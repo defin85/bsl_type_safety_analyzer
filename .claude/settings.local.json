@@ -20,7 +20,8 @@
       "Bash(cargo --version)",
       "Bash(target/release/bsl-analyzer.exe:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git clean:*)"
     ],
     "deny": []
   }
