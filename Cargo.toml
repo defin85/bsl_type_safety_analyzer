@@ -1,0 +1,73 @@
+[package]
+name = "bsl-analyzer"
+version = "0.1.0"
+edition = "2021"
+authors = ["BSL Analyzer Team"]
+description = "Advanced BSL (1C:Enterprise) static analyzer with type safety checking"
+license = "MIT"
+repository = "https://github.com/your-org/bsl-analyzer"
+keywords = ["bsl", "1c", "static-analysis", "type-safety"]
+categories = ["development-tools", "parser-implementations"]
+
+[dependencies]
+# Парсинг
+nom = "7.1"                           
+logos = "0.14"                        
+
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# Сериализация
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# CLI
+clap = { version = "4.4", features = ["derive", "color"] }
+console = "0.15"                      
+indicatif = "0.17"                    
+
+# LSP сервер
+tower-lsp = "0.20"
+
+# Параллелизм
+rayon = "1.8"                         
+num_cpus = "1.16"
+
+# Работа с файлами
+walkdir = "2.4"                       
+
+# Error handling
+anyhow = "1.0"                        
+thiserror = "1.0"                     
+
+# Логирование
+tracing = "0.1"                       
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Утилиты
+regex = "1.10"                        
+uuid = { version = "1.6", features = ["v4"] }
+
+# XML парсинг для метаданных 1С
+quick-xml = { version = "0.31", features = ["serialize"] }
+
+# Тестирование
+[dev-dependencies]
+tempfile = "3.8"                      
+pretty_assertions = "1.4"            
+
+# Оптимизация для release
+[profile.release]
+opt-level = 3           
+lto = true             
+codegen-units = 1      
+panic = "abort"        
+
+# Бинарники
+[[bin]]
+name = "bsl-analyzer"
+path = "src/main.rs"
+
+[[bin]]
+name = "bsl-lsp"
+path = "src/lsp_main.rs"
