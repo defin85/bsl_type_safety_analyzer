@@ -1,1 +1,38 @@
+# Rust
 /target
+**/*.pdb
+
+# Python temp files
+*.py
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp and debug files
+*.tmp
+*.temp
+debug*.bsl
+test_*.bsl
+
+# Documentation drafts
+*_REPORT.md
+*_STATUS.md
+*_PLAN.md
+*_TODO.md
+*_ANALYSIS.md
+*_ASSESSMENT.md
+*_CHECKLIST.md
+*_DECISION.md
+*_MIGRATION*.md
+*_INTEGRATION*.md
+*_IMPROVEMENTS.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

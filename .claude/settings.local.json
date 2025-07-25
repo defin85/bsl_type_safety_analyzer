@@ -18,7 +18,8 @@
       "Bash(./test_fix)",
       "Bash(cargo clippy:*)",
       "Bash(cargo --version)",
-      "Bash(target/release/bsl-analyzer.exe:*)"
+      "Bash(target/release/bsl-analyzer.exe:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
