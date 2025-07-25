@@ -21,7 +21,8 @@
       "Bash(target/release/bsl-analyzer.exe:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git clean:*)"
+      "Bash(git clean:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }
