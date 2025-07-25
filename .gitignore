@@ -14,7 +14,7 @@ __pycache__/
 debug*.bsl
 test_*.bsl
 
-# Documentation drafts
+# Documentation drafts and obsolete files
 *_REPORT.md
 *_STATUS.md
 *_PLAN.md
@@ -26,6 +26,13 @@ test_*.bsl
 *_MIGRATION*.md
 *_INTEGRATION*.md
 *_IMPROVEMENTS.md
+METHODOLOGY.md
+PROJECT_STRUCTURE.md
+Cargo_new.toml
+
+# Obsolete Python directories
+analyzers/
+core/
 
 # IDE
 .vscode/
