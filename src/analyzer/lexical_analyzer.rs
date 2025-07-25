@@ -226,63 +226,61 @@ impl LexicalAnalyzer {
     
     /// Creates compiled regex patterns for tokenization
     fn create_patterns() -> Vec<(LexicalTokenType, Regex)> {
-        let mut patterns = Vec::new();
-        
-        // Comments (single-line)
-        patterns.push((
-            LexicalTokenType::Comment,
-            Regex::new(r"//.*").expect("Invalid comment regex")
-        ));
-        
-        // Strings (double quotes)
-        patterns.push((
-            LexicalTokenType::String,
-            Regex::new(r#""[^"]*""#).expect("Invalid string regex")
-        ));
-        
-        // Strings (single quotes) 
-        patterns.push((
-            LexicalTokenType::String,
-            Regex::new(r"'[^']*'").expect("Invalid string regex")
-        ));
-        
-        // Numbers (integers and floats)
-        patterns.push((
-            LexicalTokenType::Number,
-            Regex::new(r"\b\d+(?:\.\d+)?\b").expect("Invalid number regex")
-        ));
-        
-        // Identifiers and keywords (Cyrillic and Latin)
-        patterns.push((
-            LexicalTokenType::Identifier,
-            Regex::new(r"\b[a-zA-Zа-яА-Я_&][a-zA-Zа-яА-Я0-9_]*\b").expect("Invalid identifier regex")
-        ));
-        
-        // Multi-character operators
-        patterns.push((
-            LexicalTokenType::Operator,
-            Regex::new(r"(:=)|(<>)|(<=)|(>=)").expect("Invalid multi-char operator regex")
-        ));
-        
-        // Single-character operators and punctuation
-        patterns.push((
-            LexicalTokenType::Operator,
-            Regex::new(r"[+\-*/=<>()\[\]{}.,;:?]").expect("Invalid operator regex")
-        ));
-        
-        // Newlines
-        patterns.push((
-            LexicalTokenType::Newline,
-            Regex::new(r"\r?\n").expect("Invalid newline regex")
-        ));
-        
-        // Whitespace
-        patterns.push((
-            LexicalTokenType::Whitespace,
-            Regex::new(r"[ \t]+").expect("Invalid whitespace regex")
-        ));
-        
-        patterns
+        vec![
+            // Comments (single-line)
+            (
+                LexicalTokenType::Comment,
+                Regex::new(r"//.*").expect("Invalid comment regex")
+            ),
+            
+            // Strings (double quotes)
+            (
+                LexicalTokenType::String,
+                Regex::new(r#""[^"]*""#).expect("Invalid string regex")
+            ),
+            
+            // Strings (single quotes) 
+            (
+                LexicalTokenType::String,
+                Regex::new(r"'[^']*'").expect("Invalid string regex")
+            ),
+            
+            // Numbers (integers and floats)
+            (
+                LexicalTokenType::Number,
+                Regex::new(r"\b\d+(?:\.\d+)?\b").expect("Invalid number regex")
+            ),
+            
+            // Identifiers and keywords (Cyrillic and Latin)
+            (
+                LexicalTokenType::Identifier,
+                Regex::new(r"\b[a-zA-Zа-яА-Я_&][a-zA-Zа-яА-Я0-9_]*\b").expect("Invalid identifier regex")
+            ),
+            
+            // Multi-character operators
+            (
+                LexicalTokenType::Operator,
+                Regex::new(r"(:=)|(<>)|(<=)|(>=)").expect("Invalid multi-char operator regex")
+            ),
+            
+            // Single-character operators and punctuation
+            (
+                LexicalTokenType::Operator,
+                Regex::new(r"[+\-*/=<>()\[\]{}.,;:?]").expect("Invalid operator regex")
+            ),
+            
+            // Newlines
+            (
+                LexicalTokenType::Newline,
+                Regex::new(r"\r?\n").expect("Invalid newline regex")
+            ),
+            
+            // Whitespace
+            (
+                LexicalTokenType::Whitespace,
+                Regex::new(r"[ \t]+").expect("Invalid whitespace regex")
+            )
+        ]
     }
     
     /// Tokenizes BSL source code

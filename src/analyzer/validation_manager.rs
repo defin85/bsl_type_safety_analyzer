@@ -194,7 +194,7 @@ impl ConfigValidator {
         // Проверяем обязательные атрибуты
         let required_attrs = ["strict_mode", "verbose", "check_documentation"];
         for attr in &required_attrs {
-            if !config.get(attr).is_some() {
+            if config.get(attr).is_none() {
                 result.add_error(format!("Отсутствует обязательный атрибут: {}", attr));
             }
         }
@@ -260,7 +260,7 @@ impl TokenValidator {
         // Проверяем обязательные поля
         let required_fields = ["type", "value", "line", "column"];
         for field in &required_fields {
-            if !token.get(field).is_some() {
+            if token.get(field).is_none() {
                 result.add_error(format!("Токен {}: отсутствует поле '{}'", index, field));
             }
         }

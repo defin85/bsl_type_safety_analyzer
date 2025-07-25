@@ -213,6 +213,7 @@ impl AnalysisEngine {
                     file_path: file_path.clone(),
                     errors: vec![crate::core::errors::AnalysisError {
                         message: format!("Failed to read file {}: {}", file_path.display(), e),
+                        file_path: file_path.clone(),
                         position: crate::parser::ast::Position { line: 0, column: 0, offset: 0 },
                         level: crate::core::errors::ErrorLevel::Error,
                         error_code: Some("FILE_READ_ERROR".to_string()),
@@ -234,6 +235,7 @@ impl AnalysisEngine {
         let mut local_syntax_analyzer = SyntaxAnalyzer::new();
         let semantic_config = SemanticAnalysisConfig::default();
         let mut local_semantic_analyzer = SemanticAnalyzer::new(semantic_config);
+        local_semantic_analyzer.set_file_path(file_path.clone());
         
         let mut errors = Vec::new();
         let mut warnings = Vec::new();
@@ -245,6 +247,7 @@ impl AnalysisEngine {
                 if let Err(e) = local_semantic_analyzer.analyze(&ast) {
                     errors.push(crate::core::errors::AnalysisError {
                         message: format!("Semantic analysis error in {}: {}", module_name, e),
+                        file_path: file_path.clone(),
                         position: crate::parser::ast::Position { line: 0, column: 0, offset: 0 },
                         level: crate::core::errors::ErrorLevel::Error,
                         error_code: Some("SEMANTIC_ERROR".to_string()),
@@ -261,9 +264,10 @@ impl AnalysisEngine {
             Err(e) => {
                 errors.push(crate::core::errors::AnalysisError {
                     message: format!("Syntax error in {}: {}", module_name, e),
+                    file_path: file_path.clone(),
                     position: crate::parser::ast::Position { line: 0, column: 0, offset: 0 },
                     level: crate::core::errors::ErrorLevel::Error,
-                                                error_code: Some("SYNTAX_ERROR".to_string()),
+                    error_code: Some("SYNTAX_ERROR".to_string()),
                     related_positions: Vec::new(),
                     suggestion: None,
                 });

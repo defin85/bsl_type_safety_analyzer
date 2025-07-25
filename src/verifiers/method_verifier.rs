@@ -261,7 +261,7 @@ impl MethodVerifier {
         let mut full_message = message.clone();
         
         if !result.suggestions.is_empty() {
-            full_message.push_str(&format!("\n\nПредложения:\n"));
+            full_message.push_str("\n\nПредложения:\n");
             for suggestion in &result.suggestions {
                 full_message.push_str(&format!("• {}\n", suggestion));
             }
@@ -353,7 +353,7 @@ impl MethodVerifier {
         let mut matrix = vec![vec![0; len2 + 1]; len1 + 1];
         
         // Инициализация первой строки и столбца
-        for i in 0..=len1 { matrix[i][0] = i; }
+        for (i, row) in matrix.iter_mut().enumerate().take(len1 + 1) { row[0] = i; }
         for j in 0..=len2 { matrix[0][j] = j; }
         
         let chars1: Vec<char> = s1.chars().collect();
@@ -362,11 +362,11 @@ impl MethodVerifier {
         for i in 1..=len1 {
             for j in 1..=len2 {
                 let cost = if chars1[i-1] == chars2[j-1] { 0 } else { 1 };
-                matrix[i][j] = [
+                matrix[i][j] = *[
                     matrix[i-1][j] + 1,      // удаление
                     matrix[i][j-1] + 1,      // вставка
                     matrix[i-1][j-1] + cost  // замена
-                ].iter().min().unwrap().clone();
+                ].iter().min().unwrap();
             }
         }
         

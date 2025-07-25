@@ -3,8 +3,10 @@ use tower_lsp::{
     jsonrpc::Result,
 };
 
+#[allow(dead_code)]
 pub struct CompletionProvider;
 
+#[allow(dead_code)]
 impl CompletionProvider {
     pub fn new() -> Self {
         Self

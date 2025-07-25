@@ -10,6 +10,7 @@ pub mod semantic;
 pub mod data_flow_analyzer;
 pub mod validation_manager;
 pub mod lexical_analyzer;
+pub mod dependency_analyzer;
 
 #[cfg(test)]
 mod engine_test;
@@ -27,6 +28,7 @@ pub use semantic::{SemanticAnalyzer, SemanticAnalysisConfig};
 pub use data_flow_analyzer::{DataFlowAnalyzer, VariableState};
 pub use validation_manager::{ValidationManager, ValidationResult};
 pub use lexical_analyzer::{LexicalAnalyzer, LexicalToken, LexicalTokenType, LexicalAnalysisConfig};
+pub use dependency_analyzer::{DependencyAnalyzer, DependencyGraph, DependencyNode, DependencyEdge, DependencyCycle};
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};

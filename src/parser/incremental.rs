@@ -9,7 +9,7 @@ use super::ast::{AstNode, AstNodeType, Position, Span};
 use anyhow::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
-use tracing::{debug, info, warn};
+use tracing::{debug, info};
 
 /// Represents a text change in the source code
 #[derive(Debug, Clone)]
@@ -53,12 +53,15 @@ struct CacheEntry {
     /// The parsed AST node
     node: Arc<AstNode>,
     /// Source text hash for cache validation
+    #[allow(dead_code)]
     source_hash: u64,
     /// Last modification timestamp
+    #[allow(dead_code)]
     timestamp: std::time::SystemTime,
 }
 
 /// Incremental AST parser that maintains cache of parsed nodes
+#[derive(Debug)]
 pub struct IncrementalParser {
     /// Cache of parsed AST nodes by source position
     cache: HashMap<String, CacheEntry>,
@@ -128,6 +131,11 @@ impl IncrementalParser {
         info!("AST cache cleared");
     }
 
+    /// Get cache size for statistics
+    pub fn cache_size(&self) -> usize {
+        self.cache.len()
+    }
+
     // Private implementation methods
 
     fn apply_text_edit(&self, edit: &TextEdit) -> Result<(String, Span)> {
@@ -151,10 +159,8 @@ impl IncrementalParser {
         let mut current_line = 0;
         
         for ch in self.source.chars() {
-            if current_line == pos.line {
-                if offset == pos.column {
-                    return Ok(offset);
-                }
+            if current_line == pos.line && offset == pos.column {
+                return Ok(offset);
             }
             
             if ch == '\n' {
@@ -209,7 +215,8 @@ impl IncrementalParser {
         let updated_tree = self.merge_subtree(new_subtree, &reparse_range)?;
         
         // Cache the new nodes
-        self.cache_tree_nodes(&updated_tree, &self.source);
+        let source_clone = self.source.clone();
+        self.cache_tree_nodes(&updated_tree, &source_clone);
         
         Ok(updated_tree)
     }
@@ -275,7 +282,7 @@ impl IncrementalParser {
         Ok(Arc::new(node))
     }
 
-    fn merge_subtree(&self, new_subtree: Arc<AstNode>, range: &Span) -> Result<Arc<AstNode>> {
+    fn merge_subtree(&self, new_subtree: Arc<AstNode>, _range: &Span) -> Result<Arc<AstNode>> {
         // Clone current tree and replace the affected range
         let current = self.current_tree.as_ref().unwrap();
         let mut new_tree = (**current).clone();

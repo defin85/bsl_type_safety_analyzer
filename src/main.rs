@@ -5,15 +5,18 @@ Command-line interface for BSL (1C:Enterprise) static analyzer.
 */
 
 use anyhow::{Context, Result};
-use bsl_analyzer::{Configuration, AnalysisEngine};
+use bsl_analyzer::{Configuration, AnalysisEngine, ReportManager, ReportFormat, ReportConfig};
+use bsl_analyzer::{RulesManager, RulesConfig, BuiltinRules, CustomRulesManager};
 use bsl_analyzer::analyzer::AnalysisResult;
+use bsl_analyzer::core::AnalysisResults;
+use bsl_analyzer::metrics::QualityMetricsManager;
 use clap::{Parser, Subcommand};
 use console::{style, Term};
 use indicatif::{ProgressBar, ProgressStyle};
 use serde_json;
 use std::path::PathBuf;
 use std::time::Instant;
-use tracing::{info, warn};
+use tracing::info;
 use tracing_subscriber;
 
 #[derive(Parser)]
@@ -31,7 +34,7 @@ struct Cli {
     #[arg(short, long)]
     verbose: bool,
     
-    /// Output format (json, text, sarif)
+    /// Output format (json, text, sarif, html)
     #[arg(short = 'f', long, default_value = "text")]
     format: String,
 }
@@ -55,6 +58,22 @@ enum Commands {
         /// Enable inter-module dependency analysis
         #[arg(long, default_value = "true")]
         inter_module: bool,
+        
+        /// Include dependency analysis in report
+        #[arg(long)]
+        include_dependencies: bool,
+        
+        /// Include performance metrics in report
+        #[arg(long)]
+        include_performance: bool,
+        
+        /// Path to rules configuration file
+        #[arg(long)]
+        rules_config: Option<PathBuf>,
+        
+        /// Active rules profile to use
+        #[arg(long)]
+        rules_profile: Option<String>,
     },
     
     /// Start Language Server Protocol (LSP) server
@@ -77,6 +96,160 @@ enum Commands {
         #[arg(short, long)]
         path: PathBuf,
     },
+    
+    /// Generate reports in all supported formats
+    GenerateReports {
+        /// Path to configuration directory or BSL files
+        #[arg(short, long)]
+        path: PathBuf,
+        
+        /// Output directory for reports
+        #[arg(short, long, default_value = "./reports")]
+        output_dir: PathBuf,
+        
+        /// Include dependency analysis
+        #[arg(long)]
+        include_dependencies: bool,
+        
+        /// Include performance metrics
+        #[arg(long)]
+        include_performance: bool,
+    },
+    
+    /// Rules management commands
+    Rules {
+        #[command(subcommand)]
+        command: RulesCommands,
+    },
+    
+    /// Code quality metrics and analysis
+    Metrics {
+        #[command(subcommand)]
+        command: MetricsCommands,
+    },
+    
+    /// LSP server configuration commands
+    LspConfig {
+        #[command(subcommand)]
+        command: LspConfigCommands,
+    },
+}
+
+#[derive(Subcommand)]
+enum RulesCommands {
+    /// List all available rules
+    List {
+        /// Show only enabled rules
+        #[arg(long)]
+        enabled_only: bool,
+        
+        /// Filter by rule tags
+        #[arg(long)]
+        tag: Option<String>,
+    },
+    
+    /// Show rule details
+    Show {
+        /// Rule ID to show details for
+        rule_id: String,
+    },
+    
+    /// Create example configuration file
+    Init {
+        /// Output path for configuration file
+        #[arg(short, long, default_value = "bsl-rules.toml")]
+        output: PathBuf,
+        
+        /// Create with strict profile
+        #[arg(long)]
+        strict: bool,
+    },
+    
+    /// Validate rules configuration
+    Validate {
+        /// Path to rules configuration file
+        #[arg(short, long, default_value = "bsl-rules.toml")]
+        config: PathBuf,
+    },
+    
+    /// Export custom rules template
+    ExportCustom {
+        /// Output path for custom rules file
+        #[arg(short, long, default_value = "custom-rules.toml")]
+        output: PathBuf,
+    },
+}
+
+#[derive(Subcommand)]
+enum MetricsCommands {
+    /// Analyze code quality metrics
+    Analyze {
+        /// Path to configuration directory or BSL files
+        #[arg(short, long)]
+        path: PathBuf,
+        
+        /// Output format (json, text)
+        #[arg(short = 'f', long, default_value = "text")]
+        format: String,
+        
+        /// Output file (stdout if not specified)
+        #[arg(short, long)]
+        output: Option<PathBuf>,
+        
+        /// Include detailed function metrics
+        #[arg(long)]
+        include_functions: bool,
+        
+        /// Include technical debt analysis
+        #[arg(long)]
+        include_debt: bool,
+    },
+    
+    /// Generate metrics report
+    Report {
+        /// Path to configuration directory or BSL files
+        #[arg(short, long)]
+        path: PathBuf,
+        
+        /// Output directory for reports
+        #[arg(short, long, default_value = "./metrics")]
+        output_dir: PathBuf,
+    },
+    
+    /// Test metrics system with sample data
+    Test,
+}
+
+#[derive(Subcommand)]
+enum LspConfigCommands {
+    /// Initialize LSP configuration
+    Init {
+        /// Output path for configuration file
+        #[arg(short, long, default_value = "lsp-config.toml")]
+        output: PathBuf,
+        
+        /// Use TCP mode by default
+        #[arg(long)]
+        tcp: bool,
+        
+        /// TCP port for server
+        #[arg(long, default_value = "8080")]
+        port: u16,
+    },
+    
+    /// Validate LSP configuration
+    Validate {
+        /// Path to LSP configuration file
+        #[arg(short, long, default_value = "lsp-config.toml")]
+        config: PathBuf,
+    },
+    
+    /// Test LSP server connectivity
+    TestConnection {
+        /// LSP configuration file
+        #[arg(short, long, default_value = "lsp-config.toml")]
+        config: PathBuf,
+    },
 }
 
 #[tokio::main]
@@ -94,9 +267,13 @@ async fn main() -> Result<()> {
             path, 
             output, 
             workers, 
-            inter_module 
+            inter_module,
+            include_dependencies,
+            include_performance,
+            rules_config,
+            rules_profile,
         } => {
-            analyze_command(path, output, workers, inter_module, &cli.format).await?;
+            analyze_command(path, output, workers, inter_module, include_dependencies, include_performance, &cli.format, rules_config, rules_profile).await?;
         }
         
         Commands::Lsp { port } => {
@@ -110,6 +287,369 @@ async fn main() -> Result<()> {
         Commands::Validate { path } => {
             validate_command(path).await?;
         }
+        
+        Commands::GenerateReports { path, output_dir, include_dependencies, include_performance } => {
+            generate_reports_command(path, output_dir, include_dependencies, include_performance).await?;
+        }
+        
+        Commands::Rules { command } => {
+            rules_command(command).await?;
+        }
+        
+        Commands::Metrics { command } => {
+            metrics_command(command).await?;
+        }
+        
+        Commands::LspConfig { command } => {
+            lsp_config_command(command).await?;
+        }
+    }
+    
+    Ok(())
+}
+
+async fn rules_command(command: RulesCommands) -> Result<()> {
+    let term = Term::stdout();
+    
+    match command {
+        RulesCommands::List { enabled_only, tag } => {
+            term.write_line(&format!("🔧 {}", style("Available Rules").bold().cyan()))?;
+            
+            let rules = BuiltinRules::get_all_rules();
+            
+            for (rule_id, rule_config) in &rules {
+                if enabled_only && !rule_config.enabled {
+                    continue;
+                }
+                
+                if let Some(ref filter_tag) = tag {
+                    if !rule_config.tags.contains(filter_tag) {
+                        continue;
+                    }
+                }
+                
+                let status = if rule_config.enabled {
+                    style("✅ ENABLED").green()
+                } else {
+                    style("❌ DISABLED").red()
+                };
+                
+                term.write_line(&format!(
+                    "   {} {} [{}] - {}",
+                    status,
+                    style(rule_id).bold(),
+                    style(format!("{:?}", rule_config.severity)).dim(),
+                    rule_config.description.as_ref().unwrap_or(&"No description".to_string())
+                ))?;
+                
+                if !rule_config.tags.is_empty() {
+                    term.write_line(&format!(
+                        "      Tags: {}",
+                        style(rule_config.tags.join(", ")).dim()
+                    ))?;
+                }
+            }
+        }
+        
+        RulesCommands::Show { rule_id } => {
+            let rules = BuiltinRules::get_all_rules();
+            
+            if let Some(rule_config) = rules.get(&rule_id) {
+                term.write_line(&format!("🔍 {} - {}", style(&rule_id).bold().cyan(), rule_id))?;
+                term.write_line(&format!(
+                    "   Status: {}",
+                    if rule_config.enabled {
+                        style("ENABLED").green()
+                    } else {
+                        style("DISABLED").red()
+                    }
+                ))?;
+                term.write_line(&format!("   Severity: {}", style(format!("{:?}", rule_config.severity)).yellow()))?;
+                term.write_line(&format!("   Tags: {}", style(rule_config.tags.join(", ")).dim()))?;
+                
+                if let Some(ref desc) = rule_config.description {
+                    term.write_line(&format!("   Description: {}", desc))?;
+                }
+                
+                if let Some(ref msg) = rule_config.message {
+                    term.write_line(&format!("   Message Template: {}", style(msg).dim()))?;
+                }
+                
+                term.write_line(&format!("   Min Confidence: {:.1}%", rule_config.min_confidence * 100.0))?;
+                
+                // Show recommendations
+                let recommendations = BuiltinRules::get_recommendations(&rule_id);
+                if !recommendations.is_empty() {
+                    term.write_line("   Recommendations:")?;
+                    for rec in &recommendations {
+                        term.write_line(&format!("     • {}", rec))?;
+                    }
+                }
+            } else {
+                term.write_line(&format!("❌ Rule '{}' not found", style(&rule_id).red()))?;
+                std::process::exit(1);
+            }
+        }
+        
+        RulesCommands::Init { output, strict } => {
+            term.write_line(&format!("📄 Creating rules configuration: {}", output.display()))?;
+            
+            let config = if strict {
+                RulesConfig::strict_profile()
+            } else {
+                RulesConfig::default()
+            };
+            
+            config.export_to_file(&output)?;
+            term.write_line(&format!("✅ Rules configuration created: {}", style(output.display()).green()))?;
+        }
+        
+        RulesCommands::Validate { config } => {
+            term.write_line(&format!("✅ Validating rules configuration: {}", config.display()))?;
+            
+            let rules_config = RulesConfig::from_file(&config)
+                .with_context(|| format!("Failed to load rules from {}", config.display()))?;
+            
+            let manager = RulesManager::new_with_config(rules_config);
+            let warnings = manager.validate_config()?;
+            
+            if warnings.is_empty() {
+                term.write_line(&format!("   {}", style("Configuration is valid").green()))?;
+            } else {
+                term.write_line(&format!("   {}", style("Configuration has warnings:").yellow()))?;
+                for warning in &warnings {
+                    term.write_line(&format!("   - {}", style(warning).yellow()))?;
+                }
+            }
+        }
+        
+        RulesCommands::ExportCustom { output } => {
+            term.write_line(&format!("📄 Creating custom rules template: {}", output.display()))?;
+            
+            CustomRulesManager::create_example_file(&output)?;
+            term.write_line(&format!("✅ Custom rules template created: {}", style(output.display()).green()))?;
+            term.write_line("   Edit the file to add your custom rules and load with --custom-rules")?;
+        }
+    }
+    
+    Ok(())
+}
+
+async fn metrics_command(command: MetricsCommands) -> Result<()> {
+    let term = Term::stdout();
+    
+    match command {
+        MetricsCommands::Analyze { path, format, output, include_functions, include_debt } => {
+            term.write_line(&format!("📊 {}", style("Code Quality Metrics Analysis").bold().cyan()))?;
+            
+            let pb = ProgressBar::new_spinner();
+            pb.set_style(
+                ProgressStyle::default_spinner()
+                    .template("{spinner:.cyan} {msg}")
+                    .context("Failed to set progress style")?
+            );
+            pb.set_message("Loading configuration...");
+            
+            let config = Configuration::load_from_directory(&path)?;
+            pb.set_message("Creating metrics manager...");
+            
+            let mut metrics_manager = QualityMetricsManager::new();
+            
+            pb.set_message("Analyzing modules...");
+            
+            let mut all_metrics = Vec::new();
+            
+            for module in config.get_modules() {
+                if let Ok(content) = std::fs::read_to_string(&module.path) {
+                    let metrics = metrics_manager.analyze_file(&module.path, &content)?;
+                    all_metrics.push((module.path.clone(), metrics));
+                }
+            }
+            
+            pb.finish_and_clear();
+            
+            // Generate output
+            match format.as_str() {
+                "json" => {
+                    let json_output = serde_json::to_string_pretty(&all_metrics)?;
+                    if let Some(output_path) = output {
+                        std::fs::write(&output_path, json_output)?;
+                        term.write_line(&format!("Results written to {}", output_path.display()))?;
+                    } else {
+                        println!("{}", json_output);
+                    }
+                }
+                _ => {
+                    // Text format
+                    for (file_path, metrics) in &all_metrics {
+                        term.write_line(&format!("\n📄 {}", style(file_path.display()).bold()))?;
+                        term.write_line(&format!("   Quality Score: {:.1}/100", style(metrics.quality_score).green()))?;
+                        term.write_line(&format!("   Maintainability Index: {:.1}", metrics.maintainability_index))?;
+                        term.write_line(&format!("   Average Complexity: {:.1}", metrics.complexity_metrics.average_cyclomatic_complexity))?;
+                        
+                        if include_debt && !metrics.technical_debt.debt_items.is_empty() {
+                            term.write_line(&format!("   Technical Debt: {} items", metrics.technical_debt.debt_items.len()))?;
+                        }
+                        
+                        if include_functions && !metrics.complexity_metrics.function_metrics.is_empty() {
+                            term.write_line("   Functions:")?;
+                            for (func_name, func_metrics) in &metrics.complexity_metrics.function_metrics {
+                                term.write_line(&format!("     {} (complexity: {})", func_name, func_metrics.cyclomatic_complexity))?;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        MetricsCommands::Report { path, output_dir } => {
+            term.write_line(&format!("📊 Generating metrics reports in {}", output_dir.display()))?;
+            
+            std::fs::create_dir_all(&output_dir)?;
+            
+            let config = Configuration::load_from_directory(&path)?;
+            let mut metrics_manager = QualityMetricsManager::new();
+            
+            let mut all_metrics = Vec::new();
+            
+            for module in config.get_modules() {
+                if let Ok(content) = std::fs::read_to_string(&module.path) {
+                    let metrics = metrics_manager.analyze_file(&module.path, &content)?;
+                    all_metrics.push((module.path.clone(), metrics));
+                }
+            }
+            
+            // Generate JSON report
+            let json_report = serde_json::to_string_pretty(&all_metrics)?;
+            std::fs::write(output_dir.join("metrics.json"), json_report)?;
+            
+            term.write_line(&format!("✅ Metrics reports generated in {}", style(output_dir.display()).green()))?;
+        }
+        
+        MetricsCommands::Test => {
+            term.write_line(&format!("🧪 {}", style("Testing Metrics System").bold().cyan()))?;
+            
+            let sample_code = r#"
+            Функция СложнаяФункция(Параметр1, Параметр2, Параметр3)
+                Если Параметр1 > 0 Тогда
+                    Для Счетчик = 1 По 10 Цикл
+                        Если Счетчик % 2 = 0 Тогда
+                            Возврат Счетчик * Параметр2;
+                        КонецЕсли;
+                    КонецЦикла;
+                ИначеЕсли Параметр2 < 0 Тогда
+                    Попытка
+                        Результат = Параметр1 / Параметр2;
+                    Исключение
+                        Возврат Неопределено;
+                    КонецПопытки;
+                Иначе
+                    Возврат Параметр3;
+                КонецЕсли;
+            КонецФункции
+            "#;
+            
+            let mut metrics_manager = QualityMetricsManager::new();
+            let metrics = metrics_manager.analyze_content("test.bsl", sample_code)?;
+            
+            term.write_line(&format!("📊 Quality Score: {:.1}/100", style(metrics.quality_score).green()))?;
+            term.write_line(&format!("📈 Maintainability Index: {:.1}", metrics.maintainability_index))?;
+            term.write_line(&format!("🔄 Average Complexity: {:.1}", metrics.complexity_metrics.average_cyclomatic_complexity))?;
+            term.write_line(&format!("⚠️  Technical Debt Items: {}", metrics.technical_debt.debt_items.len()))?;
+            
+            if !metrics.recommendations.is_empty() {
+                term.write_line("\n💡 Recommendations:")?;
+                for rec in &metrics.recommendations {
+                    term.write_line(&format!("   • {}", rec))?;
+                }
+            }
+        }
+    }
+    
+    Ok(())
+}
+
+async fn lsp_config_command(command: LspConfigCommands) -> Result<()> {
+    let term = Term::stdout();
+    
+    match command {
+        LspConfigCommands::Init { output, tcp, port } => {
+            term.write_line(&format!("🔧 Creating LSP configuration: {}", output.display()))?;
+            
+            let lsp_config = if tcp {
+                format!(r#"
+# BSL Analyzer LSP Server Configuration
+
+mode = "tcp"
+
+[tcp]
+host = "127.0.0.1"
+port = {}
+max_connections = 10
+connection_timeout = 30000
+request_timeout = 10000
+
+[analysis]
+enable_real_time = true
+enable_auto_save = true
+max_file_size = 1048576
+enable_diagnostics = true
+enable_completion = true
+enable_hover = true
+
+[logging]
+level = "info"
+file = "lsp-server.log"
+"#, port)
+            } else {
+                r#"
+# BSL Analyzer LSP Server Configuration
+
+mode = "stdio"
+
+[analysis]
+enable_real_time = true
+enable_auto_save = true
+max_file_size = 1048576
+enable_diagnostics = true
+enable_completion = true
+enable_hover = true
+
+[logging]
+level = "info"
+file = "lsp-server.log"
+"#.to_string()
+            };
+            
+            std::fs::write(&output, lsp_config.trim())?;
+            term.write_line(&format!("✅ LSP configuration created: {}", style(output.display()).green()))?;
+        }
+        
+        LspConfigCommands::Validate { config } => {
+            term.write_line(&format!("✅ Validating LSP configuration: {}", config.display()))?;
+            
+            if !config.exists() {
+                term.write_line(&format!("❌ Configuration file not found: {}", style(config.display()).red()))?;
+                std::process::exit(1);
+            }
+            
+            let content = std::fs::read_to_string(&config)?;
+            match toml::from_str::<toml::Value>(&content) {
+                Ok(_) => {
+                    term.write_line(&format!("   {}", style("Configuration is valid").green()))?;
+                }
+                Err(e) => {
+                    term.write_line(&format!("   {}: {}", style("Configuration error").red(), e))?;
+                    std::process::exit(1);
+                }
+            }
+        }
+        
+        LspConfigCommands::TestConnection { config: _config } => {
+            term.write_line(&format!("🔌 {}", style("Testing LSP Server Connection").bold().cyan()))?;
+            term.write_line("   This feature will be implemented in the next version")?;
+            // TODO: Implement actual connection test
+        }
     }
     
     Ok(())
@@ -120,7 +660,11 @@ async fn analyze_command(
     output: Option<PathBuf>,
     workers: Option<usize>,
     inter_module: bool,
+    include_dependencies: bool,
+    include_performance: bool,
     format: &str,
+    rules_config: Option<PathBuf>,
+    rules_profile: Option<String>,
 ) -> Result<()> {
     let term = Term::stdout();
     term.write_line(&format!(
@@ -150,6 +694,32 @@ async fn analyze_command(
         config.objects.len()
     ));
     
+    // Load rules configuration
+    pb.set_message("Loading rules configuration...");
+    let mut rules_manager = if let Some(ref rules_path) = rules_config {
+        RulesManager::from_file(rules_path)
+            .with_context(|| format!("Failed to load rules from {}", rules_path.display()))?
+    } else {
+        // Use default rules
+        RulesManager::new()
+    };
+    
+    // Set active profile if specified
+    if let Some(ref profile_name) = rules_profile {
+        let mut config = rules_manager.config().clone();
+        config.active_profile = profile_name.clone();
+        rules_manager.reload_config_from_memory(config)?;
+    }
+    
+    // Validate rules configuration
+    let validation_warnings = rules_manager.validate_config()?;
+    if !validation_warnings.is_empty() {
+        term.write_line(&format!("⚠️  Rules validation warnings:"))?;
+        for warning in &validation_warnings {
+            term.write_line(&format!("   - {}", style(warning).yellow()))?;
+        }
+    }
+    
     // Create analysis engine
     let mut engine = AnalysisEngine::new();
     if let Some(workers) = workers {
@@ -168,41 +738,74 @@ async fn analyze_command(
     
     let analysis_time = start_time.elapsed();
     
+    // Convert engine results to AnalysisResults format for reports
+    let mut combined_results = AnalysisResults::new();
+    for result in &results {
+        for error in &result.errors {
+            combined_results.add_error(error.clone());
+        }
+        for warning in &result.warnings {
+            combined_results.add_warning(warning.clone());
+        }
+    }
+    
+    // Apply rules to filter and transform results
+    pb.set_message("Applying rules...");
+    let original_errors = combined_results.get_errors().len();
+    let original_warnings = combined_results.get_warnings().len();
+    
+    combined_results = rules_manager.apply_rules(&combined_results)
+        .context("Failed to apply rules")?;
+    
+    let filtered_errors = combined_results.get_errors().len();
+    let filtered_warnings = combined_results.get_warnings().len();
+    
+    // Report rules application results
+    if original_errors != filtered_errors || original_warnings != filtered_warnings {
+        let rules_summary = rules_manager.get_engine_summary();
+        term.write_line(&format!(
+            "🔧 Rules applied: {} enabled rules, {} → {} errors, {} → {} warnings",
+            rules_summary.enabled_rules,
+            original_errors, filtered_errors,
+            original_warnings, filtered_warnings
+        ))?;
+    }
+    
     // Collect statistics
     let total_files = results.len();
-    let total_errors: usize = results.iter().map(|r| r.errors.len()).sum();
-    let total_warnings: usize = results.iter().map(|r| r.warnings.len()).sum();
+    let total_errors = combined_results.get_errors().len();
+    let total_warnings = combined_results.get_warnings().len();
     let total_suggestions: usize = 0; // results.iter().map(|r| r.suggestions.len()).sum();
     
+    // Create report configuration
+    let report_config = ReportConfig {
+        format: format.parse().unwrap_or(ReportFormat::Text),
+        output_path: output.as_ref().map(|p| p.to_string_lossy().to_string()),
+        include_details: true,
+        include_performance,
+        include_dependencies,
+        min_severity: None,
+    };
+    
+    // Generate report using ReportManager
+    let report_manager = ReportManager::new();
+    let report_content = report_manager.generate_with_config(&combined_results, &report_config)
+        .context("Failed to generate report")?;
+    
     // Output results
-    match format {
-        "json" => {
-            let json_output = serde_json::to_string_pretty(&results)
-                .context("Failed to serialize results to JSON")?;
-                
-            if let Some(output_path) = output {
-                std::fs::write(&output_path, json_output)
-                    .with_context(|| format!("Failed to write to {}", output_path.display()))?;
-                term.write_line(&format!("Results written to {}", output_path.display()))?;
-            } else {
-                println!("{}", json_output);
+    if let Some(output_path) = output {
+        std::fs::write(&output_path, report_content)
+            .with_context(|| format!("Failed to write to {}", output_path.display()))?;
+        term.write_line(&format!("Results written to {}", output_path.display()))?;
+    } else {
+        // For text output, use our custom formatter to maintain CLI compatibility
+        match format {
+            "text" => {
+                print_text_results(&results, &term)?;
             }
-        }
-        
-        "text" => {
-            print_text_results(&results, &term)?;
-        }
-        
-        "sarif" => {
-            // TODO: Implement SARIF format
-            warn!("SARIF format not yet implemented, falling back to JSON");
-            let json_output = serde_json::to_string_pretty(&results)
-                .context("Failed to serialize results to JSON")?;
-            println!("{}", json_output);
-        }
-        
-        _ => {
-            anyhow::bail!("Unsupported format: {}. Use json, text, or sarif", format);
+            _ => {
+                println!("{}", report_content);
+            }
         }
     }
     
@@ -290,6 +893,123 @@ async fn validate_command(path: PathBuf) -> Result<()> {
             term.write_line(&format!("   - {}", style(issue).red()))?;
         }
         std::process::exit(1);
+    }
+    
+    Ok(())
+}
+
+async fn generate_reports_command(
+    path: PathBuf,
+    output_dir: PathBuf,
+    include_dependencies: bool,
+    include_performance: bool,
+) -> Result<()> {
+    let term = Term::stdout();
+    term.write_line(&format!(
+        "📊 {} v{}", 
+        style("BSL Reports Generator").bold().cyan(),
+        env!("CARGO_PKG_VERSION")
+    ))?;
+    
+    let start_time = Instant::now();
+    
+    // Create output directory
+    std::fs::create_dir_all(&output_dir)
+        .with_context(|| format!("Failed to create output directory: {}", output_dir.display()))?;
+    
+    let pb = ProgressBar::new_spinner();
+    pb.set_style(
+        ProgressStyle::default_spinner()
+            .template("{spinner:.cyan} {msg}")
+            .context("Failed to set progress style")?
+    );
+    pb.set_message("Loading configuration...");
+    
+    // Load configuration
+    let config = Configuration::load_from_directory(&path)
+        .with_context(|| format!("Failed to load configuration from {}", path.display()))?;
+    
+    pb.set_message("Analyzing configuration...");
+    
+    // Create analysis engine
+    let mut engine = AnalysisEngine::new();
+    engine.set_inter_module_analysis(true);
+    
+    // Run analysis
+    let results = engine.analyze_configuration(&config)
+        .await
+        .context("Analysis failed")?;
+    
+    pb.set_message("Converting results...");
+    
+    // Convert engine results to AnalysisResults format
+    let mut combined_results = AnalysisResults::new();
+    for result in &results {
+        for error in &result.errors {
+            combined_results.add_error(error.clone());
+        }
+        for warning in &result.warnings {
+            combined_results.add_warning(warning.clone());
+        }
+    }
+    
+    pb.set_message("Generating reports...");
+    
+    // Create report manager with configuration
+    let report_config = ReportConfig {
+        format: ReportFormat::Json, // Will be overridden for each format
+        output_path: None,
+        include_details: true,
+        include_performance,
+        include_dependencies,
+        min_severity: None,
+    };
+    
+    let report_manager = ReportManager::with_config(report_config);
+    
+    // Generate all format reports
+    match report_manager.generate_all_formats(&combined_results, &output_dir) {
+        Ok(()) => {
+            pb.finish_and_clear();
+            
+            let generation_time = start_time.elapsed();
+            
+            // Report success
+            term.write_line("")?;
+            term.write_line(&format!("✅ {}", style("Reports Generated Successfully").bold().green()))?;
+            term.write_line(&format!("   Output directory: {}", style(output_dir.display()).cyan()))?;
+            term.write_line(&format!("   SARIF report: {}", style("analysis-results.sarif").yellow()))?;
+            term.write_line(&format!("   JSON report: {}", style("analysis-results.json").yellow()))?;
+            term.write_line(&format!("   HTML report: {}", style("analysis-results.html").yellow()))?;
+            term.write_line(&format!("   Text report: {}", style("analysis-results.txt").yellow()))?;
+            term.write_line("")?;
+            term.write_line(&format!("📊 Summary:"))?;
+            term.write_line(&format!("   Files analyzed: {}", style(results.len()).green()))?;
+            term.write_line(&format!("   Errors found: {}", 
+                if combined_results.get_errors().len() > 0 { 
+                    style(combined_results.get_errors().len()).red() 
+                } else { 
+                    style(combined_results.get_errors().len()).green() 
+                }
+            ))?;
+            term.write_line(&format!("   Warnings: {}", style(combined_results.get_warnings().len()).yellow()))?;
+            term.write_line(&format!("   Generation time: {:.2?}", style(generation_time).dim()))?;
+            
+            // Special note about SARIF for GitHub Actions
+            if combined_results.get_errors().len() > 0 || combined_results.get_warnings().len() > 0 {
+                term.write_line("")?;
+                term.write_line(&format!("💡 {}", style("GitHub Actions Integration:").bold().blue()))?;
+                term.write_line("   Upload the SARIF file to GitHub Security tab:")?;
+                term.write_line(&format!("   {} upload-sarif --sarif-file {}/analysis-results.sarif", 
+                    style("gh api").dim(),
+                    output_dir.display()
+                ))?;
+            }
+        }
+        Err(e) => {
+            pb.finish_and_clear();
+            return Err(e.context("Failed to generate reports"));
+        }
     }
     
     Ok(())

@@ -20,6 +20,8 @@ tokio = { version = "1.35", features = ["full"] }
 # Сериализация
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+toml = "0.8"                          # Для TOML конфигураций
+serde_yaml = "0.9"                    # Для YAML конфигураций
 
 # CLI
 clap = { version = "4.4", features = ["derive", "color"] }
@@ -51,6 +53,21 @@ uuid = { version = "1.6", features = ["v4"] }
 # XML парсинг для метаданных 1С
 quick-xml = { version = "0.31", features = ["serialize"] }
 
+# Для интеграции Python парсеров
+# HTML парсинг документации (1c-help-parser)
+scraper = "0.18"                      # Замена BeautifulSoup
+zip = "0.6"                          # Для .hbk архивов
+
+# Кодировки для конфигураций 1С (onec-contract-generator)
+encoding_rs = "0.8"                  # Поддержка UTF-16, CP1251
+
+# Дата и время для метаданных генерации
+chrono = { version = "0.4", features = ["serde"] }
+
+# Кэширование и сжатие
+flate2 = "1.0"                       # Для сжатия данных кэша
+bincode = "1.3"                      # Для сериализации кэша
+
 # Тестирование
 [dev-dependencies]
 tempfile = "3.8"                      
@@ -68,6 +85,4 @@ panic = "abort"
 name = "bsl-analyzer"
 path = "src/main.rs"
 
-[[bin]]
-name = "bsl-lsp"
-path = "src/lsp_main.rs"
+# Убираем бинарник bsl-lsp так как файл был удален

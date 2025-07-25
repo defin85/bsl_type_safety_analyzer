@@ -1,0 +1,205 @@
+{
+    "name": "bsl-analyzer",
+    "displayName": "BSL Analyzer",
+    "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking",
+    "version": "1.0.0",
+    "publisher": "bsl-analyzer-team",
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Linters",
+        "Other"
+    ],
+    "keywords": [
+        "bsl",
+        "1c",
+        "enterprise",
+        "static-analysis",
+        "type-safety"
+    ],
+    "activationEvents": [
+        "onLanguage:bsl"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "bsl",
+                "aliases": [
+                    "BSL",
+                    "1C:Enterprise"
+                ],
+                "extensions": [
+                    ".bsl",
+                    ".os"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "bsl",
+                "scopeName": "source.bsl",
+                "path": "./syntaxes/bsl.tmGrammar.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "BSL Analyzer",
+            "properties": {
+                "bslAnalyzer.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable BSL Analyzer"
+                },
+                "bslAnalyzer.serverPath": {
+                    "type": "string",
+                    "default": "bsl-analyzer",
+                    "description": "Path to BSL Analyzer executable"
+                },
+                "bslAnalyzer.serverMode": {
+                    "type": "string",
+                    "enum": ["stdio", "tcp"],
+                    "default": "tcp",
+                    "description": "LSP server communication mode"
+                },
+                "bslAnalyzer.tcpPort": {
+                    "type": "number",
+                    "default": 8080,
+                    "description": "TCP port for LSP server (when using TCP mode)"
+                },
+                "bslAnalyzer.rulesConfig": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to rules configuration file"
+                },
+                "bslAnalyzer.enableMetrics": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable code quality metrics"
+                },
+                "bslAnalyzer.enableRealTimeAnalysis": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable real-time analysis as you type"
+                },
+                "bslAnalyzer.maxFileSize": {
+                    "type": "number",
+                    "default": 1048576,
+                    "description": "Maximum file size for analysis (bytes)"
+                },
+                "bslAnalyzer.trace.server": {
+                    "type": "string",
+                    "enum": ["off", "messages", "verbose"],
+                    "default": "off",
+                    "description": "Trace communication between VS Code and LSP server"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "bslAnalyzer.analyzeFile",
+                "title": "Analyze Current File",
+                "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.analyzeWorkspace",
+                "title": "Analyze Workspace",
+                "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.generateReports",
+                "title": "Generate Reports",
+                "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.showMetrics",
+                "title": "Show Code Quality Metrics",
+                "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.configureRules",
+                "title": "Configure Rules",
+                "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.restartServer",
+                "title": "Restart LSP Server",
+                "category": "BSL Analyzer"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "when": "resourceExtname == .bsl",
+                    "command": "bslAnalyzer.analyzeFile",
+                    "group": "BSL Analyzer"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceExtname == .bsl",
+                    "command": "bslAnalyzer.analyzeFile",
+                    "group": "BSL Analyzer"
+                },
+                {
+                    "when": "resourceExtname == .bsl",
+                    "command": "bslAnalyzer.showMetrics",
+                    "group": "BSL Analyzer"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "bslAnalyzer.analyzeFile",
+                    "when": "resourceExtname == .bsl"
+                },
+                {
+                    "command": "bslAnalyzer.analyzeWorkspace"
+                },
+                {
+                    "command": "bslAnalyzer.generateReports"
+                },
+                {
+                    "command": "bslAnalyzer.showMetrics",
+                    "when": "resourceExtname == .bsl"
+                },
+                {
+                    "command": "bslAnalyzer.configureRules"
+                },
+                {
+                    "command": "bslAnalyzer.restartServer"
+                }
+            ]
+        },
+        "snippets": [
+            {
+                "language": "bsl",
+                "path": "./snippets/bsl.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.74.0",
+        "@types/node": "16.x",
+        "typescript": "^4.9.4"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.1.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourorg/bsl-analyzer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/yourorg/bsl-analyzer/issues"
+    },
+    "homepage": "https://github.com/yourorg/bsl-analyzer#readme",
+    "license": "MIT"
+}

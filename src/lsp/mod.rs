@@ -10,6 +10,7 @@ use tower_lsp::{LspService, Server};
 mod server;
 mod handlers;
 mod completion;
+mod incremental_integration;
 
 pub use server::BslLanguageServer;
 

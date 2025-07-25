@@ -9,7 +9,7 @@
 mod tests {
     use super::super::syntax_analyzer::SyntaxAnalyzer;
     use crate::parser::ast::{AstNode, AstNodeType};
-    use crate::parser::lexer::{BslLexer, Token, TokenType};
+    // use crate::parser::lexer::{BslLexer, Token, TokenType}; // Unused imports
 
     /// Создает тестовый синтаксический анализатор
     fn create_test_analyzer() -> SyntaxAnalyzer {
@@ -52,9 +52,8 @@ mod tests {
 
     #[test]
     fn test_syntax_analyzer_creation() {
-        let analyzer = create_test_analyzer();
+        let _analyzer = create_test_analyzer();
         // Основная проверка - анализатор создается без ошибок
-        assert!(true, "SyntaxAnalyzer создан успешно");
     }
 
     #[test]

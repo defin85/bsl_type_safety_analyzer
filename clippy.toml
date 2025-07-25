@@ -1,0 +1,9 @@
+# Clippy configuration for BSL Analyzer
+# Разрешаем некоторые не критичные предупреждения
+
+# Разрешаем рекурсивные параметры (нормально для анализаторов)
+allow-dbg-in-tests = true
+
+# Разрешаем некоторые сложные выражения
+too-many-arguments-threshold = 8
+type-complexity-threshold = 300

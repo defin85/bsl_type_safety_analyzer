@@ -234,114 +234,117 @@ impl TypeSystem {
     
     fn initialize_method_cache(&mut self) {
         // ТаблицаЗначений methods
-        let mut table_methods = Vec::new();
-        table_methods.push(MethodInfo {
-            name: "Добавить".to_string(),
-            parameters: vec![],
-            return_type: Some("СтрокаТаблицыЗначений".to_string()),
-            description: Some("Добавляет новую строку в таблицу значений".to_string()),
-            is_procedure: false,
-        });
-        table_methods.push(MethodInfo {
-            name: "Удалить".to_string(),
-            parameters: vec![ParameterInfo {
-                name: "Строка".to_string(),
-                param_type: Some("СтрокаТаблицыЗначений".to_string()),
-                is_optional: false,
-                default_value: None,
-            }],
-            return_type: None,
-            description: Some("Удаляет строку из таблицы значений".to_string()),
-            is_procedure: true,
-        });
-        table_methods.push(MethodInfo {
-            name: "Очистить".to_string(),
-            parameters: vec![],
-            return_type: None,
-            description: Some("Очищает все строки таблицы значений".to_string()),
-            is_procedure: true,
-        });
-        table_methods.push(MethodInfo {
-            name: "Количество".to_string(),
-            parameters: vec![],
-            return_type: Some("Число".to_string()),
-            description: Some("Возвращает количество строк в таблице".to_string()),
-            is_procedure: false,
-        });
-        table_methods.push(MethodInfo {
-            name: "Найти".to_string(),
-            parameters: vec![
-                ParameterInfo {
-                    name: "Значение".to_string(),
-                    param_type: Some("Произвольный".to_string()),
+        let table_methods = vec![
+            MethodInfo {
+                name: "Добавить".to_string(),
+                parameters: vec![],
+                return_type: Some("СтрокаТаблицыЗначений".to_string()),
+                description: Some("Добавляет новую строку в таблицу значений".to_string()),
+                is_procedure: false,
+            },
+            MethodInfo {
+                name: "Удалить".to_string(),
+                parameters: vec![ParameterInfo {
+                    name: "Строка".to_string(),
+                    param_type: Some("СтрокаТаблицыЗначений".to_string()),
                     is_optional: false,
                     default_value: None,
-                },
-                ParameterInfo {
-                    name: "Колонка".to_string(),
-                    param_type: Some("Строка".to_string()),
-                    is_optional: true,
-                    default_value: None,
-                }
-            ],
-            return_type: Some("СтрокаТаблицыЗначений".to_string()),
-            description: Some("Ищет строку в таблице по значению".to_string()),
-            is_procedure: false,
-        });
+                }],
+                return_type: None,
+                description: Some("Удаляет строку из таблицы значений".to_string()),
+                is_procedure: true,
+            },
+            MethodInfo {
+                name: "Очистить".to_string(),
+                parameters: vec![],
+                return_type: None,
+                description: Some("Очищает все строки таблицы значений".to_string()),
+                is_procedure: true,
+            },
+            MethodInfo {
+                name: "Количество".to_string(),
+                parameters: vec![],
+                return_type: Some("Число".to_string()),
+                description: Some("Возвращает количество строк в таблице".to_string()),
+                is_procedure: false,
+            },
+            MethodInfo {
+                name: "Найти".to_string(),
+                parameters: vec![
+                    ParameterInfo {
+                        name: "Значение".to_string(),
+                        param_type: Some("Произвольный".to_string()),
+                        is_optional: false,
+                        default_value: None,
+                    },
+                    ParameterInfo {
+                        name: "Колонка".to_string(),
+                        param_type: Some("Строка".to_string()),
+                        is_optional: true,
+                        default_value: None,
+                    }
+                ],
+                return_type: Some("СтрокаТаблицыЗначений".to_string()),
+                description: Some("Ищет строку в таблице по значению".to_string()),
+                is_procedure: false,
+            },
+        ];
         self.method_cache.insert("ТаблицаЗначений".to_string(), table_methods);
         
         // Запрос methods
-        let mut query_methods = Vec::new();
-        query_methods.push(MethodInfo {
-            name: "Выполнить".to_string(),
-            parameters: vec![],
-            return_type: Some("РезультатЗапроса".to_string()),
-            description: Some("Выполняет запрос и возвращает результат".to_string()),
-            is_procedure: false,
-        });
-        query_methods.push(MethodInfo {
-            name: "УстановитьПараметр".to_string(),
-            parameters: vec![
-                ParameterInfo {
-                    name: "Имя".to_string(),
-                    param_type: Some("Строка".to_string()),
-                    is_optional: false,
-                    default_value: None,
-                },
-                ParameterInfo {
+        let query_methods = vec![
+            MethodInfo {
+                name: "Выполнить".to_string(),
+                parameters: vec![],
+                return_type: Some("РезультатЗапроса".to_string()),
+                description: Some("Выполняет запрос и возвращает результат".to_string()),
+                is_procedure: false,
+            },
+            MethodInfo {
+                name: "УстановитьПараметр".to_string(),
+                parameters: vec![
+                    ParameterInfo {
+                        name: "Имя".to_string(),
+                        param_type: Some("Строка".to_string()),
+                        is_optional: false,
+                        default_value: None,
+                    },
+                    ParameterInfo {
+                        name: "Значение".to_string(),
+                        param_type: Some("Произвольный".to_string()),
+                        is_optional: false,
+                        default_value: None,
+                    }
+                ],
+                return_type: None,
+                description: Some("Устанавливает значение параметра запроса".to_string()),
+                is_procedure: true,
+            }
+        ];
+        self.method_cache.insert("Запрос".to_string(), query_methods);
+        
+        // Массив methods
+        let array_methods = vec![
+            MethodInfo {
+                name: "Добавить".to_string(),
+                parameters: vec![ParameterInfo {
                     name: "Значение".to_string(),
                     param_type: Some("Произвольный".to_string()),
                     is_optional: false,
                     default_value: None,
-                }
-            ],
-            return_type: None,
-            description: Some("Устанавливает значение параметра запроса".to_string()),
-            is_procedure: true,
-        });
-        self.method_cache.insert("Запрос".to_string(), query_methods);
-        
-        // Массив methods
-        let mut array_methods = Vec::new();
-        array_methods.push(MethodInfo {
-            name: "Добавить".to_string(),
-            parameters: vec![ParameterInfo {
-                name: "Значение".to_string(),
-                param_type: Some("Произвольный".to_string()),
-                is_optional: false,
-                default_value: None,
-            }],
-            return_type: None,
-            description: Some("Добавляет элемент в массив".to_string()),
-            is_procedure: true,
-        });
-        array_methods.push(MethodInfo {
-            name: "Количество".to_string(),
-            parameters: vec![],
-            return_type: Some("Число".to_string()),
-            description: Some("Возвращает количество элементов массива".to_string()),
-            is_procedure: false,
-        });
+                }],
+                return_type: None,
+                description: Some("Добавляет элемент в массив".to_string()),
+                is_procedure: true,
+            },
+            MethodInfo {
+                name: "Количество".to_string(),
+                parameters: vec![],
+                return_type: Some("Число".to_string()),
+                description: Some("Возвращает количество элементов массива".to_string()),
+                is_procedure: false,
+            }
+        ];
         self.method_cache.insert("Массив".to_string(), array_methods);
     }
     
@@ -630,6 +633,7 @@ pub struct SemanticAnalyzer {
     pub type_system: TypeSystem,
     pub config: SemanticAnalysisConfig,
     pub current_scope: Scope,
+    pub current_file_path: std::path::PathBuf,
     pub errors: Vec<AnalysisError>,
     pub warnings: Vec<AnalysisError>,
 }
@@ -640,9 +644,15 @@ impl SemanticAnalyzer {
             type_system: TypeSystem::new(),
             config,
             current_scope: Scope::new("global".to_string(), ScopeType::Global),
+            current_file_path: std::path::PathBuf::new(),
             errors: Vec::new(),
             warnings: Vec::new(),
         }
+    }
+    
+    /// Set current file path for error reporting
+    pub fn set_file_path(&mut self, file_path: std::path::PathBuf) {
+        self.current_file_path = file_path;
     }
     
     /// Perform semantic analysis on AST
@@ -770,14 +780,12 @@ impl SemanticAnalyzer {
             if child.node_type == AstNodeType::Identifier {
                 if let Some(var_name) = child.name() {
                     // Check if variable is declared
-                    if self.config.check_undefined_variables {
-                        if self.current_scope.get_variable(var_name).is_none() {
-                            self.add_warning(
-                                format!("Variable '{}' is used but not declared", var_name),
-                                child.position(),
-                                ErrorLevel::Warning,
-                            );
-                        }
+                    if self.config.check_undefined_variables && self.current_scope.get_variable(var_name).is_none() {
+                        self.add_warning(
+                            format!("Variable '{}' is used but not declared", var_name),
+                            child.position(),
+                            ErrorLevel::Warning,
+                        );
                     }
                     
                     // Mark as used
@@ -1161,7 +1169,7 @@ impl SemanticAnalyzer {
             
             // Check if first token is "Новый" (keyword) and second is identifier
             if matches!(first_child.node_type, AstNodeType::Keyword) &&
-               first_child.value.as_ref().map_or(false, |v| v == "Новый") &&
+               first_child.value.as_ref().is_some_and(|v| v == "Новый") &&
                matches!(second_child.node_type, AstNodeType::Identifier) {
                 
                 if let Some(type_name) = &second_child.value {
@@ -1240,8 +1248,8 @@ impl SemanticAnalyzer {
         let mut matrix = vec![vec![0; len2 + 1]; len1 + 1];
         
         // Initialize first row and column
-        for i in 0..=len1 {
-            matrix[i][0] = i;
+        for (i, row) in matrix.iter_mut().enumerate().take(len1 + 1) {
+            row[0] = i;
         }
         for j in 0..=len2 {
             matrix[0][j] = j;
@@ -1283,7 +1291,7 @@ impl SemanticAnalyzer {
     }
     
     fn add_error(&mut self, message: String, position: Position, level: ErrorLevel) {
-        let error = AnalysisError::new(message, position, level);
+        let error = AnalysisError::new(message, self.current_file_path.clone(), position, level);
         match level {
             ErrorLevel::Error => self.errors.push(error),
             ErrorLevel::Warning => self.warnings.push(error),
@@ -1292,18 +1300,18 @@ impl SemanticAnalyzer {
     }
     
     fn add_warning(&mut self, message: String, position: Position, level: ErrorLevel) {
-        let warning = AnalysisError::new(message, position, level);
+        let warning = AnalysisError::new(message, self.current_file_path.clone(), position, level);
         self.warnings.push(warning);
     }
     
     fn add_warning_with_suggestion(&mut self, message: String, position: Position, level: ErrorLevel, suggestion: String) {
-        let warning = AnalysisError::new(message, position, level)
+        let warning = AnalysisError::new(message, self.current_file_path.clone(), position, level)
             .with_suggestion(suggestion);
         self.warnings.push(warning);
     }
     
     fn add_error_with_suggestion(&mut self, message: String, position: Position, level: ErrorLevel, suggestion: String) {
-        let error = AnalysisError::new(message, position, level)
+        let error = AnalysisError::new(message, self.current_file_path.clone(), position, level)
             .with_suggestion(suggestion);
         
         match level {
@@ -1334,7 +1342,7 @@ impl Default for SemanticAnalyzer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::ast::{AstNode, Span};
+    // use crate::parser::ast::{AstNode, Span}; // Unused imports
 
     #[test]
     fn test_scope_creation() {

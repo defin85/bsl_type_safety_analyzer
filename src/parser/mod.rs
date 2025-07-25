@@ -29,6 +29,7 @@ pub mod lexer;
 pub mod grammar;
 pub mod ast;
 pub mod syntax_analyzer;
+pub mod incremental;
 
 #[cfg(test)]
 mod syntax_analyzer_integration_test;
@@ -36,6 +37,7 @@ mod syntax_analyzer_integration_test;
 pub use ast::{AstNode, AstNodeType, Position, Span};
 pub use lexer::{BslLexer, Token, TokenType};
 pub use syntax_analyzer::SyntaxAnalyzer;
+pub use incremental::{IncrementalParser, TextEdit};
 
 use anyhow::{Context, Result};
 use std::path::Path;

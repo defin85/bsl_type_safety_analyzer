@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cargo check:*)",
+      "Bash(cargo test:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(grep:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo run:*)",
+      "Bash(cargo tree:*)",
+      "Bash(rustc:*)",
+      "Bash(./test_fix)",
+      "Bash(cargo clippy:*)",
+      "Bash(cargo --version)",
+      "Bash(target/release/bsl-analyzer.exe:*)"
+    ],
+    "deny": []
+  }
+}

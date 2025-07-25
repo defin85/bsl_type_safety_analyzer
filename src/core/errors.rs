@@ -7,6 +7,7 @@ Ported from Python implementation with enhanced type safety.
 
 use serde::{Deserialize, Serialize};
 use std::fmt;
+use std::path::PathBuf;
 use crate::parser::ast::Position;
 
 /// Error severity levels
@@ -30,9 +31,10 @@ impl fmt::Display for ErrorLevel {
 }
 
 /// Analysis error with position and context
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AnalysisError {
     pub message: String,
+    pub file_path: PathBuf,
     pub position: Position,
     pub level: ErrorLevel,
     pub error_code: Option<String>,
@@ -41,9 +43,10 @@ pub struct AnalysisError {
 }
 
 impl AnalysisError {
-    pub fn new(message: String, position: Position, level: ErrorLevel) -> Self {
+    pub fn new(message: String, file_path: PathBuf, position: Position, level: ErrorLevel) -> Self {
         Self {
             message,
+            file_path,
             position,
             level,
             error_code: None,
@@ -104,8 +107,8 @@ impl ErrorCollector {
         self.errors.push(error);
     }
     
-    pub fn add_simple_error(&mut self, message: String, position: Position, level: ErrorLevel) {
-        self.add_error(AnalysisError::new(message, position, level));
+    pub fn add_simple_error(&mut self, message: String, file_path: PathBuf, position: Position, level: ErrorLevel) {
+        self.add_error(AnalysisError::new(message, file_path, position, level));
     }
     
     pub fn has_errors(&self) -> bool {

@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn test_lexical_analyzer_creation() {
-        let analyzer = create_test_analyzer();
+        let _analyzer = create_test_analyzer();
         // Analyzer should be created successfully
         assert!(true);
     }
@@ -186,7 +186,7 @@ mod tests {
             .collect();
         assert_eq!(number_tokens.len(), 3);
         
-        let expected_numbers = vec!["123", "45.67", "0"];
+        let expected_numbers = ["123", "45.67", "0"];
         for (i, expected) in expected_numbers.iter().enumerate() {
             assert_eq!(number_tokens[i].value, *expected);
         }

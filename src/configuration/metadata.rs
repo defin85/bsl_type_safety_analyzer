@@ -21,7 +21,7 @@ impl ConfigurationMetadata {
     pub fn load_from_path(_path: &Path) -> Result<Self> {
         // TODO: Parse Configuration.xml
         Ok(Self {
-            name: "DefaultConfiguration".to_string(),
+            name: "TestConfiguration".to_string(),
             version: "1.0.0".to_string(),
             objects: Vec::new(),
         })

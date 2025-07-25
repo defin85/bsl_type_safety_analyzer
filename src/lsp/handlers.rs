@@ -5,11 +5,13 @@ use tower_lsp::{
 };
 use crate::parser::BslParser;
 
+#[allow(dead_code)]
 pub struct LspHandlers {
     client: Client,
     parser: BslParser,
 }
 
+#[allow(dead_code)]
 impl LspHandlers {
     pub fn new(client: Client) -> Self {
         Self {
