@@ -32,6 +32,7 @@ let completions = syntax_db.get_completion_items("Сообщ");
 */
 
 pub mod hbk_parser;
+pub mod hbk_parser_full;
 pub mod bsl_syntax_extractor;
 
 pub use hbk_parser::{HbkArchiveParser, HtmlContent, ArchiveAnalysis, FileInfo};

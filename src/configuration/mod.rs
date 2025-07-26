@@ -16,6 +16,7 @@ pub mod dependencies;
 // New integrated parsers
 pub mod metadata_parser;
 pub mod form_parser;
+pub mod module_generator;
 
 pub use metadata::{ConfigurationMetadata, MetadataObject};
 pub use modules::{BslModule, ModuleType};
@@ -31,6 +32,7 @@ pub use form_parser::{
     FormXmlParser, FormContract, FormType, FormStructure, FormElement,
     FormAttribute, FormCommand, FormElementType, CommandRepresentation
 };
+pub use module_generator::{ModuleGenerator, ModuleContract};
 
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
@@ -169,6 +171,67 @@ impl Configuration {
         
         tracing::info!("Parsed {} form contracts", contracts.len());
         Ok(contracts)
+    }
+    
+    /// Loads configuration with external report path
+    pub fn from_directory_with_report<P: AsRef<Path>, R: AsRef<Path>>(
+        config_path: P,
+        report_path: R,
+    ) -> Result<Self> {
+        let path = config_path.as_ref().to_path_buf();
+        let report_path = report_path.as_ref();
+        
+        tracing::info!("Loading configuration from: {}", path.display());
+        tracing::info!("Using external report: {}", report_path.display());
+        
+        // Load metadata from Configuration.xml
+        let metadata = ConfigurationMetadata::load_from_path(&path)
+            .context("Failed to load configuration metadata")?;
+        
+        // Discover BSL modules
+        let modules = Self::discover_bsl_modules(&path)
+            .context("Failed to discover BSL modules")?;
+        
+        // Load configuration objects
+        let objects = Self::load_configuration_objects(&path, &metadata)
+            .context("Failed to load configuration objects")?;
+        
+        // Build dependency graph
+        let dependencies = DependencyGraph::build_for_configuration(&modules, &objects)
+            .context("Failed to build dependency graph")?;
+        
+        // Parse metadata contracts from external report
+        let metadata_contracts = if report_path.exists() {
+            let parser = MetadataReportParser::new()
+                .context("Failed to create metadata report parser")?;
+            parser.parse_report(report_path)
+                .context("Failed to parse configuration report")?
+        } else {
+            tracing::warn!("External report file not found: {}", report_path.display());
+            Vec::new()
+        };
+        
+        // Parse form contracts from XML files
+        let forms = Self::parse_form_contracts(&path)
+            .context("Failed to parse form contracts")?;
+        
+        tracing::info!(
+            "Configuration loaded: {} modules, {} objects, {} metadata contracts, {} forms",
+            modules.len(),
+            objects.len(),
+            metadata_contracts.len(),
+            forms.len()
+        );
+        
+        Ok(Configuration {
+            path,
+            metadata,
+            modules,
+            objects,
+            dependencies,
+            metadata_contracts,
+            forms,
+        })
     }
     
     /// Gets module by name

@@ -35,7 +35,7 @@ pub mod incremental;
 mod syntax_analyzer_integration_test;
 
 pub use ast::{AstNode, AstNodeType, Position, Span};
-pub use lexer::{BslLexer, Token, TokenType};
+pub use lexer::{BslLexer, Token, TokenType, read_bsl_file};
 pub use syntax_analyzer::SyntaxAnalyzer;
 pub use incremental::{IncrementalParser, TextEdit};
 
@@ -66,9 +66,9 @@ impl BslParser {
             .context("Syntax analysis failed")
     }
     
-    /// Parses BSL file
+    /// Parses BSL file with proper encoding detection and BOM handling
     pub fn parse_file<P: AsRef<Path>>(&self, file_path: P) -> Result<AstNode> {
-        let content = std::fs::read_to_string(file_path.as_ref())
+        let content = read_bsl_file(file_path.as_ref())
             .with_context(|| format!("Failed to read file: {}", file_path.as_ref().display()))?;
             
         self.parse_text(&content)

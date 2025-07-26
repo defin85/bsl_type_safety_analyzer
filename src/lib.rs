@@ -102,6 +102,7 @@ pub mod parser;
 pub mod reports;  // NEW: Reports module for SARIF, HTML, Text output
 pub mod rules;    // NEW: Rules system for configurable analysis
 pub mod verifiers;
+pub mod contract_generator;  // NEW: Contract generator launcher
 
 // Re-export main types for convenience
 pub use analyzer::{BslAnalyzer, SemanticAnalyzer};
@@ -115,8 +116,9 @@ pub use parser::{BslParser, BslLexer};
 pub use docs_integration::{DocsIntegration, BslSyntaxDatabase, CompletionItem};
 pub use configuration::{
     MetadataReportParser, FormXmlParser, MetadataContract, FormContract,
-    ObjectType, FormType
+    ObjectType, FormType, ModuleGenerator, ModuleContract
 };
+pub use contract_generator::{ContractGeneratorLauncher, GenerationComponents};
 
 // NEW: Re-export reports functionality
 pub use reports::{

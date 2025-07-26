@@ -23,9 +23,10 @@ use std::collections::HashMap;
 use std::path::Path;
 use serde::{Deserialize, Serialize};
 use regex::Regex;
-use anyhow::{Context, Result};
+use anyhow::Result;
+use scraper::{Html, Selector, ElementRef};
 
-use super::hbk_parser::{HbkArchiveParser, HtmlContent};
+use super::hbk_parser_full::{HbkArchiveParser, LinkInfo};
 
 /// База знаний синтаксиса BSL (замена Python categorized syntax)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -54,14 +55,25 @@ pub struct BslObjectInfo {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BslMethodInfo {
     pub name: String,
-    pub syntax_variants: Vec<String>,
+    pub english_name: Option<String>,
+    pub syntax_variants: Vec<SyntaxVariant>,
     pub parameters: Vec<ParameterInfo>,
+    pub parameters_by_variant: HashMap<String, Vec<ParameterInfo>>,
     pub return_type: Option<String>,
+    pub return_type_description: Option<String>,
     pub description: Option<String>,
-    pub availability: Option<String>,
+    pub availability: Vec<String>,
     pub version: Option<String>,
     pub examples: Vec<String>,
     pub object_context: Option<String>, // К какому объекту относится метод
+    pub links: Vec<LinkInfo>,
+}
+
+/// Вариант синтаксиса метода
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SyntaxVariant {
+    pub variant_name: String,
+    pub syntax: String,
 }
 
 /// Информация о свойстве BSL
@@ -101,9 +113,11 @@ pub struct BslOperatorInfo {
 pub struct ParameterInfo {
     pub name: String,
     pub param_type: Option<String>,
+    pub type_description: Option<String>,
     pub description: Option<String>,
     pub is_optional: bool,
     pub default_value: Option<String>,
+    pub link: Option<String>,
 }
 
 /// Режим доступа к свойству
@@ -134,13 +148,161 @@ pub enum CompletionItemKind {
     Keyword,
 }
 
+/// Информация об элементах коллекции
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CollectionElementsInfo {
+    pub description: Option<String>,
+    pub usage: Option<String>,
+    pub element_type: Option<String>,
+}
+
 /// Извлекатель синтаксиса BSL (замена Python BSLSyntaxExtractor)
 pub struct BslSyntaxExtractor {
     hbk_parser: HbkArchiveParser,
     syntax_patterns: HashMap<String, Regex>,
+    type_mapping: HashMap<String, TypeInfo>,
+}
+
+/// Информация о типе
+#[derive(Debug, Clone)]
+struct TypeInfo {
+    type_name: String,
+    description: String,
 }
 
 impl BslSyntaxExtractor {
+    /// Извлекает тип и описание из ссылки v8help
+    fn extract_type_from_link(&self, link: &str) -> (String, String) {
+        if link.is_empty() {
+            return (String::new(), String::new());
+        }
+        
+        // Базовые типы языка
+        if link.contains("def_") {
+            let type_key = link.split("def_").last().unwrap_or("");
+            if let Some(type_info) = self.type_mapping.get(type_key) {
+                return (type_info.type_name.clone(), type_info.description.clone());
+            } else {
+                return (type_key.to_string(), format!("Базовый тип: {}", type_key));
+            }
+        }
+        
+        // Объектные типы
+        if link.contains("objects/") {
+            let object_path = link.split("objects/").last().unwrap_or("").replace(".html", "");
+            let object_name = object_path.split('/').last().unwrap_or("");
+            
+            if let Some(type_info) = self.type_mapping.get(object_name) {
+                return (type_info.type_name.clone(), type_info.description.clone());
+            } else {
+                return (object_name.to_string(), format!("Объект: {}", object_name));
+            }
+        }
+        
+        (String::new(), String::new())
+    }
+    
+    /// Извлекает варианты синтаксиса
+    fn extract_syntax_variants(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        let mut current_variant: Option<String> = None;
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            
+            if text.contains("Вариант синтаксиса:") {
+                // Начинаем новый вариант
+                current_variant = Some(text.replace("Вариант синтаксиса:", "").trim().to_string());
+            } else if text.contains("Синтаксис:") || text.contains("Синтаксис") {
+                // Ищем синтаксис
+                if let Some(syntax_text) = self.get_next_text_content(&elem) {
+                    if let Some(variant_name) = &current_variant {
+                        syntax_info.syntax_variants.push(SyntaxVariant {
+                            variant_name: variant_name.clone(),
+                            syntax: syntax_text.clone(),
+                        });
+                    } else {
+                        // Обычный синтаксис (без вариантов)
+                        syntax_info.syntax = syntax_text;
+                    }
+                }
+            }
+        }
+        
+        // Если есть варианты, используем первый как основной синтаксис
+        if !syntax_info.syntax_variants.is_empty() && syntax_info.syntax.is_empty() {
+            syntax_info.syntax = syntax_info.syntax_variants[0].syntax.clone();
+        }
+        
+        Ok(())
+    }
+    
+    /// Получает следующий текстовый контент после элемента
+    fn get_next_text_content(&self, elem: &ElementRef) -> Option<String> {
+        let mut current = elem.next_sibling();
+        while let Some(node) = current {
+            if let Some(elem_ref) = ElementRef::wrap(node) {
+                let tag_name = elem_ref.value().name();
+                if tag_name != "p" || !elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                    let text = elem_ref.text().collect::<String>().trim().to_string();
+                    if !text.is_empty() && text != "Параметры:" {
+                        return Some(text);
+                    }
+                }
+            } else if let Some(text_node) = node.value().as_text() {
+                let text = text_node.trim();
+                if !text.is_empty() {
+                    return Some(text.to_string());
+                }
+            }
+            current = node.next_sibling();
+        }
+        None
+    }
+    
+    /// Извлекает описание
+    fn extract_description(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Описание") {
+                let _p_selector = Selector::parse("p").unwrap();
+                if let Some(desc_elem) = elem.next_siblings()
+                    .filter_map(ElementRef::wrap)
+                    .find(|e| e.value().name() == "p" && !e.value().attr("class").unwrap_or("").contains("V8SH_chapter")) {
+                    syntax_info.description = desc_elem.text().collect::<String>().trim().to_string();
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает доступность
+    fn extract_availability(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Доступность") {
+                if let Some(avail_elem) = elem.next_siblings()
+                    .filter_map(ElementRef::wrap)
+                    .find(|e| e.value().name() == "p") {
+                    let availability_text = avail_elem.text().collect::<String>().trim().to_string();
+                    // Разбиваем по запятым и очищаем
+                    syntax_info.availability = availability_text
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect();
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
     /// Создает новый извлекатель синтаксиса
     pub fn new<P: AsRef<Path>>(hbk_archive_path: P) -> Self {
         let mut patterns = HashMap::new();
@@ -162,9 +324,57 @@ impl BslSyntaxExtractor {
             patterns.insert("version".to_string(), version_regex);
         }
         
+        // Инициализируем справочник типов
+        let mut type_mapping = HashMap::new();
+        type_mapping.insert("def_String".to_string(), TypeInfo {
+            type_name: "String".to_string(),
+            description: "Строковый тип данных".to_string(),
+        });
+        type_mapping.insert("def_Number".to_string(), TypeInfo {
+            type_name: "Number".to_string(),
+            description: "Числовой тип данных".to_string(),
+        });
+        type_mapping.insert("def_Boolean".to_string(), TypeInfo {
+            type_name: "Boolean".to_string(),
+            description: "Логический тип данных".to_string(),
+        });
+        type_mapping.insert("def_BooleanTrue".to_string(), TypeInfo {
+            type_name: "Boolean".to_string(),
+            description: "Логический тип данных (Истина)".to_string(),
+        });
+        type_mapping.insert("def_Date".to_string(), TypeInfo {
+            type_name: "Date".to_string(),
+            description: "Тип данных Дата".to_string(),
+        });
+        type_mapping.insert("def_Time".to_string(), TypeInfo {
+            type_name: "Time".to_string(),
+            description: "Тип данных Время".to_string(),
+        });
+        type_mapping.insert("Array".to_string(), TypeInfo {
+            type_name: "Array".to_string(),
+            description: "Массив значений".to_string(),
+        });
+        type_mapping.insert("Structure".to_string(), TypeInfo {
+            type_name: "Structure".to_string(),
+            description: "Структура данных".to_string(),
+        });
+        type_mapping.insert("ValueTable".to_string(), TypeInfo {
+            type_name: "ValueTable".to_string(),
+            description: "Таблица значений".to_string(),
+        });
+        type_mapping.insert("FormDataCollectionItem".to_string(), TypeInfo {
+            type_name: "FormDataCollectionItem".to_string(),
+            description: "Элемент коллекции данных формы".to_string(),
+        });
+        type_mapping.insert("FormDataTreeItem".to_string(), TypeInfo {
+            type_name: "FormDataTreeItem".to_string(),
+            description: "Элемент дерева данных формы".to_string(),
+        });
+        
         Self {
             hbk_parser: HbkArchiveParser::new(hbk_archive_path),
             syntax_patterns: patterns,
+            type_mapping,
         }
     }
     
@@ -172,8 +382,8 @@ impl BslSyntaxExtractor {
     pub fn extract_syntax_database(&mut self, max_files: Option<usize>) -> Result<BslSyntaxDatabase> {
         tracing::info!("Extracting BSL syntax database");
         
-        let sample_content = self.hbk_parser.extract_sample_content(max_files.unwrap_or(usize::MAX))
-            .context("Failed to extract sample content from HBK archive")?;
+        // Открываем архив
+        self.hbk_parser.open_archive()?;
         
         let mut database = BslSyntaxDatabase {
             objects: HashMap::new(),
@@ -184,10 +394,37 @@ impl BslSyntaxExtractor {
             keywords: Vec::new(),
         };
         
+        // Получаем список HTML файлов
+        let html_files: Vec<String> = self.hbk_parser.list_contents()
+            .into_iter()
+            .filter(|f| f.ends_with(".html") || f.ends_with(".htm"))
+            .collect();
+        
+        let files_to_process = if let Some(max) = max_files {
+            html_files.into_iter().take(max).collect()
+        } else {
+            html_files
+        };
+        
+        tracing::info!("Processing {} HTML files", files_to_process.len());
+        
         // Обрабатываем каждый HTML файл
-        for content in sample_content {
-            if let Err(e) = self.categorize_and_extract_syntax(&content, &mut database) {
-                tracing::warn!("Failed to extract syntax from content: {}", e);
+        for (i, filename) in files_to_process.iter().enumerate() {
+            if i > 0 && i % 100 == 0 {
+                tracing::info!("Processed {} files...", i);
+            }
+            
+            // Извлекаем содержимое файла
+            if let Some(html_content) = self.hbk_parser.extract_file_content(filename) {
+                // Парсим HTML и извлекаем синтаксическую информацию
+                match self.extract_syntax_info(&html_content, filename) {
+                    Ok(syntax_info) => {
+                        self.categorize_syntax(syntax_info, &mut database);
+                    }
+                    Err(e) => {
+                        tracing::warn!("Failed to extract syntax from {}: {}", filename, e);
+                    }
+                }
             }
         }
         
@@ -205,63 +442,459 @@ impl BslSyntaxExtractor {
         Ok(database)
     }
     
-    /// Классифицирует и извлекает синтаксис из HTML контента
-    fn categorize_and_extract_syntax(&self, content: &HtmlContent, database: &mut BslSyntaxDatabase) -> Result<()> {
-        if let Some(title) = &content.title {
-            let title_clean = title.trim();
+    /// Извлекает информацию о синтаксисе из HTML контента (полный порт Python extract_syntax_info)
+    pub fn extract_syntax_info(&self, html_content: &str, filename: &str) -> Result<SyntaxInfo> {
+        if html_content.is_empty() {
+            anyhow::bail!("Empty HTML content");
+        }
+        
+        let document = Html::parse_document(html_content);
+        let mut syntax_info = SyntaxInfo {
+            filename: filename.to_string(),
+            title: String::new(),
+            syntax: String::new(),
+            syntax_variants: Vec::new(),
+            description: String::new(),
+            parameters: Vec::new(),
+            parameters_by_variant: HashMap::new(),
+            return_value: String::new(),
+            example: String::new(),
+            category: String::new(),
+            links: Vec::new(),
+            availability: Vec::new(),
+            version: String::new(),
+            methods: Vec::new(),
+            collection_elements: None,
+        };
+        
+        // Извлекаем заголовок
+        let title_selector = Selector::parse("h1.V8SH_pagetitle").unwrap();
+        if let Some(title_elem) = document.select(&title_selector).next() {
+            syntax_info.title = title_elem.text().collect::<String>().trim().to_string();
+        }
+        
+        // Определяем категорию по пути файла
+        if filename.contains("objects/") {
+            syntax_info.category = "object".to_string();
+        } else if filename.contains("tables/") {
+            syntax_info.category = "table".to_string();
+        } else if filename.contains("methods/") {
+            syntax_info.category = "method".to_string();
+        } else if filename.contains("properties/") {
+            syntax_info.category = "property".to_string();
+        }
+        
+        // Извлекаем синтаксис и другие элементы
+        self.extract_syntax_variants(&document, &mut syntax_info)?;
+        self.extract_description(&document, &mut syntax_info)?;
+        self.extract_availability(&document, &mut syntax_info)?;
+        self.extract_parameters(&document, &mut syntax_info)?;
+        self.extract_return_value(&document, &mut syntax_info)?;
+        self.extract_version(&document, &mut syntax_info)?;
+        self.extract_example(&document, &mut syntax_info)?;
+        self.extract_object_methods(&document, &mut syntax_info)?;
+        self.extract_collection_elements(&document, &mut syntax_info)?;
+        self.extract_links(&document, &mut syntax_info)?;
+        
+        Ok(syntax_info)
+    }
+    
+    /// Классифицирует синтаксическую информацию и добавляет в базу данных
+    fn categorize_syntax(&self, syntax_info: SyntaxInfo, database: &mut BslSyntaxDatabase) {
+        let title = syntax_info.title.trim();
+        if title.is_empty() {
+            return;
+        }
+        
+        // Определяем тип по заголовку и синтаксису
+        if title.contains("Функция") || title.to_lowercase().contains("function") {
+            if let Ok(function_info) = self.convert_to_function_info(syntax_info) {
+                database.functions.insert(function_info.name.clone(), function_info);
+            }
+        } else if title.contains("Метод") || title.to_lowercase().contains("method") {
+            if let Ok(method_info) = self.convert_to_method_info(syntax_info) {
+                database.methods.insert(method_info.name.clone(), method_info);
+            }
+        } else if title.contains("Свойство") || title.to_lowercase().contains("property") {
+            if let Ok(property_info) = self.convert_to_property_info(syntax_info) {
+                database.properties.insert(property_info.name.clone(), property_info);
+            }
+        } else if title.contains("Оператор") || title.to_lowercase().contains("operator") {
+            if let Ok(operator_info) = self.convert_to_operator_info(syntax_info) {
+                database.operators.insert(operator_info.operator.clone(), operator_info);
+            }
+        } else if syntax_info.category == "object" {
+            if let Ok(object_info) = self.convert_to_object_info(syntax_info) {
+                database.objects.insert(object_info.name.clone(), object_info);
+            }
+        } else {
+            // По умолчанию добавляем в объекты
+            if let Ok(object_info) = self.convert_to_object_info(syntax_info) {
+                database.objects.insert(object_info.name.clone(), object_info);
+            }
+        }
+    }
+    
+    /// Извлекает параметры с поддержкой вариантов
+    fn extract_parameters(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        let _rubric_selector = Selector::parse("div.V8SH_rubric").unwrap();
+        let mut current_variant: Option<String> = None;
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
             
-            if title_clean.is_empty() {
-                return Ok(());
+            // Определяем текущий вариант
+            if text.contains("Вариант синтаксиса:") {
+                current_variant = Some(text.replace("Вариант синтаксиса:", "").trim().to_string());
+                if let Some(variant) = &current_variant {
+                    syntax_info.parameters_by_variant.insert(variant.clone(), Vec::new());
+                }
             }
             
-            // Определяем тип синтаксического элемента и извлекаем информацию
-            if self.is_object_syntax(title_clean) {
-                let object_info = self.extract_object_info(content)?;
-                database.objects.insert(object_info.name.clone(), object_info);
-            } else if self.is_method_syntax(title_clean) {
-                let method_info = self.extract_method_info(content)?;
-                database.methods.insert(method_info.name.clone(), method_info);
-            } else if self.is_property_syntax(title_clean) {
-                let property_info = self.extract_property_info(content)?;
-                database.properties.insert(property_info.name.clone(), property_info);
-            } else if self.is_function_syntax(title_clean) {
-                let function_info = self.extract_function_info(content)?;
-                database.functions.insert(function_info.name.clone(), function_info);
-            } else if self.is_operator_syntax(title_clean) {
-                let operator_info = self.extract_operator_info(content)?;
-                database.operators.insert(operator_info.operator.clone(), operator_info);
+            // Извлекаем параметры
+            if text.contains("Параметры:") {
+                // Ищем все div с классом V8SH_rubric до следующего заголовка
+                let mut current = elem.next_sibling();
+                while let Some(node) = current {
+                    if let Some(elem_ref) = ElementRef::wrap(node) {
+                        if elem_ref.value().name() == "p" && elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                            break;
+                        }
+                        
+                        if elem_ref.value().name() == "div" && elem_ref.value().attr("class").unwrap_or("").contains("V8SH_rubric") {
+                            if let Ok(param_info) = self.extract_parameter_info(&elem_ref) {
+                                // Добавляем в общий список
+                                syntax_info.parameters.push(param_info.clone());
+                                
+                                // Добавляем к текущему варианту, если есть
+                                if let Some(variant) = &current_variant {
+                                    if let Some(variant_params) = syntax_info.parameters_by_variant.get_mut(variant) {
+                                        variant_params.push(param_info);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    current = node.next_sibling();
+                }
             }
         }
         
         Ok(())
     }
     
-    /// Извлекает информацию о методе из HTML контента
-    fn extract_method_info(&self, content: &HtmlContent) -> Result<BslMethodInfo> {
-        let method_name = self.extract_method_name(&content.title.as_deref().unwrap_or(""));
+    /// Извлекает информацию об одном параметре
+    fn extract_parameter_info(&self, param_block: &ElementRef) -> Result<ParameterInfo> {
+        let mut param_info = ParameterInfo {
+            name: String::new(),
+            param_type: None,
+            type_description: None,
+            description: None,
+            is_optional: false,
+            default_value: None,
+            link: None,
+        };
+        
+        let param_text = param_block.text().collect::<String>();
+        
+        // Извлекаем имя параметра между < >
+        if let Some(start) = param_text.find('<') {
+            if let Some(end) = param_text.find('>') {
+                if end > start {
+                    param_info.name = param_text[start + 1..end].trim().to_string();
+                }
+            }
+        }
+        
+        // Проверяем обязательность
+        param_info.is_optional = param_text.contains("(необязательный)");
+        
+        // Ищем ссылку на тип
+        let link_selector = Selector::parse("a").unwrap();
+        if let Some(type_link) = param_block.select(&link_selector).next() {
+            if let Some(href) = type_link.value().attr("href") {
+                param_info.link = Some(href.to_string());
+                
+                // Извлекаем тип и описание из ссылки
+                let (type_name, type_desc) = self.extract_type_from_link(href);
+                if !type_name.is_empty() {
+                    param_info.param_type = Some(type_name);
+                    param_info.type_description = Some(type_desc);
+                }
+            }
+        }
+        
+        // Ищем описание параметра в следующем элементе
+        if let Some(next_sibling) = param_block.next_sibling() {
+            if let Some(next_elem) = ElementRef::wrap(next_sibling) {
+                let type_text = next_elem.text().collect::<String>();
+                
+                // Извлекаем тип после "Тип:"
+                if type_text.contains("Тип:") {
+                    if let Some(type_start) = type_text.find("Тип:") {
+                        let type_end = type_text.find('.').unwrap_or(type_text.len());
+                        if type_end > type_start + 4 {
+                            let param_type = type_text[type_start + 4..type_end].trim().to_string();
+                            if param_info.param_type.is_none() {
+                                param_info.param_type = Some(param_type);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        Ok(param_info)
+    }
+    
+    /// Извлекает возвращаемое значение
+    fn extract_return_value(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Возвращаемое значение") {
+                if let Some(return_elem) = elem.next_siblings()
+                    .filter_map(ElementRef::wrap)
+                    .find(|e| e.value().name() == "p") {
+                    syntax_info.return_value = return_elem.text().collect::<String>().trim().to_string();
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает версию
+    fn extract_version(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Использование в версии") {
+                let _version_selector = Selector::parse("p.V8SH_versionInfo").unwrap();
+                if let Some(version_elem) = elem.next_siblings()
+                    .filter_map(ElementRef::wrap)
+                    .find(|e| e.value().attr("class").unwrap_or("").contains("V8SH_versionInfo")) {
+                    let version_text = version_elem.text().collect::<String>().trim().to_string();
+                    // Извлекаем номер версии
+                    if let Some(version_pos) = version_text.find("версии") {
+                        syntax_info.version = version_text[version_pos + 6..].trim().to_string();
+                    }
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает пример
+    fn extract_example(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Пример") {
+                let _table_selector = Selector::parse("table").unwrap();
+                if let Some(table) = elem.next_siblings()
+                    .filter_map(ElementRef::wrap)
+                    .find(|e| e.value().name() == "table") {
+                    syntax_info.example = table.text().collect::<String>().trim().to_string();
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает методы объекта
+    fn extract_object_methods(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Методы") {
+                // Ищем список методов
+                let mut current = elem.next_sibling();
+                while let Some(node) = current {
+                    if let Some(elem_ref) = ElementRef::wrap(node) {
+                        if elem_ref.value().name() == "ul" {
+                            // Нашли список методов
+                            let li_selector = Selector::parse("li").unwrap();
+                            for li in elem_ref.select(&li_selector) {
+                                let method_text = li.text().collect::<String>().trim().to_string();
+                                if !method_text.is_empty() {
+                                    let method_info = self.parse_method_from_text(&method_text);
+                                    syntax_info.methods.push(method_info);
+                                }
+                            }
+                            break;
+                        } else if elem_ref.value().name() == "p" && elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                            break;
+                        }
+                    }
+                    current = node.next_sibling();
+                }
+                
+                // Если методы не найдены в списке, ищем ссылки
+                if syntax_info.methods.is_empty() {
+                    self.extract_method_links(document, syntax_info);
+                }
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает методы из ссылок
+    fn extract_method_links(&self, document: &Html, syntax_info: &mut SyntaxInfo) {
+        let link_selector = Selector::parse("a").unwrap();
+        let mut seen_methods = std::collections::HashSet::new();
+        
+        for link in document.select(&link_selector) {
+            if let Some(href) = link.value().attr("href") {
+                if href.contains("methods/") {
+                    let text = link.text().collect::<String>().trim().to_string();
+                    if !text.is_empty() {
+                        let method_info = self.parse_method_from_text(&text);
+                        let method_key = format!("{}_{}", method_info.name, method_info.english_name);
+                        
+                        if !seen_methods.contains(&method_key) {
+                            syntax_info.methods.push(method_info);
+                            seen_methods.insert(method_key);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /// Парсит информацию о методе из текста
+    fn parse_method_from_text(&self, text: &str) -> MethodInfo {
+        let mut method_info = MethodInfo {
+            name: text.to_string(),
+            english_name: String::new(),
+            full_name: text.to_string(),
+        };
+        
+        // Пытаемся найти английское название в скобках
+        if let Some(start) = text.find('(') {
+            if let Some(end) = text.find(')') {
+                if end > start {
+                    method_info.name = text[..start].trim().to_string();
+                    method_info.english_name = text[start + 1..end].trim().to_string();
+                }
+            }
+        }
+        
+        method_info
+    }
+    
+    /// Извлекает информацию об элементах коллекции
+    fn extract_collection_elements(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Элементы коллекции") {
+                let mut elements_info = CollectionElementsInfo {
+                    description: None,
+                    usage: None,
+                    element_type: None,
+                };
+                
+                // Собираем весь текст до следующего заголовка
+                let mut full_text = String::new();
+                let mut current = elem.next_sibling();
+                
+                while let Some(node) = current {
+                    if let Some(elem_ref) = ElementRef::wrap(node) {
+                        if elem_ref.value().name() == "p" && elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                            break;
+                        }
+                        full_text.push_str(&elem_ref.text().collect::<String>());
+                        full_text.push(' ');
+                    }
+                    current = node.next_sibling();
+                }
+                
+                // Разбиваем на предложения
+                let sentences: Vec<String> = full_text
+                    .split('.')
+                    .map(|s| s.trim().to_string())
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                
+                if !sentences.is_empty() {
+                    // Первое предложение - тип элементов
+                    elements_info.element_type = Some(sentences[0].clone());
+                    
+                    // Ищем информацию об использовании
+                    let usage_sentences: Vec<String> = sentences
+                        .iter()
+                        .filter(|s| s.contains("Для каждого") || s.contains("Из") || s.contains("Цикл") || 
+                                   s.contains("индекс") || s.contains("оператор"))
+                        .cloned()
+                        .collect();
+                    
+                    if !usage_sentences.is_empty() {
+                        elements_info.usage = Some(usage_sentences.join(". "));
+                    }
+                    
+                    // Формируем полное описание
+                    elements_info.description = Some(sentences.join(". "));
+                }
+                
+                syntax_info.collection_elements = Some(elements_info);
+                break;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Извлекает ссылки
+    fn extract_links(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let link_selector = Selector::parse("a").unwrap();
+        
+        for link in document.select(&link_selector) {
+            if let Some(href) = link.value().attr("href") {
+                if href.starts_with("v8help://") {
+                    syntax_info.links.push(LinkInfo {
+                        text: link.text().collect::<String>().trim().to_string(),
+                        href: href.to_string(),
+                    });
+                }
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Преобразует SyntaxInfo в BslMethodInfo
+    fn convert_to_method_info(&self, syntax_info: SyntaxInfo) -> Result<BslMethodInfo> {
+        let method_name = self.extract_method_name(&syntax_info.title);
         
         let mut method_info = BslMethodInfo {
             name: method_name,
-            syntax_variants: content.syntax.clone(),
-            parameters: Vec::new(),
-            return_type: None,
-            description: content.description.clone(),
-            availability: content.availability.clone(),
-            version: content.version.clone(),
-            examples: content.examples.clone(),
+            english_name: None,
+            syntax_variants: syntax_info.syntax_variants,
+            parameters: syntax_info.parameters,
+            parameters_by_variant: syntax_info.parameters_by_variant,
+            return_type: if syntax_info.return_value.is_empty() { None } else { Some(syntax_info.return_value) },
+            return_type_description: None,
+            description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
+            availability: syntax_info.availability,
+            version: if syntax_info.version.is_empty() { None } else { Some(syntax_info.version) },
+            examples: if syntax_info.example.is_empty() { vec![] } else { vec![syntax_info.example] },
             object_context: None,
+            links: syntax_info.links,
         };
-        
-        // Извлекаем параметры из синтаксиса
-        for syntax in &content.syntax {
-            let params = self.parse_parameters_from_syntax(syntax)?;
-            method_info.parameters.extend(params);
-        }
-        
-        // Извлекаем дополнительную информацию с помощью регулярных выражений
-        if let Some(desc) = &content.description {
-            self.extract_additional_info_from_description(desc, &mut method_info);
-        }
         
         // Определяем контекст объекта
         method_info.object_context = self.extract_object_context(&method_info.name);
@@ -269,70 +902,66 @@ impl BslSyntaxExtractor {
         Ok(method_info)
     }
     
-    /// Извлекает информацию об объекте из HTML контента
-    fn extract_object_info(&self, content: &HtmlContent) -> Result<BslObjectInfo> {
-        let object_name = content.title.as_deref().unwrap_or("").to_string();
-        
+    /// Преобразует SyntaxInfo в BslObjectInfo
+    fn convert_to_object_info(&self, syntax_info: SyntaxInfo) -> Result<BslObjectInfo> {
         let object_info = BslObjectInfo {
-            name: object_name.clone(),
-            object_type: content.object_type.as_deref().unwrap_or("object").to_string(),
-            description: content.description.clone(),
-            methods: Vec::new(), // TODO: извлечь из описания
+            name: syntax_info.title.clone(),
+            object_type: syntax_info.category,
+            description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
+            methods: syntax_info.methods.iter().map(|m| m.name.clone()).collect(),
             properties: Vec::new(), // TODO: извлечь из описания
             constructors: Vec::new(), // TODO: извлечь из описания
-            availability: content.availability.clone(),
+            availability: if syntax_info.availability.is_empty() { None } else { Some(syntax_info.availability.join(", ")) },
         };
         
         Ok(object_info)
     }
     
-    /// Извлекает информацию о свойстве из HTML контента
-    fn extract_property_info(&self, content: &HtmlContent) -> Result<BslPropertyInfo> {
-        let property_name = content.title.as_deref().unwrap_or("").to_string();
-        
+    /// Преобразует SyntaxInfo в BslPropertyInfo
+    fn convert_to_property_info(&self, syntax_info: SyntaxInfo) -> Result<BslPropertyInfo> {
         let property_info = BslPropertyInfo {
-            name: property_name,
+            name: syntax_info.title,
             property_type: "Variant".to_string(), // По умолчанию
             access_mode: AccessMode::ReadWrite, // По умолчанию
-            description: content.description.clone(),
-            availability: content.availability.clone(),
+            description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
+            availability: if syntax_info.availability.is_empty() { None } else { Some(syntax_info.availability.join(", ")) },
             object_context: None,
         };
         
         Ok(property_info)
     }
     
-    /// Извлекает информацию о функции из HTML контента
-    fn extract_function_info(&self, content: &HtmlContent) -> Result<BslFunctionInfo> {
-        let function_name = self.extract_method_name(&content.title.as_deref().unwrap_or(""));
+    /// Преобразует SyntaxInfo в BslFunctionInfo
+    fn convert_to_function_info(&self, syntax_info: SyntaxInfo) -> Result<BslFunctionInfo> {
+        let function_name = self.extract_method_name(&syntax_info.title);
         
-        let mut function_info = BslFunctionInfo {
-            name: function_name,
-            syntax_variants: content.syntax.clone(),
-            parameters: Vec::new(),
-            return_type: None,
-            description: content.description.clone(),
-            category: "Global".to_string(), // По умолчанию
-            availability: content.availability.clone(),
-        };
-        
-        // Извлекаем параметры из синтаксиса
-        for syntax in &content.syntax {
-            let params = self.parse_parameters_from_syntax(syntax)?;
-            function_info.parameters.extend(params);
+        let mut syntax_variants = Vec::new();
+        for variant in &syntax_info.syntax_variants {
+            syntax_variants.push(variant.syntax.clone());
         }
+        if syntax_variants.is_empty() && !syntax_info.syntax.is_empty() {
+            syntax_variants.push(syntax_info.syntax);
+        }
+        
+        let function_info = BslFunctionInfo {
+            name: function_name,
+            syntax_variants,
+            parameters: syntax_info.parameters,
+            return_type: if syntax_info.return_value.is_empty() { None } else { Some(syntax_info.return_value) },
+            description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
+            category: "Global".to_string(), // По умолчанию
+            availability: if syntax_info.availability.is_empty() { None } else { Some(syntax_info.availability.join(", ")) },
+        };
         
         Ok(function_info)
     }
     
-    /// Извлекает информацию об операторе из HTML контента
-    fn extract_operator_info(&self, content: &HtmlContent) -> Result<BslOperatorInfo> {
-        let operator_name = content.title.as_deref().unwrap_or("").to_string();
-        
+    /// Преобразует SyntaxInfo в BslOperatorInfo
+    fn convert_to_operator_info(&self, syntax_info: SyntaxInfo) -> Result<BslOperatorInfo> {
         let operator_info = BslOperatorInfo {
-            operator: operator_name,
-            syntax: content.syntax.first().cloned().unwrap_or_default(),
-            description: content.description.clone(),
+            operator: syntax_info.title,
+            syntax: syntax_info.syntax,
+            description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
             precedence: 0, // TODO: определить приоритет
         };
         
@@ -377,9 +1006,11 @@ impl BslSyntaxExtractor {
         let mut parameter = ParameterInfo {
             name: param.to_string(),
             param_type: None,
+            type_description: None,
             description: None,
             is_optional: false,
             default_value: None,
+            link: None,
         };
         
         // Проверяем наличие значения по умолчанию
@@ -403,7 +1034,7 @@ impl BslSyntaxExtractor {
         // Извлекаем доступность
         if let Some(availability_regex) = self.syntax_patterns.get("availability") {
             if let Some(captures) = availability_regex.captures(description) {
-                method_info.availability = Some(captures[1].trim().to_string());
+                method_info.availability = vec![captures[1].trim().to_string()];
             }
         }
         
@@ -494,6 +1125,34 @@ impl BslSyntaxExtractor {
     }
 }
 
+/// Промежуточная структура для хранения распарсенной синтаксической информации
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct SyntaxInfo {
+    pub filename: String,
+    pub title: String,
+    pub syntax: String,
+    pub syntax_variants: Vec<SyntaxVariant>,
+    pub description: String,
+    pub parameters: Vec<ParameterInfo>,
+    pub parameters_by_variant: HashMap<String, Vec<ParameterInfo>>,
+    pub return_value: String,
+    pub example: String,
+    pub category: String,
+    pub links: Vec<LinkInfo>,
+    pub availability: Vec<String>,
+    pub version: String,
+    pub methods: Vec<MethodInfo>,
+    pub collection_elements: Option<CollectionElementsInfo>,
+}
+
+/// Информация о методе объекта
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct MethodInfo {
+    pub name: String,
+    pub english_name: String,
+    pub full_name: String,
+}
+
 impl BslSyntaxDatabase {
     /// Поиск методов по запросу
     pub fn search_methods(&self, query: &str) -> Vec<&BslMethodInfo> {
@@ -518,7 +1177,7 @@ impl BslSyntaxDatabase {
             if method.name.to_lowercase().starts_with(&prefix_lower) {
                 items.push(CompletionItem {
                     label: method.name.clone(),
-                    detail: method.syntax_variants.first().cloned(),
+                    detail: method.syntax_variants.first().map(|v| v.syntax.clone()),
                     documentation: method.description.clone(),
                     insert_text: Some(self.generate_method_insert_text(method)),
                     kind: CompletionItemKind::Method,

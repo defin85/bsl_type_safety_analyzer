@@ -7,6 +7,7 @@ Command-line interface for BSL (1C:Enterprise) static analyzer.
 use anyhow::{Context, Result};
 use bsl_analyzer::{Configuration, AnalysisEngine, ReportManager, ReportFormat, ReportConfig};
 use bsl_analyzer::{RulesManager, RulesConfig, BuiltinRules, CustomRulesManager};
+use bsl_analyzer::{ContractGeneratorLauncher, GenerationComponents};
 use bsl_analyzer::analyzer::AnalysisResult;
 use bsl_analyzer::core::AnalysisResults;
 use bsl_analyzer::metrics::QualityMetricsManager;
@@ -132,6 +133,48 @@ enum Commands {
     LspConfig {
         #[command(subcommand)]
         command: LspConfigCommands,
+    },
+    
+    /// Generate contracts from 1C configuration
+    GenerateContracts {
+        /// Path to configuration directory
+        #[arg(short = 'c', long)]
+        config_path: PathBuf,
+        
+        /// Path to configuration report (optional)
+        #[arg(short = 'r', long)]
+        report_path: Option<PathBuf>,
+        
+        /// Output directory for contracts
+        #[arg(short, long, default_value = "./contracts")]
+        output: PathBuf,
+        
+        /// Generate metadata contracts
+        #[arg(long, default_value = "true")]
+        metadata: bool,
+        
+        /// Generate form contracts
+        #[arg(long, default_value = "true")]
+        forms: bool,
+        
+        /// Generate module contracts (stub)
+        #[arg(long, default_value = "false")]
+        modules: bool,
+    },
+    
+    /// Parse 1C documentation archive (.hbk)
+    ParseDocs {
+        /// Path to .hbk documentation archive
+        #[arg(short, long)]
+        hbk_path: PathBuf,
+        
+        /// Output directory for parsed documentation
+        #[arg(short, long, default_value = "./docs")]
+        output: PathBuf,
+        
+        /// Maximum files to process (for testing)
+        #[arg(long)]
+        max_files: Option<usize>,
     },
 }
 
@@ -302,6 +345,21 @@ async fn main() -> Result<()> {
         
         Commands::LspConfig { command } => {
             lsp_config_command(command).await?;
+        }
+        
+        Commands::GenerateContracts { config_path, report_path, output, metadata, forms, modules } => {
+            let mut components = vec![];
+            if metadata { components.push("metadata".to_string()); }
+            if forms { components.push("forms".to_string()); }
+            if modules { components.push("modules".to_string()); }
+            generate_contracts_command(config_path, report_path, output, components).await?;
+        }
+        
+        Commands::ParseDocs { hbk_path, output, max_files } => {
+            // For now, default behavior: analyze structure and extract samples
+            let analyze_structure = true;
+            let extract_samples = max_files.is_some();
+            parse_docs_command(hbk_path, output, analyze_structure, extract_samples).await?;
         }
     }
     
@@ -1061,6 +1119,201 @@ fn print_text_results(
             // }
         }
     }
+    
+    Ok(())
+}
+
+
+async fn generate_contracts_command(
+    conf_dir: PathBuf,
+    report_path: Option<PathBuf>,
+    output_dir: PathBuf,
+    components: Vec<String>,
+) -> Result<()> {
+    let term = Term::stdout();
+    term.write_line(&format!(
+        "🚀 {} v{}", 
+        style("Contract Generator").bold().cyan(),
+        env!("CARGO_PKG_VERSION")
+    ))?;
+    
+    // Parse components
+    let generation_components = GenerationComponents {
+        metadata: components.is_empty() || components.contains(&"metadata".to_string()),
+        forms: components.is_empty() || components.contains(&"forms".to_string()),
+        modules: components.contains(&"modules".to_string()),
+    };
+    
+    // Create generator
+    let mut generator = ContractGeneratorLauncher::new(&conf_dir, &output_dir);
+    
+    if let Some(report) = report_path {
+        generator = generator.with_report_path(report);
+    }
+    
+    generator = generator.with_components(generation_components);
+    
+    // Run generation
+    let start_time = Instant::now();
+    let result = generator.run_generation()
+        .context("Contract generation failed")?;
+    
+    let elapsed = start_time.elapsed();
+    
+    // Show summary
+    term.write_line("")?;
+    term.write_line(&format!(
+        "✅ Generation completed in {:.2}s",
+        elapsed.as_secs_f64()
+    ))?;
+    
+    if result.metadata_success {
+        term.write_line(&format!(
+            "   Metadata contracts: {}",
+            style(result.metadata_count).green()
+        ))?;
+    }
+    
+    if result.forms_success {
+        term.write_line(&format!(
+            "   Form contracts: {}",
+            style(result.forms_count).green()
+        ))?;
+    }
+    
+    if result.modules_success {
+        term.write_line(&format!(
+            "   Module contracts: {}",
+            style("Stub").yellow()
+        ))?;
+    }
+    
+    Ok(())
+}
+
+async fn parse_docs_command(
+    hbk_file: PathBuf,
+    output_dir: PathBuf,
+    analyze_structure: bool,
+    extract_samples: bool,
+) -> Result<()> {
+    let term = Term::stdout();
+    term.write_line(&format!(
+        "📚 {} v{}", 
+        style("Documentation Parser").bold().cyan(),
+        env!("CARGO_PKG_VERSION")
+    ))?;
+    
+    // Check if HBK file exists
+    if !hbk_file.exists() {
+        anyhow::bail!("HBK file not found: {}", hbk_file.display());
+    }
+    
+    term.write_line(&format!("Processing: {}", hbk_file.display()))?;
+    
+    // Create output directory
+    std::fs::create_dir_all(&output_dir)
+        .with_context(|| format!("Failed to create output directory: {}", output_dir.display()))?;
+    
+    let start_time = Instant::now();
+    
+    // Create and use HBK parser - use the full version
+    use bsl_analyzer::docs_integration::hbk_parser_full::HbkArchiveParser;
+    
+    let mut parser = HbkArchiveParser::new(&hbk_file);
+    
+    // Open the archive first
+    parser.open_archive()
+        .context("Failed to open HBK archive")?;
+    
+    // Analyze structure if requested
+    if analyze_structure {
+        term.write_line("")?;
+        term.write_line(&style("📂 Analyzing archive structure...").yellow().to_string())?;
+        
+        let structure = parser.analyze_structure()
+            .context("Failed to analyze HBK structure")?;
+        
+        // Save structure to JSON
+        let structure_path = output_dir.join("hbk_structure.json");
+        let json = serde_json::to_string_pretty(&structure)?;
+        std::fs::write(&structure_path, json)?;
+        
+        term.write_line(&format!(
+            "   Structure saved to: {}",
+            structure_path.display()
+        ))?;
+    }
+    
+    // Extract sample files if requested
+    if extract_samples {
+        term.write_line("")?;
+        term.write_line(&style("📄 Extracting sample files...").yellow().to_string())?;
+        
+        let samples = parser.extract_sample_files(10)
+            .context("Failed to extract sample files")?;
+        
+        // Save samples to JSON
+        let samples_path = output_dir.join("sample_contents.json");
+        let json = serde_json::to_string_pretty(&samples)?;
+        std::fs::write(&samples_path, json)?;
+        
+        term.write_line(&format!(
+            "   Extracted {} sample files to: {}",
+            samples.len(),
+            samples_path.display()
+        ))?;
+    }
+    
+    // Always extract BSL syntax information
+    term.write_line("")?;
+    term.write_line(&style("🔍 Extracting BSL syntax information...").yellow().to_string())?;
+    
+    use bsl_analyzer::docs_integration::BslSyntaxExtractor;
+    let extractor = BslSyntaxExtractor::new(&hbk_file);
+    
+    // List contents to find syntax files
+    let contents = parser.list_contents();
+    
+    let mut syntax_count = 0;
+    let mut all_syntax_info = Vec::new();
+    
+    for filename in contents {
+        if filename.ends_with(".htm") || filename.ends_with(".html") {
+            match parser.extract_file_content(&filename) {
+                Some(content) => {
+                    if let Ok(syntax_info) = extractor.extract_syntax_info(&content, &filename) {
+                        if !syntax_info.syntax_variants.is_empty() {
+                            syntax_count += 1;
+                            all_syntax_info.push(syntax_info);
+                        }
+                    }
+                }
+                None => {}
+            }
+        }
+    }
+    
+    // Save syntax information
+    if !all_syntax_info.is_empty() {
+        let syntax_path = output_dir.join("bsl_syntax.json");
+        let json = serde_json::to_string_pretty(&all_syntax_info)?;
+        std::fs::write(&syntax_path, json)?;
+        
+        term.write_line(&format!(
+            "   Extracted {} syntax definitions to: {}",
+            syntax_count,
+            syntax_path.display()
+        ))?;
+    }
+    
+    let elapsed = start_time.elapsed();
+    
+    term.write_line("")?;
+    term.write_line(&format!(
+        "✅ Documentation parsing completed in {:.2}s",
+        elapsed.as_secs_f64()
+    ))?;
     
     Ok(())
 }

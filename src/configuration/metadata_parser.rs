@@ -239,6 +239,11 @@ impl MetadataReportParser {
         let path = report_path.as_ref();
         tracing::info!("Parsing configuration report: {}", path.display());
         
+        // Проверяем существование файла
+        if !path.exists() {
+            anyhow::bail!("Report file not found: {}", path.display());
+        }
+        
         // Читаем файл с поддержкой множественных кодировок
         let (content, encoding_used) = self.read_with_encoding_fallback(path)?;
         

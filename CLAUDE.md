@@ -24,6 +24,12 @@ cargo run --bin bsl-lsp
 
 # Run specific binary
 cargo run --bin bsl-analyzer -- --help
+
+# Generate contracts from 1C configuration
+cargo run -- generate-contracts --config-path ./config --report-path ./report.txt --output ./contracts
+
+# Parse 1C documentation archive
+cargo run -- parse-docs --hbk-path ./1C_Help.hbk --output ./docs
 ```
 
 ### Testing
@@ -112,6 +118,8 @@ The analyzer understands 1C:Enterprise configuration structure:
 - Supports both Russian and English BSL keywords
 - Handles 1C:Enterprise-specific constructs like export procedures, client/server contexts
 - Properly parses 1C configuration metadata (XML format)
+- **NEW**: BOM (Byte Order Mark) handling for UTF-8, UTF-16LE, UTF-16BE files
+- **NEW**: Multi-encoding support for BSL files (UTF-8, UTF-16, Windows-1251)
 - **NEW**: Text configuration reports parsing with multi-encoding support (UTF-16, UTF-8, CP1251)
 - **NEW**: XML forms parsing with complete element and attribute extraction
 - **NEW**: Documentation integration with 1C help system (.hbk archives)
@@ -181,6 +189,21 @@ Framework for integrating Python `1c-help-parser` functionality:
 ```rust
 let mut docs = DocsIntegration::new();
 // Future: docs.load_from_hbk_archive("help.hbk")?;
+```
+
+### BOM and Encoding Support (`src/parser/lexer.rs`)
+Enhanced BSL file reading with proper encoding detection:
+- Automatic BOM detection and removal (UTF-8, UTF-16LE, UTF-16BE)
+- Multi-encoding support with fallback to Windows-1251
+- Safe Unicode character boundary handling
+
+```rust
+use bsl_analyzer::parser::read_bsl_file;
+
+// Read BSL file with automatic encoding detection and BOM handling
+let content = read_bsl_file("module.bsl")?;
+let lexer = BslLexer::new();
+let tokens = lexer.tokenize(&content)?; // BOM automatically stripped
 ```
 
 ### Enhanced Configuration Module

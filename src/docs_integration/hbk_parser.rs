@@ -22,6 +22,7 @@ let sample_content = parser.extract_sample_content(100)?;
 use std::collections::HashMap;
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::fs::File;
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
 use scraper::{Html, Selector};
@@ -31,6 +32,7 @@ use anyhow::{Context, Result};
 pub struct HbkArchiveParser {
     archive_path: PathBuf,
     content_cache: HashMap<String, String>,
+    zip_archive: Option<ZipArchive<File>>,
 }
 
 /// Структура для хранения распарсенного HTML контента
@@ -78,17 +80,83 @@ impl HbkArchiveParser {
         Self {
             archive_path: archive_path.as_ref().to_path_buf(),
             content_cache: HashMap::new(),
+            zip_archive: None,
         }
+    }
+    
+    /// Открывает архив .hbk как ZIP (замена Python open_archive)
+    pub fn open_archive(&mut self) -> Result<()> {
+        let file = File::open(&self.archive_path)
+            .with_context(|| format!("Failed to open HBK file: {}", self.archive_path.display()))?;
+        
+        let archive = ZipArchive::new(file)
+            .with_context(|| format!("Failed to read HBK as ZIP archive: {}", self.archive_path.display()))?;
+        
+        self.zip_archive = Some(archive);
+        tracing::info!("Opened HBK archive: {}", self.archive_path.display());
+        
+        Ok(())
+    }
+    
+    /// Возвращает список файлов в архиве (замена Python list_contents)
+    pub fn list_contents(&self) -> Result<Vec<String>> {
+        // Открываем архив для чтения
+        let file = std::fs::File::open(&self.archive_path)?;
+        let mut archive = ZipArchive::new(file)?;
+        
+        let file_names: Vec<String> = (0..archive.len())
+            .filter_map(|i| archive.by_index(i).ok().map(|f| f.name().to_string()))
+            .collect();
+        
+        Ok(file_names)
+    }
+    
+    /// Извлекает содержимое файла из архива (замена Python extract_file_content)
+    pub fn extract_file_content(&mut self, filename: &str) -> Result<String> {
+        // Проверяем кэш
+        if let Some(cached) = self.content_cache.get(filename) {
+            return Ok(cached.clone());
+        }
+        
+        // Открываем архив заново для чтения
+        let file = std::fs::File::open(&self.archive_path)?;
+        let mut archive = ZipArchive::new(file)?;
+        
+        let mut file = archive.by_name(filename)
+            .with_context(|| format!("File not found in archive: {}", filename))?;
+        
+        let mut content = Vec::new();
+        file.read_to_end(&mut content)?;
+        
+        // Пытаемся декодировать как UTF-8, если не получается - как Windows-1251
+        let decoded = if let Ok(utf8_str) = String::from_utf8(content.clone()) {
+            utf8_str
+        } else {
+            // Используем encoding_rs для Windows-1251
+            let (cow, _, had_errors) = encoding_rs::WINDOWS_1251.decode(&content);
+            if had_errors {
+                tracing::warn!("Encoding errors while decoding {}", filename);
+            }
+            cow.into_owned()
+        };
+        
+        // Кэшируем содержимое
+        self.content_cache.insert(filename.to_string(), decoded.clone());
+        
+        Ok(decoded)
     }
     
     /// Анализирует структуру HBK архива (замена Python analyze_structure)
     pub fn analyze_archive(&mut self) -> Result<ArchiveAnalysis> {
         tracing::info!("Analyzing HBK archive: {}", self.archive_path.display());
         
-        let file = std::fs::File::open(&self.archive_path)
-            .with_context(|| format!("Failed to open archive: {}", self.archive_path.display()))?;
-        let mut archive = ZipArchive::new(file)
-            .context("Failed to read ZIP archive")?;
+        // Открываем архив если еще не открыт
+        if self.zip_archive.is_none() {
+            self.open_archive()?;
+        }
+        
+        let archive = self.zip_archive.as_ref()
+            .context("Archive not available")?;
         
         let mut analysis = ArchiveAnalysis {
             total_files: archive.len(),
@@ -98,8 +166,13 @@ impl HbkArchiveParser {
             sample_content: Vec::new(),
         };
         
-        // Анализируем каждый файл в архиве
-        for i in 0..archive.len() {
+        // Собираем информацию о файлах через повторное открытие архива
+        let file = std::fs::File::open(&self.archive_path)?;
+        let mut archive = ZipArchive::new(file)?;
+        let total_files = archive.len();
+        let mut files_info = Vec::new();
+        
+        for i in 0..total_files {
             let file = archive.by_index(i)
                 .with_context(|| format!("Failed to access file at index {}", i))?;
             
@@ -108,6 +181,11 @@ impl HbkArchiveParser {
                 size: file.size(),
                 file_type: self.detect_file_type(file.name()),
             };
+            files_info.push(file_info);
+        }
+        
+        // Теперь анализируем собранную информацию
+        for file_info in files_info {
             
             // Считаем категории файлов
             *analysis.file_categories.entry(file_info.file_type.clone()).or_insert(0) += 1;
@@ -253,26 +331,6 @@ impl HbkArchiveParser {
         Ok(sample_content)
     }
     
-    /// Извлекает содержимое файла из архива с кэшированием
-    fn extract_file_content(&mut self, file_name: &str) -> Result<String> {
-        // Проверяем кэш
-        if let Some(cached) = self.content_cache.get(file_name) {
-            return Ok(cached.clone());
-        }
-        
-        let file = std::fs::File::open(&self.archive_path)?;
-        let mut archive = ZipArchive::new(file)?;
-        let mut file = archive.by_name(file_name)
-            .with_context(|| format!("File not found in archive: {}", file_name))?;
-        
-        let mut content = String::new();
-        file.read_to_string(&mut content)
-            .with_context(|| format!("Failed to read file content: {}", file_name))?;
-        
-        // Кэшируем содержимое
-        self.content_cache.insert(file_name.to_string(), content.clone());
-        Ok(content)
-    }
     
     /// Определяет тип файла по расширению
     fn detect_file_type(&self, file_name: &str) -> String {

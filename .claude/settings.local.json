@@ -22,7 +22,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git clean:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(./target/release/bsl-analyzer analyze:*)",
+      "Bash(./target/release/bsl-analyzer --help)"
     ],
     "deny": []
   }

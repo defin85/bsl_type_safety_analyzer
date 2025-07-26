@@ -12,6 +12,97 @@ use std::collections::HashSet;
 
 use super::ast::Position;
 
+/// Reads a BSL file with proper encoding detection and BOM handling
+/// Returns the content as UTF-8 string with BOM removed
+pub fn read_bsl_file<P: AsRef<std::path::Path>>(path: P) -> Result<String, std::io::Error> {
+    let bytes = std::fs::read(path)?;
+    
+    // Try to detect encoding and convert to UTF-8
+    let content = if bytes.len() >= 2 {
+        match (bytes[0], bytes[1]) {
+            // UTF-16LE BOM: FF FE
+            (0xFF, 0xFE) => {
+                let (decoded, _, had_errors) = encoding_rs::UTF_16LE.decode(&bytes);
+                if had_errors {
+                    tracing::warn!("Errors detected while decoding UTF-16LE file");
+                }
+                decoded.into_owned()
+            }
+            // UTF-16BE BOM: FE FF
+            (0xFE, 0xFF) => {
+                let (decoded, _, had_errors) = encoding_rs::UTF_16BE.decode(&bytes);
+                if had_errors {
+                    tracing::warn!("Errors detected while decoding UTF-16BE file");
+                }
+                decoded.into_owned()
+            }
+            // UTF-8 BOM: EF BB BF or regular UTF-8
+            _ => {
+                // Try UTF-8 first
+                match String::from_utf8(bytes.clone()) {
+                    Ok(s) => s,
+                    Err(_) => {
+                        // Fall back to Windows-1251 (common in Russian 1C installations)
+                        tracing::debug!("UTF-8 decoding failed, trying Windows-1251");
+                        let (decoded, _, had_errors) = encoding_rs::WINDOWS_1251.decode(&bytes);
+                        if had_errors {
+                            tracing::warn!("Errors detected while decoding Windows-1251 file");
+                        }
+                        decoded.into_owned()
+                    }
+                }
+            }
+        }
+    } else {
+        String::from_utf8(bytes).map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::InvalidData, e)
+        })?
+    };
+    
+    // Remove BOM if present after encoding conversion
+    Ok(strip_bom(&content).to_string())
+}
+
+/// Removes BOM (Byte Order Mark) from the beginning of text if present
+/// Handles UTF-8, UTF-16LE, and UTF-16BE BOMs commonly found in 1C files
+fn strip_bom(input: &str) -> &str {
+    // UTF-8 BOM as Unicode character U+FEFF
+    if input.starts_with('\u{FEFF}') {
+        // U+FEFF is encoded as 3 bytes in UTF-8, so we need to find the char boundary
+        let mut char_indices = input.char_indices();
+        if let Some((_, _)) = char_indices.next() {
+            // Skip the first character (BOM) and return the rest
+            if let Some((next_char_start, _)) = char_indices.next() {
+                return &input[next_char_start..];
+            } else {
+                // Input was only BOM
+                return "";
+            }
+        }
+    }
+    
+    // Check for UTF-8 BOM bytes (EF BB BF)
+    let bytes = input.as_bytes();
+    if bytes.len() >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF {
+        return &input[3..];
+    }
+    
+    // For UTF-16 BOMs, they should be handled at the encoding level
+    // before the text reaches this function, but we can detect them
+    if bytes.len() >= 2 {
+        // UTF-16LE BOM: FF FE
+        if bytes[0] == 0xFF && bytes[1] == 0xFE {
+            tracing::warn!("UTF-16LE BOM detected - file should be converted to UTF-8 first");
+        }
+        // UTF-16BE BOM: FE FF  
+        else if bytes[0] == 0xFE && bytes[1] == 0xFF {
+            tracing::warn!("UTF-16BE BOM detected - file should be converted to UTF-8 first");
+        }
+    }
+    
+    input
+}
+
 /// Complete BSL token types with all language constructs
 #[derive(Logos, Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TokenType {
@@ -359,12 +450,15 @@ impl BslLexer {
     
     /// Tokenize BSL source code with full error handling
     pub fn tokenize(&self, input: &str) -> Result<Vec<Token>, String> {
-        if input.trim().is_empty() {
+        // Remove BOM if present
+        let cleaned_input = strip_bom(input);
+        
+        if cleaned_input.trim().is_empty() {
             return Ok(Vec::new());
         }
         
         let mut tokens = Vec::new();
-        let mut lexer = TokenType::lexer(input);
+        let mut lexer = TokenType::lexer(cleaned_input);
         let mut line = 1;
         let mut column = 1;
         let mut offset = 0;
@@ -507,5 +601,42 @@ mod tests {
         let lexer = BslLexer::new();
         let tokens = lexer.tokenize("").unwrap();
         assert!(tokens.is_empty());
+    }
+
+    #[test]
+    fn test_strip_bom() {
+        // Test UTF-8 BOM (Unicode character U+FEFF)
+        let input_with_bom = "\u{FEFF}Процедура Тест()";
+        let cleaned = strip_bom(input_with_bom);
+        assert_eq!(cleaned, "Процедура Тест()");
+        
+        // Test input without BOM
+        let input_without_bom = "Процедура Тест()";
+        let cleaned = strip_bom(input_without_bom);
+        assert_eq!(cleaned, "Процедура Тест()");
+        
+        // Test empty string
+        let empty = strip_bom("");
+        assert_eq!(empty, "");
+    }
+
+    #[test]
+    fn test_tokenize_with_bom() {
+        let lexer = BslLexer::new();
+        
+        // Test with UTF-8 BOM
+        let input_with_bom = "\u{FEFF}Процедура Тест() КонецПроцедуры";
+        let tokens = lexer.tokenize(input_with_bom).unwrap();
+        
+        assert!(!tokens.is_empty());
+        assert_eq!(tokens[0].token_type, TokenType::Процедура);
+        assert_eq!(tokens[1].token_type, TokenType::Identifier);
+        assert_eq!(tokens[1].value, "Тест");
+        
+        // Ensure BOM doesn't create extra tokens
+        let input_without_bom = "Процедура Тест() КонецПроцедуры";
+        let tokens_without_bom = lexer.tokenize(input_without_bom).unwrap();
+        
+        assert_eq!(tokens.len(), tokens_without_bom.len());
     }
 }
