@@ -1,0 +1,65 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СпецификацииНоменклатуры",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Количество",
+        "data_type": "Число(15, 3, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ИсходныеКомплектующие",
+        "attributes": [
+          {
+            "name": "Номенклатура",
+            "data_type": "СправочникСсылка.Номенклатура",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Количество",
+            "data_type": "Число(15, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаГруппы",
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаВыбораГруппы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СпецификацииНоменклатуры",
+    "Спецификации",
+    "Номенклатуры"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.918658600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

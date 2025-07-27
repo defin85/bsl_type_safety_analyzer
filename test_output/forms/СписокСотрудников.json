@@ -1,0 +1,76 @@
+{
+  "metadata_type": "Form",
+  "name": "СписокСотрудников",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ListForm",
+  "object_name": "НастройкаОтправкиСотрудниковБронированияКомандировок",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 6,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Сотрудники",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "СистемаБронирования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ПричиныОтправки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "Отправляется",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ВидСписка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      }
+    ],
+    "commands": []
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.441436100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\НастройкаОтправкиСотрудниковБронированияКомандировок\\Forms\\СписокСотрудников\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\НастройкаОтправкиСотрудниковБронированияКомандировок\\Forms\\СписокСотрудников\\Ext"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СлучаиУходаЗаБольнымиДетьми",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "с 1.1.2007"
+  },
+  "search_keywords": [
+    "СлучаиУходаЗаБольнымиДетьми",
+    "Случаи",
+    "Ухода",
+    "За",
+    "Больными",
+    "Детьми"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.135435200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

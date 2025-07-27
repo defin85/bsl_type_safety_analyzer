@@ -1,0 +1,53 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВзаиморасчетыССотрудниками",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПериодВзаиморасчетов",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидВзаиморасчетов",
+        "data_type": "ПеречислениеСсылка.ВидыВзаиморасчетовССотрудниками",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ГруппаНачисленияУдержанияВыплаты",
+        "data_type": "ПеречислениеСсылка.ВидыДоходовИсполнительногоПроизводства",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Сумма в валюте взаиморасчетов"
+  },
+  "search_keywords": [
+    "ВзаиморасчетыССотрудниками",
+    "Взаиморасчеты",
+    "С",
+    "Сотрудниками"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.621597100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

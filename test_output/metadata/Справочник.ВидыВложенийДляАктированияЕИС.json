@@ -1,0 +1,77 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыВложенийДляАктированияЕИС",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КодТипаФайла",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Идентификатор",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОбновления",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Актуален",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НеПрикрепляется",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Справочник вложений с сервера ftp nsiEADocType"
+  },
+  "search_keywords": [
+    "ВидыВложенийДляАктированияЕИС",
+    "Виды",
+    "Вложений",
+    "Для",
+    "Актирования",
+    "Е",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.391164500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

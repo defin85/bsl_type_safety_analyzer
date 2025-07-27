@@ -1,0 +1,196 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОтправкиОтчетности",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Отчет",
+        "data_type": "ЛюбаяСсылка",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТипНаправления",
+        "data_type": "ПеречислениеСсылка.ТипыНаправленийСдачиОтчетности",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодНаправления",
+        "data_type": "Строка(7, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОткрытия",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОтправки",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаПоследнегоОбновления",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаЗакрытия",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Статус",
+        "data_type": "ПеречислениеСсылка.СтатусыОтправкиОтчетности",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Идентификатор",
+        "data_type": "Строка(32, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаНачалаПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОкончанияПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидДокумента",
+        "data_type": "Число(3, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеПериода",
+        "data_type": "Строка(64, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидОтчета",
+        "data_type": "СправочникСсылка.РегламентированныеОтчеты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьВидОтчета",
+        "data_type": "СправочникСсылка.УдалитьРегламентированныеОтчеты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ПричиныОтказа",
+        "attributes": [
+          {
+            "name": "Причина",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Пояснение",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОтправкиОтчетности",
+    "Отправки",
+    "Отчетности"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.729772300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

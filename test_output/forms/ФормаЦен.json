@@ -1,0 +1,59 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаЦен",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЦеныНоменклатуры",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ДатаЦены",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ЦеныНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ЗаписатьЦены",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОбновитьЦены",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:07.179902200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\ЦеныНоменклатуры\\Forms\\ФормаЦен\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\ЦеныНоменклатуры\\Forms\\ФормаЦен\\Ext"
+  }
+}

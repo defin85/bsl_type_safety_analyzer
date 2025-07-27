@@ -1,0 +1,671 @@
+{
+  "metadata_type": "Form",
+  "name": "ВводАдреса",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "РасширенныйВводКонтактнойИнформации",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 56,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Комментарий",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПредставлениеАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Страна",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Индекс",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "НаселенныйПункт",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "Улица",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ИдентификаторНаселенногоПункта",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ТипДома",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "Дом",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ТипСтроения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "Строение",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ТипПомещения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "Помещение",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ОсновнаяСтрана",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ДополнительныеСтроенияИПомещения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "НаселенныйПунктДетально",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ВидКонтактнойИнформации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ПроверятьКорректность",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "СкрыватьНеактуальныеАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "КопияКомментария",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ЕстьПравоЗагружатьКлассификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "АвтоЦвет",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "РазрешитьВводАдресаВСвободнойФорме",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ЦветФонаФормы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ИспользуетсяАдресныйКлассификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ЦветФонаУправляющегоПоля",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "КодСтраны",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ТекстПредупрежденияПриОткрытии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ПолеПредупрежденияПриОткрытии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ВозвращатьСписокЗначений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ЕстьЗагруженныйКлассификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ИдентификаторУлицы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "АдресИзменен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТекстСообщенияСервиса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ДополнительныйЭлемент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ПодчиненныйЭлемент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ПодборПоИндексуДоступен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ОКТМО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ИсторическийАдрес",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "КонтактнаяИнформацияОписаниеДополнительныхРеквизитов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ВебСервисИспользуется",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "АдресНаДату",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ВводНовогоАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "АдресДействуетС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "СведенияОСтране",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ФорматАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "МеждународныйФорматАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ВебКлассификаторДоступен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "АвтоподборДоступен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ТипАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ИсключатьГородИзМуниципальногоАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "ЦветПоясняющегоТекста",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "РегионИностранногоАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "РайонИностранногоАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "ВнутригородскойРайонИностранногоАдреса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "62"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "КомандаОК",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПроверитьЗаполнениеАдреса",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ОчиститьАдрес",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ЗагрузитьКлассификатор",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "АдресВСвободнойФорме",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ЗаполнитьПоПочтовомуИндексу",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ПодключитьИнтернетПоддержку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ИсторияИзменений",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "АдресНаЯндексКарты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "АдресНаGoogleMaps",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "АдресныйКлассификаторУстарел",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ДобавитьКомментарий",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "МуниципальноеДеление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "АдминистративноТерриториальноеДеление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "КомандаОтмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "СкопироватьАдресВБуферОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "30"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.161047900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\РасширенныйВводКонтактнойИнформации\\Forms\\ВводАдреса\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\РасширенныйВводКонтактнойИнформации\\Forms\\ВводАдреса\\Ext"
+  }
+}

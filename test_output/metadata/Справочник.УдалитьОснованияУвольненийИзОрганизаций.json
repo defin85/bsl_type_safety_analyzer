@@ -1,0 +1,73 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьОснованияУвольненийИзОрганизаций",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Статья",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Часть",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Пункт",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Подпункт",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Абзац",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьОснованияУвольненийИзОрганизаций",
+    "Удалить",
+    "Основания",
+    "Увольнений",
+    "Из",
+    "Организаций"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.031494100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

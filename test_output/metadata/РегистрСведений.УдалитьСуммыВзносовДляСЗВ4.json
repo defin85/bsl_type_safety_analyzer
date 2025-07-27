@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьСуммыВзносовДляСЗВ4",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьСуммыВзносовДляСЗВ4",
+    "Удалить",
+    "Суммы",
+    "Взносов",
+    "Для",
+    "С",
+    "З",
+    "В",
+    "4"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.559100500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

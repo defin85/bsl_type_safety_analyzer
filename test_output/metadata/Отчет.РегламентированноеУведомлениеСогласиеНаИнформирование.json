@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированноеУведомлениеСогласиеНаИнформирование",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма2023_1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированноеУведомлениеСогласиеНаИнформирование",
+    "Регламентированное",
+    "Уведомление",
+    "Согласие",
+    "На",
+    "Информирование"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.812107600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

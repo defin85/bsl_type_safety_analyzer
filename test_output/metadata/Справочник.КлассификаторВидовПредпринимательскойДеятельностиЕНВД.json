@@ -1,0 +1,90 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлассификаторВидовПредпринимательскойДеятельностиЕНВД",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НаименованиеПолное",
+        "data_type": "Строка(400, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РегистрацияПоМестуНахожденияОрганизации",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "БазоваяДоходность",
+        "data_type": "Число(10, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИмяФизическогоПоказателя",
+        "data_type": "ПеречислениеСсылка.ФизическиеПоказатели",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьИмяФизическогоПоказателя",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодсказкаФизическогоПоказателя",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаВыгрузкиКлассификатора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КлассификаторВидовПредпринимательскойДеятельностиЕНВД",
+    "Классификатор",
+    "Видов",
+    "Предпринимательской",
+    "Деятельности",
+    "Е",
+    "Н",
+    "В",
+    "Д"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.553955100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

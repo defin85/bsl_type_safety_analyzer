@@ -1,0 +1,167 @@
+{
+  "metadata_type": "Form",
+  "name": "ПодборУчетнойЗаписи",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "УправлениеПодключениемDSS",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 14,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ЛогинУчетнойЗаписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Сервер",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТаблицаСервисов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ЛогинПараметр",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ВосстановитьУчетнуюЗапись",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ВосстановлениеНачато",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "СостояниеЛогина",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ВыборНовойУчетнойЗаписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ИсточникВыбора",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "СписокВыбор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "УчетнаяЗапись",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "НастройкиНовойУчетнойЗаписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ВыборДействия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ДополнитьСервера",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Подтвердить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Продолжить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.378288300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\УправлениеПодключениемDSS\\Forms\\ПодборУчетнойЗаписи\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\УправлениеПодключениемDSS\\Forms\\ПодборУчетнойЗаписи\\Ext"
+  }
+}

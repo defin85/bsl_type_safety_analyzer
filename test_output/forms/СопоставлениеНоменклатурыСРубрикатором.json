@@ -1,0 +1,401 @@
+{
+  "metadata_type": "Form",
+  "name": "СопоставлениеНоменклатурыСРубрикатором",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "РаботаСНоменклатурой",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 31,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "СписокПоВидам",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Реквизиты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИдентификаторЗаданияОбновленияРеквизитов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "АдресКэшаКатегорийРубрик",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "КатегорияРеквизитов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "СписокВыбораРеквизитов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ТипыЗначенийСвойств",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "СписокПоИерархии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "СписокПоНоменклатуре",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "РежимСопоставления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ЗапретРедактированиеРеквизитов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "СценарийИспользования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ДлительнаяОперация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ЦветТекстаРаботаСНоменклатуройОшибка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПодсистемаТорговыеПредложенияСуществует",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "Организация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "Проблемы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ДлительнаяОперацияПроблемыЗаполнения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ЛимитЗаписей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "КатегорияСервиса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "КатегорииНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "Расшифровка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "НастройкаВыгрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ОбязательныеРеквизиты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ОбязательныеРеквизитыДлительнаяОперация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ЭтоВыгрузкаВНациональныйКаталог",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "РаботаСНоменклатуройВстроена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ОтборВидыНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ИспользоватьЧастичноеСопоставлениеБезВопроса",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ВидНоменклатурыСопоставления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "СостояниеВыгрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ОчиститьКатегорию",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ОчиститьРеквизит",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ВыбратьКатегорию",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ОбъектСопоставленияНоменклатура",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ОбъектСопоставленияРодитель",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ОбъектСопоставленияВидНоменклатуры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОтборНеУстановлен",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "НоменклатураСопоставлена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "НоменклатураНеСопоставлена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ЗаполнитьРеквизитыАвтоматически",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "Готово",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.094870100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\РаботаСНоменклатурой\\Forms\\СопоставлениеНоменклатурыСРубрикатором\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\РаботаСНоменклатурой\\Forms\\СопоставлениеНоменклатурыСРубрикатором\\Ext"
+  }
+}

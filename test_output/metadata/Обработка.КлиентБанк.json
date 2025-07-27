@@ -1,0 +1,933 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлиентБанк",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КлиентБанка",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Кодировка",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НачалоПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КонецПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФайлВыгрузки",
+        "data_type": "Строка(254, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФайлЗагрузки",
+        "data_type": "Строка(254, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "БанковскийСчет",
+        "data_type": "СправочникСсылка.БанковскиеСчета",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Программа",
+        "data_type": "Строка(254, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КонтролироватьНекорректныеСимволыВНомере",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВыгружатьПлатежноеПоручение",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВыгружатьПлатежноеТребование",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СоглашениеПрямогоОбменаСБанками",
+        "data_type": "СправочникСсылка.НастройкиОбменСБанками",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СоздаватьНенайденныеЭлементы",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КонтролироватьБезопасностьОбменаСБанком",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ТаблицаСчетов",
+        "attributes": [
+          {
+            "name": "Пометка",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Счет",
+            "data_type": "СправочникСсылка.БанковскиеСчета",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ПлатежныеДокументы",
+        "attributes": [
+          {
+            "name": "Дата",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Номер",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НомерВФорматеВыгрузки",
+            "data_type": "Строка(6, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаДокумента",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Контрагент",
+            "data_type": "Строка(100, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентНомерСчета",
+            "data_type": "Строка(70, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НазначениеПлатежа",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидДокумента",
+            "data_type": "Строка(31, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидПлатежа",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Документ",
+            "data_type": "ДокументСсылка.ПлатежноеПоручение, ДокументСсылка.ПлатежноеТребование",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПоказательДаты",
+            "data_type": "Строка(10, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПоказательНомера",
+            "data_type": "Строка(18, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПоказательОснования",
+            "data_type": "Строка(2, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПоказательТипа",
+            "data_type": "Строка(2, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПоказательПериода",
+            "data_type": "Строка(10, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтатусСоставителя",
+            "data_type": "Строка(2, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СрокАкцепта",
+            "data_type": "Число(3, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "УсловиеОплаты1",
+            "data_type": "Строка(220, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаОтсылкиДок",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОчередностьПлатежа",
+            "data_type": "Строка(1, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ТекстПлательщика",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ТекстПолучателя",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИННПлательщика",
+            "data_type": "Строка(12, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КПППлательщика",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИННПолучателя",
+            "data_type": "Строка(12, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КПППолучателя",
+            "data_type": "Строка(12, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодБК",
+            "data_type": "Строка(20, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодОКАТО",
+            "data_type": "Строка(11, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Организация",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияКратко",
+            "data_type": "Строка(100, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияПеречислениеНалога",
+            "data_type": "Строка(150, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияИНН",
+            "data_type": "Строка(12, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияКПП",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияСчет",
+            "data_type": "СправочникСсылка.БанковскиеСчета",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияНомерСчета",
+            "data_type": "Строка(20, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаБезКопеек",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияТекстКорреспондента",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияТекстНазначения",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияБИКБанка",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияБанк",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияРасчСчет",
+            "data_type": "Строка(20, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияГородБанка",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияБанкДляРасчетов",
+            "data_type": "Строка(254, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияГородРЦБанка",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияБИКРЦБанка",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОрганизацияКоррСчетРЦБанка",
+            "data_type": "Строка(20, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентКратко",
+            "data_type": "Строка(100, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентИНН",
+            "data_type": "Строка(12, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентКПП",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентСчет",
+            "data_type": "СправочникСсылка.БанковскиеСчета",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентБанк",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентРасчСчет",
+            "data_type": "Строка(20, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентГородБанка",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентБанкДляРасчетов",
+            "data_type": "Строка(254, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентГородРЦБанка",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентБИКБанка",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентБИКРЦБанка",
+            "data_type": "Строка(9, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентКоррСчетРЦБанка",
+            "data_type": "Строка(20, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентТекстКорреспондента",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КонтрагентТекстНазначения",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Выгружать",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Готовность",
+            "data_type": "Число(10, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОписаниеОшибок",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ТипДокумента",
+            "data_type": "Число(10, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПеречислениеВБюджет",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Проведен",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СостояниеДокумента",
+            "data_type": "Число(10, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидОперации",
+            "data_type": "ПеречислениеСсылка.ВидыОперацийПоступлениеДенежныхСредств, ПеречислениеСсылка.ВидыОперацийСписаниеДенежныхСредств",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументОснование",
+            "data_type": "ДокументСсылка.ПлатежноеПоручение",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтавкаНДС",
+            "data_type": "ПеречислениеСсылка.СтавкиНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаПлПоручения",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИдентификаторПлатежа",
+            "data_type": "Строка(25, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЕстьОшибка",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Состояние",
+            "data_type": "ПеречислениеСсылка.СостоянияБанковскихДокументов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодВыплат",
+            "data_type": "Строка(1, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодВидаДохода",
+            "data_type": "Строка(1, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПеречислениеПоИсполнительномуЛисту",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КраткоеПредставлениеДокументаМК",
+            "data_type": "Строка(100, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "НастройкаЗаполнения",
+        "attributes": [
+          {
+            "name": "Документ",
+            "data_type": "Строка(100, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Проводить",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтатьяДДС",
+            "data_type": "СправочникСсылка.СтатьиДвиженияДенежныхСредств",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма",
+      "ФормаНастройкиЗаполнения",
+      "ФормаСпискаВыписок",
+      "ФормаСозданиеНенайденных",
+      "КонтрольБезопасностиОбменаСБанком",
+      "ФормаНастройкиЗагрузки"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "поле 22 \"Код"
+  },
+  "search_keywords": [
+    "КлиентБанк",
+    "Клиент",
+    "Банк"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.290555400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

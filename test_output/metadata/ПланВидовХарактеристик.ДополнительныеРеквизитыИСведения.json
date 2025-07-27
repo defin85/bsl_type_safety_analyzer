@@ -1,0 +1,391 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДополнительныеРеквизитыИСведения",
+  "object_type": "ChartOfCharacteristicTypes",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Виден",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВладелецДополнительныхЗначений",
+        "data_type": "ПланВидовХарактеристикСсылка.ДополнительныеРеквизитыИСведения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВыводитьВВидеГиперссылки",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДополнительныеЗначенияИспользуются",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДополнительныеЗначенияСВесом",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Доступен",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Заголовок",
+        "data_type": "Строка(75, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыВыбораЗначения",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыВыбораЗначенияЯзык1",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыВыбораЗначенияЯзык2",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыЗначения",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыЗначенияЯзык1",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокФормыЗначенияЯзык2",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокЯзык1",
+        "data_type": "Строка(75, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаголовокЯзык2",
+        "data_type": "Строка(75, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаполнятьОбязательно",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторДляФормул",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Имя",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "МногострочноеПолеВвода",
+        "data_type": "Число(2, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НаборСвойств",
+        "data_type": "СправочникСсылка.НаборыДополнительныхРеквизитовИСведений",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Подсказка",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодсказкаЯзык1",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодсказкаЯзык2",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФорматСвойства",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоДополнительноеСведение",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидСвойства",
+        "data_type": "ПеречислениеСсылка.ВидыСвойств",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЦветСвойства",
+        "data_type": "ПеречислениеСсылка.ЦветаСвойств",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ЗависимостиДополнительныхРеквизитов",
+        "attributes": [
+          {
+            "name": "ЗависимоеСвойство",
+            "data_type": "Строка(25, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НаборСвойств",
+            "data_type": "СправочникСсылка.НаборыДополнительныхРеквизитовИСведений",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Реквизит",
+            "data_type": "ПланВидовХарактеристикСсылка.ДополнительныеРеквизитыИСведения, Строка(99, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Условие",
+            "data_type": "Строка(20, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Значение",
+            "data_type": "ЛюбаяСсылка, Булево, Строка(50, Переменная), Дата(Дата), Число(10, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "Представления",
+        "attributes": [
+          {
+            "name": "КодЯзыка",
+            "data_type": "Строка(10, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Заголовок",
+            "data_type": "Строка(75, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Подсказка",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЗаголовокФормыЗначения",
+            "data_type": "Строка(150, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЗаголовокФормыВыбораЗначения",
+            "data_type": "Строка(150, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "РазблокированиеРеквизитов",
+      "ИзменениеНастройкиСвойства",
+      "ЗависимостьРеквизитов",
+      "ВыборРеквизита",
+      "ФормаВыбораМеток",
+      "ФормаМетки"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58"
+  },
+  "search_keywords": [
+    "ДополнительныеРеквизитыИСведения",
+    "Дополнительные",
+    "Реквизиты",
+    "И",
+    "Сведения"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.710876+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

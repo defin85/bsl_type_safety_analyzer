@@ -1,0 +1,590 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаДокументаУслуги",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "РеализацияТоваровУслуг",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 53,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ИтогиВсего",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИтогиВсегоНДС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ЦеныИВалюта",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "НадписьСчетФактура",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "СчетФактура",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ВалютаРегламентированногоУчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТребуетсяСчетФактура",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ПлательщикНДФЛ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ПрименяетсяУСНПатент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ПрименяетсяТолькоУСНПатент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ТребуетсяСчетРасходовПоОказаниюУслуг",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ТекущаяДатаДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ДатыИзмененияОтветственныхЛиц",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ВалютаВзаиморасчетов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ПорядокУчетаРасчетов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "СчетаРасчетовЗаполнены",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ПлательщикНДС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "СостояниеДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ОтказПроверкаКонтрагентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ЕстьВалютныйУчет",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ИспользоватьТипыЦенНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "СтатусДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "РеквизитыПроверкиКонтрагентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "Новости",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ПредлагатьНовыйДоговор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ОтражениеДоходов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ВестиУчетПоДоговорам",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "АвторасчетСрокаОплаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ИспользуетсяПланированиеПлатежей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "СрокОплаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "СкрытьСчетРасчетов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ДатыИзмененияАдресаГрузополучателя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ПрименяетсяНесколькоПатентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ПараметрыОбменаСКонтрагентами",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "СчетНаОплатуГиперссылка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "НомерСчетаФактуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "КодВидаОперации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ПредставлениеУПД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ПредупреждениеНастройкиНалоговИОтчетов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "СостояниеЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ВыделенныйЭлементПодсказки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ИспользоватьНачислениеНДССМежценовойРазницы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ПредставленияСубконто",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ПредлагатьНовыйДоговорСНумерацией",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "РеквизитыПроверкиРНПТ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ВедетсяУчетПрослеживаемыхТоваров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "НадписьПроверкаРНПТ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ТаблицаУдаленныхСтрок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ПатентПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "СписокПатентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ЗаполнятьОтветственногоПоПродажамИзКонтрагента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "СтавкаНДСПриРеализации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПодборУслуги",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ВыписатьСчетФактуру",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ПоказатьКонтекстныеНовости",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ВставитьСтроки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "СкопироватьСтроки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ПроверитьКонтрагентов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ДобавитьИзСчета",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ЗакрытьПанельПодсказок",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ИзменитьВидимостьПодсказок",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ВключитьОтражениеВУчете",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:05.747611300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\РеализацияТоваровУслуг\\Forms\\ФормаДокументаУслуги\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\РеализацияТоваровУслуг\\Forms\\ФормаДокументаУслуги\\Ext"
+  }
+}

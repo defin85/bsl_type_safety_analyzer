@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "БезопасноеХранилищеДанныхОбластейДанных",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:1329, АПК:1330 Универсальный составной тип, т.к. возможна работа с произвольным, заранее неизвестным составом типов."
+  },
+  "search_keywords": [
+    "БезопасноеХранилищеДанныхОбластейДанных",
+    "Безопасное",
+    "Хранилище",
+    "Данных",
+    "Областей",
+    "Данных"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.550329500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

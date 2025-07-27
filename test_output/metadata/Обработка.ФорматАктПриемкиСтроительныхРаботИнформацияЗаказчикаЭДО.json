@@ -1,0 +1,661 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ФорматАктПриемкиСтроительныхРаботИнформацияЗаказчикаЭДО",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДополнительныеДанныеДляФормирования",
+        "data_type": "",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОбработчикОшибок",
+        "data_type": "ОбработкаОбъект.ОбработчикОшибокЭДО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ИнформацияЗаказчика",
+        "attributes": [
+          {
+            "name": "Составитель",
+            "data_type": "Строка(1000, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДоверенностьНаСоставление",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДляГосИМуниципальныхНужд",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидОперации",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Содержание",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодОперации",
+            "data_type": "Строка(1, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПричиныОтказа",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "УстранимыеНедостатки",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаНДФЛ",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаРешения",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументОтказа",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументПодтвержденияНедостатков",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИтогиПринятияНаУсловияхУменьшенияСтоимости",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "РешениеПоПредоставленнымРасчетам",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИтогиПринятияРаботНаУсловияхУменьшенияСтоимости",
+        "attributes": [
+          {
+            "name": "Сумма",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаСНДС",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаНДС",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИтогоСУчетомУменьшенияСтоимостиДоговора",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИтогоСНачалаСтроительстваСУчетомУменьшенияСтоимостиДоговора",
+            "data_type": "Число(19, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "РешениеПоПредоставленнымРасчетам",
+        "attributes": [
+          {
+            "name": "ПричинаНесогласия",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КодРешения",
+            "data_type": "Строка(300, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НеучтенныеДокументы",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЛишниеДокументы",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиИностранныхГраждан",
+        "attributes": [
+          {
+            "name": "Страна",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ФИО",
+            "data_type": "Строка(1000, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Идентификатор",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИныеСведения",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиИностранныхОрганизаций",
+        "attributes": [
+          {
+            "name": "Страна",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Наименование",
+            "data_type": "Строка(1000, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Идентификатор",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИныеСведения",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиОргановИсполнительнойВласти",
+        "attributes": [
+          {
+            "name": "Наименование",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиФизЛиц",
+        "attributes": [
+          {
+            "name": "ИНН",
+            "data_type": "Строка(12, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиЮрЛиц",
+        "attributes": [
+          {
+            "name": "ИНН",
+            "data_type": "Строка(10, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ИдентифицирующиеПризнакиДокументов",
+        "attributes": [
+          {
+            "name": "Номер",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Дата",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Наименование",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДополнительныеСведения",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ГосНомер",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Стороны",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ФИО",
+        "attributes": [
+          {
+            "name": "Фамилия",
+            "data_type": "Строка(60, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Имя",
+            "data_type": "Строка(60, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Отчество",
+            "data_type": "Строка(60, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "Подписанты",
+        "attributes": [
+          {
+            "name": "Статус",
+            "data_type": "Строка(1, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ТипПодписи",
+            "data_type": "Строка(1, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "URLДоверенности",
+            "data_type": "Строка(500, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Должность",
+            "data_type": "Строка(255, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ФИО",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЭлектроннаяДоверенность",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "БумажнаяДоверенность",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ЭлектронныеДоверенности",
+        "attributes": [
+          {
+            "name": "Номер",
+            "data_type": "Строка(36, Фиксированная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаВыдачи",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВнутреннийНомер",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаВнутреннейРегистрации",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СистемаОтменыДоверенности",
+            "data_type": "Строка(500, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "БумажныеДоверенности",
+        "attributes": [
+          {
+            "name": "ДатаВыдачи",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВнутреннийНомер",
+            "data_type": "Строка(50, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПодписалФИО",
+            "data_type": "",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СведенияОДоверителе",
+            "data_type": "Строка(1000, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "ИдЛишнДок"
+  },
+  "search_keywords": [
+    "ФорматАктПриемкиСтроительныхРаботИнформацияЗаказчикаЭДО",
+    "Формат",
+    "Акт",
+    "Приемки",
+    "Строительных",
+    "Работ",
+    "Информация",
+    "Заказчика",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.517118900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

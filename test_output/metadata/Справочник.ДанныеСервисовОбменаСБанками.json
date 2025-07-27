@@ -1,0 +1,64 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДанныеСервисовОбменаСБанками",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Версия",
+        "data_type": "Число(10, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОбновления",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Сервис",
+        "data_type": "ПеречислениеСсылка.СервисыОбменаСБанками",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Характеристики",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДанныеСервисовОбменаСБанками",
+    "Данные",
+    "Сервисов",
+    "Обмена",
+    "С",
+    "Банками"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.448592200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СрокОплатыПокупателей",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Срок в днях, после которого долг покупателей считается просроченным, если другой срок не установлен в договоре"
+  },
+  "search_keywords": [
+    "СрокОплатыПокупателей",
+    "Срок",
+    "Оплаты",
+    "Покупателей"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.269036+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

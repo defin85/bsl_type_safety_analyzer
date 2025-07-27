@@ -1,0 +1,49 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбновлениеКлючейДоступаТекущиеЗадания",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ЭтоЗапуск",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаИзмененияЗаписиРегистра",
+        "data_type": "УникальныйИдентификатор",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОбновлениеКлючейДоступаТекущиеЗадания",
+    "Обновление",
+    "Ключей",
+    "Доступа",
+    "Текущие",
+    "Задания"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.947547400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

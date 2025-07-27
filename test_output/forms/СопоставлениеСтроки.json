@@ -1,0 +1,185 @@
+{
+  "metadata_type": "Form",
+  "name": "СопоставлениеСтроки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ПомощникКорректировкиОстатковЕГАИС",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 16,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Количество",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ДопустимыеСтрокиСопоставления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ПредставлениеТекущейСтроки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "Номенклатура",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "Характеристика",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "Серия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "АлкогольнаяПродукция",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "Справка2",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "НеПроверено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ИтогПоСтрокам",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "Проверено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ЕдиницаИзмерения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ОписаниеОстатка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ЦветТекстаПроблемаГосИС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "ЭтоСтрокаОстатков",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ПринудительноЗакрытьФорму",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Проверено",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Распределить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.877531900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПомощникКорректировкиОстатковЕГАИС\\Forms\\СопоставлениеСтроки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПомощникКорректировкиОстатковЕГАИС\\Forms\\СопоставлениеСтроки\\Ext"
+  }
+}

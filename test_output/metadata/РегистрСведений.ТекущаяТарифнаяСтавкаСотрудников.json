@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ТекущаяТарифнаяСтавкаСотрудников",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ТекущаяТарифнаяСтавкаСотрудников",
+    "Текущая",
+    "Тарифная",
+    "Ставка",
+    "Сотрудников"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.470734800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

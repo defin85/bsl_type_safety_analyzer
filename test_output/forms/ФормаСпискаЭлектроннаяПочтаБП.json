@@ -1,0 +1,590 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаСпискаЭлектроннаяПочтаБП",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "Взаимодействия",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 46,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Список",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Статус",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ТипВзаимодействия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "СтрокаПоиска",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "Предпросмотр",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ТаблицаДопРеквизитовСвойств",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ТекущееСвойствоПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ТекущееСвойствоПанелиНавигацииЯвляетсяРеквизитом",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "СписокВыбораТипаПредмета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ИмяТекущейПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ПредставлениеТекущегоСвойства",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ПоказыватьВсеАктивныеПредметы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "Папки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "НастройкиДеревьевПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "НеОтрабатыватьАктивизациюПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ОтправлятьСообщениеСразу",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ТаблицаДопРеквизитовСвойствТипаБулево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ОписанияНайденоПолнотекстовымПоиском",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ОписаниеНайденоПолнотекстовымПоиском",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "РасширенныйПоиск",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ИнформационнаяБазаФайловая",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ДокументыДоступныеДляСоздания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ИспользоватьПризнакРассмотрено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ВзаимодействиеДляКоторогоСформированПредпросмотр",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ПредпросмотрHTML",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ТолькоЗначимыеПредметы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ТолькоЗначимыеКонтакты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ОтображатьОбластьЧтения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ПанельНавигацииСкрыта",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ЗаголовокПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ЗаголовокПанелиНавигацииПодсказка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ЗначениеУстановленноеПослеЗаполненияПанелиНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ВключитьНебезопасноеСодержимое",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "ЕстьНебезопасноеСодержимое",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ЗапрещеноОтображениеНебезопасногоСодержимогоВПисьмах",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ПравоПометкиУдаленияПапок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ГиперссылкаЦвет",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ДатаПредыдущегоВыполненияКомандыОтправкиПолученияПочты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "ДатаПредыдущегоПолученияОтправкиПочты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ОтправкаПолучениеПисемВыполняется",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "РазделениеВключено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ТолькоПочта",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ТекущийПользователь",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "РольПолныеПравДоступна",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ЕстьУчетныеЗаписиДляОтправки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Ответственный",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Рассмотрено",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "СоздатьЭлектронноеПисьмо",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ОтправитьПолучитьПочту",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "НастройкиЭлектроннойПочты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ПрименитьПравилаОбработки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ПеренестиВПапку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "Обновить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "УстановитьПризнакРассмотрено",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ИзменитьПризнакРассмотрено",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ОтветственныйСписок",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "Ответить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ОтветитьВсем",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "Переслать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ОтображатьОбластьЧтения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ПереслатьКакВложение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "Предмет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "36"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.462240+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DocumentJournals\\Взаимодействия\\Forms\\ФормаСпискаЭлектроннаяПочтаБП\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DocumentJournals\\Взаимодействия\\Forms\\ФормаСпискаЭлектроннаяПочтаБП\\Ext"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаМетки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ДополнительныеРеквизитыИСведения",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ТекущийНаборСвойств",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "СвойствоГолубое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "СвойствоЖелтое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "СвойствоЗеленое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "СвойствоЛаймовое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "СвойствоКрасное",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "СвойствоОранжевое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "СвойствоРозовое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "СвойствоСерое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "СвойствоСинее",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "СвойствоФиолетовое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "КомандаОК",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "КомандаОтмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.816893500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\ChartsOfCharacteristicTypes\\ДополнительныеРеквизитыИСведения\\Forms\\ФормаМетки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\ChartsOfCharacteristicTypes\\ДополнительныеРеквизитыИСведения\\Forms\\ФормаМетки\\Ext"
+  }
+}

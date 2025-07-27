@@ -1,0 +1,135 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СкрытиеКонфиденциальнойИнформации",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПравилоСтрока",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилоЧисло",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилоБулево",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилоДата",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилоХранилищеЗначений",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОчищатьПерсональныеНастройкиПользователей",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалятьФайлы",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "УничтоженныеДанные",
+        "attributes": [
+          {
+            "name": "ИмяОбъекта",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Поле",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Категория",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИдентификаторОбъекта",
+            "data_type": "УникальныйИдентификатор",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма",
+      "ВыборПравилОбработки"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:497 - содержание макета не зависит от языка конфигурации"
+  },
+  "search_keywords": [
+    "СкрытиеКонфиденциальнойИнформации",
+    "Скрытие",
+    "Конфиденциальной",
+    "Информации"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.484215+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

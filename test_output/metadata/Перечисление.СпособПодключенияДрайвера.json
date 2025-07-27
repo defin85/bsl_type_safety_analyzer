@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СпособПодключенияДрайвера",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Установка драйвера осуществляется из информационной базы"
+  },
+  "search_keywords": [
+    "СпособПодключенияДрайвера",
+    "Способ",
+    "Подключения",
+    "Драйвера"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.188908600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

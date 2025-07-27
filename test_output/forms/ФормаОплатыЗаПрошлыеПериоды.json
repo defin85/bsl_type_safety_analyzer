@@ -1,0 +1,365 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаОплатыЗаПрошлыеПериоды",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ПомощникУплатыНалоговВзносовПрошлыхЛет",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 34,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Платежи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "Итого",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ЦветПодсветки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ПоказыватьКомандыОплаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ИнтервалПроверкиСостоянияИнтеграцииСБанком",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ХешДанныхБаннера",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "СообщениеТребуютсяРеквизиты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "РеквизитыОрганизацииЗаполнены",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "КодЗадачи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "Правило",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ТаблицаОстатков",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "Налог",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "Пеня",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "Штраф",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ПФРВзнос",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ПФРВзносСвышеПредела",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ПФРПеня",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ПФРШтраф",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ФФОМСВзнос",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ФФОМСПеня",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ФФОМСШтраф",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ПФРИтого",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ФФОМСИтого",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ПроверкаПрошлыхПериодов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ЕдиныйТарифВзнос",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ЕдиныйТарифПеня",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ЕдиныйТарифШтраф",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ЕдиныйТарифИтого",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ПерешлиНаЕдиныйТариф",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ПлательщикЕНП",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ОперацииПоЕНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ДатаПереходаНаЕНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ИнтерфейсИнтеграцииСБанками",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ОплатитьНаличнымиПоКвитанции",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ОплатитьСБанковскогоСчета",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ВыгрузитьПлатежи",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОтправитьПлатежиВБанк",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.969590600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПомощникУплатыНалоговВзносовПрошлыхЛет\\Forms\\ФормаОплатыЗаПрошлыеПериоды\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПомощникУплатыНалоговВзносовПрошлыхЛет\\Forms\\ФормаОплатыЗаПрошлыеПериоды\\Ext"
+  }
+}

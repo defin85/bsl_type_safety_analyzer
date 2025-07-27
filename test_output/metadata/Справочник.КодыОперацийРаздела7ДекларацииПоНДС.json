@@ -1,0 +1,64 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КодыОперацийРаздела7ДекларацииПоНДС",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ОперацияНеПодлежитНалогообложению",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидНеоблагаемойОперации",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВключаетсяВРеестрПодтверждающихДокументов",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "ДобавлениеЭлементов",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КодыОперацийРаздела7ДекларацииПоНДС",
+    "Коды",
+    "Операций",
+    "Раздела",
+    "7",
+    "Декларации",
+    "По",
+    "Н",
+    "Д",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.585365600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

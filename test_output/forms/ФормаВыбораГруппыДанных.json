@@ -1,0 +1,59 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаВыбораГруппыДанных",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "НастройкиДополнительныхРеквизитовЭПД",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Дерево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ТипДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Выбрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПоказатьТехническиеПоля",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.719517600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\НастройкиДополнительныхРеквизитовЭПД\\Forms\\ФормаВыбораГруппыДанных\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\НастройкиДополнительныхРеквизитовЭПД\\Forms\\ФормаВыбораГруппыДанных\\Ext"
+  }
+}

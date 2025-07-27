@@ -1,0 +1,221 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаПроверки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ПроверкаКодовМаркировкиИСМП",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 18,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ЗагрузкаДанныхТСД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ОрганизацияПриОткрытии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ИспользоватьПодключаемоеОборудование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "КодМаркировкиДляУточнения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "БуферОбмена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "Организация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "РежимРаботыОдинКод",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ДеревоКодовМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ОрганизацияДляСохранения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "91"
+        }
+      },
+      {
+        "name": "КэшМаркируемойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "93"
+        }
+      },
+      {
+        "name": "ЭтоНезависимоеОкно",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "94"
+        }
+      },
+      {
+        "name": "ПолноеИмяФормыОтчетаМестаИспользования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "100"
+        }
+      },
+      {
+        "name": "ПоддерживаемыеТипыПодключаемогоОборудования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "106"
+        }
+      },
+      {
+        "name": "ПодключаемоеОборудованиеБПО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "119"
+        }
+      },
+      {
+        "name": "ЦветПроблема",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "122"
+        }
+      },
+      {
+        "name": "ЦветТребуетВнимания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "123"
+        }
+      },
+      {
+        "name": "ТекущаяДата",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "124"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПоискПоШтрихкоду",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ЗагрузитьДанныеИзТСД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ЗагрузитьИзВнешнегоФайла",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОбновитьДанныеПоКоду",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.025728700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПроверкаКодовМаркировкиИСМП\\Forms\\ФормаПроверки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПроверкаКодовМаркировкиИСМП\\Forms\\ФормаПроверки\\Ext"
+  }
+}

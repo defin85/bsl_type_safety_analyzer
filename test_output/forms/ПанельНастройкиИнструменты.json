@@ -1,0 +1,166 @@
+{
+  "metadata_type": "Form",
+  "name": "ПанельНастройкиИнструменты",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ПанелиПростойИнтерфейс",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 0,
+    "elements": [],
+    "attributes": [],
+    "commands": [
+      {
+        "name": "СверткаИнформационнойБазы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПроверкаЗаписейРегистраБухгалтерии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПроверкаПереходаНаФСБУ6",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ПомощникИсключенияИзПрослеживаемости",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "УничтожениеПерсональныхДанных",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ПомощникПоПереходуНаУСН",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ВводОстатковПриИзмененииОбъектаУСН",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "УстановкаЦенНоменклатуры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "НастройкиРаспознаванияДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "РаботаСНоменклатурой",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "НастройкиБиллинга",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "НастройкиПроверкиРНПТ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "Сервис1СКабинетСотрудника",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ЗагрузкаИз1СПредприятия77",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ЗагрузкаДанныхИзТиС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ЗагрузкаИзДругойУчетнойСистемы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.609420600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанелиПростойИнтерфейс\\Forms\\ПанельНастройкиИнструменты\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанелиПростойИнтерфейс\\Forms\\ПанельНастройкиИнструменты\\Ext"
+  }
+}

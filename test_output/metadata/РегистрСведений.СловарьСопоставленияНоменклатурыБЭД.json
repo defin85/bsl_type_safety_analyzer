@@ -1,0 +1,38 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СловарьСопоставленияНоменклатурыБЭД",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Слово",
+        "data_type": "Число(3, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СловарьСопоставленияНоменклатурыБЭД",
+    "Словарь",
+    "Сопоставления",
+    "Номенклатуры",
+    "Б",
+    "Э",
+    "Д"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.330353800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

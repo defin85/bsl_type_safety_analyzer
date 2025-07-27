@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОсновныеВариантыПеречисленияСотруднику",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОсновныеВариантыПеречисленияСотруднику",
+    "Основные",
+    "Варианты",
+    "Перечисления",
+    "Сотруднику"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.979268400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

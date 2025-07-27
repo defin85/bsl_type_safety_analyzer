@@ -1,0 +1,235 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегистрацияСчетовФактурНаАванс",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НачалоПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КонецПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗаТекущийПериод",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НеПередаютсяКонтрагентам",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Дата",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Список",
+        "attributes": [
+          {
+            "name": "СФсформирован",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Контрагент",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДоговорКонтрагента",
+            "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сумма",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтавкаНДС",
+            "data_type": "ПеречислениеСсылка.СтавкиНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаНДС",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументОснование",
+            "data_type": "ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.ПоступлениеНаРасчетныйСчет, ДокументСсылка.КорректировкаРеализации, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ВозвратТоваровОтПокупателя, ДокументСсылка.ОплатаПлатежнойКартой, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.ПриходныйКассовыйОрдер",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетНаОплату",
+            "data_type": "ДокументСсылка.СчетНаОплатуПокупателю",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Дата",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВалютаДокумента",
+            "data_type": "СправочникСсылка.Валюты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВалютнаяСумма",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетФактура",
+            "data_type": "ДокументСсылка.СчетФактураВыданный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаДокументаОснования",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПорядокРегистрацииСчетовФактурНаАванс",
+            "data_type": "ПеречислениеСсылка.ПорядокРегистрацииСчетовФактурНаАванс",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "АвансПоКомиссии",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Выставлен",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегистрацияСчетовФактурНаАванс",
+    "Регистрация",
+    "Счетов",
+    "Фактур",
+    "На",
+    "Аванс"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.469010600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

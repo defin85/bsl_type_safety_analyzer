@@ -1,0 +1,43 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтруктураПредприятия",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Источник",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций, СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодИсточника",
+        "data_type": "Строка(9, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СтруктураПредприятия",
+    "Структура",
+    "Предприятия"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.953790700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаРасшифровкаСписанияЕНС",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "МониторНалоговИОтчетности",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 5,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ДоступноНаЕНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "СуммаНалога",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ДоступноКСписанию",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "КДоплате",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      }
+    ],
+    "commands": []
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.419361800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\МониторНалоговИОтчетности\\Forms\\ФормаРасшифровкаСписанияЕНС\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\МониторНалоговИОтчетности\\Forms\\ФормаРасшифровкаСписанияЕНС\\Ext"
+  }
+}

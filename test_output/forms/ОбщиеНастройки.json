@@ -1,0 +1,671 @@
+{
+  "metadata_type": "Form",
+  "name": "ОбщиеНастройки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ПанельАдминистрированияБЭД",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 47,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ИспользоватьАвтоматическоеПолучениеЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИспользоватьАвтоматическуюОтправкуЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ОповещатьОСобытияхЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ИспользоватьАвтоматическуюПубликациюТорговыхПредложений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьЭлектронныеПодписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьИнтеграциюСЯндексКассой",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбменБизнесСеть",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбменСБанками",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбменЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбменЭДМеждуОрганизациями",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОтложеннуюОтправкуЭлектронныхДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ИспользоватьАвтоматическоеПолучениеУведомленияОтЯндексКассы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОзнакомлениеСЭлектроннымиДокументами",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ПроверкаНастроекОтправкиПолученияЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "РезультатПроверкиНастроекОтправкиПолученияЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ПомечатьНаУдалениеТранспортныеКонтейнерыЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "Константа_СрокХраненияТранспортногоКонтейнераЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "Константа_СоздаватьКонтрагентовАвтоматическиБЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Константа_ОтправлятьВходящиеДокументыНаУтверждение",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьПрямойОбменЭлектроннымиДокументами",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "Константа_НеВыгружатьИзображенияТорговыхПредложений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ТребуетсяВзаимодействие",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "РазделениеВключено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ИспользуютсяОбсуждения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьВнутренниеДокументыЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбменEDI",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "Константа_ПоказыватьРекомендацииБизнесСеть",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ВыбранныйРаздел",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "Константа_ВыводитьQRКодНаПечатныхФормахДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьЭлектронноеАктированиеВЕИС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "Константа_ЗапретитьФормированиеОтветногоТитулаБезДокументовУчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьЭлектронноеАктированиеЗаказчикаВЕИС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьПрочтениеДокументовЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ИспользоватьАвтоматическоеОбновлениеДанныхСервисДоставки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ПроверкаНастроекПолученияНаложенныхПлатежей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьРеестрДоверенностейФНСЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьИнтеграциюОблачногоЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьОбезличенныеСертификаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьСервис1СШтамп",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "Константа_ТипПодписиЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "Константа_ТипПодписиМЧД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ИспользоватьСервис1СШтамп",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "Константа_ОтключитьАвтоматическоеДовериеПолнымПолномочиям",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "Константа_ОтключитьЗаполнениеТекстовыхПолномочийПоУмолчанию",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "Константа_ИспользоватьРазделениеДокументовПоОтветственнымЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "СервисыДоставки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "Константа_ПриниматьПриглашенияЭДОАвтоматически",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ОткрытьНастройкиПрофилейЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ОткрытьНастройкиЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "НастройкиЭлектроннойПодписиИШифрования",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ОткрытьПомощникПодключенияКСервису1СЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ОткрытьНастройкиОбменаСБанками",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "НастроитьОтправкуЭД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "НастроитьПолученияЭД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ОткрытьПомощникПодключенияКСервисуБизнесСеть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "НастроитьОповещенияЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "НастроитьРасписаниеПубликацииТорговыхПредложений",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ОткрытьНастройкиЯндексКассы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ПерейтиВШаблоныСообщений",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "НастроитьПолучениеУведомленийОтЯндексКассы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ОткрытьПомощникПубликацииТорговыхПредложений",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ОткрытьМаршрутыПодписания",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ОткрытьПрофильАбонента1СБизнесСеть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ОткрытьПомощникНастроекРегламентногоЗаданияОтправка",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "НастроитьПометкуНаУдалениеТранспортныхКонтейнеровЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "РазблокироватьРаботуСВнешнимиРесурсами",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОткрытьПомощникНастроекРегламентногоЗаданияПолучение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ОткрытьНастройкиEDI",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "НастроитьСозданиеПлатежныхДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ОткрытьМашиночитаемыеДоверенности",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ОткрытьСтраницуПодключенияEDIОбменСТорговымиСетями",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ОткрытьУчетныеЗаписиОблачногоЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "42"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.652740100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанельАдминистрированияБЭД\\Forms\\ОбщиеНастройки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанельАдминистрированияБЭД\\Forms\\ОбщиеНастройки\\Ext"
+  }
+}

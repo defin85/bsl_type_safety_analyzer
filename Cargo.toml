@@ -85,4 +85,32 @@ panic = "abort"
 name = "bsl-analyzer"
 path = "src/main.rs"
 
+[[bin]]
+name = "test_hbk_parser"
+path = "test_hbk_parser.rs"
+
+[[bin]]
+name = "test_chunked_export"
+path = "test_chunked_export.rs"
+
+[[bin]]
+name = "process_all_docs"
+path = "process_all_docs.rs"
+
+[[bin]]
+name = "enhance_index"
+path = "enhance_index.rs"
+
+[[bin]]
+name = "analyze_objects"
+path = "src/bin/analyze_objects.rs"
+
+[[bin]]
+name = "convert_to_hybrid"
+path = "src/bin/convert_to_hybrid.rs"
+
+[[bin]]
+name = "extract_hybrid_docs"
+path = "src/bin/extract_hybrid_docs.rs"
+
 # Убираем бинарник bsl-lsp так как файл был удален

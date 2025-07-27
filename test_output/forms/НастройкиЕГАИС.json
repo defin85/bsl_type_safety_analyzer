@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "НастройкиЕГАИС",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ПанельАдминистрированияЕГАИС",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 5,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "НаборКонстант",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "РасписаниеОтправкиПолученияЕГАИС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "РасписаниеСверткиРегистраСоответствиеНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "РежимРаботы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ДополнительныеКонстанты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "НастроитьОтправкуПолучениеЕГАИС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ПараметрыПодключенияЕГАИС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "НастроитьСверткуРегистраСоответствияНоменклатурыЕГАИС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.662468+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанельАдминистрированияЕГАИС\\Forms\\НастройкиЕГАИС\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПанельАдминистрированияЕГАИС\\Forms\\НастройкиЕГАИС\\Ext"
+  }
+}

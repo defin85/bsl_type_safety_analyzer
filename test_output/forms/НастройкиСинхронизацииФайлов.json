@@ -1,0 +1,140 @@
+{
+  "metadata_type": "Form",
+  "name": "НастройкиСинхронизацииФайлов",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "НастройкиСинхронизацииФайлов",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 8,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "АвтоматическиСинхронизироватьФайлы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ИдентификаторФоновогоЗадания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТекущееФоновоеЗадание",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ДеревоОбъектовМетаданных",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТекущийВладелецФайла",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ВладелецФайла",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "СтрокаНайдена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "Список",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "НастроитьРасписание",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СинхронизацияЭлемента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Синхронизировать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "СоздатьСинхронизациюФайлов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ИзменитьНастройкуСинхронизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.779538100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\НастройкиСинхронизацииФайлов\\Forms\\НастройкиСинхронизацииФайлов\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\НастройкиСинхронизацииФайлов\\Forms\\НастройкиСинхронизацииФайлов\\Ext"
+  }
+}

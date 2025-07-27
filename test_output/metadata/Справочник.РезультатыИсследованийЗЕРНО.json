@@ -1,0 +1,185 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РезультатыИсследованийЗЕРНО",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Идентификатор",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Товаропроизводитель",
+        "data_type": "СправочникСсылка.КлючиРеквизитовОрганизацийЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОКПД2",
+        "data_type": "Строка(36, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "МестоФормированияПартии",
+        "data_type": "СправочникСсылка.РеестрМестФормированияПартийЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Лаборатория",
+        "data_type": "СправочникСсылка.КлючиРеквизитовОрганизацийЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Количество",
+        "data_type": "Число(10, 3)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КоличествоНачальное",
+        "data_type": "Число(10, 3)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЦельИспользования",
+        "data_type": "СправочникСсылка.КлассификаторНСИЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "МестоОтбораПроб",
+        "data_type": "СправочникСсылка.КлючиАдресовЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПротоколИсследований",
+        "data_type": "СправочникСсылка.КлючиРеквизитовПервичныхДокументовЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АктОтбораПроб",
+        "data_type": "СправочникСсылка.КлючиРеквизитовПервичныхДокументовЗЕРНО, СправочникСсылка.АктыОтбораПробЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТребуетсяЗагрузка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерПробы",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Статус",
+        "data_type": "ПеречислениеСсылка.СтатусыРезультатовИсследованийЗЕРНО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ПотребительскиеСвойства",
+        "attributes": [
+          {
+            "name": "ПотребительскоеСвойство",
+            "data_type": "СправочникСсылка.КлассификаторНСИЗЕРНО",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Значение",
+            "data_type": "ОпределяемыйТип.ЗначениеПотребительскогоСвойстваЗЕРНО",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЭлемента",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РезультатыИсследованийЗЕРНО",
+    "Результаты",
+    "Исследований",
+    "З",
+    "Е",
+    "Р",
+    "Н",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.872685400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

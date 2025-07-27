@@ -1,0 +1,122 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаВыбораИзКлассификатора",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "КлассификаторЕдиницИзмерения",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 9,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "СтрокаПоиска",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Классификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ИмяМакета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ОбластьКодЧисловойЛево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ОбластьКодЧисловойПраво",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОбластьНаименованиеКраткоеЛево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ОбластьНаименованиеКраткоеПраво",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ОбластьНаименованиеПолноеЛево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ОбластьНаименованиеПолноеПраво",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Выбрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ИскатьВперед",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.004274500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\КлассификаторЕдиницИзмерения\\Forms\\ФормаВыбораИзКлассификатора\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\КлассификаторЕдиницИзмерения\\Forms\\ФормаВыбораИзКлассификатора\\Ext"
+  }
+}

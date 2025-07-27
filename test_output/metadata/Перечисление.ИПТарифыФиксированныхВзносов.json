@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИПТарифыФиксированныхВзносов",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Тариф для военных пенсионеров согласно п.1.4. ст. 430 НК РФ"
+  },
+  "search_keywords": [
+    "ИПТарифыФиксированныхВзносов",
+    "И",
+    "П",
+    "Тарифы",
+    "Фиксированных",
+    "Взносов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.963978+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

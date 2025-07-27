@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПанельОбменЗЕРНО",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма",
+      "СостоянияОбмена",
+      "ВыборКлассификатора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПанельОбменЗЕРНО",
+    "Панель",
+    "Обмен",
+    "З",
+    "Е",
+    "Р",
+    "Н",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.372892300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

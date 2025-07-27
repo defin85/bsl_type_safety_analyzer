@@ -350,29 +350,29 @@ impl FormXmlParser {
     
     /// Проверяет, является ли путь валидным путем к форме 1С
     fn is_valid_form_path(&self, path: &Path) -> bool {
-        // Проверяем структуру пути: .../Forms/FormName/Form.xml
+        // Проверяем структуру пути: .../Forms/FormName/Ext/Form.xml
         let components: Vec<_> = path.components().collect();
         
-        if components.len() < 3 {
+        if components.len() < 4 {
             return false;
         }
         
-        // Проверяем, что предпоследняя папка называется "Forms"
-        if let Some(forms_component) = components.get(components.len() - 3) {
-            if let Some(name) = forms_component.as_os_str().to_str() {
-                return name == "Forms";
-            }
-        }
+        // Проверяем, что в пути есть папка "Forms" и "Ext"
+        let has_forms = components.iter().any(|c| c.as_os_str() == "Forms");
+        let has_ext = components.iter().any(|c| c.as_os_str() == "Ext");
         
-        false
+        has_forms && has_ext
     }
     
     /// Извлекает имя формы из пути к файлу
     fn extract_form_name_from_path(&self, path: &Path) -> String {
-        // Имя формы = имя папки, содержащей Form.xml
-        if let Some(parent) = path.parent() {
-            if let Some(form_name) = parent.file_name() {
-                return form_name.to_string_lossy().to_string();
+        // Структура: .../Forms/FormName/Ext/Form.xml
+        // Имя формы - папка перед Ext
+        if let Some(ext_parent) = path.parent() {
+            if let Some(form_parent) = ext_parent.parent() {
+                if let Some(form_name) = form_parent.file_name() {
+                    return form_name.to_string_lossy().to_string();
+                }
             }
         }
         "Unknown".to_string()
@@ -382,11 +382,14 @@ impl FormXmlParser {
     fn extract_object_name_from_path(&self, path: &Path) -> Option<String> {
         let components: Vec<_> = path.components().collect();
         
-        // Ищем структуру: ObjectType/ObjectName/Forms/FormName/Form.xml
-        if components.len() >= 5 {
-            if let Some(object_name_component) = components.get(components.len() - 4) {
-                if let Some(name) = object_name_component.as_os_str().to_str() {
-                    return Some(name.to_string());
+        // Ищем структуру: ObjectType/ObjectName/Forms/FormName/Ext/Form.xml
+        // Ищем компонент "Forms" и берем предыдущий компонент как имя объекта
+        for (i, component) in components.iter().enumerate() {
+            if component.as_os_str() == "Forms" && i > 0 {
+                if let Some(object_component) = components.get(i - 1) {
+                    if let Some(name) = object_component.as_os_str().to_str() {
+                        return Some(name.to_string());
+                    }
                 }
             }
         }

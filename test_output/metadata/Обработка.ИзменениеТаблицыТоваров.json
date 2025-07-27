@@ -1,0 +1,304 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИзменениеТаблицыТоваров",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "Товары",
+        "attributes": [
+          {
+            "name": "Номенклатура",
+            "data_type": "СправочникСсылка.Номенклатура",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Содержание",
+            "data_type": "Строка(1000, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КоличествоМест",
+            "data_type": "Число(15, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЕдиницаИзмерения",
+            "data_type": "СправочникСсылка.КлассификаторЕдиницИзмерения",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Коэффициент",
+            "data_type": "Число(10, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Количество",
+            "data_type": "Число(15, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Цена",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЦенаВРознице",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сумма",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПроцентСкидки",
+            "data_type": "Число(4, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаСкидки",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаВРознице",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтавкаНДС",
+            "data_type": "ПеречислениеСсылка.СтавкиНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаНДС",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтранаПроисхождения",
+            "data_type": "СправочникСсылка.СтраныМира",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НомерГТД",
+            "data_type": "СправочникСсылка.НомераГТД",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Валюта",
+            "data_type": "СправочникСсылка.Валюты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НомерСтрокиДокумента",
+            "data_type": "Число(10, 0)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НовыйСчетУчета",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОтражениеВУСН",
+            "data_type": "ПеречислениеСсылка.ОтражениеВУСН",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПереданныеСчетУчета",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Пометка",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Субконто",
+            "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетДоходов",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетРасходов",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчета",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчетаНДС",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчетаНДСПоРеализации",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СпособУчетаНДС",
+            "data_type": "ПеречислениеСсылка.СпособыУчетаНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетНаОплатуПокупателю",
+            "data_type": "ДокументСсылка.СчетНаОплатуПокупателю",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Розничная цена в розничной торговле"
+  },
+  "search_keywords": [
+    "ИзменениеТаблицыТоваров",
+    "Изменение",
+    "Таблицы",
+    "Товаров"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.274789100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

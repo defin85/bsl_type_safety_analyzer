@@ -1,0 +1,75 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ТипыЦенНоменклатуры",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ВалютаЦены",
+        "data_type": "СправочникСсылка.Валюты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЦенаВключаетНДС",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПорядокОкругления",
+        "data_type": "ПеречислениеСсылка.ПорядкиОкругления",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОкруглятьВБольшуюСторону",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаВыбора",
+      "ФормаСписка",
+      "ФормаЭлемента"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ТипыЦенНоменклатуры",
+    "Типы",
+    "Цен",
+    "Номенклатуры"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.974494400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

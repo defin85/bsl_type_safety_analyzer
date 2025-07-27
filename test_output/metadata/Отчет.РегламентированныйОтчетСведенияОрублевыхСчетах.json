@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетСведенияОрублевыхСчетах",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2005Кв1",
+      "ФормаОтчета2015Кв1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетСведенияОрублевыхСчетах",
+    "Регламентированный",
+    "Отчет",
+    "Сведения",
+    "Орублевых",
+    "Счетах"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.983099200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КалендарьОтчетностиВызовСервера",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КалендарьОтчетностиВызовСервера",
+    "Календарь",
+    "Отчетности",
+    "Вызов",
+    "Сервера"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:33.967696100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

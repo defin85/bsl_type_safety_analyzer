@@ -1,0 +1,241 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлассификаторПАТСАТУРН",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Идентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОКПД2",
+        "data_type": "Строка(12, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидПродукции",
+        "data_type": "ПеречислениеСсылка.ВидыПродукцииСАТУРН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Статус",
+        "data_type": "ПеречислениеСсылка.СтатусыОбъектовСАТУРН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Группа",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Регистрант",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерГосударственнойРегистрации",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаРегистрации",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОкончанияРегистрации",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДействующееВещество",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПрепаративнаяФорма",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СодержаниеДействующегоВещества",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КлассОпасности",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТребуетсяЗагрузка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Производитель",
+        "data_type": "СправочникСсылка.КлассификаторОрганизацийСАТУРН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "СоставТукосмеси",
+        "attributes": [
+          {
+            "name": "ПА",
+            "data_type": "СправочникСсылка.КлассификаторПАТСАТУРН",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИдентификаторСтроки",
+            "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Количество",
+            "data_type": "Число(15, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "СоставКомбипака",
+        "attributes": [
+          {
+            "name": "ПА",
+            "data_type": "СправочникСсылка.КлассификаторПАТСАТУРН",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ИдентификаторСтроки",
+            "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Количество",
+            "data_type": "Число(15, 3, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЭлемента",
+      "ДанныеКлассификатора",
+      "ПараметрыПоиска",
+      "ПомощникСоздания"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Компонент тукосмеси"
+  },
+  "search_keywords": [
+    "КлассификаторПАТСАТУРН",
+    "Классификатор",
+    "П",
+    "А",
+    "Т",
+    "С",
+    "А",
+    "Т",
+    "У",
+    "Р",
+    "Н"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.564654400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

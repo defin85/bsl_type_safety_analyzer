@@ -1,0 +1,833 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаРедактированияШаблона",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ШаблоныДоговоров",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 4,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ФорматированныйДокумент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ДополнительныеРеквизиты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ЦветФонаЗаменяемогоПараметра",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ВставитьНомерДоговора",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ВставитьЮридическийАдресОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ВставитьЮридическийАдресКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ВставитьДатуДоговора",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ВставитьПолноеНаименованиеОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ВставитьПолноеНаименованиеКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ВставитьБанковскиеРеквизитыОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ВставитьСрокОплаты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ВставитьФактическийАдресОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ВставитьТелефонОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ВставитьФаксОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ВставитьАдресЭлектроннойПочтыОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ВставитьПочтовыйАдресОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ВставитьФактическийАдресКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ВставитьТелефонКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ВставитьФаксКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ВставитьАдресЭлектроннойПочтыКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ВставитьПочтовыйАдресКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ВставитьСуммуДокумента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ВосстановитьТиповойШаблон",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ВставитьГородПоЮридическомуАдресуОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ВставитьГородПоФактическомуАдресуОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ВставитьГородПоПочтовомуАдресуОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ВставитьИННКППОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ВставитьОснованиеПолномочийРуководителяОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ВставитьПредставительОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ВставитьОГРНОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ВставитьСвидетельствоОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "ВставитьБанковскиеРеквизитыКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ВставитьИННКППКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ВставитьОГРНКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ВставитьСвидетельствоКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ВставитьДокументУдостоверяющийЛичностьКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ВставитьГородПоЮридическомуАдресуКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ВставитьГородПоФактическомуАдресуКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ВставитьГородПоПочтовомуАдресуКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ВставитьОснованиеПолномочийРуководителяКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ВставитьПредставительКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "ВставитьСрокДействия",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДокументаПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДокументаБезНДС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДокументаБезНДСПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "ВставитьСуммаНДС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ВставитьСуммаНДСПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ВставитьСловоИменуемоеДляОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ВставитьСловоИменуемоеДляКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагентаРодительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагентаДательныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагентаТворительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагентаПредложныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагентаРодительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагентаДательныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагентаТворительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагентаПредложныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяКонтрагентаВинительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "ВставитьРуководительКонтрагентаВинительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизацииПредложныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "63"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизацииРодительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "64"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизацииТворительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "65"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизацииДательныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "66"
+        }
+      },
+      {
+        "name": "ВставитьДолжностьРуководителяОрганизацииВинительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "67"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизацииТворительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "68"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизацииВинительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "69"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизацииРодительныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "70"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизацииДательныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "71"
+        }
+      },
+      {
+        "name": "ВставитьРуководительОрганизацииПредложныйПадеж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "72"
+        }
+      },
+      {
+        "name": "ВставитьДатуОплаты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "ВставитьУсловиеОплаты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "62"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДоговора",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "73"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДоговораПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "74"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДоговораБезНДС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "75"
+        }
+      },
+      {
+        "name": "ВставитьСуммаДоговораБезНДСПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "76"
+        }
+      },
+      {
+        "name": "ВставитьСуммаНДСДоговора",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "77"
+        }
+      },
+      {
+        "name": "ВставитьСуммаНДСДоговораПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "78"
+        }
+      },
+      {
+        "name": "ВставитьСуммаСНДСДоговораПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "79"
+        }
+      },
+      {
+        "name": "ВставитьСтавкаНДСДоговора",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "80"
+        }
+      },
+      {
+        "name": "ВставитьСтавкаНДСДоговораПрописью",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "81"
+        }
+      },
+      {
+        "name": "ВставитьУсловиеИзменилсяСтатусСамозанятого",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "82"
+        }
+      },
+      {
+        "name": "ВставитьДатуРегистрацииКонтрагента",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "83"
+        }
+      },
+      {
+        "name": "ВставитьДатуРегистрацииОрганизации",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "84"
+        }
+      },
+      {
+        "name": "ВставитьДатуСоглашения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "85"
+        }
+      },
+      {
+        "name": "ВставитьНомерСоглашения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "86"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.758765300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ШаблоныДоговоров\\Forms\\ФормаРедактированияШаблона\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ШаблоныДоговоров\\Forms\\ФормаРедактированияШаблона\\Ext"
+  }
+}

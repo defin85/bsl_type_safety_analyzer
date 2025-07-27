@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЦеныНоменклатуры",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЦен"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЦеныНоменклатуры",
+    "Цены",
+    "Номенклатуры"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.605988400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

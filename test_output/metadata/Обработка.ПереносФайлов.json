@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПереносФайлов",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма",
+      "ФормаОтчета"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПереносФайлов",
+    "Перенос",
+    "Файлов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.378212900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

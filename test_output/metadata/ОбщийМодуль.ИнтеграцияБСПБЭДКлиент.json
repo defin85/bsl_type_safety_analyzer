@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИнтеграцияБСПБЭДКлиент",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИнтеграцияБСПБЭДКлиент",
+    "Интеграция",
+    "Б",
+    "С",
+    "П",
+    "Б",
+    "Э",
+    "Д",
+    "Клиент"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:33.707722+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

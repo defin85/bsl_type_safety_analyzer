@@ -1,0 +1,69 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗаболеванияВЕТИС",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Идентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторВерсии",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Статус",
+        "data_type": "ПеречислениеСсылка.СтатусыВерсионныхОбъектовВЕТИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТребуетсяЗагрузка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЗаболеванияВЕТИС",
+    "Заболевания",
+    "В",
+    "Е",
+    "Т",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.473609500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

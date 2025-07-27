@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СПАРКРиски",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СПАРКРиски",
+    "С",
+    "П",
+    "А",
+    "Р",
+    "К",
+    "Риски"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:35.490630+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

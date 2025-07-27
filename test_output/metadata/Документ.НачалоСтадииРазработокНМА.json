@@ -1,0 +1,85 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НачалоСтадииРазработокНМА",
+  "object_type": "Document",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "СправочникСсылка.Пользователи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РучнаяКорректировка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "СоздаваемыеОбъекты",
+        "attributes": [
+          {
+            "name": "НематериальныйАктив",
+            "data_type": "СправочникСсылка.НематериальныеАктивы",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаДокумента",
+      "ФормаСписка",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НачалоСтадииРазработокНМА",
+    "Начало",
+    "Стадии",
+    "Разработок",
+    "Н",
+    "М",
+    "А"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.283210700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

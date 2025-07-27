@@ -1,0 +1,51 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СписокСтатейЗатратВключенныхВБазуРаспределенияКосвенныхРасходов",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "СтатьиЗатрат",
+        "attributes": [
+          {
+            "name": "СтатьяЗатрат",
+            "data_type": "СправочникСсылка.СтатьиЗатрат",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СписокСтатейЗатратВключенныхВБазуРаспределенияКосвенныхРасходов",
+    "Список",
+    "Статей",
+    "Затрат",
+    "Включенных",
+    "В",
+    "Базу",
+    "Распределения",
+    "Косвенных",
+    "Расходов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.927862400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

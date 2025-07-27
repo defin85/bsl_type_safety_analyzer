@@ -1,0 +1,55 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатусыСамозанятых",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаРегистрации",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаПроверки",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоОкончательноеЗначение",
+        "data_type": "ОпределяемыйТип.Контрагент",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "В часовом поясе \"Europe/Moscow"
+  },
+  "search_keywords": [
+    "СтатусыСамозанятых",
+    "Статусы",
+    "Самозанятых"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.450258900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

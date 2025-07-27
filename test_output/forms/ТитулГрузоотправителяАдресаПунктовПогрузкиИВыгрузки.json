@@ -1,0 +1,239 @@
+{
+  "metadata_type": "Form",
+  "name": "ТитулГрузоотправителяАдресаПунктовПогрузкиИВыгрузки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЭлектронныйЗаказЗаявка",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 22,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ТитулГрузоотправителяАдресаПунктовПогрузкиИВыгрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПунктаПогрузкиФИАСЗдания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиИндекс",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиКодРегиона",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиРайон",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиГород",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиНаселенныйПункт",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиУлица",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиДом",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиКорпус",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяАдресПогрузкиКвартира",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяЗаявленныеДатаВремяПодачи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительЮЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительИП_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительФЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительЮЛНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительИПФамилия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительИПИмя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительИПОтчество",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительФЛФамилия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительФЛИмя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяГрузоотправительФЛОтчество",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "62"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ДобавитьПунктПодачи",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.483539+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказЗаявка\\Forms\\ТитулГрузоотправителяАдресаПунктовПогрузкиИВыгрузки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказЗаявка\\Forms\\ТитулГрузоотправителяАдресаПунктовПогрузкиИВыгрузки\\Ext"
+  }
+}

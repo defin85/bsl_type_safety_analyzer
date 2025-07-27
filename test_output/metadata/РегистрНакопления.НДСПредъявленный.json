@@ -1,0 +1,45 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НДСПредъявленный",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаСобытия",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Событие",
+        "data_type": "ДокументСсылка.КорректировкаПоступления, ДокументСсылка.КорректировкаРеализации, ДокументСсылка.СчетФактураПолученный",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Субсчет 19 счета, на котором учитывается НДС"
+  },
+  "search_keywords": [
+    "НДСПредъявленный",
+    "Н",
+    "Д",
+    "С",
+    "Предъявленный"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.657996400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

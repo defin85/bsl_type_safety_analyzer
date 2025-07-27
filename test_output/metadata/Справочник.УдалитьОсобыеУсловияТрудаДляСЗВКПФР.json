@@ -1,0 +1,37 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьОсобыеУсловияТрудаДляСЗВКПФР",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьОсобыеУсловияТрудаДляСЗВКПФР",
+    "Удалить",
+    "Особые",
+    "Условия",
+    "Труда",
+    "Для",
+    "С",
+    "З",
+    "В",
+    "К",
+    "П",
+    "Ф",
+    "Р"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.034026100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

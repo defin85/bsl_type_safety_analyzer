@@ -1,0 +1,35 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Обмен1СКАМИНЗарплатаБухгалтерия30РегистрацияНабора",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "Обмен1СКАМИНЗарплатаБухгалтерия30РегистрацияНабора",
+    "Обмен",
+    "1",
+    "С",
+    "К",
+    "А",
+    "М",
+    "И",
+    "Н",
+    "Зарплата",
+    "Бухгалтерия",
+    "30",
+    "Регистрация",
+    "Набора"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.177492400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

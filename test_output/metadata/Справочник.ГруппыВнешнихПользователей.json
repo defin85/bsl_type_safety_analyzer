@@ -1,0 +1,93 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ГруппыВнешнихПользователей",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВсеОбъектыАвторизации",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Состав",
+        "attributes": [
+          {
+            "name": "ВнешнийПользователь",
+            "data_type": "СправочникСсылка.ВнешниеПользователи",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "Роли",
+        "attributes": [
+          {
+            "name": "Роль",
+            "data_type": "СправочникСсылка.ИдентификаторыОбъектовМетаданных",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "Назначение",
+        "attributes": [
+          {
+            "name": "ТипПользователей",
+            "data_type": "ОпределяемыйТип.ВнешнийПользователь",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ГруппыВнешнихПользователей",
+    "Группы",
+    "Внешних",
+    "Пользователей"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.440376500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

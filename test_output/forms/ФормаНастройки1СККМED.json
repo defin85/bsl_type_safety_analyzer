@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаНастройки1СККМED",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ОфлайнОборудование",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 6,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ПодключаемоеОборудование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "КоличествоЭлементовВПакете",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "КаталогОбмена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ИмяФайлаЗагрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ИмяФайлаВыгрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ВидОбмена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ЗаписатьИЗакрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ТестУстройства",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.437482200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ОфлайнОборудование\\Forms\\ФормаНастройки1СККМED\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ОфлайнОборудование\\Forms\\ФормаНастройки1СККМED\\Ext"
+  }
+}

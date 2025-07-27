@@ -1,0 +1,37 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗаявлениеНаВыпускНовогоКвалифицированногоСертификата",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма",
+      "ФормаСоглашения",
+      "СведенияОбОрганизации",
+      "СведенияОВладельцеСертификата",
+      "ТехническаяИнформация",
+      "Информация",
+      "ИнформацияОДоступностиВыпуска",
+      "ВводПинКода"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Дата актуальности - 24.03.2014 (http://www.gnivc.ru/inf_provision/classifiers_reference/ssrf/)"
+  },
+  "search_keywords": [
+    "ЗаявлениеНаВыпускНовогоКвалифицированногоСертификата",
+    "Заявление",
+    "На",
+    "Выпуск",
+    "Нового",
+    "Квалифицированного",
+    "Сертификата"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.273660400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "metadata_type": "Form",
+  "name": "УправляемаяФормаНастройкиОтладкиОбработчиков",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "УниверсальныйОбменДаннымиXML",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ЦветОсобогоТекста",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ВыгрузитьКодОбработчиков",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОткрытьФайл",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Готово",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ПроверитьДоступность",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.359395600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\УниверсальныйОбменДаннымиXML\\Forms\\УправляемаяФормаНастройкиОтладкиОбработчиков\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\УниверсальныйОбменДаннымиXML\\Forms\\УправляемаяФормаНастройкиОтладкиОбработчиков\\Ext"
+  }
+}

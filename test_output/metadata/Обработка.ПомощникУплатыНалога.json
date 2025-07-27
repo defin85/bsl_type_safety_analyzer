@@ -1,0 +1,47 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПомощникУплатыНалога",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СуммаЕНП",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "Форма",
+      "ФормаЕдиная"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПомощникУплатыНалога",
+    "Помощник",
+    "Уплаты",
+    "Налога"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.440514400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

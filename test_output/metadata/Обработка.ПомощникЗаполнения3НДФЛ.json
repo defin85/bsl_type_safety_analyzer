@@ -1,0 +1,244 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПомощникЗаполнения3НДФЛ",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Период",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НалогКУплате",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвансовыеПлатежиИП",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СформироватьДекларацию4НДФЛ",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредполагаемаяСуммаДоходов",
+        "data_type": "Число(15, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТорговыйСбор",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерКорректировки",
+        "data_type": "Число(3, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерКорректировки4НДФЛ",
+        "data_type": "Число(3, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвансовыеПлатежиИП1Квартал",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвансовыеПлатежиИППолугодие",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвансовыеПлатежиИП9Месяцев",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТорговыйСбор1Квартал",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТорговыйСборПолугодие",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТорговыйСбор9Месяцев",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ДоходыВычеты",
+        "attributes": [
+          {
+            "name": "Вид",
+            "data_type": "ПеречислениеСсылка.ВычетыФизическихЛиц, ПеречислениеСсылка.ИсточникиДоходовФизическихЛиц",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Информация",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаДохода",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаВычета",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КлючСтроки",
+            "data_type": "Строка(36, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма",
+      "ДобровольныеПенсионныеВзносыИСтрахованиеЖизни",
+      "ДоходЗаПределамиРФ",
+      "ИнвестиционныйВычет",
+      "ИнойДоходОтИсточникаРФ",
+      "НаПриобретениеИлиСтроительствоНедвижимости",
+      "ОперацииСЦеннымиБумагами",
+      "ОплатаТруда",
+      "ПредпринимательскаяДеятельность",
+      "Подарок",
+      "ПолезнаяИнформация",
+      "ПродажаИмущества",
+      "РасшифровкаАвансовыхПлатежей",
+      "РасшифровкаУплаченногоТорговогоСбора",
+      "СдачаИмуществаВАренду",
+      "СоциальныеВычеты",
+      "СтандартныйВычетНаДетей",
+      "СтандартныйВычетНалогоплательщика",
+      "УбыткиПрошлыхЛетПоОперациямСЦеннымиБумагами",
+      "УплатаАвансовыхПлатежейНДФЛ",
+      "ВыигрышВЛотерееАзартныхИграх",
+      "УплатаНалогаПрошлыхЛет",
+      "АвансыПокупателей",
+      "ПодборАвансовПокупателей",
+      "ПредпринимательскаяДеятельность2020",
+      "ПрибыльКИК"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПомощникЗаполнения3НДФЛ",
+    "Помощник",
+    "Заполнения",
+    "3",
+    "Н",
+    "Д",
+    "Ф",
+    "Л"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.418094200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

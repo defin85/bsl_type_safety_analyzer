@@ -1,0 +1,168 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПредприятияВЕТИС",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Идентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторВерсии",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Статус",
+        "data_type": "ПеречислениеСсылка.СтатусыВерсионныхОбъектовВЕТИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Тип",
+        "data_type": "ПеречислениеСсылка.ТипыПредприятийВЕТИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДанныеАдреса",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Адрес",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АдресПредставление",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТребуетсяЗагрузка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтранаИдентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РегионИдентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РайонИдентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НаселенныйПунктИдентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатусВРеестре",
+        "data_type": "ПеречислениеСсылка.СтатусыПредприятийВРеестреЦерберВЕТИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "НомераПредприятий",
+        "attributes": [
+          {
+            "name": "Номер",
+            "data_type": "ОпределяемыйТип.СтрокаВЕТИС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаЭлемента",
+      "ДанныеКлассификатора",
+      "ПараметрыПоиска"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Глобальный идентификатор населенного пункта в соответствии со справочником РСХН"
+  },
+  "search_keywords": [
+    "ПредприятияВЕТИС",
+    "Предприятия",
+    "В",
+    "Е",
+    "Т",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.827375500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

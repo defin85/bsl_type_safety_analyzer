@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "ВыборОрганизацииОбмена",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "ДокументооборотСКонтролирующимиОрганами",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 4,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Организации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПустаяОрганизация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "МножественныйВыбор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Выбрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "УстановитьФлажкиУВсех",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "СнятьФлажкиУВсех",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ОткрытьОрганизацию",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.924799700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ДокументооборотСКонтролирующимиОрганами\\Forms\\ВыборОрганизацииОбмена\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ДокументооборотСКонтролирующимиОрганами\\Forms\\ВыборОрганизацииОбмена\\Ext"
+  }
+}

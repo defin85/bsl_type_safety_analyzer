@@ -1,0 +1,86 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаВыбораПоОстаткам",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "НомераГТД",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 6,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Список",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПоказыватьТолькоОстатки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ИнформационнаяНадписьПараметровВыбора",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "НоменклатураОтбор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ОрганизацияОтбор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИмяТаблицы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "КомандаВыбрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.342638500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\НомераГТД\\Forms\\ФормаВыбораПоОстаткам\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\НомераГТД\\Forms\\ФормаВыбораПоОстаткам\\Ext"
+  }
+}

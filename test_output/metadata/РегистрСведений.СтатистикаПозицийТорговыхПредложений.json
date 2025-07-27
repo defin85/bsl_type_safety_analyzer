@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатистикаПозицийТорговыхПредложений",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Уникальный идентификатор рубрики в сервисе 1С:Бизнес-Сеть"
+  },
+  "search_keywords": [
+    "СтатистикаПозицийТорговыхПредложений",
+    "Статистика",
+    "Позиций",
+    "Торговых",
+    "Предложений"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.426396100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

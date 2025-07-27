@@ -1,0 +1,77 @@
+{
+  "metadata_type": "Form",
+  "name": "ТитулГрузоотправителяГрузыУчетВГИС",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЭлектроннаяТранспортнаяНакладная",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 5,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ИмеетУчетВГИС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ИдентификационныеНомераУчетныхЕдиниц",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "СведенияГИСИнаяИнформацияОТоваре",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "СведенияГИСУчетнаяЕдиница",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "СведенияГИСНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.323931+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектроннаяТранспортнаяНакладная\\Forms\\ТитулГрузоотправителяГрузыУчетВГИС\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектроннаяТранспортнаяНакладная\\Forms\\ТитулГрузоотправителяГрузыУчетВГИС\\Ext"
+  }
+}

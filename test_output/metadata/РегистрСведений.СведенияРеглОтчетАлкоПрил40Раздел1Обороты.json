@@ -1,0 +1,79 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СведенияРеглОтчетАлкоПрил40Раздел1Обороты",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ХешИдПроизводителя",
+        "data_type": "Строка(64, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ХешИдКодПродПроизв",
+        "data_type": "Строка(64, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПроизводительИмпортер",
+        "data_type": "ОпределяемыйТип.КонтрагентБРО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Активно",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "П000010000303АдресXML",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Адрес XML или JSON производителя/импортера"
+  },
+  "search_keywords": [
+    "СведенияРеглОтчетАлкоПрил40Раздел1Обороты",
+    "Сведения",
+    "Регл",
+    "Отчет",
+    "Алко",
+    "Прил",
+    "40",
+    "Раздел",
+    "1",
+    "Обороты"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.298865600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

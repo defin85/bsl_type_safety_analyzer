@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаВыбораОрганизаций",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "ОбщиеОбъектыРеглОтчетности",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 4,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Организации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ВыбранныеОрганизации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "НачальноеЗначениеВыбора",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Выбрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "УстановитьФлажки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "СнятьФлажки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Отмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.574863700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ОбщиеОбъектыРеглОтчетности\\Forms\\ФормаВыбораОрганизаций\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ОбщиеОбъектыРеглОтчетности\\Forms\\ФормаВыбораОрганизаций\\Ext"
+  }
+}

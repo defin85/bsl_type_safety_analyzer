@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИспользоватьПрофилиБезопасностиДляДОО",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58 в имени используется сокращение"
+  },
+  "search_keywords": [
+    "ИспользоватьПрофилиБезопасностиДляДОО",
+    "Использовать",
+    "Профили",
+    "Безопасности",
+    "Для",
+    "Д",
+    "О",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.020953600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

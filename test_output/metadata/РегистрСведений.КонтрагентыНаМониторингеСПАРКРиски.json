@@ -1,0 +1,71 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КонтрагентыНаМониторингеСПАРКРиски",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИдентификаторЗапроса",
+        "data_type": "УникальныйИдентификатор",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Пользователь",
+        "data_type": "ОпределяемыйТип.Пользователь",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТипОшибки",
+        "data_type": "ПеречислениеСсылка.ВидыОшибокСПАРКРиски",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаДобавления",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "КонтрагентыНаМониторинге",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КонтрагентыНаМониторингеСПАРКРиски",
+    "Контрагенты",
+    "На",
+    "Мониторинге",
+    "С",
+    "П",
+    "А",
+    "Р",
+    "К",
+    "Риски"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.791769400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

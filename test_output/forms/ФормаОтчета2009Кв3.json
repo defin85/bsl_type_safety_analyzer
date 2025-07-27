@@ -1,0 +1,167 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаОтчета2009Кв3",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ReportForm",
+  "object_name": "РегламентированныйОтчетСтатистика1Квотирование",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 10,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "мТаблицаСоставПоказателей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "мСтруктураВариантыЗаполнения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "мДеревоСтраницОтчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ПолеТабличногоДокументаФормаОтчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "НомерКорректировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ПорядкиОкругленияОтчетности",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "СоответствиеЕдиницыИзмеренияДелителю",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ДатаПодписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "СтруктураРеквизитовФормы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ЗаписатьИЗакрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "93554"
+        }
+      },
+      {
+        "name": "Обновить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОчиститьОтчет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПоказатьБланк",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "СохранитьОтчет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОткрытьФормуНастроек",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:09.655071600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Reports\\РегламентированныйОтчетСтатистика1Квотирование\\Forms\\ФормаОтчета2009Кв3\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Reports\\РегламентированныйОтчетСтатистика1Квотирование\\Forms\\ФормаОтчета2009Кв3\\Ext"
+  }
+}

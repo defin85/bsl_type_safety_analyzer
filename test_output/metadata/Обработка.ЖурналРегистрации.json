@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЖурналРегистрации",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ЖурналРегистрации",
+      "ОтборЖурналаРегистрации",
+      "РедакторСоставаСвойства",
+      "Событие",
+      "РазделениеДанныхСеанса"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЖурналРегистрации",
+    "Журнал",
+    "Регистрации"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.251169100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

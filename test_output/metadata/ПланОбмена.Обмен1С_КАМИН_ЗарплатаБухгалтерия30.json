@@ -1,0 +1,154 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Обмен1С_КАМИН_ЗарплатаБухгалтерия30",
+  "object_type": "ExchangePlan",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаНачалаВыгрузкиДокументов",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗагружатьСправочникиИзБухгалтерииПредприятия",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИспользоватьОтборПоОрганизациям",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РегистрироватьИзменения",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимВыгрузкиПриНеобходимости",
+        "data_type": "ПеречислениеСсылка.РежимыВыгрузкиОбъектовОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РучнойОбмен",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Сотрудник",
+        "data_type": "СправочникСсылка.ФизическиеЛица",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьПравилаОтправкиСправочников",
+        "data_type": "Строка(32, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьРежимВыгрузкиСправочников",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьЭтотУзел",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Подразделение",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Организации",
+        "attributes": [
+          {
+            "name": "Организация",
+            "data_type": "СправочникСсылка.Организации",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаСписка",
+      "ФормаУзла",
+      "ФормаПодробнойИнформацииПоОбмену",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "Обмен1С_КАМИН_ЗарплатаБухгалтерия30",
+    "Обмен",
+    "1",
+    "С",
+    "К",
+    "А",
+    "М",
+    "И",
+    "Н",
+    "Зарплата",
+    "Бухгалтерия",
+    "30"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.001182700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВажностьПроблемыУчета",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Определяет значимость проблемы, выявленной при проверке"
+  },
+  "search_keywords": [
+    "ВажностьПроблемыУчета",
+    "Важность",
+    "Проблемы",
+    "Учета"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.697440900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

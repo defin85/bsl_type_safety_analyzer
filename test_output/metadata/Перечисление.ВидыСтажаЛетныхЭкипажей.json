@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыСтажаЛетныхЭкипажей",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВидыСтажаЛетныхЭкипажей",
+    "Виды",
+    "Стажа",
+    "Летных",
+    "Экипажей"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.903857800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КнигаУчетаДоходовПатент",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Содержание",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РеквизитыПервичногоДокумента",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтапПроведения",
+        "data_type": "Число(1, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Контрагент",
+        "data_type": "СправочникСсылка.Контрагенты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоговорКонтрагента",
+        "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТипОплаты",
+        "data_type": "СправочникСсылка.Патенты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КнигаУчетаДоходовПатент",
+    "Книга",
+    "Учета",
+    "Доходов",
+    "Патент"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.646340400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

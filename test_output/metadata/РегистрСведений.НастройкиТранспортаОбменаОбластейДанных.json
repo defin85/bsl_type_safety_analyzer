@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиТранспортаОбменаОбластейДанных",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Хранит общие для всех областей данных настройки транспорта сообщений обмена."
+  },
+  "search_keywords": [
+    "НастройкиТранспортаОбменаОбластейДанных",
+    "Настройки",
+    "Транспорта",
+    "Обмена",
+    "Областей",
+    "Данных"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.904681200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

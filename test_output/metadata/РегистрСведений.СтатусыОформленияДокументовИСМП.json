@@ -1,0 +1,77 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатусыОформленияДокументовИСМП",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Контрагент",
+        "data_type": "ОпределяемыйТип.ОрганизацияКонтрагентГосИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "ОпределяемыйТип.Пользователь",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Дата",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Номер",
+        "data_type": "Строка(11, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДополнительнаяИнформация",
+        "data_type": "ОпределяемыйТип.ОснованиеСтатусыОформленияДокументовИСМП",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СтатусыОформленияДокументовИСМП",
+    "Статусы",
+    "Оформления",
+    "Документов",
+    "И",
+    "С",
+    "М",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.445800200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

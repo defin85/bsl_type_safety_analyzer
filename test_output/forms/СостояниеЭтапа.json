@@ -1,0 +1,113 @@
+{
+  "metadata_type": "Form",
+  "name": "СостояниеЭтапа",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ОтправкиРегистрацияЮЛ",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 9,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "СписокФайлов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СостояниеЭтапа",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТекущийЭтап",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ОписаниеЭтапа",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "КодОшибки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОписаниеОшибки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "Идентификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ТипЭтапа",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ДатаОтвета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ВыгрузитьФайлы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.431350+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ОтправкиРегистрацияЮЛ\\Forms\\СостояниеЭтапа\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ОтправкиРегистрацияЮЛ\\Forms\\СостояниеЭтапа\\Ext"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьСостоянияМЧДКЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "СтатусТранзакции",
+        "data_type": "Строка(15, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторТранзакции",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаВремяТранзакции",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекстОтвета",
+        "data_type": "СправочникСсылка.УдалитьМашиночитаемыеДоверенностиКЭДО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьСостоянияМЧДКЭДО",
+    "Удалить",
+    "Состояния",
+    "М",
+    "Ч",
+    "Д",
+    "К",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.551660800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

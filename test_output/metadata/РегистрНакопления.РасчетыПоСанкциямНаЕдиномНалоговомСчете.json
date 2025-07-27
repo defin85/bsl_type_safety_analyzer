@@ -1,0 +1,39 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РасчетыПоСанкциямНаЕдиномНалоговомСчете",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПлатежныйДокумент",
+        "data_type": "ПеречислениеСсылка.ВидыПлатежейВГосБюджет",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РасчетыПоСанкциямНаЕдиномНалоговомСчете",
+    "Расчеты",
+    "По",
+    "Санкциям",
+    "На",
+    "Едином",
+    "Налоговом",
+    "Счете"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.688344900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

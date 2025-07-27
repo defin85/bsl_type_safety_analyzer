@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетАлкоПриложение38",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2023Кв3"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетАлкоПриложение38",
+    "Регламентированный",
+    "Отчет",
+    "Алко",
+    "Приложение",
+    "38"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.874300800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

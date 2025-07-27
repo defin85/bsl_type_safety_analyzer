@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПравилаПоискаПоЧастиНаименованияБЭД",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ПравилоПоискаПоЧастиНаименования"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПравилаПоискаПоЧастиНаименованияБЭД",
+    "Правила",
+    "Поиска",
+    "По",
+    "Части",
+    "Наименования",
+    "Б",
+    "Э",
+    "Д"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.102588200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

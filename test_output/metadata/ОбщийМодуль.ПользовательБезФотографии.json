@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПользовательБезФотографии",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПользовательБезФотографии",
+    "Пользователь",
+    "Без",
+    "Фотографии"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:32.008176300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

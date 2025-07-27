@@ -1,0 +1,85 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьНДФЛИмущественныеВычетыФизлиц",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КодПоОКАТО",
+        "data_type": "Строка(11, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КПП",
+        "data_type": "Строка(9, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОбособленноеПодразделение",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодразделениеОрганизации",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодПоОКТМО",
+        "data_type": "Строка(11, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "МесяцРегистрации",
+        "data_type": "Число(4, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "(Регл)"
+  },
+  "search_keywords": [
+    "УдалитьНДФЛИмущественныеВычетыФизлиц",
+    "Удалить",
+    "Н",
+    "Д",
+    "Ф",
+    "Л",
+    "Имущественные",
+    "Вычеты",
+    "Физлиц"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.701188700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

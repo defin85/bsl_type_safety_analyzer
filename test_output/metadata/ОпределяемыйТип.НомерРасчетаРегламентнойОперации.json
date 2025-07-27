@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НомерРасчетаРегламентнойОперации",
+  "object_type": "DefinedType",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Позволяет раздельно зафиксировать результаты расчетов, последовательно выполняемых в ходе регламентных операций по одному и тому же алгоритму в одном и том же периоде"
+  },
+  "search_keywords": [
+    "НомерРасчетаРегламентнойОперации",
+    "Номер",
+    "Расчета",
+    "Регламентной",
+    "Операции"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:37.084101400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

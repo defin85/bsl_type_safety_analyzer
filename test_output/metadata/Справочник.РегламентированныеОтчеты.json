@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныеОтчеты",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИсточникОтчета",
+        "data_type": "Строка(255, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Описание",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Периоды",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВнешнийОтчетИспользовать",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВнешнийОтчетХранилище",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВнешнийОтчетВерсия",
+        "data_type": "Строка(32, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УИДОтчета",
+        "data_type": "Строка(36, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЭлемента",
+      "ФормаГруппы",
+      "ФормаВыбораГруппы",
+      "ФормаВыбора",
+      "ФормаВыбораЭлементовДляВосстановленияПоказа"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Любая дополнительная информация"
+  },
+  "search_keywords": [
+    "РегламентированныеОтчеты",
+    "Регламентированные",
+    "Отчеты"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.860204200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

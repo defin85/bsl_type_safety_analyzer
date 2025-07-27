@@ -1,0 +1,72 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НДСНачисленный",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаСобытия",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Событие",
+        "data_type": "ПеречислениеСсылка.СобытияПоНДСПродажи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Номенклатура",
+        "data_type": "СправочникСсылка.Номенклатура",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетДоходовБУ",
+        "data_type": "ПланСчетовСсылка.Хозрасчетный",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетУчетаНДС",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Договор контрагента (для СФ на аванс, нал.агента по 161.5)"
+  },
+  "search_keywords": [
+    "НДСНачисленный",
+    "Н",
+    "Д",
+    "С",
+    "Начисленный"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.655496300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

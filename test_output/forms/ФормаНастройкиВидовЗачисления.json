@@ -1,0 +1,68 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаНастройкиВидовЗачисления",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ЗарплатныеПроекты",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ВидыЗачисленийПоСпособамВыплат",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "АдресТаблицыНастройкиВидовЗачислений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ЗаполнитьСпособамиВыплат",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "КомандаОК",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "КомандаОтмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:01.957061900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ЗарплатныеПроекты\\Forms\\ФормаНастройкиВидовЗачисления\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ЗарплатныеПроекты\\Forms\\ФормаНастройкиВидовЗачисления\\Ext"
+  }
+}

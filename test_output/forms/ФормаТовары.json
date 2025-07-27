@@ -1,0 +1,536 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаТовары",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "Номенклатура",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 27,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Список",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Новости",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Корзина",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "КорзинаПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТипЦен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ВалютаРегламентированногоУчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ТоварЦена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ТоварОстаток",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ТоварНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ТоварЦенаВключаетНДС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ТоварЦенаПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ТоварОстатокПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "СуммаВключаетНДС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ПараметрыПодключаемыхКоманд",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "УправлениеКассовойСменойДоступно",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ОтслеживатьПометкуУдаления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "Баннер",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ТекстБаннера",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ОтображатьОстаткиИЦеныВСписке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "РазрешенПросмотрЦен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "Склад",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ИспользоватьОтборПоСкладу",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ИспользоватьПодключаемоеОборудование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ПоддерживаемыеТипыПодключаемогоОборудования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ПоказыватьОстатки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ТолькоВНаличии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ПоказыватьСкрытые",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПоместитьВКорзину",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СоздатьНакладнуюПоступление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "СоздатьНакладнуюРеализация",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "СоздатьСчетПокупателю",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "СоздатьАктРеализация",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ОтчетПродажиПоНоменклатуре",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ОтчетДвижениеТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ОтчетОборачиваемостьТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ОтчетОстаткиТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ИзменитьВыделенные",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ПоказатьКонтекстныеНовости",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ОтчетДоходыИРасходы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ОтчетОборотныеСредства",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ОтчетСравнениеПродажПоНоменклатуре",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ОткрытьФормуВидовОплат",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ОткрытьПодключаемоеОборудование",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "СоздатьЧек",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ЗакрытьКассовуюСмену",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ОтчетАнализПродаж",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ОтчетОстаткиТоваровПоСрокамХранения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ОтчетКалькуляцияСебестоимости",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ИзменитьВидимостьПодсказок",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ЗакрытьПанельПодсказок",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "СоздатьКоммерческоеПредложение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ЗагрузкаКаталогаWIldberries",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ЗагрузкаКаталогаOzon",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ЗагрузкаКаталогаЯндексМаркет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ТолькоВНаличии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ПоказыватьСкрытые",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "Скрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "30"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.325787100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\Номенклатура\\Forms\\ФормаТовары\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\Номенклатура\\Forms\\ФормаТовары\\Ext"
+  }
+}

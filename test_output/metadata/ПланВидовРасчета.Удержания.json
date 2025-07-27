@@ -1,0 +1,97 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Удержания",
+  "object_type": "ChartOfCalculationTypes",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КатегорияУдержания",
+        "data_type": "ПеречислениеСсылка.КатегорииУдержаний",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РеквизитДопУпорядочивания",
+        "data_type": "Число(5, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидОперацииПоЗарплате",
+        "data_type": "ПеречислениеСсылка.ВидыОперацийПоЗарплате",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КраткоеНаименование",
+        "data_type": "Строка(25, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ДополнительныеРеквизиты",
+        "attributes": [
+          {
+            "name": "Свойство",
+            "data_type": "ПланВидовХарактеристикСсылка.ДополнительныеРеквизитыИСведения",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Значение",
+            "data_type": "Характеристика.ДополнительныеРеквизитыИСведения",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ТекстоваяСтрока",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаВидаРасчета",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58 различия имени и синонима оправданы"
+  },
+  "search_keywords": [
+    "Удержания",
+    "Удержания"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.719950500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

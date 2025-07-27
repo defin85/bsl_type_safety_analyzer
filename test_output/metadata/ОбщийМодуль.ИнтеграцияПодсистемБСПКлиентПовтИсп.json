@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИнтеграцияПодсистемБСПКлиентПовтИсп",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИнтеграцияПодсистемБСПКлиентПовтИсп",
+    "Интеграция",
+    "Подсистем",
+    "Б",
+    "С",
+    "П",
+    "Клиент",
+    "Повт",
+    "Исп"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:33.796233700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

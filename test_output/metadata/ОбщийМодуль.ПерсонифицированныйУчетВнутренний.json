@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПерсонифицированныйУчетВнутренний",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПерсонифицированныйУчетВнутренний",
+    "Персонифицированный",
+    "Учет",
+    "Внутренний"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:34.738654800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "metadata_type": "Form",
+  "name": "Токен",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ПрограммыЭлектроннойПодписиИШифрования",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 5,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "СерийныйНомер",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "Представление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Сертификаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ЭтоСервер",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "Слот",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Обновить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:02.505107900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ПрограммыЭлектроннойПодписиИШифрования\\Forms\\Токен\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ПрограммыЭлектроннойПодписиИШифрования\\Forms\\Токен\\Ext"
+  }
+}

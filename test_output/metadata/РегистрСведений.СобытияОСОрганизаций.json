@@ -1,0 +1,74 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СобытияОСОрганизаций",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НазваниеДокумента",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерДокумента",
+        "data_type": "Строка(11, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СуммаЗатратБУ",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СуммаЗатратНУ",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СуммаЗатратУСН",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": " Регистр, который отражает события, происходящие с ОС в организациях. Данные вносятся только документами. По этому регистру ведется анализ даты модернизации, перемещения и проч."
+  },
+  "search_keywords": [
+    "СобытияОСОрганизаций",
+    "События",
+    "О",
+    "С",
+    "Организаций"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.337898100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

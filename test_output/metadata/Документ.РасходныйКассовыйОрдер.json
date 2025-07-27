@@ -1,0 +1,825 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РасходныйКассовыйОрдер",
+  "object_type": "Document",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ВидОперации",
+        "data_type": "ПеречислениеСсылка.ВидыОперацийРКО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Налог",
+        "data_type": "СправочникСсылка.ВидыНалоговИПлатежейВБюджет",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидНалоговогоОбязательства",
+        "data_type": "ПеречислениеСсылка.ВидыПлатежейВГосБюджет",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодразделениеОрганизации",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетКасса",
+        "data_type": "ПланСчетовСсылка.Хозрасчетный",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Контрагент",
+        "data_type": "СправочникСсылка.Склады, СправочникСсылка.Контрагенты, СправочникСсылка.ФизическиеЛица",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетКонтрагента",
+        "data_type": "СправочникСсылка.БанковскиеСчета",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СуммаДокумента",
+        "data_type": "Число(15, 2, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВалютаДокумента",
+        "data_type": "СправочникСсылка.Валюты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетУчетаРасчетовСКонтрагентом",
+        "data_type": "ПланСчетовСсылка.Хозрасчетный",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетОрганизации",
+        "data_type": "СправочникСсылка.БанковскиеСчета",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоДт1",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоДт2",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоДт3",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодразделениеДт",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьПлатежнаяВедомость",
+        "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатьяДвиженияДенежныхСредств",
+        "data_type": "СправочникСсылка.СтатьиДвиженияДенежныхСредств",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Выдать",
+        "data_type": "Строка(250, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Основание",
+        "data_type": "Строка(250, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Приложение",
+        "data_type": "Строка(250, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоДокументу",
+        "data_type": "Строка(250, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "СправочникСсылка.Пользователи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДокументОснование",
+        "data_type": "ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ВыкупПредметовЛизинга, ДокументСсылка.СчетНаОплатуПоставщика, ДокументСсылка.ПоступлениеНМА, ДокументСсылка.ПоступлениеТоваровУслуг, ДокументСсылка.ВозвратТоваровОтПокупателя, ДокументСсылка.ВедомостьНаВыплатуЗарплаты, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ОтчетКомитентуОПродажах, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.НачислениеДивидендов, ДокументСсылка.ПриходныйКассовыйОрдер, ДокументСсылка.РегламентированныйОтчет, ДокументСсылка.ИнвентаризацияКассы, ДокументСсылка.ПоступлениеДопРасходов, ДокументСсылка.ВедомостьНаВыплатуЗарплатыВКассу",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоговорКонтрагента",
+        "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтавкаНДС",
+        "data_type": "ПеречислениеСсылка.СтавкиНДС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Содержание_УСН",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Графа4_УСН",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Графа5_УСН",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Графа6_УСН",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Графа7_УСН",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоходыЕНВД_УСН",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьРасходыЕНВД_УСН",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НДС_УСН",
+        "data_type": "Число(15, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьРучнаяНастройка_УСН",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерЧекаККМ",
+        "data_type": "Число(8, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РучнаяКорректировка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПлатежнаяВедомость",
+        "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты, ДокументСсылка.ВедомостьНаВыплатуЗарплатыВКассу",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодБК",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодОКАТО",
+        "data_type": "Строка(11, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоказательДаты",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоказательНомера",
+        "data_type": "Строка(18, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоказательОснования",
+        "data_type": "Строка(2, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоказательПериода",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоказательТипа",
+        "data_type": "Строка(2, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатусСоставителя",
+        "data_type": "Строка(2, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидПеречисленияВБюджет",
+        "data_type": "ПеречислениеСсылка.ВидыПеречисленийВБюджет",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторПлатежа",
+        "data_type": "Строка(25, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НалоговыйПериод",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерВходящегоДокумента",
+        "data_type": "Строка(20, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "БезЗакрывающихДокументов",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НачислениеДивидендов",
+        "data_type": "ДокументСсылка.НачислениеДивидендов",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерЧекаНПД",
+        "data_type": "Строка(12, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОтражениеВУСН",
+        "data_type": "ПеречислениеСсылка.ОтражениеВУСН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторЧекаККМДляОбмена",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "РасшифровкаПлатежа",
+        "attributes": [
+          {
+            "name": "ДоговорКонтрагента",
+            "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СпособПогашенияЗадолженности",
+            "data_type": "ПеречислениеСсылка.СпособыПогашенияЗадолженности",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сделка",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.ПередачаОС, ДокументСсылка.ВыкупПредметовЛизинга, ДокументСсылка.ВыдачаДенежныхДокументов, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.ПоступлениеНаРасчетныйСчет, ДокументСсылка.НачислениеПеней, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.ПоступлениеДенежныхДокументов, ДокументСсылка.АктОбОказанииПроизводственныхУслуг, ДокументСсылка.ПоступлениеНМА, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ПоступлениеТоваровУслуг, ДокументСсылка.ОперацияСБилетом, ДокументСсылка.ВозвратТоваровОтПокупателя, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ОтчетКомитентуОПродажах, ДокументСсылка.ПередачаНМА, ДокументСсылка.ПриходныйКассовыйОрдер, ДокументСсылка.ПоступлениеИзПереработки, ДокументСсылка.РеализацияУслугПоПереработке, ДокументСсылка.РеализацияТоваровУслуг, ДокументСсылка.ВозвратТоваровПоставщику, ДокументСсылка.ОтражениеНачисленияНДС, ДокументСсылка.ОтражениеНДСКВычету, ДокументСсылка.РеализацияОтгруженныхТоваров, ДокументСсылка.ПоступлениеДопРасходов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаПлатежа",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КурсВзаиморасчетов",
+            "data_type": "Число(10, 4, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаВзаиморасчетов",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтавкаНДС",
+            "data_type": "ПеречислениеСсылка.СтавкиНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаНДС",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтатьяДвиженияДенежныхСредств",
+            "data_type": "СправочникСсылка.СтатьиДвиженияДенежныхСредств",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчетаРасчетовСКонтрагентом",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчетаРасчетовПоАвансам",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "КратностьВзаиморасчетов",
+            "data_type": "Число(10, 0, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "РасходыУСН",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "УдалитьРаспределятьРасходыУСН",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидПлатежаПоКредитамЗаймам",
+            "data_type": "ПеречислениеСсылка.ВидыПлатежейПоКредитамЗаймам",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетНаОплату",
+            "data_type": "ДокументСсылка.СчетНаОплатуПоставщика",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ПорядокОтраженияДохода",
+            "data_type": "ПеречислениеСсылка.ПорядокОтраженияАвансов, СправочникСсылка.Патенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ОтражениеВУСН",
+            "data_type": "ПеречислениеСсылка.ОтражениеВУСН",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ВыплатаЗаработнойПлаты",
+        "attributes": [
+          {
+            "name": "УдалитьВедомость",
+            "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаКВыплате",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Ведомость",
+            "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты, ДокументСсылка.ВедомостьНаВыплатуЗарплатыВКассу",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ВыплатаДепонентов",
+        "attributes": [
+          {
+            "name": "ФизЛицо",
+            "data_type": "СправочникСсылка.ФизическиеЛица",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "УдалитьПлатежнаяВедомость",
+            "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Ведомость",
+            "data_type": "ДокументСсылка.ВедомостьНаВыплатуЗарплаты, ДокументСсылка.ВедомостьНаВыплатуЗарплатыВКассу",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаКВыплате",
+            "data_type": "Число(15, 2, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "НалоговыйАгентНДС",
+        "attributes": [
+          {
+            "name": "Контрагент",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Договор",
+            "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументРасчетов",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.КорректировкаДолга, ДокументСсылка.РеализацияТоваровУслуг",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сумма",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаДокумента",
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаДокументаОднострочная",
+      "ФормаРасшифровкаПлатежа",
+      "ФормаВыплатаЗаработнойПлаты",
+      "ФормаВыплатаДепонентов",
+      "ФормаДокументаОднострочнаяИнтеграцияСБанком"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "поле 22 \"Код"
+  },
+  "search_keywords": [
+    "РасходныйКассовыйОрдер",
+    "Расходный",
+    "Кассовый",
+    "Ордер"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.445511700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

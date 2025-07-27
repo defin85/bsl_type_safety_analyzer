@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СрокХраненияТранспортногоКонтейнераЭДО",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Количество дней, по истечению которых, обработанный транспортный контейнер ЭДО будет помечен на удаление регламентным заданием"
+  },
+  "search_keywords": [
+    "СрокХраненияТранспортногоКонтейнераЭДО",
+    "Срок",
+    "Хранения",
+    "Транспортного",
+    "Контейнера",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.275571500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

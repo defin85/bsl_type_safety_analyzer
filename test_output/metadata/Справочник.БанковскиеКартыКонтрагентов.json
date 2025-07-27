@@ -1,0 +1,83 @@
+{
+  "metadata_type": "Metadata",
+  "name": "БанковскиеКартыКонтрагентов",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ОсновнойНомерДержателяКарты",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИмяДержателяКарты",
+        "data_type": "Строка(26, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаИстеченияСрокаДействияКарты",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоНациональныйПлатежныйИнструмент",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоМеждународнаяПлатежнаяКарта",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВАрхиве",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:1206 Нестандартная длина кода связана с форматом номеров платежных карт"
+  },
+  "search_keywords": [
+    "БанковскиеКартыКонтрагентов",
+    "Банковские",
+    "Карты",
+    "Контрагентов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.368594200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

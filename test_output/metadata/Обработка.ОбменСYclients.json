@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбменСYclients",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСопоставления",
+      "ЗагруженныеДокументы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Обмен с yclients"
+  },
+  "search_keywords": [
+    "ОбменСYclients",
+    "Обмен",
+    "С",
+    "Yclients"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.323549400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

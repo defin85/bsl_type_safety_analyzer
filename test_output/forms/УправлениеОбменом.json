@@ -1,0 +1,1904 @@
+{
+  "metadata_type": "Form",
+  "name": "УправлениеОбменом",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ДокументооборотСКонтролирующимиОрганами",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 67,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ОтборУчетнаяЗапись",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "УчетныеЗаписи",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ВидОтбораЦикловОбмена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ВидОтбораЦикловОбменаПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаОтчетностьФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ЗапросНаИнформационноеОбслуживаниеНалогоплательщика",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТранспортноеСообщение",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаИсходящиеФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаВходящиеФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаЗапросыИОН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаОтчетностьПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаИсходящиеПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаВходящиеПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ПолученныеТранспортныеСообщения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаЗаявление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаТребования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "Требования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаОтчетностьФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаИсходящиеФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаВходящиеФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "Представления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаПредставления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ЗапросНаИнформационноеОбслуживаниеСтрахователя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаЗапросыИОС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "ОтправкиОтчетностьФСС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаУведомления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "Уведомления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ОтправкиОтчетностьФСРАР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ЗапросыНаВыпискуИзЕГРЮЛ_ЕГРИП",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаЗапросыЕГР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ПредметЗаявленийФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ПредметЗаявленийФНСПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиПФР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиПФРПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФНС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФНСПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФСГС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФСГСПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФСРАР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФСРАРПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФСС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФССПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ИмяДокументаУведомлениеОКонтролируемыхСделках",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ИмяДокументаУведомлениеОСпецрежимахНалогообложения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ПараметрыДинамическихСписков",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ОтправкиОтчетностьРПН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиРПН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиРПНПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ВидДокументаЗаявленияОВвозе",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ОтправкиОтчетностьФТС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФТС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиФТСПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "ИмяДокументаЗаявлениеОПодтвержденииПраваНаЗачетАвансовПоНДФЛ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "ИмяДокументаУведомлениеОВвозеПрослеживаемыхТоваров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "ИмяДокументаУведомлениеОбОстаткахПрослеживаемыхТоваров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "ИмяДокументаУведомлениеОПеремещенииПрослеживаемыхТоваров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "62"
+        }
+      },
+      {
+        "name": "ОтправкиУведомленияРПН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "63"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиЦБ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "64"
+        }
+      },
+      {
+        "name": "ПредметОтчетностиЦБПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "65"
+        }
+      },
+      {
+        "name": "ЦиклыОбменаОтчетностьЦБ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "66"
+        }
+      },
+      {
+        "name": "ИмяДокументаСведенияОДоходахСотрудникаДляСоцВыплат",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "67"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ОсновнаяКоманднаяПанельРежимОднойУчетнойЗаписи",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ОсновнаяКоманднаяПанельОбменяться",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыФНСОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыФНСОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыПФРОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыПФРОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ЗапросыИОНОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "КомандаКоманднаяПанельУчетныеЗаписиУстановитьФлажки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "КомандаКоманднаяПанельУчетныеЗаписиСнятьФлажки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьУстановитьФлажкиУВсех",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьСнятьФлажкиУВсех",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаРегламентированныйОтчет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаНайтиОтчетВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьВывестиВОкно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПоказатьОтчетОСостоянии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьВыгрузить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьВыгрузитьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьВыгрузитьСодержимое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьОткрытьВходящее",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "КоманднаяПанельВходящиеДокументыФНСОтветить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "КоманднаяПанельВходящиеДокументыПФРОткрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "КоманднаяПанельПрочиеОткрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыФНССоздать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПФРВывестиВОкно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПФРПоказатьОтчетОСостоянии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПФРВыгрузить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПФРВыгрузитьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьПФРВыгрузитьСодержимое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаРегламентированныйОтчетПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаНайтиОтчетПФРВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "КоманднаяПанельВходящиеДокументыПФРОтветить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "КомандаОбновитьИсходящиеДокументыФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "КомандаОбновитьВходящиеДокументыФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "КомандаОбновитьИсходящиеДокументыПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "КомандаОбновитьВходящиеДокументыПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "КомандаОбновитьТранспортноеСообщение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "КомандаОбновитьЗапросыИОН",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "КоманднаяПанельТребованияОткрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "КомандаОбновитьТребования",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ТребованияОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЗаявлениеВывестиВОкно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЗаявлениеВыгрузить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЗаявлениеВыгрузитьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЗаявлениеВыгрузитьСодержимое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЗаявлениеПоказатьОтчетОСостоянии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаЗаявление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаНайтиЗаявлениеВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "КомандаОбновитьЗаявление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСГСВывестиВОкно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "62"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСГСПоказатьОтчетОСостоянии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "63"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСГСВыгрузить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "64"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСГСВыгрузитьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "65"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСГСВыгрузитьСодержимое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "66"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаРегламентированныйОтчетФСГС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "67"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаНайтиОтчетФСГСВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "68"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьФСГС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "69"
+        }
+      },
+      {
+        "name": "КоманднаяПанельВходящиеДокументыФСГСОткрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "70"
+        }
+      },
+      {
+        "name": "КоманднаяПанельВходящиеДокументыФСГСОтветить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "71"
+        }
+      },
+      {
+        "name": "КомандаОбновитьВходящиеДокументыФСГС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "72"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыФСГССоздать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "73"
+        }
+      },
+      {
+        "name": "КомандаОбновитьИсходящиеДокументыФСГС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "74"
+        }
+      },
+      {
+        "name": "ИсходящиеДокументыФСГСОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "75"
+        }
+      },
+      {
+        "name": "ВходящиеДокументыФСГСОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "76"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьВыгрузитьПакет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "78"
+        }
+      },
+      {
+        "name": "КомандаОбновитьПредставления",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "79"
+        }
+      },
+      {
+        "name": "ПредставленияОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "80"
+        }
+      },
+      {
+        "name": "КомандаПредставленияСоздать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "81"
+        }
+      },
+      {
+        "name": "ЗапросыИОСОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "83"
+        }
+      },
+      {
+        "name": "КомандаОбновитьЗапросыИОС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "84"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФССВыгрузитьОтправленныйПакет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "85"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФССВыгрузитьПолученнуюКвитанцию",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "86"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФССВыгрузитьПолученныйПротоколОбработки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "87"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьФСС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "88"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиНайтиОтчетФССВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "89"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиРегламентированныйОтчетФСС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "90"
+        }
+      },
+      {
+        "name": "КомандаОбновитьУведомления",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "91"
+        }
+      },
+      {
+        "name": "КомандаУведомленияСоздать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "92"
+        }
+      },
+      {
+        "name": "УведомленияОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "93"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиНайтиОтчетФСРАРВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "94"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиРегламентированныйОтчетФСРАР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "95"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьФСРАР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "97"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСРАРВыгрузитьОтправленныйПакет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "98"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФСРАРВыгрузитьПолученныйПротоколОбработки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "99"
+        }
+      },
+      {
+        "name": "ЗапросыНаВыпискуЕГРОтображатьСписокЦикловОбмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "100"
+        }
+      },
+      {
+        "name": "КомандаОбновитьЗапросыНаВыпискуЕГР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "101"
+        }
+      },
+      {
+        "name": "КомандаОткрытьФайлы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "102"
+        }
+      },
+      {
+        "name": "КомандаОткрытьДокументы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "103"
+        }
+      },
+      {
+        "name": "КомандаОткрытьПрочиеУведомления",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "104"
+        }
+      },
+      {
+        "name": "Отобрать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "111"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьРПН",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиНайтиОтчетРПНВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиРегламентированныйОтчетРПН",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьРПНВыгрузитьОтправленныйПакет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьРПНВыгрузитьПолученныйПротоколОбработки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОРозничныхЦенахНаТабак",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ПереключитьНаОтветыНаТребованиеПоясненийКДекларацииНДС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ПереключитьНаОтветыНаТребованиеОПредставленииДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "КомандаВыборВидаЗаявление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "КомандаВыборВидаПереченьЗаявлений",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьФТС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "77"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиНайтиОтчетФТСВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "82"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтправкиРегламентированныйОтчетФТС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "96"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФТСВыгрузитьОтправленныйПодписанныйОтчет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "105"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФТСВыгрузитьПолученныйПротоколОбработки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "106"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФТСВыгрузитьПолученнуюКвитанцию",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "107"
+        }
+      },
+      {
+        "name": "КомандаОткрытьРеестрыФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "108"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьМакетПД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "109"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОПолучателеДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "110"
+        }
+      },
+      {
+        "name": "КомандаОткрытьРеестрыАкцизы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "112"
+        }
+      },
+      {
+        "name": "КомандаОткрытьАвансыНДФЛ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "113"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОбУчастииВМеждународнойГруппеКомпаний",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "114"
+        }
+      },
+      {
+        "name": "КомандаОткрытьСтрановыеОтчеты",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "115"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьЗаявлениеОНазначенииПенсии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "116"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФССВыгрузитьОтправленныйПодписанныйПакет",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "117"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьФССВыгрузитьПолученныйПакетКвитанции",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "118"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьЗаявлениеНаПодключениеКЭДОсПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "119"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьЗаявлениеНаОтключениеОтЭДОсПФР",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "120"
+        }
+      },
+      {
+        "name": "КомандаОткрытьДоходыОтДеятельностиМузеяТеатраБиблиотеки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "122"
+        }
+      },
+      {
+        "name": "КомандаОткрытьДвижениеСредствПоСчетуВБанкеЗаПределамиРФ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "123"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОбОстаткахПрослеживаемыхТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "124"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОВвозеПрослеживаемыхТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "125"
+        }
+      },
+      {
+        "name": "КомандаОткрытьУведомленияОПеремещенииПрослеживаемыхТоваров",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "126"
+        }
+      },
+      {
+        "name": "КомандаОткрытьПрослеживаемыеТоварыОтчетОбОперациях",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "127"
+        }
+      },
+      {
+        "name": "КомандаОткрытьПрослеживаемыеТоварыВвоз",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "128"
+        }
+      },
+      {
+        "name": "КомандаОткрытьПрослеживаемыеТоварыПеремещение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "129"
+        }
+      },
+      {
+        "name": "КомандаОткрытьПрослеживаемыеТоварыОстатки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "130"
+        }
+      },
+      {
+        "name": "КомандаОткрытьМашиночитаемыеДоверенностиФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "131"
+        }
+      },
+      {
+        "name": "КомандаОткрытьЗаявленияОбОтзывеМЧДФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "132"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьУведомлениеОПредоставленииПолномочийПредставителю",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "133"
+        }
+      },
+      {
+        "name": "КомандаИсходящиеДокументыПФРСоздатьУведомлениеОПрекращенииПолномочийПредставителя",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "134"
+        }
+      },
+      {
+        "name": "КомандаОбновитьОтчетностьЦБ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "121"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьЦБВыгрузить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "135"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьЦБВыгрузитьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "136"
+        }
+      },
+      {
+        "name": "КоманднаяПанельОтчетностьЦБВыгрузитьСодержимое",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "137"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаНайтиОтчетЦБВСписке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "138"
+        }
+      },
+      {
+        "name": "КоманднаяПанельЦиклыОбменаРегламентированныйОтчетЦБ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "139"
+        }
+      },
+      {
+        "name": "КомандаОткрытьСведенияОДоходахСотрудникаДляСоцВыплат",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "140"
+        }
+      },
+      {
+        "name": "КомандаОткрытьДвижениеСредствНерезидентаЗаПределамиРФ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "141"
+        }
+      },
+      {
+        "name": "КомандаОткрытьФинОтчетностьМГК",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "142"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.144861700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ДокументооборотСКонтролирующимиОрганами\\Forms\\УправлениеОбменом\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ДокументооборотСКонтролирующимиОрганами\\Forms\\УправлениеОбменом\\Ext"
+  }
+}

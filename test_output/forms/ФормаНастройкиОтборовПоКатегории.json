@@ -1,0 +1,158 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаНастройкиОтборовПоКатегории",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "НастройкиНовостей",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 11,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ДоступныеЗначенияКатегории_Справочник",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ДоступныеЗначенияКатегории_Строка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ДоступныеЗначенияКатегории_Число",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ДоступныеЗначенияКатегории_Булево",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ЛентаНовостей_ДоступныеКатегории",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ЛентаНовостей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "КатегорияНовостей",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТипЗначенияКатегории",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ДоступныеЗначенияКатегории_НастроеноАдминистратором",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ДоступныеЗначенияКатегории_Дата",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ТекущийПользователь",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "КомандаОК",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "КомандаОтмена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "КомандаУстановитьФлажки_Справочник",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "КомандаСнятьФлажки_Справочник",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:12.709541+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\SettingsStorages\\НастройкиНовостей\\Forms\\ФормаНастройкиОтборовПоКатегории\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\SettingsStorages\\НастройкиНовостей\\Forms\\ФормаНастройкиОтборовПоКатегории\\Ext"
+  }
+}

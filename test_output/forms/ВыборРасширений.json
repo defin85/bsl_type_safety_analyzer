@@ -1,0 +1,40 @@
+{
+  "metadata_type": "Form",
+  "name": "ВыборРасширений",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "МастерПереходаВОблако",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 2,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ПереченьРасширений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "АдресХраненияРасширений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": []
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.401194900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\МастерПереходаВОблако\\Forms\\ВыборРасширений\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\МастерПереходаВОблако\\Forms\\ВыборРасширений\\Ext"
+  }
+}

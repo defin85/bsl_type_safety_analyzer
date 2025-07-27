@@ -1,0 +1,45 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СНИЛСВходящихСообщенийСЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НомерЛН",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Не все документы, а только те, которые свидетельствуют о наличии привязки СНИЛС к страхователю - 100 и 111."
+  },
+  "search_keywords": [
+    "СНИЛСВходящихСообщенийСЭДО",
+    "С",
+    "Н",
+    "И",
+    "Л",
+    "С",
+    "Входящих",
+    "Сообщений",
+    "С",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.332822900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "metadata_type": "Form",
+  "name": "ТитулГрузоотправителяУказанияГрузоотправителя",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЭлектронныйЗаказЗаявка",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 8,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ТитулГрузоотправителяУказанияВОтношенииВыполненияНормПеревозки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяРекомендацииОПредельныхСрокахПеревозки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяТребованияТранспортногоСредстваДляПищевыхПродуктов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВерхнийПределТемпературыПриПеревозке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяНижнийПределТемпературыПриПеревозке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВерхнийПределВлажностиПриПеревозке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяНижнийПределВлажностиПриПеревозке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяТребованияТранспортногоСредстваИныеУсловия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.496826700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказЗаявка\\Forms\\ТитулГрузоотправителяУказанияГрузоотправителя\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказЗаявка\\Forms\\ТитулГрузоотправителяУказанияГрузоотправителя\\Ext"
+  }
+}

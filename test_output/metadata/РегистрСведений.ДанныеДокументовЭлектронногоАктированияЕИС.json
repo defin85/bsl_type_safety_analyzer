@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДанныеДокументовЭлектронногоАктированияЕИС",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Реквизиты документа, подтверждающего наличие соглашения сторон или решения суда по обжалованию отказа в приемке ТРУ"
+  },
+  "search_keywords": [
+    "ДанныеДокументовЭлектронногоАктированияЕИС",
+    "Данные",
+    "Документов",
+    "Электронного",
+    "Актирования",
+    "Е",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.596854700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

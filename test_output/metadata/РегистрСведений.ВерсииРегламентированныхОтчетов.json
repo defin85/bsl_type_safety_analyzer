@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВерсииРегламентированныхОтчетов",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Идентификатор регламентного отчета на Портале 1С:ИТС"
+  },
+  "search_keywords": [
+    "ВерсииРегламентированныхОтчетов",
+    "Версии",
+    "Регламентированных",
+    "Отчетов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.565645900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

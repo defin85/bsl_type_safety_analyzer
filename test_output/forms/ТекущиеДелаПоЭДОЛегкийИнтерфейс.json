@@ -1,0 +1,1211 @@
+{
+  "metadata_type": "Form",
+  "name": "ТекущиеДелаПоЭДОЛегкийИнтерфейс",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ИнтерфейсДокументовЭДО",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 84,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ВходящиеЭлектронныеДокументы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "КоличествоНовыхИсходящие",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Организация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ИсходящиеЭлектронныеДокументы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ТекущийРаздел",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ПанельНавигации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "НаправлениеСортировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "Период",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "Сформировать",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "Предпросмотр",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ТекущийЭлектронныйДокумент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ФормированиеПредставления",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ЭлементСхемыРегламента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ЕстьОтборПоНепрочитанным",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ТекущийДокументУчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ТекущийДокументУчетаПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ТекущееСостояниеЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ТекущийФайлПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ТекущийФайлНомерИконки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ОтображатьОбластьПредпросмотра",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ЕстьДокументыКОбработкеНастройка",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "Контрагент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "Состояние",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "Договор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ПакетноеОтображение",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ЗаблокированныеЭлементыФормы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "Новые",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "КоличествоНовыхВходящие",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "КоличествоИсправить",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "КоличествоПодписать",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "РасширенныйПоискРаскрыт",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТипДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ЕстьДокументыКОбработке",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ЕстьДокументыКОбработкеСкрытьПанель",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "Приглашения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ПустойКонтрагент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ОтображатьУдаленные",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "КоличествоСоздать",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "Ошибки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "Контейнеры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ТекущийИдентификаторПакета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "НесколькоОрганизаций",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ТипРегламента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "СтатусПриглашения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ТипыДоговорСКонтрагентомЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "КэшФильтровВСписках",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "КоличествоДополнительныхОтборовСписков",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ДанныеВосстановленыИзНастроек",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "ПредпросмотрHTML",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "ИспользуютсяЛегкиеКарточкиДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "59"
+        }
+      },
+      {
+        "name": "ОперацияПолученияДанных",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "ОбъектыУчетаТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "65"
+        }
+      },
+      {
+        "name": "СписокПодбора",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "66"
+        }
+      },
+      {
+        "name": "СписокСоздания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "67"
+        }
+      },
+      {
+        "name": "СпособыОбработкиДополнительные",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "68"
+        }
+      },
+      {
+        "name": "СпособыОбработкиОсновные",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "69"
+        }
+      },
+      {
+        "name": "ТипТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "70"
+        }
+      },
+      {
+        "name": "ЕстьПравоОбработкиДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "71"
+        }
+      },
+      {
+        "name": "ЕстьВозможностьОтраженияВУчетеТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "72"
+        }
+      },
+      {
+        "name": "СостояниеЭДОТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "74"
+        }
+      },
+      {
+        "name": "ВидТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "76"
+        }
+      },
+      {
+        "name": "ЕстьНоменклатураНаКонтролеТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "78"
+        }
+      },
+      {
+        "name": "СоставПакетаТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "79"
+        }
+      },
+      {
+        "name": "ОрганизацияТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "80"
+        }
+      },
+      {
+        "name": "КонтрагентТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "81"
+        }
+      },
+      {
+        "name": "СуммаТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "82"
+        }
+      },
+      {
+        "name": "ТекущийДокументОблачногоЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "83"
+        }
+      },
+      {
+        "name": "ОтветственныйТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "84"
+        }
+      },
+      {
+        "name": "ТекущийФайлАдресВХранилище",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "88"
+        }
+      },
+      {
+        "name": "ТекущийДокументПомеченНаУдаление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "89"
+        }
+      },
+      {
+        "name": "ФорматОсновногоТитулаТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "90"
+        }
+      },
+      {
+        "name": "ИдентификаторОрганизацииТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "93"
+        }
+      },
+      {
+        "name": "ИдентификаторТекущегоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "94"
+        }
+      },
+      {
+        "name": "ИспользуетсяПоказТрафикаЭлектронныхДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СведенияОPDFДокументе",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "96"
+        }
+      },
+      {
+        "name": "ДанныеКомпонентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "97"
+        }
+      },
+      {
+        "name": "ЭтоМобильныйКлиент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "99"
+        }
+      },
+      {
+        "name": "ПараметрыАвтоматическогоПолученияЭДО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "100"
+        }
+      },
+      {
+        "name": "КоличествоПриглашений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "101"
+        }
+      },
+      {
+        "name": "КоличествоФильтров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "102"
+        }
+      },
+      {
+        "name": "МК_СведенияОбЭлементахФормы",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "104"
+        }
+      },
+      {
+        "name": "ОтложеннаяОтправкаЭлектронныхДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "105"
+        }
+      },
+      {
+        "name": "ТребуетсяОбновитьСчетчикиКоличестваДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "106"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Обновить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Подписать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "Утвердить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ОтказатьсяОтПодписания",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ЗакрытьПринудительно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ЗагрузитьНовыйДокументСДиска",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "РаскрытьФильтры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ОчиститьБыстрыеОтборы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ПодписатьОтправить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ОтправитьПриглашение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ПринятьПриглашения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ОтклонитьПриглашения",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ПометитьКакПрочитанное",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ОМодулеЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "НастройкиЭДО",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "Техподдержка",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ЕстьИдея",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ОтображатьУдаленные",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ПринятьАннулирование",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ОтклонитьАннулирование",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ВыгрузитьВФорматеПДФ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "НапечататьЭлектронныеДокументы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ВыгрузитьДляФНС",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ВыгрузитьДокументооборотЦеликом",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "ОткрытьМашиночитаемыеДоверенности",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "НовоеПриглашение",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "РаспаковатьКонтейнеры",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "УстановитьСтатусОтмененКонтейнера",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "Аннулировать",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ПерейтиНаРасширенныйИнтерфейс",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "Отправить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "ВернутьНаПодготовкуКОтправке",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ПроверитьПодписи",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ОткрытьПользовательскиеОтборы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ПерейтиНаЛегкийИнтерфейсКарточекДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "СоздатьДокументУчета",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "ПодобратьДокументУчета1",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "ОткрытьДокументУчета1",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ПодобратьДокументУчета2",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ОткрытьДокументУчета2",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ПоказатьВсеДокументыУчета",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "СменитьОтветственного",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "ОткрытьФайл",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ЗагрузитьФайлы",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ВыборочныйОбменПоОрганизациям",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ПоказатьСведенияОЗадолженности",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ПоказатьСведенияПоТекущемуТрафику",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ИспользуетсяПоказТрафикаЭлектронныхДокументов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.332360600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ИнтерфейсДокументовЭДО\\Forms\\ТекущиеДелаПоЭДОЛегкийИнтерфейс\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ИнтерфейсДокументовЭДО\\Forms\\ТекущиеДелаПоЭДОЛегкийИнтерфейс\\Ext"
+  }
+}

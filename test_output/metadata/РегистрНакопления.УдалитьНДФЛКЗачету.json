@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьНДФЛКЗачету",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьНДФЛКЗачету",
+    "Удалить",
+    "Н",
+    "Д",
+    "Ф",
+    "Л",
+    "К",
+    "Зачету"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.701985900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

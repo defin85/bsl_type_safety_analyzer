@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаРедактирования",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "СостоянияОбменовЭДЧерезОператоровЭДО",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 7,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ИдентификаторОрганизации",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ДатаПолученияЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ДатаПоследнегоПолученияПриглашений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ДатаПоследнейАктивности",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ПроверочнаяДатаПолученияЭД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПроверочнаяДатаПолученияПриглашений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ДатаПолученияЭПД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ЗаписатьИЗакрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:07.113747100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\СостоянияОбменовЭДЧерезОператоровЭДО\\Forms\\ФормаРедактирования\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\InformationRegisters\\СостоянияОбменовЭДЧерезОператоровЭДО\\Forms\\ФормаРедактирования\\Ext"
+  }
+}

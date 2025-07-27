@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатусыСинхронизацииФайловСОблачнымСервисом",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:1330 невозможно объединить 2 определяемых типа"
+  },
+  "search_keywords": [
+    "СтатусыСинхронизацииФайловСОблачнымСервисом",
+    "Статусы",
+    "Синхронизации",
+    "Файлов",
+    "С",
+    "Облачным",
+    "Сервисом"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.451173600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

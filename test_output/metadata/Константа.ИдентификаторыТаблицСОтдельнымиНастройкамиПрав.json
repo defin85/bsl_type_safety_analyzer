@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИдентификаторыТаблицСОтдельнымиНастройкамиПрав",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИдентификаторыТаблицСОтдельнымиНастройкамиПрав",
+    "Идентификаторы",
+    "Таблиц",
+    "С",
+    "Отдельными",
+    "Настройками",
+    "Прав"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:32.607046100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

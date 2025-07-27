@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДанныеПоУдержаниямДляПечатиЧеков",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДанныеПоУдержаниямДляПечатиЧеков",
+    "Данные",
+    "По",
+    "Удержаниям",
+    "Для",
+    "Печати",
+    "Чеков"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.609734200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

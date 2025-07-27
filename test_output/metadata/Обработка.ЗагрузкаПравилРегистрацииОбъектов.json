@@ -1,0 +1,38 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗагрузкаПравилРегистрацииОбъектов",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИмяПланаОбменаДляЗагрузки",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "Форма"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЗагрузкаПравилРегистрацииОбъектов",
+    "Загрузка",
+    "Правил",
+    "Регистрации",
+    "Объектов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.266353500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

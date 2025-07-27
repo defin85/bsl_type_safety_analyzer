@@ -1,0 +1,55 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДокументыПоЗаявкамКабинетСотрудника",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НеподтвержденнаяЗапись",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВариантФормированияФайлаОтвета",
+        "data_type": "ПеречислениеСсылка.ВариантыФормированияФайлаОтветаЗаявкиСотрудника",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаЗаписи",
+        "data_type": "ОпределяемыйТип.ЗаявкаКабинетСотрудника",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДокументыПоЗаявкамКабинетСотрудника",
+    "Документы",
+    "По",
+    "Заявкам",
+    "Кабинет",
+    "Сотрудника"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.629655300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

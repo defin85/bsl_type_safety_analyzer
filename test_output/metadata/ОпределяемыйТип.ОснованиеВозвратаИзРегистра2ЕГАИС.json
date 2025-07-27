@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОснованиеВозвратаИзРегистра2ЕГАИС",
+  "object_type": "DefinedType",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОснованиеВозвратаИзРегистра2ЕГАИС",
+    "Основание",
+    "Возврата",
+    "Из",
+    "Регистра",
+    "2",
+    "Е",
+    "Г",
+    "А",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:37.112343400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДокументыОперацийПереходаНаЕНС",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДокументыОперацийПереходаНаЕНС",
+    "Документы",
+    "Операций",
+    "Перехода",
+    "На",
+    "Е",
+    "Н",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.627278300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

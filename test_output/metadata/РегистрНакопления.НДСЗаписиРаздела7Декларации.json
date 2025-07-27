@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НДСЗаписиРаздела7Декларации",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НДСЗаписиРаздела7Декларации",
+    "Н",
+    "Д",
+    "С",
+    "Записи",
+    "Раздела",
+    "7",
+    "Декларации"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.653717300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

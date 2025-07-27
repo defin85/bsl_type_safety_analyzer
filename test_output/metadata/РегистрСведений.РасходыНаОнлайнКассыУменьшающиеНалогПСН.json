@@ -1,0 +1,43 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РасходыНаОнлайнКассыУменьшающиеНалогПСН",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "РучнаяКорректировка",
+        "data_type": "ПеречислениеСсылка.ВидыПлатежейПоПатенту",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Используется с 2024 года"
+  },
+  "search_keywords": [
+    "РасходыНаОнлайнКассыУменьшающиеНалогПСН",
+    "Расходы",
+    "На",
+    "Онлайн",
+    "Кассы",
+    "Уменьшающие",
+    "Налог",
+    "П",
+    "С",
+    "Н"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.154866300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

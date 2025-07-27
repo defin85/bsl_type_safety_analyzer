@@ -25,11 +25,11 @@ cargo run --bin bsl-lsp
 # Run specific binary
 cargo run --bin bsl-analyzer -- --help
 
-# Generate contracts from 1C configuration
-cargo run -- generate-contracts --config-path ./config --report-path ./report.txt --output ./contracts
+# Extract BSL documentation to hybrid format (recommended)
+cargo run --bin extract_hybrid_docs
 
-# Parse 1C documentation archive
-cargo run -- parse-docs --hbk-path ./1C_Help.hbk --output ./docs
+# Extract BSL documentation to chunked format (legacy)
+cargo run --bin process_all_docs
 ```
 
 ### Testing
@@ -181,14 +181,59 @@ let forms = parser.generate_all_contracts("./config")?;
 ```
 
 ### Documentation Integration (`src/docs_integration/`)
-Framework for integrating Python `1c-help-parser` functionality:
-- HBK archive parser for 1C documentation extraction
-- BSL syntax database with methods, objects, functions, properties
-- Completion and help system integration (structure ready)
+**COMPLETE**: Full integration of Python `1c-help-parser` functionality:
+
+#### HBK Archive Parser (`src/docs_integration/hbk_parser_full.rs`)
+- Complete 1C documentation archive (.hbk/.shcntx_ru) parsing
+- ZIP-based archive reading with file extraction
+- Multi-encoding support for HTML content
+- Handles 51,000+ HTML documentation files
 
 ```rust
-let mut docs = DocsIntegration::new();
-// Future: docs.load_from_hbk_archive("help.hbk")?;
+let mut parser = HbkArchiveParser::new("rebuilt.shcntx_ru.zip");
+parser.open_archive()?;
+let content = parser.extract_file_content("syntax/array.html");
+```
+
+#### BSL Syntax Extractor (`src/docs_integration/bsl_syntax_extractor.rs`) 
+- Extracts complete BSL syntax database from documentation
+- Parses methods, properties, functions, operators
+- Multi-variant syntax support
+- Parameter extraction with types and descriptions
+
+```rust
+let mut extractor = BslSyntaxExtractor::new(archive_path);
+let database = extractor.extract_syntax_database(None)?;
+// database contains: objects, methods, properties, functions, operators
+```
+
+#### Hybrid Storage Architecture (`src/docs_integration/hybrid_storage.rs`)
+**NEW**: Optimized storage format for 4,916 BSL types:
+- Groups types by functional categories (Collections, Database, Forms, IO, System, Web)
+- Reduces from 609 chunked files to 8 structured files
+- Provides fast method/property lookups via indices
+- Memory-efficient runtime caching
+
+```rust
+let mut storage = HybridDocumentationStorage::new(output_dir);
+storage.initialize()?;
+// Direct parsing from HBK to hybrid format
+extractor.extract_to_hybrid_storage(output_dir, None)?;
+```
+
+#### Storage Structure
+```
+output/hybrid_docs/
+├── core/
+│   ├── builtin_types/
+│   │   ├── collections.json  # Array, Map, ValueList, etc.
+│   │   ├── database.json     # Query, QueryResult, etc.
+│   │   ├── forms.json        # Form, FormItems, etc.
+│   │   ├── io.json          # TextReader, XMLWriter, etc.
+│   │   ├── system.json      # 4,894 system types
+│   │   └── web.json         # HTTPConnection, etc.
+│   └── global_context.json  # Method index and metadata
+└── manifest.json           # Version and statistics
 ```
 
 ### BOM and Encoding Support (`src/parser/lexer.rs`)
@@ -210,15 +255,48 @@ let tokens = lexer.tokenize(&content)?; // BOM automatically stripped
 The main `Configuration` struct now includes:
 - `metadata_contracts: Vec<MetadataContract>` - parsed configuration objects
 - `forms: Vec<FormContract>` - parsed form definitions
+- **NEW**: `docs_integration: DocsIntegration` - BSL syntax database access
 - Helper methods for searching contracts by type
 - Statistics tracking for integrated components
+
+### BSL Type System Integration
+The analyzer now has complete knowledge of:
+- **4,916 built-in BSL types** with full method/property signatures
+- Parameter types and return values for all methods
+- Availability contexts (Client, Server, MobileApp, etc.)
+- Deprecated methods and version information
+- Multi-language support (Russian/English names)
+
+### Usage Examples
+
+#### Extracting BSL Documentation
+```bash
+# Extract to hybrid format (recommended)
+cargo run --bin extract_hybrid_docs
+
+# Extract to chunked format (legacy)
+cargo run --bin process_all_docs
+```
+
+#### Accessing Type Information
+```rust
+// Get type definition
+let array_type = storage.get_type("Массив")?;
+println!("Methods: {}", array_type.methods.len());
+
+// Find methods by name
+let insert_methods = storage.find_methods("Вставить");
+// Returns: ["Массив", "СписокЗначений", "ТаблицаЗначений", ...]
+```
 
 ### Integration Tests
 Comprehensive tests in `tests/integration_test.rs` verify:
 - Metadata report parsing with realistic 1C object structures
 - Form XML parsing with proper element extraction
 - Enhanced Configuration loading with integrated parsers
+- BSL documentation extraction and hybrid storage
 - Error handling for malformed files and missing reports
 
 ### Example Files
 - `examples/sample_config_report.txt` - comprehensive example of 1C configuration report format
+- `data/rebuilt.shcntx_ru.zip` - rebuilt 1C documentation archive (required for extraction)

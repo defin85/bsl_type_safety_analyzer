@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаДокументаБланкСтрогойОтчетности",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ReportForm",
+  "object_name": "СчетФактураПолученный",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 7,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СостояниеДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПлательщикНДС",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "РаздельныйУчетНДСНаСчете19",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "РеквизитыПроверкиКонтрагентов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ПараметрыПодключаемыхКоманд",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ОригиналПолучен",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПроверитьКонтрагентов",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.045346400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\СчетФактураПолученный\\Forms\\ФормаДокументаБланкСтрогойОтчетности\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\СчетФактураПолученный\\Forms\\ФормаДокументаБланкСтрогойОтчетности\\Ext"
+  }
+}

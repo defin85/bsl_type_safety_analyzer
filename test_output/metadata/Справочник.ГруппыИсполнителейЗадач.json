@@ -1,0 +1,53 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ГруппыИсполнителейЗадач",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "РольИсполнителя",
+        "data_type": "СправочникСсылка.РолиИсполнителей",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОсновнойОбъектАдресации",
+        "data_type": "Характеристика.ОбъектыАдресацииЗадач",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДополнительныйОбъектАдресации",
+        "data_type": "Характеристика.ОбъектыАдресацииЗадач",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Служебный, не редактируется пользователем"
+  },
+  "search_keywords": [
+    "ГруппыИсполнителейЗадач",
+    "Группы",
+    "Исполнителей",
+    "Задач"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.443288900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

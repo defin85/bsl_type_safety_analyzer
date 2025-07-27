@@ -1,0 +1,47 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыРегистровУчета",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Отчет",
+        "data_type": "СправочникСсылка.ИдентификаторыОбъектовМетаданных",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВариантОтчета",
+        "data_type": "Строка(255, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЭлемента"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВидыРегистровУчета",
+    "Виды",
+    "Регистров",
+    "Учета"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.413721200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

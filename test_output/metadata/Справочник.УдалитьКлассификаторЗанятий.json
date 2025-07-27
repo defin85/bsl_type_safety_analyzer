@@ -1,0 +1,44 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьКлассификаторЗанятий",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КонтрольноеЧисло",
+        "data_type": "Число(1, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НаименованиеГруппЗанятий",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьКлассификаторЗанятий",
+    "Удалить",
+    "Классификатор",
+    "Занятий"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.020094+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УведомлениеОбОсвобожденииОтУплатыНДСКлиент",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УведомлениеОбОсвобожденииОтУплатыНДСКлиент",
+    "Уведомление",
+    "Об",
+    "Освобождении",
+    "От",
+    "Уплаты",
+    "Н",
+    "Д",
+    "С",
+    "Клиент"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:35.587786100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

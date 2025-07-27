@@ -1,0 +1,15 @@
+{
+  "category": "operators",
+  "total_items": 26,
+  "chunks": [
+    {
+      "chunk_number": 1,
+      "filename": "operators_001.json",
+      "items_count": 26,
+      "first_item_id": "operators_0",
+      "last_item_id": "operators_25",
+      "size_kb": 38.40625
+    }
+  ],
+  "created_at": "2025-07-27T11:19:13.788996300+00:00"
+}

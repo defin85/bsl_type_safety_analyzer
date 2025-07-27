@@ -1,0 +1,1067 @@
+{
+  "metadata_type": "Form",
+  "name": "ПроверкаИПодбор",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ПроверкаИПодборТабачнойПродукцииМОТП",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 91,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ДеревоМаркированнойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ПроверяемыйДокумент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "КоличествоУпаковокВНаличии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "КоличествоУпаковокОтсутствует",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "КоличествоКодовМаркировкиВНаличии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "КоличествоКодовМаркировкиОтсутствует",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "СледующийСтикерОтложено",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "СкрытьПроверенные",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "РежимПроверки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ПредставлениеНастроек",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "УпаковкиДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ДоступныеДляПроверкиУпаковки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ИдентификаторТекущейПроверяемойУпаковки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ДобавленныеУпаковки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ВыполняетсяЗакрытие",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ВыводимоеПредставлениеПроверкиСодержимого",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ИспользоватьПодключаемоеОборудование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ПоддерживаемыеТипыПодключаемогоОборудования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "АдресПредыдущихШтрихкодов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "КоличествоУпаковокКоторыеНеобходимоПеремаркировать",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "УстановленОтборТребуетсяПеремаркировать",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "УстановленОтбор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ТребуетсяОбновитьИнформациюОНеобходимостиПеремаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "АдресСоответствиеШтрихкодыИдентификаторыСтрок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "Добавление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "РежимПодбораСуществующихУпаковок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "Организация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ПодобраннаяМаркируемаяПродукция",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "45"
+        }
+      },
+      {
+        "name": "КонтролироватьСканируемуюПродукциюПоДокументуОснованию",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ПроверятьНеобходимостьПеремаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ПроверитьНеобходимостьПеремаркировкиПриИзмененииСтатусаПроверки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ПроверкаНеПоДокументу",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ТаблицаИзмененийТабачнойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ПараметрыПроверкиКодовМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ИдентификаторСтрокиПотребительскиеУпаковкиБезУпаковки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "РежимПросмотра",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "НачальныйСтатусПроверки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      },
+      {
+        "name": "КоличествоСтрокПодобраннойТабачнойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "57"
+        }
+      },
+      {
+        "name": "ПриЗавершенииСохранятьРезультатыПроверки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "58"
+        }
+      },
+      {
+        "name": "РедактированиеФормыНедоступно",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "60"
+        }
+      },
+      {
+        "name": "ДетализацияСтруктурыХранения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "61"
+        }
+      },
+      {
+        "name": "ДанныеВыбораПоМаркируемойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "62"
+        }
+      },
+      {
+        "name": "СохраненВыборПоМаркируемойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "63"
+        }
+      },
+      {
+        "name": "ЗагрузкаДанныхТСД",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "67"
+        }
+      },
+      {
+        "name": "ВосстановленыСохраненныеРезультатыПроверки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "68"
+        }
+      },
+      {
+        "name": "АдресПроверяемыхДанных",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "71"
+        }
+      },
+      {
+        "name": "АктыОРасхожденияхПослеПриемкиИспользуются",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "72"
+        }
+      },
+      {
+        "name": "ИдентификаторСтрокиГрупповыеУпаковкиБезКоробки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "74"
+        }
+      },
+      {
+        "name": "ТребуетсяОбновлениеКлючаСессии",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "75"
+        }
+      },
+      {
+        "name": "ПараметрыУказанияСерий",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "85"
+        }
+      },
+      {
+        "name": "Склад",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "88"
+        }
+      },
+      {
+        "name": "УстановленОтборНедопустимыеКодыМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "94"
+        }
+      },
+      {
+        "name": "КоличествоНедопустимыхКодовМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "95"
+        }
+      },
+      {
+        "name": "ТребуетсяОбновитьИнформациюНедопустимыеКодыМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "96"
+        }
+      },
+      {
+        "name": "ТаблицаИзмененийНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "103"
+        }
+      },
+      {
+        "name": "ЦветТекстаТребуетВнимания",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "112"
+        }
+      },
+      {
+        "name": "ЦветГиперссылки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "113"
+        }
+      },
+      {
+        "name": "ЦветТекстаПоля",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "114"
+        }
+      },
+      {
+        "name": "ИспользоватьСерииНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "115"
+        }
+      },
+      {
+        "name": "ИспользоватьХарактеристикиНоменклатуры",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "116"
+        }
+      },
+      {
+        "name": "ПредставлениеСохраненногоВыбора",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "117"
+        }
+      },
+      {
+        "name": "СодержимоеУпаковокНедоступно",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "118"
+        }
+      },
+      {
+        "name": "ПроверкаЭлектронногоДокумента",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "121"
+        }
+      },
+      {
+        "name": "ДоступноСозданиеНовыхУпаковок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "122"
+        }
+      },
+      {
+        "name": "РасчитыватьХешСуммуУпаковок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "КэшМаркируемойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "125"
+        }
+      },
+      {
+        "name": "КоличествоПоДокументуСУчетомВидаПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "134"
+        }
+      },
+      {
+        "name": "Контейнер",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "136"
+        }
+      },
+      {
+        "name": "ВидМаркируемойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "137"
+        }
+      },
+      {
+        "name": "КодМаркировкиДляУточнения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "138"
+        }
+      },
+      {
+        "name": "ЭтоДокументПриобретения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "139"
+        }
+      },
+      {
+        "name": "ЗагрузкаДанныхПоОснованию",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "150"
+        }
+      },
+      {
+        "name": "ПродукцияПоДокументу",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "156"
+        }
+      },
+      {
+        "name": "ИспользоватьСтатусПроверкаЗавершена",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "157"
+        }
+      },
+      {
+        "name": "ЕстьОшибкиПроверкиККТ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "159"
+        }
+      },
+      {
+        "name": "ДеревоОтсканированнойУпаковки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "162"
+        }
+      },
+      {
+        "name": "ПараметрыСканирования",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "163"
+        }
+      },
+      {
+        "name": "РежимИсправленияОшибокПослеПередачиКодов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "168"
+        }
+      },
+      {
+        "name": "ДальнейшееДействие",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "169"
+        }
+      },
+      {
+        "name": "ДопустимаПроизвольнаяЕдиницаУчета",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "179"
+        }
+      },
+      {
+        "name": "ЗначенияСтрокиПоУмолчаниюДляТаблицыИзмененийПодобраннойПродукции",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "184"
+        }
+      },
+      {
+        "name": "ПоддерживаетсяОбъемноСортовойУчет",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "186"
+        }
+      },
+      {
+        "name": "ПараметрыРежимаИсправленияОшибок",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "188"
+        }
+      },
+      {
+        "name": "РежимДобавленияКодовМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "190"
+        }
+      },
+      {
+        "name": "ЕстьПравоЧтениеДокументаЗаказНаЭмиссиюКодовМаркировки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "192"
+        }
+      },
+      {
+        "name": "ЕстьПравоЧтениеДокументаМаркировкаТоваров",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "193"
+        }
+      },
+      {
+        "name": "ПродукцияОнлайнПроверкиПриРозничнойПродаже",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "196"
+        }
+      },
+      {
+        "name": "ТребуетсяОбновлениеКлючаСессииРозница",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "197"
+        }
+      },
+      {
+        "name": "ПодключаемоеОборудованиеБПО",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "198"
+        }
+      },
+      {
+        "name": "Сценарий",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "201"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПоискПоШтрихкоду",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "УстановитьСтатусПроверкиВНаличии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "УстановитьСтатусПроверкиОтсутствует",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "УстановитьСтатусПроверкиНеПроверялась",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ПроверкаЗавершена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "УстановитьСтатусПроверкиОтложена",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ДобавитьМаркированнуюУпаковку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "СохранитьПромежуточныеРезультатыПроверки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "МаркироватьУпаковку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "СкрытьПроверенные",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "НачатьПроверкуЗаново",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ЗагрузитьИзТСД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "СгенерироватьСерии",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ВключитьОтключитьКонтрольСтатусовКодовМаркировки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "РазобратьУпаковку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ВыгрузитьВТСД",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ЗагрузитьИзВнешнегоФайла",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "УточнитьДанныеПоШтрихкоду",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ОчиститьСопоставление",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ПроверитьСостояниеКодовМаркировкиНемедленно",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ЗаполнитьКодыМаркировки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ВключитьОтключитьОбратноеСканирование",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ВключитьОтключитьКонтрольПоВладельцу",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ПечатьКодовМаркировки",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ПропуститьОшибкуОбработкиВГИСМТ",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "26"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.018125300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПроверкаИПодборТабачнойПродукцииМОТП\\Forms\\ПроверкаИПодбор\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПроверкаИПодборТабачнойПродукцииМОТП\\Forms\\ПроверкаИПодбор\\Ext"
+  }
+}

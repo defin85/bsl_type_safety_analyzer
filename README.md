@@ -18,6 +18,13 @@ Production-ready static analyzer for 1C:Enterprise BSL with complete semantic an
 - **Configuration-aware analysis** with 1C metadata contract integration
 - **Inter-module dependency analysis** with circular dependency detection
 
+### BSL Documentation Integration (NEW)
+- **Complete BSL Type System** - 4,916 built-in types with full method/property signatures
+- **HBK Archive Parser** - Direct parsing of 1C documentation archives
+- **Hybrid Storage** - Optimized format grouping types by functional categories
+- **Method Index** - Fast lookup of methods across all types
+- **Multi-language Support** - Russian/English names for all types and methods
+
 ### Enterprise Features
 - **Configurable Rules System** - 10+ built-in rules with TOML/YAML configuration
 - **Code Quality Metrics** - cyclomatic complexity, maintainability index, technical debt
@@ -51,7 +58,17 @@ sudo cp target/release/bsl-analyzer /usr/local/bin/
 
 ## 🔧 Quick Start
 
-### 1. Basic Analysis
+### 1. Extract BSL Documentation (Required First Step)
+```bash
+# Extract complete BSL type system from 1C documentation
+cargo run --bin extract_hybrid_docs
+
+# This creates optimized storage with 4,916 BSL types:
+# - output/hybrid_docs/core/builtin_types/*.json
+# - output/hybrid_docs/core/global_context.json
+```
+
+### 2. Basic Analysis
 ```bash
 # Analyze BSL configuration
 bsl-analyzer analyze ./src
@@ -60,7 +77,7 @@ bsl-analyzer analyze ./src
 bsl-analyzer analyze ./src --format sarif --output results.sarif
 ```
 
-### 2. Code Quality Metrics
+### 3. Code Quality Metrics
 ```bash
 # Generate comprehensive metrics report
 bsl-analyzer metrics ./src --report-format html --output metrics.html
@@ -69,7 +86,7 @@ bsl-analyzer metrics ./src --report-format html --output metrics.html
 bsl-analyzer metrics ./src --focus debt --threshold critical
 ```
 
-### 3. Configure Rules
+### 4. Configure Rules
 ```bash
 # Generate default configuration
 bsl-analyzer rules generate-config --output bsl-rules.toml
@@ -81,7 +98,7 @@ bsl-analyzer rules list
 bsl-analyzer analyze ./src --rules-config bsl-rules.toml --profile strict
 ```
 
-### 4. LSP Server Integration
+### 5. LSP Server Integration
 ```bash
 # Start TCP server for production environments
 bsl-analyzer lsp --mode tcp --host 127.0.0.1 --port 9257
@@ -167,6 +184,11 @@ BSL Analyzer v1.0
 ├── Parser          - Extended BSL lexer with 50+ keywords
 ├── Core            - Type system and error handling
 ├── Analyzer        - Semantic analysis and scope tracking
+├── Configuration   - 1C metadata and forms parsing
+├── Docs Integration- BSL type system (4,916 types)
+│   ├── HBK Parser  - 1C documentation archive reader
+│   ├── Extractor   - HTML syntax extraction
+│   └── Storage     - Hybrid optimized format
 ├── Rules           - Configurable rules engine (10+ built-in)
 ├── Metrics         - Quality analysis and technical debt
 ├── Reports         - SARIF, HTML, Text, JSON output
@@ -220,7 +242,7 @@ Configure lsp-mode to connect to the BSL Analyzer LSP server.
 
 ## 📝 Changelog
 
-### v1.0.0 (2025-07-25)
+### v1.0.0 (2025-07-27)
 - ✅ Complete BSL parsing with extended grammar
 - ✅ Configurable rules system with 10+ built-in rules
 - ✅ TCP LSP server with production-ready features
@@ -228,7 +250,10 @@ Configure lsp-mode to connect to the BSL Analyzer LSP server.
 - ✅ SARIF export for CI/CD integration
 - ✅ Comprehensive CLI with caching and performance monitoring
 - ✅ HTML/JSON/Text reporting formats
-- ✅ Documentation integration and intelligent completions
+- ✅ BSL documentation integration (4,916 types)
+- ✅ HBK archive parser for 1C documentation
+- ✅ Hybrid storage format for optimal performance
+- ✅ Complete method/property signatures database
 
 ## 📄 License
 

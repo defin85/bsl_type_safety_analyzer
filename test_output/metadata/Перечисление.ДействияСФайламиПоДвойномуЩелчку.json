@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДействияСФайламиПоДвойномуЩелчку",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДействияСФайламиПоДвойномуЩелчку",
+    "Действия",
+    "С",
+    "Файлами",
+    "По",
+    "Двойному",
+    "Щелчку"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.951294800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

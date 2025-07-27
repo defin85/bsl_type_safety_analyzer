@@ -1,0 +1,36 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлиентскоеПриложениеСканированиеЧеков",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КодДоступа",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КлиентскоеПриложениеСканированиеЧеков",
+    "Клиентское",
+    "Приложение",
+    "Сканирование",
+    "Чеков"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.772022300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

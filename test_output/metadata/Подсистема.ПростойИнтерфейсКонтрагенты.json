@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПростойИнтерфейсКонтрагенты",
+  "object_type": "Subsystem",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПростойИнтерфейсКонтрагенты",
+    "Простой",
+    "Интерфейс",
+    "Контрагенты"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:30.957185+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

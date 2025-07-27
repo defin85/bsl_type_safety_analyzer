@@ -1,0 +1,35 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РасчетТорговогоСбора",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "РасшифровкаРасчета",
+        "data_type": "СправочникСсылка.ТорговыеТочки",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РасчетТорговогоСбора",
+    "Расчет",
+    "Торгового",
+    "Сбора"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.190541400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

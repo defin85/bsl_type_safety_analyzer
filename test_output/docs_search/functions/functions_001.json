@@ -1,0 +1,640 @@
+{
+  "items": [
+    {
+      "id": "functions_0",
+      "title": "Интерфейс (обычный)",
+      "category": "functions",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog56.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Форма",
+            "href": "v8help://SyntaxHelperContext/objects/catalog56/catalog246/Form.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_1",
+      "title": "Интерфейс (управляемый)",
+      "category": "functions",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ХранилищеСистемныхНастроек",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/properties/SystemSettingsStorage7456.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_2",
+      "title": "ДанныеФормыСтруктура (FormDataStructure)",
+      "category": "functions",
+      "content": "Структура данных для моделирования данных, редактируемых в форме клиентского приложения. Моделирует объект с набором свойств.Для текущих данных таблицы формы клиентского приложения обращение к значениям осуществляется по именам колонок.Для параметров формы клиентского приложения обращение к значениям осуществляется по именам параметров.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructure.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "Параметры",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/properties/Parameters7209.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "РеквизитФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/FormAttributeToValue3531.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "ЗначениеВРеквизитФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/ValueToFormAttribute3530.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущиеДанные",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentData7171.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ДанныеСтроки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/methods/RowData3468.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ЗаблокироватьДанныеДляРедактирования",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog8/LockDataForEdit3691.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ДанныеФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/FormDataToValue3519.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ЗначениеВДанныеФормы",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/ValueToFormData3518.html"
+          },
+          {
+            "text": "Расширение данных строки для динамического списка",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/catalog2421/Row data extension for dynamic list.html"
+          },
+          {
+            "text": "<Имя колонки>ОформлениеЯчейки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/catalog2421/Row data extension for dynamic list/properties/prop8794.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_3",
+      "title": "ДанныеФормыСтруктураСКоллекцией (FormDataStructureAndCollection)",
+      "category": "functions",
+      "content": "Предназначен для моделирования наборов записей в данных формы клиентского приложения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ДанныеФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/FormDataToValue3519.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ЗначениеВДанныеФормы",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/ValueToFormData3518.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "ЗначениеВРеквизитФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/ValueToFormAttribute3530.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "РеквизитФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/FormAttributeToValue3531.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "Удалить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Delete3539.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_4",
+      "title": "ДанныеФормыДерево (FormDataTree)",
+      "category": "functions",
+      "content": "Предназначен для моделирования дерева в данных формы клиентского приложения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTree.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ДанныеФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/FormDataToValue3519.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ЗначениеВДанныеФормы",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/ValueToFormData3518.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "ЗначениеВРеквизитФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/ValueToFormAttribute3530.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "РеквизитФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/FormAttributeToValue3531.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_5",
+      "title": "ДанныеФормыКоллекция (FormDataCollection)",
+      "category": "functions",
+      "content": "Предназначен для моделирования коллекций в данных формы клиентского приложения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollection.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ВыделенныеСтроки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/SelectedRows7170.html"
+          },
+          {
+            "text": "Расширение поля формы для поля календаря",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1676/Form field extension for a calendar field.html"
+          },
+          {
+            "text": "ВыделенныеДаты",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1676/Form field extension for a calendar field/properties/SelectedDates7336.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ДанныеФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/FormDataToValue3519.html"
+          },
+          {
+            "text": "Глобальный контекст",
+            "href": "v8help://SyntaxHelperContext/objects/Global context.html"
+          },
+          {
+            "text": "ЗначениеВДанныеФормы",
+            "href": "v8help://SyntaxHelperContext/objects/Global context/methods/catalog3517/ValueToFormData3518.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "ЗначениеВРеквизитФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/ValueToFormAttribute3530.html"
+          },
+          {
+            "text": "ФормаКлиентскогоПриложения",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm.html"
+          },
+          {
+            "text": "РеквизитФормыВЗначение",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1890/ClientApplicationForm/methods/FormAttributeToValue3531.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_6",
+      "title": "ДинамическийСписок (DynamicList)",
+      "category": "functions",
+      "content": "Динамический список предоставляет разработчику возможность описать в форме запрос практически произвольного вида, указать условное оформление данных, порядок сортировки, отборы и группировки данных.Ограничения:",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_7",
+      "title": "ДанныеФормыЭлементДерева (FormDataTreeItem)",
+      "category": "functions",
+      "content": "Элемент дерева данных формы.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "ПолучитьРодителя",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem/methods/GetParent3603.html"
+          },
+          {
+            "text": "ДанныеФормыДерево",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTree.html"
+          },
+          {
+            "text": "НайтиПоИдентификатору",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTree/methods/FindByID3613.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          },
+          {
+            "text": "Добавить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/Add3605.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          },
+          {
+            "text": "Вставить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/Insert3606.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          },
+          {
+            "text": "Получить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/Get3611.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          },
+          {
+            "text": "Удалить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/Delete3607.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          },
+          {
+            "text": "Индекс",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/IndexOf3608.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_8",
+      "title": "ДанныеФормыКоллекцияЭлементовДерева (FormDataTreeItemCollection)",
+      "category": "functions",
+      "content": "Коллекция элементов дерева.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItemCollection.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "ДанныеФормыДерево",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTree.html"
+          },
+          {
+            "text": "ПолучитьЭлементы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTree/methods/GetItems3612.html"
+          },
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "ПолучитьЭлементы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem/methods/GetItems3602.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_9",
+      "title": "ДанныеФормыЭлементКоллекции (FormDataCollectionItem)",
+      "category": "functions",
+      "content": "Элемент коллекции ДанныеФормыКоллекция и ДанныеФормыСтруктураСКоллекцией.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollectionItem.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "Добавить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/Add3479.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "Вставить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/Insert3480.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "Получить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/Get3485.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "НайтиПоИдентификатору",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/FindByID3486.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "Индекс",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/IndexOf3482.html"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          },
+          {
+            "text": "Удалить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection/methods/Delete3481.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "Добавить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Add3537.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "Вставить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Insert3538.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "Получить",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Get3543.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "НайтиПоИдентификатору",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/FindByID3544.html"
+          },
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          },
+          {
+            "text": "Индекс",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/IndexOf3540.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_10",
+      "title": "Модуль бота (Bot module)",
+      "category": "functions",
+      "content": "Предоставляет доступ к обработчикам бота системы взаимодействия.",
+      "metadata": {
+        "filename": "objects/catalog1649/Bot module.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "functions_11",
+      "title": "Модуль команды (Command module)",
+      "category": "functions",
+      "content": "Предоставляет доступ к обработчикам команды.",
+      "metadata": {
+        "filename": "objects/catalog1649/Command module.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    }
+  ],
+  "metadata": {
+    "category": "functions",
+    "chunk": 1,
+    "total_chunks": 0,
+    "items_count": 12,
+    "created_at": "2025-07-27T11:19:13.780318700+00:00"
+  }
+}

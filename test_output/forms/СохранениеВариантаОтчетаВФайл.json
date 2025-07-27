@@ -1,0 +1,95 @@
+{
+  "metadata_type": "Form",
+  "name": "СохранениеВариантаОтчетаВФайл",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ReportForm",
+  "object_name": "ХранилищеВариантовОтчетов",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 7,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ИмяФайла",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПерсональныеНастройки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ХранилищеПользовательскихНастроек",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ИмяКаталога",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ОписаниеВариантовОтчетов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ИмяФайлаБезРасширения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "РасширениеАрхива",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:12.724004100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\SettingsStorages\\ХранилищеВариантовОтчетов\\Forms\\СохранениеВариантаОтчетаВФайл\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\SettingsStorages\\ХранилищеВариантовОтчетов\\Forms\\СохранениеВариантаОтчетаВФайл\\Ext"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "metadata_type": "Form",
+  "name": "НастройкиСообщенийИзДругихПриложений",
+  "synonym": null,
+  "comment": null,
+  "form_type": "SettingsForm",
+  "object_name": "ПодключениеОбсуждений",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 1,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "СписокПодключений",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "СоздатьБотаTelegram",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "СоздатьБотаВКонтакте",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Обновить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "СоздатьБотаWhatsApp",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "СоздатьВебЧат",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "СоздатьБотаWebhook",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "6"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.788093800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПодключениеОбсуждений\\Forms\\НастройкиСообщенийИзДругихПриложений\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ПодключениеОбсуждений\\Forms\\НастройкиСообщенийИзДругихПриложений\\Ext"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированноеУведомлениеСогласиеНаРаскрытиеНалоговойТайны",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма2023_1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированноеУведомлениеСогласиеНаРаскрытиеНалоговойТайны",
+    "Регламентированное",
+    "Уведомление",
+    "Согласие",
+    "На",
+    "Раскрытие",
+    "Налоговой",
+    "Тайны"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.812975100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Интерфейс77ДокументыВедомостьНаВыплатуЗарплатыВКассу",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "Интерфейс77ДокументыВедомостьНаВыплатуЗарплатыВКассу",
+    "Интерфейс",
+    "77",
+    "Документы",
+    "Ведомость",
+    "На",
+    "Выплату",
+    "Зарплаты",
+    "В",
+    "Кассу"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:37.394948+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

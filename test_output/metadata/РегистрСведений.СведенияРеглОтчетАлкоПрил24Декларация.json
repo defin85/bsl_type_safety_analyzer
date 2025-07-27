@@ -1,0 +1,59 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СведенияРеглОтчетАлкоПрил24Декларация",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ХешИдКодПродВидДеятельности",
+        "data_type": "Строка(64, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Активно",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "П000010000301XML",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Адрес XML или JSON места деятельности"
+  },
+  "search_keywords": [
+    "СведенияРеглОтчетАлкоПрил24Декларация",
+    "Сведения",
+    "Регл",
+    "Отчет",
+    "Алко",
+    "Прил",
+    "24",
+    "Декларация"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.272132600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

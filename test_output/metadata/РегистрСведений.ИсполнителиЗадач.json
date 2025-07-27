@@ -1,0 +1,40 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИсполнителиЗадач",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ГруппаИсполнителейЗадач",
+        "data_type": "Характеристика.ОбъектыАдресацииЗадач",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "РолиИИсполнителиЗадач",
+      "ИсполнителиРолиСОбъектомАдресации",
+      "ИсполнителиРоли",
+      "ФормаЗаписи",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИсполнителиЗадач",
+    "Исполнители",
+    "Задач"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.732992900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

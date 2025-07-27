@@ -1,0 +1,52 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СоответствиеНоменклатурыСАТУРН",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Порядок",
+        "data_type": "Число(10, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатусУказанияСерий",
+        "data_type": "СправочникСсылка.ПартииСАТУРН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СоответствиеНоменклатурыСАТУРН",
+    "Соответствие",
+    "Номенклатуры",
+    "С",
+    "А",
+    "Т",
+    "У",
+    "Р",
+    "Н"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.352278900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

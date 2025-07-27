@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлассификаторОКОПФ",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КлассификаторОКОПФ",
+    "Классификатор",
+    "О",
+    "К",
+    "О",
+    "П",
+    "Ф"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.768146100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

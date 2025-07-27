@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КонтрольСопоставленияНоменклатурыЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Владелец номенклатуры"
+  },
+  "search_keywords": [
+    "КонтрольСопоставленияНоменклатурыЭДО",
+    "Контроль",
+    "Сопоставления",
+    "Номенклатуры",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.794348700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

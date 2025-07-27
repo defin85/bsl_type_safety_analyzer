@@ -1,0 +1,65 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПараметрыТиповойОперации",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПорядокПараметра",
+        "data_type": "Число(3, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОписаниеТипаРеквизита",
+        "data_type": "ХранилищеЗначения",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Подсказка",
+        "data_type": "Строка(200, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СвязьПоВладельцу",
+        "data_type": "СправочникСсылка.ПараметрыТиповойОперации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПараметрыТиповойОперации",
+    "Параметры",
+    "Типовой",
+    "Операции"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.758000200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

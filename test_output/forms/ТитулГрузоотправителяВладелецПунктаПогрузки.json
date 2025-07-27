@@ -1,0 +1,518 @@
+{
+  "metadata_type": "Form",
+  "name": "ТитулГрузоотправителяВладелецПунктаПогрузки",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЭлектроннаяТранспортнаяНакладная",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 54,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиЯвляетсяГрузоотправителем",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяПричинаОтсутствияИнформацииОВладельцеПунктаПогрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяВладелецПунктаПогрузки",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрАвтоматизацияИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрАвтоматизацияСодержание",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИП_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиОГРНИП",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИПИныеСведения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИПФамилия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "10"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИПИмя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "11"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИПОтчество",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "12"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиЮЛНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "13"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиЮЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "14"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиЮЛ_КПП",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "15"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаСтатусФЛ_ЮЛ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "16"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаСтрана",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "17"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "18"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаИдентификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "19"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаИныеСведения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "20"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаВидУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "21"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаНомерУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "22"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИнострЛицоБезУчетаДатаУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "23"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиФЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "24"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиФЛИныеСведения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "25"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиФЛФамилия",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "26"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиФЛИмя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "27"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиФЛОтчество",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "28"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресИндекс",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "29"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресКодРегиона",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "30"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресРайон",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "31"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресГород",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "32"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресНаселенныйПункт",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "33"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресУлица",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "34"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресДом",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "35"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресКорпус",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "36"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресКвартира",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "37"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресКодСтраны",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "38"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресПредставление",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "39"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресКодГАР",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "40"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиНомераТелефонов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "41"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиАдресаЭлектроннойПочты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "42"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяВладелецПунктаПогрузкиИныеКонтактныеДанные",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "43"
+        }
+      },
+      {
+        "name": "ХранимыеДанныеТитулГрузоотправителяИнойГрузоотправитель",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "44"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительЮЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "46"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительФЛ_ИНН",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "47"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаСтатусФЛ_ЮЛ",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "48"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаСтрана",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "49"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаНаименование",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "50"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаИдентификатор",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "51"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаИныеСведения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "52"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаВидУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "53"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаНомерУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "54"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительИнострЛицоБезУчетаДатаУдостоверения",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "55"
+        }
+      },
+      {
+        "name": "ТитулГрузоотправителяИнойГрузоотправительОрганВластиВыдавшийДокумент",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "56"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.317797100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектроннаяТранспортнаяНакладная\\Forms\\ТитулГрузоотправителяВладелецПунктаПогрузки\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектроннаяТранспортнаяНакладная\\Forms\\ТитулГрузоотправителяВладелецПунктаПогрузки\\Ext"
+  }
+}

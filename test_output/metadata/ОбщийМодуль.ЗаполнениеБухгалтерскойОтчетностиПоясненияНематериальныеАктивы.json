@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗаполнениеБухгалтерскойОтчетностиПоясненияНематериальныеАктивы",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЗаполнениеБухгалтерскойОтчетностиПоясненияНематериальныеАктивы",
+    "Заполнение",
+    "Бухгалтерской",
+    "Отчетности",
+    "Пояснения",
+    "Нематериальные",
+    "Активы"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:33.568498200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

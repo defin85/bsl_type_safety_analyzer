@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВерсииИзмененийУправлениеПерсоналом",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВерсииИзмененийУправлениеПерсоналом",
+    "Версии",
+    "Изменений",
+    "Управление",
+    "Персоналом"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.560653700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

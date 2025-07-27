@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетВодныеБиоресурсы",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2010Кв4",
+      "ФормаОтчета2013Кв4",
+      "ФормаОтчета2017Кв4",
+      "ФормаОтчета2024Кв1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Состав показателей"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетВодныеБиоресурсы",
+    "Регламентированный",
+    "Отчет",
+    "Водные",
+    "Биоресурсы"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.886204100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

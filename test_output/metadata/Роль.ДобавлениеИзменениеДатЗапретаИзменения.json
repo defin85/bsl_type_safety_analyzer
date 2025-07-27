@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДобавлениеИзменениеДатЗапретаИзменения",
+  "object_type": "Role",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДобавлениеИзменениеДатЗапретаИзменения",
+    "Добавление",
+    "Изменение",
+    "Дат",
+    "Запрета",
+    "Изменения"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:32.733907100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

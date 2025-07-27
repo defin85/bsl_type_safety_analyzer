@@ -1,0 +1,104 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегистрацииВОрганеСтатистики",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "АдресПочтовый",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВАрхиве",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДокументПредставителя",
+        "data_type": "Строка(1000, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификационныйНомер",
+        "data_type": "Строка(14, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодОрганаФСГС",
+        "data_type": "Строка(10, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Представитель",
+        "data_type": "ОпределяемыйТип.ПредставительВОрганеСтатистики",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтруктурнаяЕдиница",
+        "data_type": "ОпределяемыйТип.ТерриторияВыполненияРабот",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УполномоченноеЛицоПредставителя",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаПредставителя",
+      "ФормаСписка",
+      "ФормаЭлемента",
+      "ФормаСостав"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Лицо, уполномоченное предоставлять первичные статистические данные"
+  },
+  "search_keywords": [
+    "РегистрацииВОрганеСтатистики",
+    "Регистрации",
+    "В",
+    "Органе",
+    "Статистики"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.857129900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

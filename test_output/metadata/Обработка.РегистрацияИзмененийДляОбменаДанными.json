@@ -1,0 +1,135 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегистрацияИзмененийДляОбменаДанными",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НастройкаАвторегистрацияПоследовательностей",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НастройкаАвторегистрацияДвижений",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НастройкаАдресВнешнейОбработкиЗапросов",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НастройкаВариантНомераСообщения",
+        "data_type": "Число(10, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НастройкаКонтрольВыгрузкиОбъектов",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КонфигурацияПоддерживаетБСП",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоступнаРегистрацияСредствамиБСП",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоступнаРаботаРИБ",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоступнаРегистрацияАсинхронно",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДоступнаПакетнаяРегистрация",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИменаСкрываемыхМетаданных",
+        "data_type": "СписокЗначений",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ВыборУзлаПланаОбмена",
+      "Форма",
+      "НомераСообщенийУзлаПланаОбмена",
+      "ВыборКонстанты",
+      "ВыборОбъектовОтбором",
+      "УзлыРегистрацииОбъекта",
+      "Настройки"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Вычисляется при чтении настроек, ограничивает варианты настроек"
+  },
+  "search_keywords": [
+    "РегистрацияИзмененийДляОбменаДанными",
+    "Регистрация",
+    "Изменений",
+    "Для",
+    "Обмена",
+    "Данными"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.467068300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

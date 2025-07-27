@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ТипыОперацийДвиженияКодовМаркировкиМОТП",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ТипыОперацийДвиженияКодовМаркировкиМОТП",
+    "Типы",
+    "Операций",
+    "Движения",
+    "Кодов",
+    "Маркировки",
+    "М",
+    "О",
+    "Т",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.418598100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

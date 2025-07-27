@@ -1,0 +1,61 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ТуристическийНалог",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Ставка",
+        "data_type": "Число(5, 2)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДокументОснование",
+        "data_type": "ДокументСсылка.НачислениеТуристическогоНалога, ДокументСсылка.СчетНаОплатуПокупателю, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.РеализацияТоваровУслуг",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РасчетныйДокумент",
+        "data_type": "ДокументСсылка.ПоступлениеНаРасчетныйСчет, ДокументСсылка.НачислениеТуристическогоНалога, ДокументСсылка.ОплатаПлатежнойКартой, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.ПриходныйКассовыйОрдер",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Номенклатура",
+        "data_type": "ПеречислениеСсылка.ВидыЛьготПоТуристическомуНалогу",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Документ, по которому поступила последняя часть оплаты"
+  },
+  "search_keywords": [
+    "ТуристическийНалог",
+    "Туристический",
+    "Налог"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.696330700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

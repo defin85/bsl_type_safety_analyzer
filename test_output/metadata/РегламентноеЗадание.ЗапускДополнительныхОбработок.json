@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗапускДополнительныхОбработок",
+  "object_type": "ScheduledJob",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЗапускДополнительныхОбработок",
+    "Запуск",
+    "Дополнительных",
+    "Обработок"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.426121200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

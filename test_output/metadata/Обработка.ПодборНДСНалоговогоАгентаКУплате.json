@@ -1,0 +1,144 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПодборНДСНалоговогоАгентаКУплате",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "ЗадолженностьНалоговыйАгентНДС",
+        "attributes": [
+          {
+            "name": "Контрагент",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Договор",
+            "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументРасчетов",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ЗаявлениеОВвозеТоваров, ДокументСсылка.РеализацияТоваровУслуг",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сумма",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СрокУплаты",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтрокаПодобрана",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ПодобраннаяКУплатеЗадолженность",
+        "attributes": [
+          {
+            "name": "Контрагент",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Договор",
+            "data_type": "СправочникСсылка.ДоговорыКонтрагентов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументРасчетов",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ЗаявлениеОВвозеТоваров, ДокументСсылка.РеализацияТоваровУслуг",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Сумма",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СрокУплаты",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПодборНДСНалоговогоАгентаКУплате",
+    "Подбор",
+    "Н",
+    "Д",
+    "С",
+    "Налогового",
+    "Агента",
+    "К",
+    "Уплате"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.399302600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

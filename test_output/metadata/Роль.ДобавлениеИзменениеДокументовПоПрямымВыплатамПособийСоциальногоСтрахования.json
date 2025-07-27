@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДобавлениеИзменениеДокументовПоПрямымВыплатамПособийСоциальногоСтрахования",
+  "object_type": "Role",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДобавлениеИзменениеДокументовПоПрямымВыплатамПособийСоциальногоСтрахования",
+    "Добавление",
+    "Изменение",
+    "Документов",
+    "По",
+    "Прямым",
+    "Выплатам",
+    "Пособий",
+    "Социального",
+    "Страхования"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:32.739732900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

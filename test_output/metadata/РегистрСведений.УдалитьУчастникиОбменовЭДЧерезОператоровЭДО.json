@@ -1,0 +1,42 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьУчастникиОбменовЭДЧерезОператоровЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ОписаниеОшибки",
+        "data_type": "ОпределяемыйТип.КонтрагентБЭД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьУчастникиОбменовЭДЧерезОператоровЭДО",
+    "Удалить",
+    "Участники",
+    "Обменов",
+    "Э",
+    "Д",
+    "Через",
+    "Операторов",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.560833200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

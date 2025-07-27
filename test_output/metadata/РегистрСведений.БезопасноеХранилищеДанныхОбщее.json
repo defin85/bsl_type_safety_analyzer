@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "БезопасноеХранилищеДанныхОбщее",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Хранилище неразделенных данных с возможностью записи из разделенных сеансов"
+  },
+  "search_keywords": [
+    "БезопасноеХранилищеДанныхОбщее",
+    "Безопасное",
+    "Хранилище",
+    "Данных",
+    "Общее"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.551166500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

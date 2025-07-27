@@ -1,0 +1,53 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВзаиморасчетыСДепонентами",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "СтатьяФинансирования",
+        "data_type": "СправочникСсылка.СтатьиФинансированияЗарплата",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатьяРасходов",
+        "data_type": "СправочникСсылка.СтатьиРасходовЗарплата",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерПлатежногоДокумента",
+        "data_type": "СправочникСсылка.ФизическиеЛица",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВзаиморасчетыСДепонентами",
+    "Взаиморасчеты",
+    "С",
+    "Депонентами"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.620679300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

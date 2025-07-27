@@ -1,0 +1,42 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КлассификаторОКВЭД2",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НаименованиеПолное",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КлассификаторОКВЭД2",
+    "Классификатор",
+    "О",
+    "К",
+    "В",
+    "Э",
+    "Д",
+    "2"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.560532500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

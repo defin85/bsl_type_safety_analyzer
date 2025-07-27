@@ -1,0 +1,58 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаСписокДокументов",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ListForm",
+  "object_name": "ЗагрузкаОтчетаЯндексМаркет",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 4,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ТекущийПериод",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ДеревоДокументов",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "АдресХранилища",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": []
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.250174800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ЗагрузкаОтчетаЯндексМаркет\\Forms\\ФормаСписокДокументов\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\ЗагрузкаОтчетаЯндексМаркет\\Forms\\ФормаСписокДокументов\\Ext"
+  }
+}

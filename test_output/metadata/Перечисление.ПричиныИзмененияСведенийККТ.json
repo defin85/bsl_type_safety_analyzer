@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПричиныИзмененияСведенийККТ",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Иные причины"
+  },
+  "search_keywords": [
+    "ПричиныИзмененияСведенийККТ",
+    "Причины",
+    "Изменения",
+    "Сведений",
+    "К",
+    "К",
+    "Т"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.071692900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

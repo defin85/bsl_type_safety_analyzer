@@ -1,0 +1,25 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИспользоватьПроверкуКонтрагентов",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "0 - проверку никогда не включали; 1 - проверка включена; 2 - проверку отключили"
+  },
+  "search_keywords": [
+    "ИспользоватьПроверкуКонтрагентов",
+    "Использовать",
+    "Проверку",
+    "Контрагентов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.016814700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

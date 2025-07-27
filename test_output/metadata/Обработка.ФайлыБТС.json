@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ФайлыБТС",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ПолучениеФайла",
+      "ПомещениеФайла",
+      "ДлительнаяОперация"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ФайлыБТС",
+    "Файлы",
+    "Б",
+    "Т",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.514739200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

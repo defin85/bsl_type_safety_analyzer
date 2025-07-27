@@ -1,0 +1,72 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиРегламентныхЗаданийВЕТИС",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ХозяйствующийСубъект",
+        "data_type": "СправочникСсылка.ХозяйствующиеСубъектыВЕТИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РегламентноеЗадание",
+        "data_type": "УникальныйИдентификатор",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Предприятия",
+        "attributes": [
+          {
+            "name": "Предприятие",
+            "data_type": "СправочникСсылка.ПредприятияВЕТИС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаВыбораПредприятий",
+      "ФормаВыбораПредприятия",
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаНастроек"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкиРегламентныхЗаданийВЕТИС",
+    "Настройки",
+    "Регламентных",
+    "Заданий",
+    "В",
+    "Е",
+    "Т",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.647337500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

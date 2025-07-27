@@ -1,0 +1,72 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиПодключенияЛокальныхМодулейИСМП",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "СерверПодключенияЛМ",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПортПодключенияЛМ",
+        "data_type": "Число(6, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗащищенноеСоединение",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ХешСумма",
+        "data_type": "Число(3, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи",
+      "ФормаВыбораТоварныхГрупп",
+      "ФормаВводаНовогоПароля"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкиПодключенияЛокальныхМодулейИСМП",
+    "Настройки",
+    "Подключения",
+    "Локальных",
+    "Модулей",
+    "И",
+    "С",
+    "М",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.886164300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

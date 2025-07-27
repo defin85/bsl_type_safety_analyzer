@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КадровыеДокументы",
+  "object_type": "DocumentJournal",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ЭлектронныеТрудовыеКнижки_ФормаСпискаПриказы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "КадровыеДокументы",
+    "Кадровые",
+    "Документы"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.677881800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

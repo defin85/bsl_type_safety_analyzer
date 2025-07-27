@@ -1,0 +1,49 @@
+{
+  "metadata_type": "Form",
+  "name": "ПроверкаДополнительныхОтчетовИОбработок",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ReportForm",
+  "object_name": "ДополнительныеОтчетыИОбработки",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 0,
+    "elements": [],
+    "attributes": [],
+    "commands": [
+      {
+        "name": "Проверено",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      },
+      {
+        "name": "ПерейтиКСписку",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "Закрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "3"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:01.934056100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Catalogs\\ДополнительныеОтчетыИОбработки\\Forms\\ПроверкаДополнительныхОтчетовИОбработок\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Catalogs\\ДополнительныеОтчетыИОбработки\\Forms\\ПроверкаДополнительныхОтчетовИОбработок\\Ext"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетКосвенныеНалогиТамСоюз",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2010Кв3",
+      "ФормаОтчета2017Кв4",
+      "ФормаОтчета2023Кв3"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Состав показателей Расчета"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетКосвенныеНалогиТамСоюз",
+    "Регламентированный",
+    "Отчет",
+    "Косвенные",
+    "Налоги",
+    "Там",
+    "Союз"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.913128600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "metadata_type": "Form",
+  "name": "ТитулФрахтовщикаРазмерПлатыЗаПользованиеТС",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "ЭлектронныйЗаказНаряд",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 8,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ТитулФрахтовщикаСтоимостьУслугиВРублях",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаРасходыЗаПроездПоПлатнымАвтомобильнымДорогам",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаРасходыЗаПеревозкуОпасныхГрузовТяжеловесноеТСТаможня",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаВыполнениеПогрузоРазгрузочныхИПрочихРабот",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "5"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаПорядокМеханизмРасчетаИсчисленийПлаты",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "6"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаРазмерПлатыВРублях",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "7"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаРазмерПлатыЗаПользованиеТСИнформационноеПоле",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "8"
+        }
+      },
+      {
+        "name": "ТитулФрахтовщикаРазмерПлатыЗаПользованиеТСТекстоваяИнформация",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "9"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "Сохранить",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:06.542566+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказНаряд\\Forms\\ТитулФрахтовщикаРазмерПлатыЗаПользованиеТС\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\Documents\\ЭлектронныйЗаказНаряд\\Forms\\ТитулФрахтовщикаРазмерПлатыЗаПользованиеТС\\Ext"
+  }
+}

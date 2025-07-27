@@ -1,0 +1,59 @@
+{
+  "metadata_type": "Form",
+  "name": "ОткрытиеВнешнейОбработкиИлиОтчетаСВыборомБезопасногоРежима",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ChoiceForm",
+  "object_name": "НастройкаРазрешенийНаИспользованиеВнешнихРесурсов",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 3,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "ФайлОбработкиИмя",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "2"
+        }
+      },
+      {
+        "name": "ФайлОбработкиАдрес",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "3"
+        }
+      },
+      {
+        "name": "БезопасныйРежим",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "4"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "name": "ПодключитьИОткрыть",
+        "title": null,
+        "action": null,
+        "representation": "Auto",
+        "properties": {
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:03.449564800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\НастройкаРазрешенийНаИспользованиеВнешнихРесурсов\\Forms\\ОткрытиеВнешнейОбработкиИлиОтчетаСВыборомБезопасногоРежима\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\НастройкаРазрешенийНаИспользованиеВнешнихРесурсов\\Forms\\ОткрытиеВнешнейОбработкиИлиОтчетаСВыборомБезопасногоРежима\\Ext"
+  }
+}

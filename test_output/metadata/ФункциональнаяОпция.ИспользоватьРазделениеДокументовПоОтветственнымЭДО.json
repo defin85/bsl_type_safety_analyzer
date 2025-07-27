@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИспользоватьРазделениеДокументовПоОтветственнымЭДО",
+  "object_type": "FunctionalOption",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Использовать \"Ответственных\" за документы в ЭДО"
+  },
+  "search_keywords": [
+    "ИспользоватьРазделениеДокументовПоОтветственнымЭДО",
+    "Использовать",
+    "Разделение",
+    "Документов",
+    "По",
+    "Ответственным",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.715729200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

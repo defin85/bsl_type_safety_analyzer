@@ -1,0 +1,24 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Нумерация5",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "Нумерация5",
+    "Нумерация",
+    "5"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:31.747894800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

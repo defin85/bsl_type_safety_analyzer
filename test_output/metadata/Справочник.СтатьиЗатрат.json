@@ -1,0 +1,58 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатьиЗатрат",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ВидДеятельностиДляНалоговогоУчетаЗатрат",
+        "data_type": "ПеречислениеСсылка.ВидыДеятельностиДляНалоговогоУчетаЗатрат",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидРасходовНУ",
+        "data_type": "ПеречислениеСсылка.ВидыРасходовНУ",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РеквизитДопУпорядочивания",
+        "data_type": "Число(5, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаЭлемента",
+      "ФормаГруппы",
+      "ФормаВыбораГруппы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СтатьиЗатрат",
+    "Статьи",
+    "Затрат"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.947053400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

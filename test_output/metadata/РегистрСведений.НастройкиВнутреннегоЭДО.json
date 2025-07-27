@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиВнутреннегоЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "НастройкиВнутреннегоЭДО",
+      "ПечатныеФормы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкиВнутреннегоЭДО",
+    "Настройки",
+    "Внутреннего",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.848687200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

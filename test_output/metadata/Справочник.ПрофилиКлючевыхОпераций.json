@@ -1,0 +1,63 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПрофилиКлючевыхОпераций",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "КлючевыеОперацииПрофиля",
+        "attributes": [
+          {
+            "name": "КлючеваяОперация",
+            "data_type": "СправочникСсылка.КлючевыеОперации",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЦелевоеВремя",
+            "data_type": "Число(5, 1)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Приоритет",
+            "data_type": "Число(5, 0, Неотрицательный)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЭлемента",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПрофилиКлючевыхОпераций",
+    "Профили",
+    "Ключевых",
+    "Операций"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.845161700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

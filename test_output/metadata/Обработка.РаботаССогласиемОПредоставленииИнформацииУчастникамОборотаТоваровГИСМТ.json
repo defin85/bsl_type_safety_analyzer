@@ -1,0 +1,36 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РаботаССогласиемОПредоставленииИнформацииУчастникамОборотаТоваровГИСМТ",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РаботаССогласиемОПредоставленииИнформацииУчастникамОборотаТоваровГИСМТ",
+    "Работа",
+    "С",
+    "Согласием",
+    "О",
+    "Предоставлении",
+    "Информации",
+    "Участникам",
+    "Оборота",
+    "Товаров",
+    "Г",
+    "И",
+    "С",
+    "М",
+    "Т"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.461166200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

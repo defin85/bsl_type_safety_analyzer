@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыПрочихДоходовИРасходов",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Премия, выплаченная покупателю"
+  },
+  "search_keywords": [
+    "ВидыПрочихДоходовИРасходов",
+    "Виды",
+    "Прочих",
+    "Доходов",
+    "И",
+    "Расходов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.881268200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИспользоватьИнтеграциюСПриложением1СПерсонал",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИспользоватьИнтеграциюСПриложением1СПерсонал",
+    "Использовать",
+    "Интеграцию",
+    "С",
+    "Приложением",
+    "1",
+    "С",
+    "Персонал"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:37.964488500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -194,26 +194,52 @@ impl MetadataReportParser {
         let mut allowed_root_types = HashMap::new();
         
         // Инициализируем разрешенные типы объектов (из Python ALLOWED_ROOT_TYPES)
-        allowed_root_types.insert("Справочник".to_string(), ObjectType::Directory);
-        allowed_root_types.insert("Документ".to_string(), ObjectType::Document);
-        allowed_root_types.insert("Регистр".to_string(), ObjectType::Register);
-        allowed_root_types.insert("РегистрСведений".to_string(), ObjectType::InformationRegister);
-        allowed_root_types.insert("РегистрНакопления".to_string(), ObjectType::AccumulationRegister);
-        allowed_root_types.insert("РегистрБухгалтерии".to_string(), ObjectType::AccountingRegister);
-        allowed_root_types.insert("Отчет".to_string(), ObjectType::Report);
-        allowed_root_types.insert("Обработка".to_string(), ObjectType::DataProcessor);
-        allowed_root_types.insert("Перечисление".to_string(), ObjectType::Enumeration);
-        allowed_root_types.insert("ОбщийМодуль".to_string(), ObjectType::CommonModule);
-        allowed_root_types.insert("Подсистема".to_string(), ObjectType::Subsystem);
-        allowed_root_types.insert("Роль".to_string(), ObjectType::Role);
-        allowed_root_types.insert("ОбщийРеквизит".to_string(), ObjectType::CommonAttribute);
-        allowed_root_types.insert("ПланОбмена".to_string(), ObjectType::ExchangePlan);
-        allowed_root_types.insert("Константа".to_string(), ObjectType::Constant);
+        // Используем множественные формы, как в реальных отчетах
+        allowed_root_types.insert("Справочники".to_string(), ObjectType::Directory);
+        allowed_root_types.insert("Документы".to_string(), ObjectType::Document);
+        allowed_root_types.insert("Регистры".to_string(), ObjectType::Register);
+        allowed_root_types.insert("РегистрыСведений".to_string(), ObjectType::InformationRegister);
+        allowed_root_types.insert("РегистрыНакопления".to_string(), ObjectType::AccumulationRegister);
+        allowed_root_types.insert("РегистрыБухгалтерии".to_string(), ObjectType::AccountingRegister);
+        allowed_root_types.insert("Отчеты".to_string(), ObjectType::Report);
+        allowed_root_types.insert("Обработки".to_string(), ObjectType::DataProcessor);
+        allowed_root_types.insert("Перечисления".to_string(), ObjectType::Enumeration);
+        allowed_root_types.insert("ОбщиеМодули".to_string(), ObjectType::CommonModule);
+        allowed_root_types.insert("Подсистемы".to_string(), ObjectType::Subsystem);
+        allowed_root_types.insert("Роли".to_string(), ObjectType::Role);
+        allowed_root_types.insert("ОбщиеРеквизиты".to_string(), ObjectType::CommonAttribute);
+        allowed_root_types.insert("ПланыОбмена".to_string(), ObjectType::ExchangePlan);
+        allowed_root_types.insert("Константы".to_string(), ObjectType::Constant);
+        
+        // Дополнительные типы из Python версии
+        allowed_root_types.insert("Конфигурации".to_string(), ObjectType::Document); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("Языки".to_string(), ObjectType::CommonModule); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("ПланыСчетов".to_string(), ObjectType::ChartOfAccounts);
+        allowed_root_types.insert("РегистрыБухгалтерии".to_string(), ObjectType::AccountingRegister);
+        allowed_root_types.insert("РегистрыРасчета".to_string(), ObjectType::Register); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("ПланыВидовРасчета".to_string(), ObjectType::ChartOfCalculationTypes);
+        allowed_root_types.insert("ПланыВидовХарактеристик".to_string(), ObjectType::ChartOfCharacteristicTypes);
+        allowed_root_types.insert("ЖурналыДокументов".to_string(), ObjectType::DocumentJournal);
+        allowed_root_types.insert("БизнесПроцессы".to_string(), ObjectType::BusinessProcess);
+        allowed_root_types.insert("Задачи".to_string(), ObjectType::Task);
+        allowed_root_types.insert("ВнешниеИсточникиДанных".to_string(), ObjectType::ExternalDataSource);
+        allowed_root_types.insert("HTTPСервисы".to_string(), ObjectType::HTTPService);
+        allowed_root_types.insert("WebСервисы".to_string(), ObjectType::WebService);
+        allowed_root_types.insert("ОпределяемыеТипы".to_string(), ObjectType::DefinedType);
+        allowed_root_types.insert("РегламентныеЗадания".to_string(), ObjectType::ScheduledJob);
+        allowed_root_types.insert("ХранилищаНастроек".to_string(), ObjectType::SettingsStorage);
+        allowed_root_types.insert("ФункциональныеОпции".to_string(), ObjectType::FunctionalOption);
+        allowed_root_types.insert("ПараметрыСеанса".to_string(), ObjectType::Constant); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("ОбщиеКоманды".to_string(), ObjectType::CommonModule); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("ОбщиеКартинки".to_string(), ObjectType::CommonModule); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("КритерииОтбора".to_string(), ObjectType::FilterCriterion);
+        allowed_root_types.insert("ПодпискиНаСобытия".to_string(), ObjectType::CommonModule); // TODO: Добавить отдельный тип
+        allowed_root_types.insert("Последовательности".to_string(), ObjectType::Sequence);
         
         // Компилируем регулярные выражения для парсинга
         let mut section_patterns = HashMap::new();
         section_patterns.insert("object_header".to_string(), 
-            Regex::new(r"^(\w+)\.(\w+)$").context("Failed to compile object header regex")?);
+            Regex::new(r"^\s*-\s*([\w\u0400-\u04FF]+)\.([\w\u0400-\u04FF]+)$").context("Failed to compile object header regex")?);
         section_patterns.insert("attributes_section".to_string(),
             Regex::new(r"^\s*Реквизиты:").context("Failed to compile attributes section regex")?);
         section_patterns.insert("tabular_sections".to_string(),
@@ -221,9 +247,9 @@ impl MetadataReportParser {
         section_patterns.insert("forms_section".to_string(),
             Regex::new(r"^\s*Формы:").context("Failed to compile forms section regex")?);
         
-        let attribute_pattern = Regex::new(r"^\s*(\w+)\s*\(([^)]+)\)")
+        let attribute_pattern = Regex::new(r"^\s*([\w\u0400-\u04FF]+)\s*\(([^)]+)\)")
             .context("Failed to compile attribute regex")?;
-        let tabular_section_pattern = Regex::new(r"^\s*(\w+)\s*:")
+        let tabular_section_pattern = Regex::new(r"^\s*([\w\u0400-\u04FF]+)\s*:")
             .context("Failed to compile tabular section regex")?;
         
         Ok(Self {
@@ -285,146 +311,193 @@ impl MetadataReportParser {
     fn extract_metadata_objects(&self, content: &str, source_path: &Path, encoding: &str) -> Result<Vec<MetadataContract>> {
         let mut contracts = Vec::new();
         let lines: Vec<&str> = content.lines().collect();
-        let mut i = 0;
+        let mut current_object: Option<(String, ObjectType, usize)> = None;
+        let mut current_structure: Option<ObjectStructure> = None;
+        let mut last_element_path: Option<String> = None; // Путь к последнему элементу для обработки типа
         
-        while i < lines.len() {
-            let line = lines[i].trim();
+        for (i, line) in lines.iter().enumerate() {
+            let trimmed = line.trim();
             
-            // Ищем заголовки объектов (например, "Справочник.Номенклатура")
-            if let Some(captures) = self.section_patterns["object_header"].captures(line) {
-                let object_type_str = &captures[1];
-                let object_name = &captures[2];
+            // Пропускаем пустые строки
+            if trimmed.is_empty() {
+                continue;
+            }
+            
+            // Обработка строк с "-"
+            if trimmed.starts_with("-") {
+                let element_line = trimmed[1..].trim();
+                let parts: Vec<&str> = element_line.split('.').collect();
                 
-                if let Some(object_type) = self.allowed_root_types.get(object_type_str) {
-                    tracing::debug!("Found object: {} {}", object_type_str, object_name);
+                // Проверка корневого объекта
+                if parts.len() == 2 && self.allowed_root_types.contains_key(parts[0]) {
+                    // Сохраняем предыдущий объект
+                    if let (Some((obj_name, obj_type, start_line)), Some(structure)) = (current_object.take(), current_structure.take()) {
+                        let contract = self.create_contract(&obj_name, obj_type, structure, source_path, encoding);
+                        contracts.push(contract);
+                    }
                     
-                    // Парсим объект начиная с текущей позиции
-                    let (contract, lines_consumed) = self.parse_single_object(
-                        &lines[i..],
-                        object_name,
-                        object_type.clone(),
-                        source_path,
-                        encoding
-                    )?;
+                    // Начинаем новый объект
+                    let object_type = self.allowed_root_types[parts[0]].clone();
+                    let full_name = element_line.to_string();
+                    tracing::debug!("Found object: {}", full_name);
                     
-                    contracts.push(contract);
-                    i += lines_consumed;
-                } else {
-                    i += 1;
+                    current_object = Some((full_name, object_type, i));
+                    current_structure = Some(ObjectStructure {
+                        attributes: Vec::new(),
+                        tabular_sections: Vec::new(),
+                        forms: Vec::new(),
+                        templates: Vec::new(),
+                        commands: Vec::new(),
+                        comments: None,
+                    });
+                    last_element_path = None;
+                    
+                } else if let Some((ref obj_name, _, _)) = current_object {
+                    // Обработка дочерних элементов
+                    if element_line.starts_with(obj_name) {
+                        let relative_path = element_line.strip_prefix(obj_name).unwrap().trim_start_matches('.');
+                        let rel_parts: Vec<&str> = relative_path.split('.').collect();
+                        
+                        if let Some(ref mut structure) = current_structure {
+                            match rel_parts.as_slice() {
+                            ["Реквизиты", attr_name] => {
+                                let attr = AttributeInfo {
+                                    name: attr_name.to_string(),
+                                    data_type: "Неопределено".to_string(),
+                                    length: None,
+                                    precision: None,
+                                    attribute_use: AttributeUse::ForFolderAndItem,
+                                    indexing: AttributeIndexing::DontIndex,
+                                    fill_checking: FillChecking::DontCheck,
+                                };
+                                structure.attributes.push(attr);
+                                last_element_path = Some(element_line.to_string());
+                                tracing::debug!("Added attribute: {}", attr_name);
+                            }
+                            ["ТабличныеЧасти", ts_name] => {
+                                let ts = TabularSection {
+                                    name: ts_name.to_string(),
+                                    attributes: Vec::new(),
+                                    indexing: None,
+                                };
+                                structure.tabular_sections.push(ts);
+                                last_element_path = None;
+                                tracing::debug!("Added tabular section: {}", ts_name);
+                            }
+                            ["ТабличныеЧасти", ts_name, "Реквизиты", col_name] => {
+                                // Находим табличную часть и добавляем реквизит
+                                if let Some(ts) = structure.tabular_sections.iter_mut().find(|t| t.name == *ts_name) {
+                                    let attr = AttributeInfo {
+                                        name: col_name.to_string(),
+                                        data_type: "Неопределено".to_string(),
+                                        length: None,
+                                        precision: None,
+                                        attribute_use: AttributeUse::ForFolderAndItem,
+                                        indexing: AttributeIndexing::DontIndex,
+                                        fill_checking: FillChecking::DontCheck,
+                                    };
+                                    ts.attributes.push(attr);
+                                    last_element_path = Some(element_line.to_string());
+                                    tracing::debug!("Added tabular attribute {} to {}", col_name, ts_name);
+                                }
+                            }
+                            ["Формы", form_name] => {
+                                structure.forms.push(form_name.to_string());
+                                tracing::debug!("Added form: {}", form_name);
+                            }
+                            _ => {}
+                            }
+                        }
+                    }
                 }
-            } else {
-                i += 1;
+            }
+            // Обработка поля "Тип:"
+            else if trimmed.starts_with("Тип:") && last_element_path.is_some() {
+                // Собираем многострочный тип
+                let mut type_parts = Vec::new();
+                let base_indent = line.len() - line.trim_start().len();
+                
+                let mut j = i + 1;
+                while j < lines.len() {
+                    let next_line = lines[j];
+                    let next_indent = next_line.len() - next_line.trim_start().len();
+                    
+                    if next_line.trim().is_empty() {
+                        j += 1;
+                        continue;
+                    }
+                    
+                    if next_indent > base_indent {
+                        let part = next_line.trim().trim_matches('"').trim_end_matches(',');
+                        type_parts.push(part.to_string());
+                        j += 1;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if !type_parts.is_empty() {
+                    // Обновляем тип у последнего добавленного элемента
+                    if let (Some((ref obj_name, _, _)), Some(ref mut structure), Some(ref elem_path)) = 
+                        (&current_object, &mut current_structure, &last_element_path) 
+                    {
+                        let relative_path = elem_path.strip_prefix(obj_name).unwrap().trim_start_matches('.');
+                        let rel_parts: Vec<&str> = relative_path.split('.').collect();
+                        
+                        match rel_parts.as_slice() {
+                            ["Реквизиты", attr_name] => {
+                                if let Some(attr) = structure.attributes.iter_mut().find(|a| a.name == *attr_name) {
+                                    attr.data_type = type_parts.join(", ");
+                                    tracing::debug!("Set type for attribute {}: {}", attr.name, attr.data_type);
+                                }
+                            }
+                            ["ТабличныеЧасти", ts_name, "Реквизиты", col_name] => {
+                                if let Some(ts) = structure.tabular_sections.iter_mut().find(|t| t.name == *ts_name) {
+                                    if let Some(attr) = ts.attributes.iter_mut().find(|a| a.name == *col_name) {
+                                        attr.data_type = type_parts.join(", ");
+                                        tracing::debug!("Set type for tabular attribute {}.{}: {}", ts_name, attr.name, attr.data_type);
+                                    }
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            // Обработка комментария
+            else if trimmed.starts_with("Комментарий:") {
+                let comment = trimmed.strip_prefix("Комментарий:").unwrap().trim().trim_matches('"');
+                if !comment.is_empty() {
+                    if let Some(ref mut structure) = current_structure {
+                        structure.comments = Some(comment.to_string());
+                    }
+                }
             }
         }
         
+        // Сохраняем последний объект
+        if let (Some((obj_name, obj_type, _)), Some(structure)) = (current_object, current_structure) {
+            let contract = self.create_contract(&obj_name, obj_type, structure, source_path, encoding);
+            contracts.push(contract);
+        }
+        
+        tracing::info!("Parsed {} metadata objects", contracts.len());
         Ok(contracts)
     }
     
-    /// Парсит один объект метаданных
-    fn parse_single_object(
+    /// Создает контракт из структуры объекта
+    fn create_contract(
         &self,
-        lines: &[&str],
-        object_name: &str,
+        full_object_name: &str,
         object_type: ObjectType,
+        structure: ObjectStructure,
         source_path: &Path,
         encoding: &str
-    ) -> Result<(MetadataContract, usize)> {
-        let mut structure = ObjectStructure {
-            attributes: Vec::new(),
-            tabular_sections: Vec::new(),
-            forms: Vec::new(),
-            templates: Vec::new(),
-            commands: Vec::new(),
-            comments: None,
-        };
+    ) -> MetadataContract {
+        // Извлекаем короткое имя объекта (после последней точки)
+        let object_name = full_object_name.split('.').last().unwrap_or(full_object_name);
         
-        let mut i = 1; // Пропускаем заголовок объекта
-        let mut current_section = None;
-        let mut current_tabular_section: Option<TabularSection> = None;
-        
-        // Парсим секции объекта
-        while i < lines.len() {
-            let line = lines[i].trim();
-            
-            // Проверяем, не начался ли новый объект
-            if self.section_patterns["object_header"].is_match(line) {
-                break;
-            }
-            
-            // Определяем текущую секцию
-            if self.section_patterns["attributes_section"].is_match(line) {
-                current_section = Some("attributes");
-                i += 1;
-                continue;
-            } else if self.section_patterns["tabular_sections"].is_match(line) {
-                // Сохраняем предыдущую табличную часть
-                if let Some(ts) = current_tabular_section.take() {
-                    structure.tabular_sections.push(ts);
-                }
-                current_section = Some("tabular_sections");
-                i += 1;
-                continue;
-            } else if self.section_patterns["forms_section"].is_match(line) {
-                current_section = Some("forms");
-                i += 1;
-                continue;
-            }
-            
-            // Обрабатываем содержимое секций
-            match current_section {
-                Some("attributes") => {
-                    if let Some(attribute) = self.parse_attribute_line(line)? {
-                        structure.attributes.push(attribute);
-                    }
-                }
-                Some("tabular_sections") => {
-                    // Проверяем, начинается ли новая табличная часть
-                    if let Some(captures) = self.tabular_section_pattern.captures(line) {
-                        // Сохраняем предыдущую табличную часть
-                        if let Some(ts) = current_tabular_section.take() {
-                            structure.tabular_sections.push(ts);
-                        }
-                        
-                        // Начинаем новую табличную часть
-                        current_tabular_section = Some(TabularSection {
-                            name: captures[1].to_string(),
-                            attributes: Vec::new(),
-                            indexing: None,
-                        });
-                    } else if let Some(ref mut ts) = current_tabular_section {
-                        // Добавляем реквизит к текущей табличной части
-                        if let Some(attribute) = self.parse_attribute_line(line)? {
-                            ts.attributes.push(attribute);
-                        }
-                    }
-                }
-                Some("forms") => {
-                    if !line.is_empty() && !line.starts_with('-') {
-                        structure.forms.push(line.to_string());
-                    }
-                }
-                _ => {
-                    // Ищем комментарии или другую информацию
-                    if line.starts_with("//") || line.starts_with("/*") {
-                        if structure.comments.is_none() {
-                            structure.comments = Some(line.to_string());
-                        } else {
-                            structure.comments = Some(format!("{}\n{}", structure.comments.as_ref().unwrap(), line));
-                        }
-                    }
-                }
-            }
-            
-            i += 1;
-        }
-        
-        // Сохраняем последнюю табличную часть
-        if let Some(ts) = current_tabular_section {
-            structure.tabular_sections.push(ts);
-        }
-        
-        // Создаем контракт
-        let contract = MetadataContract {
+        MetadataContract {
             metadata_type: "Metadata".to_string(),
             name: object_name.to_string(),
             object_type,
@@ -436,34 +509,6 @@ impl MetadataReportParser {
                 source_file: source_path.display().to_string(),
                 encoding_used: encoding.to_string(),
             },
-        };
-        
-        Ok((contract, i))
-    }
-    
-    /// Парсит строку с реквизитом
-    fn parse_attribute_line(&self, line: &str) -> Result<Option<AttributeInfo>> {
-        if line.is_empty() || line.starts_with('-') || line.starts_with("//") {
-            return Ok(None);
-        }
-        
-        if let Some(captures) = self.attribute_pattern.captures(line) {
-            let name = captures[1].to_string();
-            let type_info = &captures[2];
-            
-            let attribute = AttributeInfo {
-                name,
-                data_type: self.parse_data_type(type_info),
-                length: self.extract_length(type_info),
-                precision: self.extract_precision(type_info),
-                attribute_use: AttributeUse::ForFolderAndItem, // По умолчанию
-                indexing: AttributeIndexing::DontIndex, // По умолчанию  
-                fill_checking: FillChecking::DontCheck, // По умолчанию
-            };
-            
-            Ok(Some(attribute))
-        } else {
-            Ok(None)
         }
     }
     
@@ -581,16 +626,16 @@ mod tests {
     fn test_metadata_parser_creation() {
         let parser = MetadataReportParser::new().unwrap();
         assert!(!parser.allowed_root_types.is_empty());
-        assert!(parser.allowed_root_types.contains_key("Справочник"));
-        assert!(parser.allowed_root_types.contains_key("Документ"));
+        assert!(parser.allowed_root_types.contains_key("Справочники"));
+        assert!(parser.allowed_root_types.contains_key("Документы"));
     }
     
     #[test]
     fn test_object_type_mapping() {
         let parser = MetadataReportParser::new().unwrap();
-        assert_eq!(parser.allowed_root_types["Справочник"], ObjectType::Directory);
-        assert_eq!(parser.allowed_root_types["Документ"], ObjectType::Document);
-        assert_eq!(parser.allowed_root_types["Отчет"], ObjectType::Report);
+        assert_eq!(parser.allowed_root_types["Справочники"], ObjectType::Directory);
+        assert_eq!(parser.allowed_root_types["Документы"], ObjectType::Document);
+        assert_eq!(parser.allowed_root_types["Отчеты"], ObjectType::Report);
     }
     
     #[test]

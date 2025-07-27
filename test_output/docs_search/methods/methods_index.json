@@ -1,0 +1,23 @@
+{
+  "category": "methods",
+  "total_items": 55,
+  "chunks": [
+    {
+      "chunk_number": 1,
+      "filename": "methods_001.json",
+      "items_count": 50,
+      "first_item_id": "methods_0",
+      "last_item_id": "methods_49",
+      "size_kb": 55.150390625
+    },
+    {
+      "chunk_number": 2,
+      "filename": "methods_002.json",
+      "items_count": 5,
+      "first_item_id": "methods_50",
+      "last_item_id": "methods_54",
+      "size_kb": 6.5244140625
+    }
+  ],
+  "created_at": "2025-07-27T11:19:13.791502+00:00"
+}

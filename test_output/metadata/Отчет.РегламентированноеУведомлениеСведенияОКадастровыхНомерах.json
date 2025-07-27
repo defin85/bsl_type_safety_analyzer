@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированноеУведомлениеСведенияОКадастровыхНомерах",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма2022_1",
+      "Форма2023_1",
+      "Форма2024_1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированноеУведомлениеСведенияОКадастровыхНомерах",
+    "Регламентированное",
+    "Уведомление",
+    "Сведения",
+    "О",
+    "Кадастровых",
+    "Номерах"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.808488300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

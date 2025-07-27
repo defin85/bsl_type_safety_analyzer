@@ -1,0 +1,233 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЦиклыОбмена",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "УчетнаяЗапись",
+        "data_type": "СправочникСсылка.УдалитьУчетныеЗаписиДокументооборота, СправочникСсылка.УчетныеЗаписиДокументооборота",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Тип",
+        "data_type": "ПеречислениеСсылка.ТипыЦикловОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Идентификатор",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Предмет",
+        "data_type": "ОпределяемыйТип.ПредметЦиклаОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВнешняяОрганизация",
+        "data_type": "СправочникСсылка.УдалитьНалоговыеОрганы, СправочникСсылка.НалоговыеОрганы, СправочникСсылка.ОрганыФСГС, СправочникСсылка.УдалитьОрганыПФР, СправочникСсылка.СерверыДокументооборота, СправочникСсылка.ОрганыПФР",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаСоздания",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаЗакрытия",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаПоследнегоСообщения",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаНачалаПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаОкончанияПериода",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидДокумента",
+        "data_type": "Число(3, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидУслуги",
+        "data_type": "ПеречислениеСсылка.ВидыУслугПриИОН, ПеречислениеСсылка.ВидыУслугПриИОС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФорматОтвета",
+        "data_type": "ПеречислениеСсылка.ФорматОтветаНаЗапросИОН",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Период",
+        "data_type": "Строка(16, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Вид",
+        "data_type": "ПеречислениеСсылка.ВидыЦикловОбмена, ПеречислениеСсылка.УдалитьВидыЦикловОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФорматДокументооборота",
+        "data_type": "ПеречислениеСсылка.ФорматыДокументооборотаСПФР, ПеречислениеСсылка.ФорматыДокументооборотаСФНС, ПеречислениеСсылка.УдалитьФорматыДокументооборотаСФНС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеПериода",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеВидаДокумента",
+        "data_type": "Строка(5, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УдалитьВидОтчета",
+        "data_type": "СправочникСсылка.ВидыОтправляемыхДокументов, СправочникСсылка.РегламентированныеОтчеты, СправочникСсылка.УдалитьВидыОтправляемыхДокументов, СправочникСсылка.УдалитьРегламентированныеОтчеты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидОтчета",
+        "data_type": "СправочникСсылка.ВидыОтправляемыхДокументов, СправочникСсылка.РегламентированныеОтчеты, СправочникСсылка.УдалитьВидыОтправляемыхДокументов, СправочникСсылка.УдалитьРегламентированныеОтчеты",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ДополнительныеПредметы",
+        "attributes": [
+          {
+            "name": "Предмет",
+            "data_type": "ОпределяемыйТип.ПредметЦиклаОбмена",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Для представления в упр.формах документооборота с КО"
+  },
+  "search_keywords": [
+    "ЦиклыОбмена",
+    "Циклы",
+    "Обмена"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.080789400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НомераЛистовКассовойКниги",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НомераЛистовКассовойКниги",
+    "Номера",
+    "Листов",
+    "Кассовой",
+    "Книги"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.941226100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

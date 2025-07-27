@@ -1,0 +1,122 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьОбменРозницаБухгалтерияПредприятия",
+  "object_type": "ExchangePlan",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИспользоватьОтборПоОрганизациям",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПередаватьНСИ",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РазрешитьПроведениеДокументовПриЗагрузке",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИспользоватьОтборПоПодразделениямОрганизации",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаНачалаВыгрузкиДокументов",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗарплатаВыплачиваетсяИзКассыВРозничнойОптовойСети",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимВыгрузкиПриНеобходимости",
+        "data_type": "ПеречислениеСсылка.РежимыВыгрузкиОбъектовОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Организации",
+        "attributes": [
+          {
+            "name": "Организация",
+            "data_type": "СправочникСсылка.Организации",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ПодразделенияОрганизаций",
+        "attributes": [
+          {
+            "name": "ПодразделениеОрганизации",
+            "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьОбменРозницаБухгалтерияПредприятия",
+    "Удалить",
+    "Обмен",
+    "Розница",
+    "Бухгалтерия",
+    "Предприятия"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.014258400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегистрацииОтветовНаЗапросыФССДляРасчетаПособий",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "РегистрацияПротокол",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ОшибкиЛогическогоКонтроля",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекстОшибки",
+        "data_type": "ДокументСсылка.ОтветНаЗапросФССДляРасчетаПособия",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Пример: P_1234567890_2022_01_01_12345678_0"
+  },
+  "search_keywords": [
+    "РегистрацииОтветовНаЗапросыФССДляРасчетаПособий",
+    "Регистрации",
+    "Ответов",
+    "На",
+    "Запросы",
+    "Ф",
+    "С",
+    "С",
+    "Для",
+    "Расчета",
+    "Пособий"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.203767800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

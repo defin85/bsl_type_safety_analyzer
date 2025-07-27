@@ -1,0 +1,15 @@
+{
+  "category": "objects",
+  "total_items": 7,
+  "chunks": [
+    {
+      "chunk_number": 1,
+      "filename": "objects_001.json",
+      "items_count": 7,
+      "first_item_id": "objects_0",
+      "last_item_id": "objects_6",
+      "size_kb": 4.9267578125
+    }
+  ],
+  "created_at": "2025-07-27T11:19:13.790267+00:00"
+}

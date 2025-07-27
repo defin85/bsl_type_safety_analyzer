@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетАкцизыНефтяноеСырье",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2020Кв2",
+      "ФормаОтчета2021Кв4",
+      "ФормаОтчета2024Кв2"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетАкцизыНефтяноеСырье",
+    "Регламентированный",
+    "Отчет",
+    "Акцизы",
+    "Нефтяное",
+    "Сырье"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.841918200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

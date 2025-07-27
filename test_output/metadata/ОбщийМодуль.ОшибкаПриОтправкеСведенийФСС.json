@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОшибкаПриОтправкеСведенийФСС",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОшибкаПриОтправкеСведенийФСС",
+    "Ошибка",
+    "При",
+    "Отправке",
+    "Сведений",
+    "Ф",
+    "С",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:31.845927400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

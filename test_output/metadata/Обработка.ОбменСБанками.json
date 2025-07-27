@@ -1,0 +1,75 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбменСБанками",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Организация",
+        "data_type": "ОпределяемыйТип.Организация",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Банк",
+        "data_type": "ОпределяемыйТип.БанкОбменСБанками",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НастройкаОбмена",
+        "data_type": "СправочникСсылка.НастройкиОбменСБанками",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "SMSПодписьСбербанк",
+      "ВопросОбУстановкеРасширенияДляПолученияИнформацииОКомпьютере",
+      "ВыборСертификатаДляДобавления",
+      "ВыборХранилища",
+      "ЖурналОбмена",
+      "ЗапросPINКода",
+      "ЗапросВБанк",
+      "ЗапросОдноразовогоПароля",
+      "ЗапросПароляКСертификату",
+      "ЗапросПинКодаСбербанк",
+      "ОжиданиеПодключенияЭлектронногоКлюча",
+      "ОжиданиеПодписиСбербанк",
+      "ПодтверждениеПлатежейВЛичномКабинетеБанка",
+      "ПодтверждениеПлатежныхПорученийПоSMS",
+      "ПредложениеПодключить1СДиректБанк",
+      "Синхронизация",
+      "СменаПароля",
+      "СписокЭлектронныхДокументов",
+      "ОшибкаСетевогоДоступа",
+      "ВводКодаИзSMS",
+      "ОповещенияОбОперациях"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Обмен электронными документами с банком"
+  },
+  "search_keywords": [
+    "ОбменСБанками",
+    "Обмен",
+    "С",
+    "Банками"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.324531600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

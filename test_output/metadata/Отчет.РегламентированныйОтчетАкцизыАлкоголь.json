@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетАкцизыАлкоголь",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2016Кв2",
+      "ФормаОтчета2019Кв1",
+      "ФормаОтчета2020Кв4",
+      "ФормаОтчета2023Кв3",
+      "ФормаОтчета2025Кв1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Состав показателей"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетАкцизыАлкоголь",
+    "Регламентированный",
+    "Отчет",
+    "Акцизы",
+    "Алкоголь"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.839852100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

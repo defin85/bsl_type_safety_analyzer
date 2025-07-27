@@ -1,0 +1,190 @@
+{
+  "items": [
+    {
+      "id": "methods_50",
+      "title": "ДанныеФормыСтруктураСКоллекцией.Сдвинуть (FormDataStructureAndCollection.Move)",
+      "category": "methods",
+      "content": "Перемещает элемент в коллекции на заданное количество элементов.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Move3542.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "methods_51",
+      "title": "ДанныеФормыЭлементДерева.ПолучитьРодителя (FormDataTreeItem.GetParent)",
+      "category": "methods",
+      "content": "Получает родительский элемент дерева.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem/methods/GetParent3603.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "methods_52",
+      "title": "ДанныеФормыЭлементДерева.ПолучитьЭлементы (FormDataTreeItem.GetItems)",
+      "category": "methods",
+      "content": "Получает коллекцию дочерних элементов.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem/methods/GetItems3602.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыКоллекцияЭлементовДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItemCollection.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "methods_53",
+      "title": "ДанныеФормыЭлементДерева.Свойство (FormDataTreeItem.Property)",
+      "category": "methods",
+      "content": "Получает значение элемента по указанному имени, а также проверяет, имеется ли указанное свойство.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem/methods/Property3891.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Булево",
+            "href": "v8help://SyntaxHelperLanguage/def_Boolean"
+          },
+          {
+            "text": "Истина",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanTrue"
+          },
+          {
+            "text": "Ложь",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanFalse"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "methods_54",
+      "title": "ДанныеФормыЭлементКоллекции.Свойство (FormDataCollectionItem.Property)",
+      "category": "methods",
+      "content": "Получает значение элемента по указанному имени, а также проверяет, имеется ли указанное свойство.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollectionItem/methods/Property3890.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Булево",
+            "href": "v8help://SyntaxHelperLanguage/def_Boolean"
+          },
+          {
+            "text": "Истина",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanTrue"
+          },
+          {
+            "text": "Ложь",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanFalse"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    }
+  ],
+  "metadata": {
+    "category": "methods",
+    "chunk": 2,
+    "total_chunks": 0,
+    "items_count": 5,
+    "created_at": "2025-07-27T11:19:13.782354900+00:00"
+  }
+}

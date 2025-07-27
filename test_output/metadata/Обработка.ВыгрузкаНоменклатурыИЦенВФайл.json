@@ -1,0 +1,57 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВыгрузкаНоменклатурыИЦенВФайл",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "ДополнительныеПоля",
+        "attributes": [
+          {
+            "name": "Поле",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Представление",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма",
+      "ФормаКолонки",
+      "ФормаОтбор"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВыгрузкаНоменклатурыИЦенВФайл",
+    "Выгрузка",
+    "Номенклатуры",
+    "И",
+    "Цен",
+    "В",
+    "Файл"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.234809900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

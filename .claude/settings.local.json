@@ -24,7 +24,20 @@
       "Bash(git clean:*)",
       "Bash(git push:*)",
       "Bash(./target/release/bsl-analyzer analyze:*)",
-      "Bash(./target/release/bsl-analyzer --help)"
+      "Bash(./target/release/bsl-analyzer --help)",
+      "Bash(mkdir:*)",
+      "Bash(iconv:*)",
+      "Bash(powershell:*)",
+      "Bash(ls:*)",
+      "Bash(jq:*)",
+      "Bash(for f in *.json)",
+      "Bash(do jq:*)",
+      "Bash(done)",
+      "Bash(target/release/process_all_docs.exe:*)",
+      "Bash(target/release/enhance_index.exe:*)",
+      "Bash(./analyze_objects.exe)",
+      "Bash(echo)",
+      "Bash(cat:*)"
     ],
     "deny": []
   }

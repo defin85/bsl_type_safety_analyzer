@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиПодключенияВЕТИС",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи",
+      "ФормаНовогоПодключения"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкиПодключенияВЕТИС",
+    "Настройки",
+    "Подключения",
+    "В",
+    "Е",
+    "Т",
+    "И",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.885225900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

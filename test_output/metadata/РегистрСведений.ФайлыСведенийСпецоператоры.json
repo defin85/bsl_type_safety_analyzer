@@ -1,0 +1,46 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ФайлыСведенийСпецоператоры",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаФайла",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Размер",
+        "data_type": "СправочникСсылка.УчетныеЗаписиДокументооборота",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ФайлыСведенийСпецоператоры",
+    "Файлы",
+    "Сведений",
+    "Спецоператоры"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.591539800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

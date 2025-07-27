@@ -1,0 +1,52 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПравилаДляОбменаДанными",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "УдалитьИспользоватьФильтрВыборочнойРегистрацииОбъектов",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилаЗагружены",
+        "data_type": "ПеречислениеСсылка.ВидыПравилДляОбменаДанными",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ЗагрузитьПравилаСинхронизацииДанных",
+      "ПравилаКонвертацииОбъектов",
+      "ПравилаРегистрацииОбъектов",
+      "ПроверкаСинхронизацииДанных",
+      "СообщениеОНеудачномОбновлении",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПравилаДляОбменаДанными",
+    "Правила",
+    "Для",
+    "Обмена",
+    "Данными"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.099117600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВыгрузкаЗагрузкаДанныхМенеджерОбработчиковВыгрузкиДанных",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВыгрузкаЗагрузкаДанныхМенеджерОбработчиковВыгрузкиДанных",
+    "Выгрузка",
+    "Загрузка",
+    "Данных",
+    "Менеджер",
+    "Обработчиков",
+    "Выгрузки",
+    "Данных"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.225402800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

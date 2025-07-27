@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиОбменаСАТУРН",
+  "object_type": "Constant",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкиОбменаСАТУРН",
+    "Настройки",
+    "Обмена",
+    "С",
+    "А",
+    "Т",
+    "У",
+    "Р",
+    "Н"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.124817700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

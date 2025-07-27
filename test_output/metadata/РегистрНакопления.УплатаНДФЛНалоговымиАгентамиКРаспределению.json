@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УплатаНДФЛНалоговымиАгентамиКРаспределению",
+  "object_type": "AccumulationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "с 2015 года не используется"
+  },
+  "search_keywords": [
+    "УплатаНДФЛНалоговымиАгентамиКРаспределению",
+    "Уплата",
+    "Н",
+    "Д",
+    "Ф",
+    "Л",
+    "Налоговыми",
+    "Агентами",
+    "К",
+    "Распределению"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.708902800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьЗаписиОСтажеДляСЗВ4",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьЗаписиОСтажеДляСЗВ4",
+    "Удалить",
+    "Записи",
+    "О",
+    "Стаже",
+    "Для",
+    "С",
+    "З",
+    "В",
+    "4"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.494803200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

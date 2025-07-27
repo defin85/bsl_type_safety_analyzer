@@ -1,0 +1,932 @@
+{
+  "items": [
+    {
+      "id": "operators_0",
+      "title": "ДинамическийСписок.ПолучитьОграниченияИспользованияВПорядке (DynamicList.GetRestrictionsForUseInOrder)",
+      "category": "operators",
+      "content": "Возвращает массив строк-путей компоновки данных, на которые ранее было установлено ограничение.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/GetRestrictionsForUseInOrder5271.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          },
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_1",
+      "title": "ДинамическийСписок.ПолучитьОграниченияИспользованияВГруппировке (DynamicList.GetRestrictionsForUseInGroup)",
+      "category": "operators",
+      "content": "Возвращает массив строк-путей компоновки данных, на которые ранее было установлено ограничение.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/GetRestrictionsForUseInGroup5270.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          },
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_2",
+      "title": "ДинамическийСписок.ПолучитьОбязательноеИспользование (DynamicList.GetRequiredUse)",
+      "category": "operators",
+      "content": "Получает признак обязательности выборки значения поля для клиента.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/GetRequiredUse3628.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Булево",
+            "href": "v8help://SyntaxHelperLanguage/def_Boolean"
+          },
+          {
+            "text": "Истина",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanTrue"
+          },
+          {
+            "text": "Ложь",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanFalse"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_3",
+      "title": "ДинамическийСписок.ПолучитьОграниченияИспользованияВОтборе (DynamicList.GetRestrictionsForUseInFilter)",
+      "category": "operators",
+      "content": "Возвращает массив строк-путей компоновки данных, на которые ранее было установлено ограничение.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/GetRestrictionsForUseInFilter5272.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          },
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_4",
+      "title": "ДинамическийСписок.УстановитьОбязательноеИспользование (DynamicList.SetRequiredUse)",
+      "category": "operators",
+      "content": "Устанавливает признак обязательной выборки указанной колонки и передачи на сторону клиента. Если для колонки обязательность выборки не установлена и колонки не видимы (например скрыта колонка в таблице), данные по этой колонке выбираться не будут.Если требуется обращаться к данным из языка, для такой колонки необходимо установить признак обязательного использования.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/SetRequiredUse3627.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Булево",
+            "href": "v8help://SyntaxHelperLanguage/def_Boolean"
+          },
+          {
+            "text": "Истина",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanTrue"
+          },
+          {
+            "text": "Ложь",
+            "href": "v8help://SyntaxHelperLanguage/def_BooleanFalse"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_5",
+      "title": "ДинамическийСписок.УстановитьОграниченияИспользованияВГруппировке (DynamicList.SetRestrictionsForUseInGroup)",
+      "category": "operators",
+      "content": "Запрещает использование указанных полей и всех их дочерних полей в настройках группировки.Поля, на которые установлено ограничение, не входят в коллекцию доступных полей.После вызова метода список полей с ограничениями замещается указанным. Вызов метода с пустым списком полей отменяет ранее установленные ограничения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/SetRestrictionsForUseInGroup5267.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "Список.Поля.Найти(\"Флаг\").ОграничениеИспользования.Группировка = Истина;",
+        "links": [
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          },
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_6",
+      "title": "ДинамическийСписок.УстановитьОграниченияИспользованияВОтборе (DynamicList.SetRestrictionsForUseInFilter)",
+      "category": "operators",
+      "content": "Запрещает использование указанных полей и всех их дочерних полей в настройках отбора.Поля, на которые установлено ограничение, не входят в коллекцию доступных полей.После вызова метода список полей с ограничениями замещается указанным. Вызов метода с пустым списком полей отменяет ранее установленные ограничения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/SetRestrictionsForUseInFilter5269.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "Список.Поля.Найти(\"Флаг\").ОграничениеИспользования.Условие = Истина;",
+        "links": [
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          },
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_7",
+      "title": "ДинамическийСписок.УстановитьОграниченияИспользованияВПорядке (DynamicList.SetRestrictionsForUseInOrder)",
+      "category": "operators",
+      "content": "Запрещает использование указанных полей и всех их дочерних полей в настройках порядка.Поля, на которые установлено ограничение, не входят в коллекцию доступных полей.После вызова метода список полей с ограничениями замещается указанным. Вызов метода с пустым списком полей отменяет ранее установленные ограничения.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/DynamicList/methods/SetRestrictionsForUseInOrder5268.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "Список.Поля.Найти(\"Флаг\").ОграничениеИспользования.Порядок = Истина;",
+        "links": [
+          {
+            "text": "Массив",
+            "href": "v8help://SyntaxHelperContext/objects/catalog234/Array.html"
+          },
+          {
+            "text": "Поля",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/DynamicList/properties/Fields12750.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/UseRestriction4807.html"
+          },
+          {
+            "text": "ОграничениеИспользованияРеквизитов",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaDataSetField/properties/AttributeUseRestriction4808.html"
+          },
+          {
+            "text": "ОграничениеИспользования",
+            "href": "v8help://SyntaxHelperContext/objects/catalog63/catalog1064/catalog1065/DataCompositionSchemaCalculatedField/properties/UseRestriction4841.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_8",
+      "title": "ДанныеФормыДерево.НайтиПоИдентификатору (FormDataTree.FindByID)",
+      "category": "operators",
+      "content": "Получает элемент коллекции по идентификатору.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTree/methods/FindByID3613.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ВыделенныеСтроки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/SelectedRows7170.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущийРодитель",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentParent7168.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущаяСтрока",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentRow7167.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_9",
+      "title": "ДанныеФормыКоллекция.Индекс (FormDataCollection.IndexOf)",
+      "category": "operators",
+      "content": "Получает индекс элемента коллекции.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollection/methods/IndexOf3482.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_10",
+      "title": "ДанныеФормыКоллекция.Итог (FormDataCollection.Total)",
+      "category": "operators",
+      "content": "Возвращает сумму значений всех строк в указанной колонке. Итог подсчитывается только для колонок, у которых указан тип Число.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollection/methods/Total3719.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "ОбщийИтог = Товары.Итог(\"Сумма\");",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_11",
+      "title": "ДанныеФормыКоллекция.НайтиПоИдентификатору (FormDataCollection.FindByID)",
+      "category": "operators",
+      "content": "Получает элемент коллекции по идентификатору.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollection/methods/FindByID3486.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ВыделенныеСтроки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/SelectedRows7170.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущийРодитель",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentParent7168.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущаяСтрока",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentRow7167.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_12",
+      "title": "ДанныеФормыКоллекцияЭлементовДерева.Индекс (FormDataTreeItemCollection.IndexOf)",
+      "category": "operators",
+      "content": "Получает индекс элемента коллекции.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItemCollection/methods/IndexOf3608.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементДерева",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataTreeItem.html"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_13",
+      "title": "ДанныеФормыСтруктура.<Имя свойства> (FormDataStructure.<Property name>)",
+      "category": "operators",
+      "content": "Доступность:",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructure/properties/prop7213.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_14",
+      "title": "ДанныеФормыСтруктура.ИсходныйКлючЗаписи (FormDataStructure.SourceRecordKey)",
+      "category": "operators",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructure/properties/SourceRecordKey8825.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "РегистрСведенийКлючЗаписи.<Имя регистра сведений>",
+            "href": "v8help://SyntaxHelperContext/objects/catalog125/catalog161/object362.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_15",
+      "title": "ДанныеФормыСтруктураСКоллекцией.<Имя свойства> (FormDataStructureAndCollection.<Property name>)",
+      "category": "operators",
+      "content": "Доступность:",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection/properties/prop7247.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_16",
+      "title": "ДанныеФормыСтруктураСКоллекцией.Индекс (FormDataStructureAndCollection.IndexOf)",
+      "category": "operators",
+      "content": "Получает индекс элемента коллекции.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/IndexOf3540.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_17",
+      "title": "ДанныеФормыСтруктураСКоллекцией.Итог (FormDataStructureAndCollection.Total)",
+      "category": "operators",
+      "content": "Возвращает сумму значений всех строк в указанной колонке. Итог подсчитывается только для колонок, у которых указан тип Число.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/Total3764.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Строка",
+            "href": "v8help://SyntaxHelperLanguage/def_String"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_18",
+      "title": "ДанныеФормыСтруктураСКоллекцией.НайтиПоИдентификатору (FormDataStructureAndCollection.FindByID)",
+      "category": "operators",
+      "content": "Возвращает элемент коллекции по идентификатору.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataStructureAndCollection/methods/FindByID3544.html",
+        "syntax": "Параметры:",
+        "syntax_variants": [
+          "Параметры:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "ДанныеФормыЭлементКоллекции",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollectionItem.html"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "Неопределено",
+            "href": "v8help://SyntaxHelperLanguage/def_Undefined"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ВыделенныеСтроки",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/SelectedRows7170.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущийРодитель",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentParent7168.html"
+          },
+          {
+            "text": "ТаблицаФормы",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable.html"
+          },
+          {
+            "text": "ТекущаяСтрока",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1679/FormTable/properties/CurrentRow7167.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_19",
+      "title": "ДанныеФормыЭлементДерева.<Имя свойства> (FormDataTreeItem.<Property name>)",
+      "category": "operators",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem/properties/prop7426.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "ДанныеФормыСтруктураСКоллекцией",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataStructureAndCollection.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_20",
+      "title": "ДанныеФормыЭлементДерева.ПолучитьИдентификатор (FormDataTreeItem.GetID)",
+      "category": "operators",
+      "content": "Получает идентификатор элемента дерева.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataTreeItem/methods/GetID3601.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_21",
+      "title": "ДанныеФормыЭлементКоллекции.ИсходныйНомерСтроки (FormDataCollectionItem.SourceLineNumber)",
+      "category": "operators",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollectionItem/properties/SourceLineNumber8819.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          },
+          {
+            "text": "ДанныеФормыКоллекция",
+            "href": "v8help://SyntaxHelperContext/objects/catalog1649/catalog1614/FormDataCollection.html"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_22",
+      "title": "ДанныеФормыЭлементКоллекции.<Имя свойства> (FormDataCollectionItem.<Property name>)",
+      "category": "operators",
+      "content": "Доступность:",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollectionItem/properties/prop7246.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_23",
+      "title": "ДанныеФормыЭлементКоллекции.ПолучитьИдентификатор (FormDataCollectionItem.GetID)",
+      "category": "operators",
+      "content": "Получает идентификатор для элемента коллекции. Этот идентификатор не привязан к позиции элемента в коллекции.",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1614/FormDataCollectionItem/methods/GetID3535.html",
+        "syntax": "Возвращаемое значение:",
+        "syntax_variants": [
+          "Возвращаемое значение:"
+        ],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [
+          {
+            "text": "Число",
+            "href": "v8help://SyntaxHelperLanguage/def_Number"
+          }
+        ],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_24",
+      "title": "Избранное",
+      "category": "operators",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1620.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    },
+    {
+      "id": "operators_25",
+      "title": "История",
+      "category": "operators",
+      "content": "",
+      "metadata": {
+        "filename": "objects/catalog1649/catalog1623.html",
+        "syntax": "",
+        "syntax_variants": [],
+        "parameters": [],
+        "parameters_by_variant": {},
+        "return_value": "",
+        "example": "",
+        "links": [],
+        "collection_elements": {},
+        "methods": [],
+        "availability": [],
+        "version": ""
+      }
+    }
+  ],
+  "metadata": {
+    "category": "operators",
+    "chunk": 1,
+    "total_chunks": 0,
+    "items_count": 26,
+    "created_at": "2025-07-27T11:19:13.781244900+00:00"
+  }
+}

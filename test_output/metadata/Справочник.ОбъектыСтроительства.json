@@ -1,0 +1,58 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбъектыСтроительства",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "КодОКВЭД",
+        "data_type": "СправочникСсылка.КлассификаторВидовЭкономическойДеятельности",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодОКВЭД2",
+        "data_type": "СправочникСсылка.КлассификаторОКВЭД2",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Вид",
+        "data_type": "ПеречислениеСсылка.ВидыОбъектовСтроительства",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаЭлемента",
+      "ФормаГруппы",
+      "ФормаВыбораГруппы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОбъектыСтроительства",
+    "Объекты",
+    "Строительства"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.683874800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

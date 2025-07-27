@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетПрибыльСРП",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2007Кв1",
+      "ФормаОтчета2017Кв3"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Состав показателей Расчета"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетПрибыльСРП",
+    "Регламентированный",
+    "Отчет",
+    "Прибыль",
+    "С",
+    "Р",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.930915600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкаЗаполненияСвободныхСтрокФормСтатистики",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПредставлениеНастройки",
+        "data_type": "СправочникСсылка.КлассификаторВидовЭкономическойДеятельности, СправочникСсылка.КлассификаторПродукцииПоВидамДеятельности, СправочникСсылка.КлассификаторУслугНаселению",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаНабораЗаписей",
+      "ФормаЗаписи",
+      "РедактированиеНастройкиВСтрокеНабораЗаписей"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "НастройкаЗаполненияСвободныхСтрокФормСтатистики",
+    "Настройка",
+    "Заполнения",
+    "Свободных",
+    "Строк",
+    "Форм",
+    "Статистики"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.841183100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

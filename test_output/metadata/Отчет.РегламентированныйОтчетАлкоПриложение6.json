@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетАлкоПриложение6",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2009Кв4",
+      "ФормаОтчета2012Кв3"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Приказ Росалкогольрегулирования от 23.06.2015 N 169"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетАлкоПриложение6",
+    "Регламентированный",
+    "Отчет",
+    "Алко",
+    "Приложение",
+    "6"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.878487800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

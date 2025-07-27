@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "Интеграция1СШтампВызовСервера",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "Интеграция1СШтампВызовСервера",
+    "Интеграция",
+    "1",
+    "С",
+    "Штамп",
+    "Вызов",
+    "Сервера"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:33.674263800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

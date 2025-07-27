@@ -1,0 +1,35 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетЕСХН",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаВводаСтатьиЗаконаСубъектаРФ",
+      "ФормаОтчета2009Кв1",
+      "ФормаОтчета2014Кв1",
+      "ФормаОтчета2015Кв1",
+      "ФормаОтчета2020Кв1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетЕСХН",
+    "Регламентированный",
+    "Отчет",
+    "Е",
+    "С",
+    "Х",
+    "Н"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.898980100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

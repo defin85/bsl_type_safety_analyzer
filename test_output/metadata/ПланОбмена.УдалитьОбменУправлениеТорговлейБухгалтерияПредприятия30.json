@@ -1,0 +1,163 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьОбменУправлениеТорговлейБухгалтерияПредприятия30",
+  "object_type": "ExchangePlan",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ВыгружатьПартнеров",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаНачалаВыгрузкиДокументов",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИспользоватьОтборПоОрганизациям",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НоменклатурнаяГруппаПоУмолчанию",
+        "data_type": "СправочникСсылка.НоменклатурныеГруппы",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РазрешитьПроведениеДокументовПриЗагрузке",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимВыгрузкиПриНеобходимости",
+        "data_type": "ПеречислениеСсылка.РежимыВыгрузкиОбъектовОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатьяПрочихДоходовРасходов_ОприходованиеТоваров",
+        "data_type": "СправочникСсылка.ПрочиеДоходыИРасходы",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РегистрироватьИзменения",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилаОтправкиДокументов",
+        "data_type": "Строка(27, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПравилаОтправкиСправочников",
+        "data_type": "Строка(32, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимВыгрузкиСправочников",
+        "data_type": "ПеречислениеСсылка.РежимыВыгрузкиОбъектовОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимВыгрузкиДокументов",
+        "data_type": "ПеречислениеСсылка.РежимыВыгрузкиОбъектовОбмена",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВыгружатьДанныеОРасходахФОТ",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Организации",
+        "attributes": [
+          {
+            "name": "Организация",
+            "data_type": "СправочникСсылка.Организации",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьОбменУправлениеТорговлейБухгалтерияПредприятия30",
+    "Удалить",
+    "Обмен",
+    "Управление",
+    "Торговлей",
+    "Бухгалтерия",
+    "Предприятия",
+    "30"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.018905500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

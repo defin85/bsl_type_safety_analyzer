@@ -1,0 +1,94 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПодтверждениеПоступившихКиЗГИСМ",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [
+      {
+        "name": "НомераКиЗКПодтверждению",
+        "attributes": [
+          {
+            "name": "ДокументПоступления",
+            "data_type": "ОпределяемыйТип.ДокументПоступленияМаркированныхТоваровГИСМ",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НомерКиЗ",
+            "data_type": "ОпределяемыйТип.НомерКиЗГИСМ",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СостояниеПодтверждения",
+            "data_type": "ПеречислениеСсылка.СостоянияОтправкиПодтвержденияГИСМ",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СерийныйНомер",
+            "data_type": "Строка(30, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Комментарий",
+            "data_type": "Строка(0, Переменная)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Документ",
+            "data_type": "ДокументСсылка.УведомлениеОПоступленииМаркированныхТоваровГИСМ, ДокументСсылка.ЗаявкаНаВыпускКиЗГИСМ",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Форма",
+      "СписокПроблем"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПодтверждениеПоступившихКиЗГИСМ",
+    "Подтверждение",
+    "Поступивших",
+    "Ки",
+    "З",
+    "Г",
+    "И",
+    "С",
+    "М"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.415258200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

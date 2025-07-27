@@ -1,0 +1,51 @@
+{
+  "metadata_type": "Metadata",
+  "name": "НастройкиПрямыхВыплатФСССотрудников",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДатаИзменения",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58 Имя и синоним отображаются в разных контекстах. В контексте регистра может появиться команда с другим именем, но таким же синонимом \"Использовать для прямых выплат\" - для другого типа объектов, с совершенно другой реализацией."
+  },
+  "search_keywords": [
+    "НастройкиПрямыхВыплатФСССотрудников",
+    "Настройки",
+    "Прямых",
+    "Выплат",
+    "Ф",
+    "С",
+    "С",
+    "Сотрудников"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.894964900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

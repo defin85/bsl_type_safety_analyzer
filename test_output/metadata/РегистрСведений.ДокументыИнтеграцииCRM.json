@@ -1,0 +1,46 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ДокументыИнтеграцииCRM",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "НастройкаИнтеграции",
+        "data_type": "СправочникСсылка.НастройкиИнтеграцииCRM",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Дата",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ДокументыИнтеграцииCRM",
+    "Документы",
+    "Интеграции",
+    "C",
+    "R",
+    "M"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.624114400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьАдресныеСокращения",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Уровень",
+        "data_type": "Число(1, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Сокращение",
+        "data_type": "Строка(10, Фиксированная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УдалитьАдресныеСокращения",
+    "Удалить",
+    "Адресные",
+    "Сокращения"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.001098700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

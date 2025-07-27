@@ -1,0 +1,164 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПрофилиГруппДоступа",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИдентификаторПоставляемыхДанных",
+        "data_type": "УникальныйИдентификатор",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПоставляемыйПрофильИзменен",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторШаблонаСервиса",
+        "data_type": "УникальныйИдентификатор",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Роли",
+        "attributes": [
+          {
+            "name": "Роль",
+            "data_type": "СправочникСсылка.ИдентификаторыОбъектовРасширений, СправочникСсылка.ИдентификаторыОбъектовМетаданных",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ВидыДоступа",
+        "attributes": [
+          {
+            "name": "ВидДоступа",
+            "data_type": "ОпределяемыйТип.ЗначениеДоступа",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "Предустановленный",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВсеРазрешены",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "ЗначенияДоступа",
+        "attributes": [
+          {
+            "name": "ВидДоступа",
+            "data_type": "ОпределяемыйТип.ЗначениеДоступа",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ЗначениеДоступа",
+            "data_type": "ОпределяемыйТип.ЗначениеДоступа",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВключаяНижестоящие",
+            "data_type": "Булево",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "Назначение",
+        "attributes": [
+          {
+            "name": "ТипПользователей",
+            "data_type": "ОпределяемыйТип.Пользователь",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаСписка",
+      "ФормаГруппы",
+      "ФормаВыбораГруппы"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Представлен пустой ссылкой основного типа значений"
+  },
+  "search_keywords": [
+    "ПрофилиГруппДоступа",
+    "Профили",
+    "Групп",
+    "Доступа"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.844295100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

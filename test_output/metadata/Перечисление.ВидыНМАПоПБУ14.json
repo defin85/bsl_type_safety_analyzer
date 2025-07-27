@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыНМАПоПБУ14",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВидыНМАПоПБУ14",
+    "Виды",
+    "Н",
+    "М",
+    "А",
+    "По",
+    "П",
+    "Б",
+    "У",
+    "14"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.807383100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

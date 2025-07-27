@@ -1,0 +1,34 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УстановитьИспользованиеКЭДОПоНастройкамИнтеграцииСКабинетСотрудника",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УстановитьИспользованиеКЭДОПоНастройкамИнтеграцииСКабинетСотрудника",
+    "Установить",
+    "Использование",
+    "К",
+    "Э",
+    "Д",
+    "О",
+    "По",
+    "Настройкам",
+    "Интеграции",
+    "С",
+    "Кабинет",
+    "Сотрудника"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.369376600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

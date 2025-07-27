@@ -1,0 +1,242 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СписаниеНДС",
+  "object_type": "Document",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Организация",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Ответственный",
+        "data_type": "СправочникСсылка.Пользователи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РучнаяКорректировка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СчетСписанияНДС",
+        "data_type": "ПланСчетовСсылка.Хозрасчетный",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоСписанияНДС1",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоСписанияНДС2",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СубконтоСписанияНДС3",
+        "data_type": "Характеристика.ВидыСубконтоХозрасчетные",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПодразделениеСписания",
+        "data_type": "СправочникСсылка.ПодразделенияОрганизаций",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "Состав",
+        "attributes": [
+          {
+            "name": "Поставщик",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетФактура",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ГТДИмпорт, ДокументСсылка.КорректировкаПоступления, ДокументСсылка.ВыкупПредметовЛизинга, ДокументСсылка.СчетФактураВыданный, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.ПринятиеКУчетуОС, ДокументСсылка.ПоступлениеНаРасчетныйСчет, ДокументСсылка.КорректировкаРеализации, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.ПоступлениеНМА, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ПоступлениеТоваровУслуг, ДокументСсылка.МодернизацияОС, ДокументСсылка.ВозвратТоваровОтПокупателя, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.СчетФактураПолученный, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.ПриходныйКассовыйОрдер, ДокументСсылка.ПоступлениеИзПереработки, ДокументСсылка.ЗаявлениеОВвозеТоваров, ДокументСсылка.РеализацияТоваровУслуг, ДокументСсылка.ВозвратТоваровПоставщику, ДокументСсылка.ОтражениеНачисленияНДС, ДокументСсылка.ОтражениеНДСКВычету, ДокументСсылка.НачислениеНДСпоСМРхозспособом, ДокументСсылка.ПоступлениеДопРасходов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ВидЦенности",
+            "data_type": "ПеречислениеСсылка.ВидыЦенностей",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СтавкаНДС",
+            "data_type": "ПеречислениеСсылка.СтавкиНДС",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СчетУчетаНДС",
+            "data_type": "ПланСчетовСсылка.Хозрасчетный",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументОплаты",
+            "data_type": "ДокументСсылка.СписаниеСРасчетногоСчета, ДокументСсылка.АвансовыйОтчет, ДокументСсылка.ГТДИмпорт, ДокументСсылка.ВыкупПредметовЛизинга, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.РасходныйКассовыйОрдер, ДокументСсылка.ОперацияБух, ДокументСсылка.ПоступлениеНМА, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ПоступлениеТоваровУслуг, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ВводНачальныхОстатков, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.ПоступлениеДопРасходов",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДатаОплаты",
+            "data_type": "Дата(Дата)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаБезНДС",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НДС",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      },
+      {
+        "name": "АвансыПолученные",
+        "attributes": [
+          {
+            "name": "Покупатель",
+            "data_type": "СправочникСсылка.Контрагенты",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "ДокументАванса",
+            "data_type": "ДокументСсылка.СчетФактураВыданный, ДокументСсылка.ДокументРасчетовСКонтрагентом, ДокументСсылка.ПоступлениеНаРасчетныйСчет, ДокументСсылка.КорректировкаРеализации, ДокументСсылка.КорректировкаДолга, ДокументСсылка.ВозвратТоваровОтПокупателя, ДокументСсылка.ОплатаПлатежнойКартой, ДокументСсылка.ОтчетКомиссионераОПродажах, ДокументСсылка.ОтчетОРозничныхПродажах, ДокументСсылка.ПриходныйКассовыйОрдер",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "СуммаАванса",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          },
+          {
+            "name": "НДС",
+            "data_type": "Число(15, 2)",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "ФормаДокумента",
+      "ФормаСписка",
+      "ФормаВыбора"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Любая дополнительная информация"
+  },
+  "search_keywords": [
+    "СписаниеНДС",
+    "Списание",
+    "Н",
+    "Д",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.505755100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

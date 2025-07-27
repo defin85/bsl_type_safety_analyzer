@@ -1,0 +1,719 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЭлектроннаяТранспортнаяНакладная",
+  "object_type": "Document",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ТитулГрузоотправителяИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяТранспортнаяНакладнаяНомер",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяТранспортнаяНакладнаяДата",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяГрузоотправитель",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяСоставитель",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяЗаказчик",
+        "data_type": "ОпределяемыйТип.КонтрагентЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяГрузополучатель",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулГрузоотправителяПеревозчик",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаПриемкаИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаПриемкаДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаПриемкаВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузополучателяИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузополучателяДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузополучателяВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаВыдачаИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаВыдачаДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаВыдачаВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПереадресовкаИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПереадресовкаДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПереадресовкаВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаТитулПереадресовкаНовыйГрузополучатель",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаЗаменыИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаЗаменыДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаЗаменыВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаФХЖИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаФХЖДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулПеревозчикаФХЖВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяФХЖИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяФХЖДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулГрузоотправителяФХЖВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПереадресовкаИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПереадресовкаДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПереадресовкаВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СсылкаДопТитулПереадресовкаНовыйГрузополучатель",
+        "data_type": "ОпределяемыйТип.УчастникЭДО_ЭПД",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаЗаменыИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаЗаменыДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаЗаменыВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулГрузополучателяИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулГрузополучателяДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулГрузополучателяВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаВыдачаИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаВыдачаДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулПеревозчикаВыдачаВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулУказаниеПереадресИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулУказаниеПереадресДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТитулУказаниеПереадресВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулУказаниеПереадресИдентификаторФайла",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулУказаниеПереадресДатаФормированияФайла",
+        "data_type": "Дата(Дата)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДопТитулУказаниеПереадресВремяФормированияФайла",
+        "data_type": "Дата(Время)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УИДМинтранс",
+        "data_type": "Строка(40, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ВидДокумента",
+        "data_type": "СправочникСсылка.ВидыДокументовЭДО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоВходящий",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекущийПолученныйТитул",
+        "data_type": "ПеречислениеСсылка.ТипыЭлементовРегламентаЭДО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекущийТитул",
+        "data_type": "ПеречислениеСсылка.ТипыЭлементовРегламентаЭДО",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РольУчастника",
+        "data_type": "Число(1, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторГрузоотправителя",
+        "data_type": "Строка(46, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторГрузополучателя",
+        "data_type": "Строка(46, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИдентификаторПеревозчика",
+        "data_type": "Строка(46, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоКонтейнернаяПеревозка",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ИныеПолучателиСтрока",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(250, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Организация",
+        "data_type": "ОпределяемыйТип.Организация",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекущийШаг",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТекущийШагВыполнен",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [
+      {
+        "name": "ДокументыОснования",
+        "attributes": [
+          {
+            "name": "ДокументОснование",
+            "data_type": "ОпределяемыйТип.ДокументыОснованияЭТрН_ЭПД",
+            "length": null,
+            "precision": null,
+            "attribute_use": "ForFolderAndItem",
+            "indexing": "DontIndex",
+            "fill_checking": "DontCheck"
+          }
+        ],
+        "indexing": null
+      }
+    ],
+    "forms": [
+      "Водитель",
+      "ТитулГрузоотправителяДоверенность",
+      "Груз",
+      "ДоговорПоОрганизацииПеревозки",
+      "ТитулГрузополучателяАкты",
+      "ИныеПолучатели",
+      "ТитулПеревозчикаЗаменыОснованиеВладенияТСРеквизитыСторон",
+      "ОснованиеВладенияПрицепомРеквизитыСторон",
+      "ОснованиеВладенияТСРеквизитыСторон",
+      "ОсновнаяФорма",
+      "Прицеп",
+      "СведенияОбОпасномГрузе",
+      "СторонаПодписавшаяДокумент",
+      "ТитулГрузоотправителяАктВзвешиванияРеквизитыСторон",
+      "ТитулГрузоотправителяАктРеквизитыСторон",
+      "ТитулГрузоотправителяАкты",
+      "ТитулГрузоотправителяАктыВзвешивания",
+      "ТитулГрузоотправителяВедомостьНаКонтейнерНаименование",
+      "ТитулГрузоотправителяВладелецПунктаПогрузки",
+      "ТитулГрузоотправителяВодители",
+      "ТитулГрузоотправителяГрузы",
+      "ТитулГрузоотправителяГрузыУчетВГИС",
+      "ТитулГрузоотправителяДоговорНаУсловияПеревозки",
+      "ТитулГрузоотправителяИдентификационныеНомераКонтейнеров",
+      "ТитулГрузоотправителяКлиматическийРежим",
+      "ТитулГрузоотправителяОснованиеДоступаКПунктуПогрузки",
+      "ТитулГрузоотправителяОснованиеОсуществленияПогрузки",
+      "ТитулГрузоотправителяОснованиеРасчетовИнымЛицом",
+      "ТитулГрузоотправителяОтметкиГрузоотправителя",
+      "ТитулГрузоотправителяПереченьМаркировокГруза",
+      "ТитулГрузоотправителяПогрузка",
+      "ТитулГрузоотправителяПолномочияПереадресовки",
+      "ТитулГрузоотправителяПутевойЛистРеквизитыСторон",
+      "ТитулГрузоотправителяРаботникНаПогрузке",
+      "ТитулГрузоотправителяРасчетыШтрафов",
+      "ТитулГрузоотправителяРеквизитыСторонДокументаПодтверждающегоОтгрузку",
+      "ТитулГрузоотправителяРеквизитыСторонСертификатовУдостоверений",
+      "ТитулГрузоотправителяРеквизитыСторонСопроводительныхДокументов",
+      "ТитулГрузоотправителяСведенияОбОпасныхГрузах",
+      "ТитулГрузоотправителяСведенияОКонтейнерах",
+      "ТитулГрузоотправителяСведенияОПереадресовке",
+      "ТитулГрузоотправителяСведенияОПутевыхЛистах",
+      "ТитулГрузоотправителяСопроводительныеДокументы",
+      "ТитулГрузоотправителяУказанияГрузоотправителя",
+      "ТитулГрузополучателяАктВзвешиванияРеквизитыСторон",
+      "ТитулГрузополучателяАктРеквизитыСторон",
+      "ТитулУказаниеПереадресСведенияОГрузе",
+      "ТитулГрузополучателяАктыВзвешивания",
+      "ТитулГрузополучателяМаркировкиГруза",
+      "ТитулГрузополучателяОтметкиГрузополучателя",
+      "ТитулГрузополучателяРасчетыШтрафов",
+      "ТитулГрузополучателяСведенияОПринятыхГрузах",
+      "ТитулПереадресовкаКонтактныеДанныеНовогоГрузополучателя",
+      "ТитулПереадресовкаОснованиеРеквизитыСторон",
+      "ТитулПереадресовкаСведенияОбОтметках",
+      "ТитулПеревозчикаВыдачаАктРеквизитыСторон",
+      "ТитулПеревозчикаВыдачаАкты",
+      "ТитулПеревозчикаВыдачаОтметкиПриВыдачеГруза",
+      "ТитулПеревозчикаВыдачаРасчетыШтрафов",
+      "ТитулПеревозчикаЗаменыАктРеквизитыСторон",
+      "ТитулПеревозчикаЗаменыАкты",
+      "ТитулПеревозчикаЗаменыВодительДокументПередачиГрузаРеквизитыСторон",
+      "ТитулПеревозчикаЗаменыДокументРеквизитыСторон",
+      "ТитулПеревозчикаЗаменыЗаменыВодителей",
+      "ТитулПеревозчикаЗаменыОтметкиОЗаменах",
+      "ТитулПеревозчикаЗаменыПутевойЛистРеквизитыСторон",
+      "ТитулПеревозчикаЗаменыПутевыеЛисты",
+      "ТитулПеревозчикаЗаменыСведенияОСпециальныхУсловияхДвижения",
+      "ТитулПеревозчикаЗаменыТранспортныеСредства",
+      "ТитулПеревозчикаЗаменыТСДокументПередачиГрузаРеквизитыСторон",
+      "ТитулПеревозчикаПриемкаАктРеквизитыСторон",
+      "ТитулПеревозчикаПриемкаАкты",
+      "ТитулПеревозчикаПриемкаОтметкиПеревозчикаПриПриемеГруза",
+      "ТитулПеревозчикаПриемкаРасчетыШтрафов",
+      "ТитулПеревозчикаФХЖПеревозчик",
+      "ТитулУказаниеПереадресДокументПодтверждающийОтгрузку",
+      "ТитулУказаниеПереадресМаркировка",
+      "ТитулУказаниеПереадресСведенияОКонтейнерах",
+      "ТитулУказаниеПереадресСведенияОМаршруте",
+      "ТранспортноеСредство",
+      "ФормаВыбора",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ЭлектроннаяТранспортнаяНакладная",
+    "Электронная",
+    "Транспортная",
+    "Накладная"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.647414+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

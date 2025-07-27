@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ИсключенияИзПравилПубликацииУправлениеПерсоналом",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаРедактирования"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ИсключенияИзПравилПубликацииУправлениеПерсоналом",
+    "Исключения",
+    "Из",
+    "Правил",
+    "Публикации",
+    "Управление",
+    "Персоналом"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.729513700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

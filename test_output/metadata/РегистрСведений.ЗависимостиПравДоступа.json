@@ -1,0 +1,28 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗависимостиПравДоступа",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:1330 - №728.2.1 Допустимо использование универсального ссылочного типа, так как это универсальный механизм и только для RLS в формате БСП 2.х (устарел)"
+  },
+  "search_keywords": [
+    "ЗависимостиПравДоступа",
+    "Зависимости",
+    "Прав",
+    "Доступа"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.666363600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

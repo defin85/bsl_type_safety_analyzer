@@ -1,0 +1,48 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СправочникиШаблоновОтчетовСтатистики",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Наименование",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДополнительнаяИнформация",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаВыбора",
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Код элемента справочника"
+  },
+  "search_keywords": [
+    "СправочникиШаблоновОтчетовСтатистики",
+    "Справочники",
+    "Шаблонов",
+    "Отчетов",
+    "Статистики"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.412415+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

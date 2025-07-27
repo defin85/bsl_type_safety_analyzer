@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СообщенияОбменаДаннымиУправлениеОбработчикСообщения_3_0_1_1",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СообщенияОбменаДаннымиУправлениеОбработчикСообщения_3_0_1_1",
+    "Сообщения",
+    "Обмена",
+    "Данными",
+    "Управление",
+    "Обработчик",
+    "Сообщения",
+    "3",
+    "0",
+    "1",
+    "1"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:35.448058100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

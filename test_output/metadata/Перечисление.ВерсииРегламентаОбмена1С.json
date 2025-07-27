@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВерсииРегламентаОбмена1С",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВерсииРегламентаОбмена1С",
+    "Версии",
+    "Регламента",
+    "Обмена",
+    "1",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.739206400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

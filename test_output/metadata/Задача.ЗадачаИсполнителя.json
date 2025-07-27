@@ -1,0 +1,174 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗадачаИсполнителя",
+  "object_type": "Task",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Автор",
+        "data_type": "СправочникСсылка.ВнешниеПользователи, СправочникСсылка.Пользователи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Важность",
+        "data_type": "ПеречислениеСсылка.ВариантыВажностиЗадачи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ГруппаИсполнителейЗадач",
+        "data_type": "СправочникСсылка.ГруппыИсполнителейЗадач",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаИсполнения",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаНачала",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаПринятияКИсполнению",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Описание",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Предмет",
+        "data_type": "ДокументСсылка, ЗадачаСсылка, ПланВидовХарактеристикСсылка, СправочникСсылка",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредметСтрокой",
+        "data_type": "Строка(500, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПринятаКИсполнению",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РезультатВыполнения",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СостояниеБизнесПроцесса",
+        "data_type": "ПеречислениеСсылка.СостоянияБизнесПроцессов",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СрокИсполнения",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвторСтрокой",
+        "data_type": "Строка(150, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "СтатусЗадачи",
+        "data_type": "СправочникСсылка.РолиИсполнителей",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "Дополнительно",
+      "ЗадачиПоБизнесПроцессу",
+      "ЗадачиПоПредмету",
+      "МоиЗадачи",
+      "МоиЗадачиДляРабочегоСтола",
+      "ПеренаправитьЗадачи",
+      "ФормаЗадачи",
+      "ФормаСписка",
+      "МоиЗадачиБП",
+      "ФормаЗадачиБП",
+      "ИсторияВыполненияБП",
+      "ЗадачиПоПредметуБП",
+      "НастройкаОповещений"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Форма выполнения задачи по умолчанию"
+  },
+  "search_keywords": [
+    "ЗадачаИсполнителя",
+    "Задача",
+    "Исполнителя"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.732879600+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

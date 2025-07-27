@@ -1,0 +1,56 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УчетныеЗаписиСинхронизацииФайлов",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Сервис",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КорневаяПапка",
+        "data_type": "Строка(30, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АвторФайлов",
+        "data_type": "СправочникСсылка.ВнешниеПользователи, СправочникСсылка.Пользователи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "УчетныеЗаписиСинхронизацииФайлов",
+    "Учетные",
+    "Записи",
+    "Синхронизации",
+    "Файлов"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.064954700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

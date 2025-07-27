@@ -1,0 +1,96 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РезультатыОбменаДанными",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПометкаУдаления",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НомерДокумента",
+        "data_type": "Строка(50, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ДатаДокумента",
+        "data_type": "Дата(ДатаВремя)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеОбъекта",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЗначенияОтборовНезависимогоРегистра",
+        "data_type": "Строка(0, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "Комментарий",
+        "data_type": "Строка(32, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ОбработкаПредупрежденийКоллизии",
+      "ОбработкаПредупрежденийПоДатеЗапретаЗагрузки",
+      "ОбработкаПредупрежденийПроведения",
+      "ОтборПредупрежденийПоТипам",
+      "ОтборСинхронизаций",
+      "ПредупреждениеАдминистрированияПриложения",
+      "ПредупреждениеКонвертацииОбъектаПриОтправке",
+      "ПредупреждениеНезаполненногоРеквизита",
+      "ПредупреждениеНепроведенногоДокумента",
+      "ПредупреждениеОКоллизии",
+      "ПредупреждениеПоДатеЗапретаЗагрузки",
+      "ПредупрежденияОбработчиковОтправкиПолучения",
+      "ПредупрежденияСинхронизаций",
+      "УдалениеУстаревшихПредупреждений",
+      "Форма"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РезультатыОбменаДанными",
+    "Результаты",
+    "Обмена",
+    "Данными"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.219158900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

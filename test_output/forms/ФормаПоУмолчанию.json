@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Form",
+  "name": "ФормаПоУмолчанию",
+  "synonym": null,
+  "comment": null,
+  "form_type": "ObjectForm",
+  "object_name": "СопоставлениеНоменклатурыБЭД",
+  "structure": {
+    "elements_count": 0,
+    "attributes_count": 1,
+    "elements": [],
+    "attributes": [
+      {
+        "name": "Объект",
+        "data_type": "Undefined",
+        "title": null,
+        "save_data": true,
+        "properties": {
+          "id": "1"
+        }
+      }
+    ],
+    "commands": []
+  },
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:32:04.302581700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_files\\DataProcessors\\СопоставлениеНоменклатурыБЭД\\Forms\\ФормаПоУмолчанию\\Ext\\Form.xml",
+    "form_path": "C:/1CProject/Unicom/conf_files\\DataProcessors\\СопоставлениеНоменклатурыБЭД\\Forms\\ФормаПоУмолчанию\\Ext"
+  }
+}

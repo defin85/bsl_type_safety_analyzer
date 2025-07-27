@@ -1,0 +1,30 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ЗастрахованныеЛицаСЭДО",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58 Имя отражает суть в контексте объекта метаданных, синоним - суть в контексте ГКИ. Быстрый поиск по имени приведет к объекту метаданных."
+  },
+  "search_keywords": [
+    "ЗастрахованныеЛицаСЭДО",
+    "Застрахованные",
+    "Лица",
+    "С",
+    "Э",
+    "Д",
+    "О"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.689087800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

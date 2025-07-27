@@ -1,0 +1,73 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СоответствиеНоменклатурыРаботаСНоменклатурой",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ПредставлениеНоменклатурыСервиса",
+        "data_type": "Строка(1024, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеХарактеристикиСервиса",
+        "data_type": "Строка(1024, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТочноеСовпадение",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КоличествоВариантов",
+        "data_type": "Число(3, 0)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ПредставлениеКатегории",
+        "data_type": "ОпределяемыйТип.ХарактеристикаРаботаСНоменклатурой",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Уникальный идентификатор рубрики в сервисе 1С:Бизнес-Сеть"
+  },
+  "search_keywords": [
+    "СоответствиеНоменклатурыРаботаСНоменклатурой",
+    "Соответствие",
+    "Номенклатуры",
+    "Работа",
+    "С",
+    "Номенклатурой"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.351421300+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

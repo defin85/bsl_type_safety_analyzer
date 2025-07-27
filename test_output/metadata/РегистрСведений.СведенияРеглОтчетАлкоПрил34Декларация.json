@@ -1,0 +1,50 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СведенияРеглОтчетАлкоПрил34Декларация",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Активно",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТаблицаПоставщиков",
+        "data_type": "СправочникСсылка.Организации",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Таблица из примитивных типов, хранится во внутреннем представлении"
+  },
+  "search_keywords": [
+    "СведенияРеглОтчетАлкоПрил34Декларация",
+    "Сведения",
+    "Регл",
+    "Отчет",
+    "Алко",
+    "Прил",
+    "34",
+    "Декларация"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.287845800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

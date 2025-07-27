@@ -1,0 +1,26 @@
+{
+  "metadata_type": "Metadata",
+  "name": "exchange_dsl_1_0_0_1",
+  "object_type": "HTTPService",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "exchange_dsl_1_0_0_1",
+    "1",
+    "0",
+    "0",
+    "1"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.039772200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированноеУведомлениеВыдачаСправкиПоРасчетам",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "Форма2023_2",
+      "Форма2025_1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированноеУведомлениеВыдачаСправкиПоРасчетам",
+    "Регламентированное",
+    "Уведомление",
+    "Выдача",
+    "Справки",
+    "По",
+    "Расчетам"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.745901200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

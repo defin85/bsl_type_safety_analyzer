@@ -1,0 +1,38 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ТаблицыГруппДоступа",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ТипТаблицы",
+        "data_type": "СправочникСсылка.ГруппыДоступа",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаЗаписи"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:1330 - №728.2.1 Допустимо использование универсального ссылочного типа, так как это универсальный механизм и только для RLS в формате БСП 2.х (устарел)"
+  },
+  "search_keywords": [
+    "ТаблицыГруппДоступа",
+    "Таблицы",
+    "Групп",
+    "Доступа"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.467438100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

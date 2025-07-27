@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РасчетНачальногоСальдоПрямыхЗатрат",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Расчет остатков продукции на затратных счетах регистра бухгалтерии в разрезе статьей затрат предыдущего месяца"
+  },
+  "search_keywords": [
+    "РасчетНачальногоСальдоПрямыхЗатрат",
+    "Расчет",
+    "Начального",
+    "Сальдо",
+    "Прямых",
+    "Затрат"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.168264800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

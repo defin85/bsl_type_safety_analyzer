@@ -1,0 +1,27 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ВидыОперацийИзменениеУсловийАренды",
+  "object_type": "Enumeration",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ВидыОперацийИзменениеУсловийАренды",
+    "Виды",
+    "Операций",
+    "Изменение",
+    "Условий",
+    "Аренды"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.820709100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

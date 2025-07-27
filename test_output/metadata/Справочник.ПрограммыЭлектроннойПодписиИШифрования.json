@@ -1,0 +1,98 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПрограммыЭлектроннойПодписиИШифрования",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ИмяПрограммы",
+        "data_type": "Строка(430, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ТипПрограммы",
+        "data_type": "Число(9, 0, Неотрицательный)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АлгоритмПодписи",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АлгоритмХеширования",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "АлгоритмШифрования",
+        "data_type": "Строка(100, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ЭтоВстроенныйКриптопровайдер",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "РежимИспользования",
+        "data_type": "ПеречислениеСсылка.РежимыИспользованияПрограммыЭлектроннойПодписи",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаЭлемента",
+      "ФормаВыбора",
+      "ОшибкаОбращенияКПрограмме",
+      "ВстроенныйКриптопровайдер",
+      "ПриложениеОпределенноеАвтоматически",
+      "Токен"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПрограммыЭлектроннойПодписиИШифрования",
+    "Программы",
+    "Электронной",
+    "Подписи",
+    "И",
+    "Шифрования"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.840524+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

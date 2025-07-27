@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СообщенияАдминистрированиеОбменаДаннымиУправлениеТрансляция_2_1_2_1",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СообщенияАдминистрированиеОбменаДаннымиУправлениеТрансляция_2_1_2_1",
+    "Сообщения",
+    "Администрирование",
+    "Обмена",
+    "Данными",
+    "Управление",
+    "Трансляция",
+    "2",
+    "1",
+    "2",
+    "1"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:35.422664100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

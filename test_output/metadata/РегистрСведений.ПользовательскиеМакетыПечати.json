@@ -1,0 +1,49 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ПользовательскиеМакетыПечати",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Использование",
+        "data_type": "Булево",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "УсловиеВидимости",
+        "data_type": "Строка(255, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ВыбораРежимаОткрытияМакета",
+      "МакетыПечатныхФорм",
+      "РедактированиеМакета",
+      "ПроверкаПечатныхФорм"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ПользовательскиеМакетыПечати",
+    "Пользовательские",
+    "Макеты",
+    "Печати"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.082105100+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

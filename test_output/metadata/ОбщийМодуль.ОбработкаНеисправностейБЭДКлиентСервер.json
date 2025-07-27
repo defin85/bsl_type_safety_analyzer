@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбработкаНеисправностейБЭДКлиентСервер",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОбработкаНеисправностейБЭДКлиентСервер",
+    "Обработка",
+    "Неисправностей",
+    "Б",
+    "Э",
+    "Д",
+    "Клиент",
+    "Сервер"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:34.455167700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

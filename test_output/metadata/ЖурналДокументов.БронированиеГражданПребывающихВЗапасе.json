@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "БронированиеГражданПребывающихВЗапасе",
+  "object_type": "DocumentJournal",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "БронированиеГражданПребывающихВЗапасе",
+    "Бронирование",
+    "Граждан",
+    "Пребывающих",
+    "В",
+    "Запасе"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:39.663369+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

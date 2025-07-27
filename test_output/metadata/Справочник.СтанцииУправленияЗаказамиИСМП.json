@@ -1,0 +1,51 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтанцииУправленияЗаказамиИСМП",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "Идентификатор",
+        "data_type": "ОпределяемыйТип.УникальныйИдентификаторИС",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "ФорматОбмена",
+        "data_type": "ПеречислениеСсылка.ВерсииФорматаОбменаСУЗ",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаВыбора",
+      "ФормаЭлемента"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Идентификатор СУЗ"
+  },
+  "search_keywords": [
+    "СтанцииУправленияЗаказамиИСМП",
+    "Станции",
+    "Управления",
+    "Заказами",
+    "И",
+    "С",
+    "М",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.941367800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

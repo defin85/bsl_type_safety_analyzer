@@ -1,0 +1,35 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетСтатистикаФормаМПСП",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "СреднесписочнаяЧисленность",
+      "ФормаОтчета2015Кв1",
+      "ФормаОтчета2020Кв1"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": "Дополнительные атрибуты для выгрузки в XML"
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетСтатистикаФормаМПСП",
+    "Регламентированный",
+    "Отчет",
+    "Статистика",
+    "Форма",
+    "М",
+    "П",
+    "С",
+    "П"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.106950200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

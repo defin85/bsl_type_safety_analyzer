@@ -1,0 +1,33 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РаботаВЛокальномРежимеМониторПортала1СИТС",
+  "object_type": "FunctionalOption",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РаботаВЛокальномРежимеМониторПортала1СИТС",
+    "Работа",
+    "В",
+    "Локальном",
+    "Режиме",
+    "Монитор",
+    "Портала",
+    "1",
+    "С",
+    "И",
+    "Т",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:36.859240400+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "metadata_type": "Metadata",
+  "name": "УдалитьЛицевыеСчетаСотрудниковПоЗарплатнымПроектам",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ДокументОснование",
+        "data_type": "СправочникСсылка.Банки",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "АПК:58 физлицо является сотрудником"
+  },
+  "search_keywords": [
+    "УдалитьЛицевыеСчетаСотрудниковПоЗарплатнымПроектам",
+    "Удалить",
+    "Лицевые",
+    "Счета",
+    "Сотрудников",
+    "По",
+    "Зарплатным",
+    "Проектам"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.509060200+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

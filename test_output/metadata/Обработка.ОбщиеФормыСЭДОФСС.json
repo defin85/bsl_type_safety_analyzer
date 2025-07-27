@@ -1,0 +1,36 @@
+{
+  "metadata_type": "Metadata",
+  "name": "ОбщиеФормыСЭДОФСС",
+  "object_type": "DataProcessor",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ПолучениеСообщенийЗаПериод",
+      "ОтправкаДокументов",
+      "ТекущиеДелаПоСЭДО",
+      "ОбновлениеРегистрационногоНомераСФР"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "ОбщиеФормыСЭДОФСС",
+    "Общие",
+    "Формы",
+    "С",
+    "Э",
+    "Д",
+    "О",
+    "Ф",
+    "С",
+    "С"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.347172500+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

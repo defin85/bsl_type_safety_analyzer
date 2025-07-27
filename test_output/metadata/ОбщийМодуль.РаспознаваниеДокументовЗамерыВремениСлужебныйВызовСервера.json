@@ -1,0 +1,29 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РаспознаваниеДокументовЗамерыВремениСлужебныйВызовСервера",
+  "object_type": "CommonModule",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РаспознаваниеДокументовЗамерыВремениСлужебныйВызовСервера",
+    "Распознавание",
+    "Документов",
+    "Замеры",
+    "Времени",
+    "Служебный",
+    "Вызов",
+    "Сервера"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:35.106779+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

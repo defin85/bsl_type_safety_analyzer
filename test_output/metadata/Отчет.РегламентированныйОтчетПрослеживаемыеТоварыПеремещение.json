@@ -1,0 +1,31 @@
+{
+  "metadata_type": "Metadata",
+  "name": "РегламентированныйОтчетПрослеживаемыеТоварыПеремещение",
+  "object_type": "Report",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [
+      "ОсновнаяФорма",
+      "ФормаОтчета2021Кв3",
+      "ФормаОтчета2022Кв4"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "РегламентированныйОтчетПрослеживаемыеТоварыПеремещение",
+    "Регламентированный",
+    "Отчет",
+    "Прослеживаемые",
+    "Товары",
+    "Перемещение"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:40.934342800+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

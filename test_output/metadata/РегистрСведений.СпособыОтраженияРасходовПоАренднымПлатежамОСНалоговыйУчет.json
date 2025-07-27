@@ -1,0 +1,32 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СпособыОтраженияРасходовПоАренднымПлатежамОСНалоговыйУчет",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Регистр, который показывает изменение направлений расходов по арендным платежам ОС в налоговом учете"
+  },
+  "search_keywords": [
+    "СпособыОтраженияРасходовПоАренднымПлатежамОСНалоговыйУчет",
+    "Способы",
+    "Отражения",
+    "Расходов",
+    "По",
+    "Арендным",
+    "Платежам",
+    "О",
+    "С",
+    "Налоговый",
+    "Учет"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:42.409131700+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

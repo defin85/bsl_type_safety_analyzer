@@ -34,6 +34,9 @@ let completions = syntax_db.get_completion_items("Сообщ");
 pub mod hbk_parser;
 pub mod hbk_parser_full;
 pub mod bsl_syntax_extractor;
+pub mod chunked_writer;
+pub mod chunked_loader;
+pub mod hybrid_storage;
 
 pub use hbk_parser::{HbkArchiveParser, HtmlContent, ArchiveAnalysis, FileInfo};
 pub use bsl_syntax_extractor::{
@@ -44,9 +47,12 @@ pub use bsl_syntax_extractor::{
 use anyhow::Result;
 use std::path::Path;
 
+use chunked_loader::{ChunkedDocsLoader, DocumentationStats};
+
 /// Основной фасад для работы с документацией 1С
 pub struct DocsIntegration {
     syntax_database: Option<BslSyntaxDatabase>,
+    chunked_loader: Option<ChunkedDocsLoader>,
 }
 
 impl DocsIntegration {
@@ -54,6 +60,7 @@ impl DocsIntegration {
     pub fn new() -> Self {
         Self {
             syntax_database: None,
+            chunked_loader: None,
         }
     }
     
@@ -91,6 +98,25 @@ impl DocsIntegration {
                 db.functions.len()
             );
         }
+        
+        Ok(())
+    }
+    
+    /// Загружает документацию из chunked формата
+    pub fn load_chunked_documentation<P: AsRef<Path>>(&mut self, docs_dir: P) -> Result<()> {
+        tracing::info!("Loading chunked documentation from: {}", docs_dir.as_ref().display());
+        
+        let mut loader = ChunkedDocsLoader::new(docs_dir);
+        loader.load_index()?;
+        
+        let stats = loader.get_statistics()?;
+        tracing::info!(
+            "Chunked documentation loaded: {} total items in {} categories",
+            stats.total_items,
+            stats.categories.len()
+        );
+        
+        self.chunked_loader = Some(loader);
         
         Ok(())
     }

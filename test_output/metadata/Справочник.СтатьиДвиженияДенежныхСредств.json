@@ -1,0 +1,62 @@
+{
+  "metadata_type": "Metadata",
+  "name": "СтатьиДвиженияДенежныхСредств",
+  "object_type": "Directory",
+  "structure": {
+    "attributes": [
+      {
+        "name": "ВидДвиженияДенежныхСредств",
+        "data_type": "ПеречислениеСсылка.ВидыДвиженийДенежныхСредств",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "КодВидаОперацииНФО",
+        "data_type": "Строка(5, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      },
+      {
+        "name": "НаименованиеВидаОперацииНФО",
+        "data_type": "Строка(500, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [
+      "ФормаСписка",
+      "ФормаВыбора",
+      "ФормаЭлемента",
+      "ФормаГруппы",
+      "ФормаВыбораГруппы",
+      "ВыборВидаОперацииНФО",
+      "ФормаСтатьиПоУмолчанию"
+    ],
+    "templates": [],
+    "commands": [],
+    "comments": null
+  },
+  "search_keywords": [
+    "СтатьиДвиженияДенежныхСредств",
+    "Статьи",
+    "Движения",
+    "Денежных",
+    "Средств"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:38.946211900+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "metadata_type": "Metadata",
+  "name": "КатегорииНовостейПростыеНеобработанные",
+  "object_type": "InformationRegister",
+  "structure": {
+    "attributes": [
+      {
+        "name": "УсловиеОтбора",
+        "data_type": "Строка(240, Переменная)",
+        "length": null,
+        "precision": null,
+        "attribute_use": "ForFolderAndItem",
+        "indexing": "DontIndex",
+        "fill_checking": "DontCheck"
+      }
+    ],
+    "tabular_sections": [],
+    "forms": [],
+    "templates": [],
+    "commands": [],
+    "comments": "Уменьшено с 255 до 240, чтобы общая длина индекса не превышала 900 байт (ограничение MS SQL Server)"
+  },
+  "search_keywords": [
+    "КатегорииНовостейПростыеНеобработанные",
+    "Категории",
+    "Новостей",
+    "Простые",
+    "Необработанные"
+  ],
+  "generation_metadata": {
+    "timestamp": "2025-07-26T20:31:41.767380+00:00",
+    "generator_version": "0.1.0",
+    "source_file": "C:/1CProject/Unicom/conf_report/ОтчетПоКонфигурации.txt",
+    "encoding_used": "UTF-16LE"
+  }
+}
