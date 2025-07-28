@@ -459,7 +459,7 @@ impl MetadataReportParser {
                                     }
                                     collecting_composite_type = false;
                                     composite_type_parts.clear();
-                                    last_attribute_name = None;
+                                    // НЕ очищаем last_attribute_name - он нужен для последующих свойств
                                 }
                             }
                         } else {
@@ -488,7 +488,7 @@ impl MetadataReportParser {
                                 }
                                 collecting_composite_type = false;
                                 composite_type_parts.clear();
-                                last_attribute_name = None;
+                                // НЕ очищаем last_attribute_name - он нужен для последующих свойств
                             }
                         }
                     }
@@ -511,7 +511,7 @@ impl MetadataReportParser {
                     }
                     collecting_composite_type = false;
                     composite_type_parts.clear();
-                    last_attribute_name = None;
+                    // НЕ очищаем last_attribute_name - он нужен для последующих свойств
                 }
                 i += 1;
                 continue;
@@ -629,6 +629,7 @@ impl MetadataReportParser {
                     let key = key.trim();
                     let value = value.trim().trim_matches('"');
                     
+                    
                     // Если у нас есть имя последнего атрибута и это строка с "Имя:"
                     if key == "Имя" && last_attribute_name.is_some() {
                         // Проверяем, что значение совпадает с именем атрибута
@@ -656,7 +657,6 @@ impl MetadataReportParser {
                     }
                     // Обработка свойств атрибута (Индексирование, ПроверкаЗаполнения и т.д.)
                     else if key == "Индексирование" && last_attribute_name.is_some() {
-                        println!("🔍 DEBUG: Processing indexing for {}: {}", last_attribute_name.as_ref().unwrap(), value);
                         self.update_last_attribute_indexing(&last_attribute_name, value, &current_section, &current_tabular_section, &mut current_structure);
                     }
                     else if key == "ПроверкаЗаполнения" && last_attribute_name.is_some() {
@@ -1235,7 +1235,6 @@ impl MetadataReportParser {
                         for attr in &mut ts.attributes {
                             if attr.name == *attr_name {
                                 attr.indexing = indexing.clone();
-                                println!("🔍 Updated indexing for tabular attribute {}: {:?}", attr_name, indexing);
                                 return;
                             }
                         }
@@ -1249,7 +1248,6 @@ impl MetadataReportParser {
                             for attr in dims {
                                 if attr.name == *attr_name {
                                     attr.indexing = indexing.clone();
-                                    println!("🔍 Updated indexing for dimension {}: {:?}", attr_name, indexing);
                                     return;
                                 }
                             }
@@ -1260,7 +1258,6 @@ impl MetadataReportParser {
                             for attr in res {
                                 if attr.name == *attr_name {
                                     attr.indexing = indexing.clone();
-                                    println!("🔍 Updated indexing for resource {}: {:?}", attr_name, indexing);
                                     return;
                                 }
                             }
@@ -1271,7 +1268,6 @@ impl MetadataReportParser {
                         for attr in &mut structure.attributes {
                             if attr.name == *attr_name {
                                 attr.indexing = indexing.clone();
-                                println!("🔍 Updated indexing for attribute {}: {:?}", attr_name, indexing);
                                 return;
                             }
                         }
@@ -1282,7 +1278,6 @@ impl MetadataReportParser {
                 for attr in &mut structure.attributes {
                     if attr.name == *attr_name {
                         attr.indexing = indexing.clone();
-                        println!("🔍 Updated indexing for attribute {}: {:?}", attr_name, indexing);
                         return;
                     }
                 }
