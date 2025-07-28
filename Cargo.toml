@@ -113,4 +113,16 @@ path = "src/bin/convert_to_hybrid.rs"
 name = "extract_hybrid_docs"
 path = "src/bin/extract_hybrid_docs.rs"
 
+[[bin]]
+name = "extract_config_metadata"
+path = "src/bin/extract_config_metadata.rs"
+
+[[bin]]
+name = "extract_forms"
+path = "src/bin/extract_forms.rs"
+
+[[bin]]
+name = "analyze_real_report"
+path = "src/bin/analyze_real_report.rs"
+
 # Убираем бинарник bsl-lsp так как файл был удален

@@ -269,10 +269,8 @@ impl HybridDocumentationStorage {
             "core",
             "core/builtin_types", 
             "configuration",
-            "configuration/types",
-            "configuration/types/refs",
-            "configuration/types/objects",
-            "configuration/types/records",
+            "configuration/metadata_types",
+            "configuration/forms",
             "indices",
             "runtime",
         ];
@@ -553,24 +551,47 @@ impl HybridDocumentationStorage {
     fn write_builtin_types(&self) -> Result<()> {
         tracing::info!("Writing builtin types...");
         
-        // Группируем типы по категориям
-        let mut groups: HashMap<TypeCategory, Vec<&TypeDefinition>> = HashMap::new();
+        let mut builtin_groups: HashMap<TypeCategory, Vec<&TypeDefinition>> = HashMap::new();
+        let mut config_groups: HashMap<String, Vec<&TypeDefinition>> = HashMap::new();
         
         for type_def in self.type_cache.values() {
-            groups.entry(type_def.category.clone())
-                .or_insert_with(Vec::new)
-                .push(type_def);
+            if type_def.category == TypeCategory::Configuration {
+                // Группируем конфигурационные типы по типу объекта
+                let object_type = type_def.id.split('.').next().unwrap_or("unknown");
+                config_groups.entry(object_type.to_string())
+                    .or_insert_with(Vec::new)
+                    .push(type_def);
+            } else {
+                // Группируем встроенные типы по категории
+                builtin_groups.entry(type_def.category.clone())
+                    .or_insert_with(Vec::new)
+                    .push(type_def);
+            }
         }
         
-        // Записываем каждую группу в отдельный файл
-        for (category, types) in groups {
+        // Записываем встроенные типы
+        for (category, types) in builtin_groups {
             let filename = format!("{}.json", self.category_to_filename(&category));
             let filepath = self.base_path.join("core/builtin_types").join(filename);
             
             let json = serde_json::to_string_pretty(&types)?;
             fs::write(filepath, json)?;
             
-            tracing::info!("Written {} types for category {:?}", types.len(), category);
+            tracing::info!("Written {} builtin types for category {:?}", types.len(), category);
+        }
+        
+        // Записываем конфигурационные типы
+        for (object_type, types) in config_groups {
+            let filename = format!("{}.json", object_type.to_lowercase());
+            let filepath = self.base_path.join("configuration/metadata_types").join(filename);
+            
+            // Создаем директорию если не существует
+            fs::create_dir_all(self.base_path.join("configuration/metadata_types"))?;
+            
+            let json = serde_json::to_string_pretty(&types)?;
+            fs::write(filepath, json)?;
+            
+            tracing::info!("Written {} configuration types for {}", types.len(), object_type);
         }
         
         Ok(())
@@ -624,5 +645,25 @@ impl HybridDocumentationStorage {
         }
         
         stats
+    }
+    
+    /// Добавляет тип из конфигурации
+    pub fn add_configuration_type(&mut self, type_def: TypeDefinition) -> Result<()> {
+        let type_id = type_def.id.clone();
+        
+        // Добавляем в кэш
+        self.type_cache.insert(type_id.clone(), type_def);
+        
+        // Обновляем индекс методов для типа конфигурации
+        if let Some(type_def) = self.type_cache.get(&type_id) {
+            for method_name in type_def.methods.keys() {
+                self.method_index
+                    .entry(method_name.clone())
+                    .or_insert_with(Vec::new)
+                    .push(type_id.clone());
+            }
+        }
+        
+        Ok(())
     }
 }

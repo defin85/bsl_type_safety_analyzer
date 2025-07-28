@@ -1,0 +1,43 @@
+[
+  {
+    "id": "Обработка.ЗагрузкаДанных",
+    "name": "ЗагрузкаДанных",
+    "english_name": null,
+    "category": "Configuration",
+    "description": "Обработка конфигурации",
+    "methods": {},
+    "properties": {
+      "ИмяФайла": {
+        "name": "ИмяФайла",
+        "english_name": null,
+        "description": "Реквизит типа Строка(500",
+        "property_type": "Строка(500",
+        "readonly": false,
+        "availability": [
+          "Сервер",
+          "Клиент"
+        ],
+        "deprecated": false
+      },
+      "НастройкиЗагрузки": {
+        "name": "НастройкиЗагрузки",
+        "english_name": null,
+        "description": "Реквизит типа ХранилищеЗначения",
+        "property_type": "ХранилищеЗначения",
+        "readonly": false,
+        "availability": [
+          "Сервер",
+          "Клиент"
+        ],
+        "deprecated": false
+      }
+    },
+    "constructors": [],
+    "parent_types": [],
+    "interfaces": [],
+    "availability": [
+      "Сервер",
+      "Клиент"
+    ]
+  }
+]

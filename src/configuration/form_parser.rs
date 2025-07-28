@@ -32,6 +32,10 @@ use quick_xml::{Reader, events::Event};
 use walkdir::WalkDir;
 use anyhow::{Context, Result};
 use chrono::Utc;
+use crate::docs_integration::hybrid_storage::{
+    HybridDocumentationStorage, TypeDefinition, TypeCategory,
+    MethodDefinition, PropertyDefinition, ParameterDefinition
+};
 
 /// Контракт формы 1С (замена Python FormContract)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -194,10 +198,10 @@ impl FormXmlParser {
         Ok(form_files)
     }
     
-    /// Парсит один XML файл формы (замена Python parse_form_xml)
+    /// Парсит один XML файл формы (обновлено для реальных форм 1С)
     pub fn parse_form_xml<P: AsRef<Path>>(&self, xml_path: P) -> Result<FormContract> {
         let xml_path = xml_path.as_ref();
-        tracing::debug!("Parsing form XML: {}", xml_path.display());
+        tracing::debug!("Parsing real 1C form XML: {}", xml_path.display());
         
         let content = std::fs::read_to_string(xml_path)
             .with_context(|| format!("Failed to read form XML: {}", xml_path.display()))?;
@@ -228,80 +232,95 @@ impl FormXmlParser {
         };
         
         let mut buf = Vec::new();
-        let mut current_section = None;
         let mut current_element: Option<FormElement> = None;
-        let mut current_attribute: Option<FormAttribute> = None;
-        let mut current_command: Option<FormCommand> = None;
-        let mut element_stack = Vec::new();
+        let mut in_child_items = false;
+        let mut current_tag_stack: Vec<String> = Vec::new();
+        let mut current_data_path: Option<String> = None;
         
-        // Парсим XML
+        // Парсим XML с реальной структурой форм 1С
         loop {
             match reader.read_event_into(&mut buf) {
                 Ok(Event::Start(ref e)) => {
                     let tag_name = String::from_utf8_lossy(e.name().as_ref()).into_owned();
+                    current_tag_stack.push(tag_name.clone());
                     
                     match tag_name.as_str() {
-                        // Основная информация о форме
+                        // Корневой элемент формы
                         "Form" => {
-                            self.extract_form_attributes(&mut form_contract, e)?;
+                            // Извлекаем атрибуты корневого элемента
+                            self.extract_real_form_attributes(&mut form_contract, e)?;
                         }
                         
-                        // Секции формы
-                        "Items" => current_section = Some("items"),
-                        "Attributes" => current_section = Some("attributes"), 
-                        "Commands" => current_section = Some("commands"),
-                        
-                        // Элементы управления
-                        _tag if current_section == Some("items") && self.is_form_element_tag(&tag_name) => {
-                            current_element = Some(self.start_form_element(&tag_name, e)?);
-                            element_stack.push(tag_name.to_string());
+                        // Элементы формы в реальной структуре
+                        "ChildItems" => {
+                            in_child_items = true;
                         }
                         
-                        // Реквизиты формы
-                        "Attribute" if current_section == Some("attributes") => {
-                            current_attribute = Some(self.start_form_attribute(e)?);
+                        // Типы элементов управления в реальных формах 1С
+                        "InputField" | "Table" | "RadioButtonField" | "CheckBoxField" | 
+                        "ButtonField" | "LabelField" | "PictureField" | "SpreadsheetDocumentField" |
+                        "TextDocumentField" | "FormattedDocumentField" | "Pages" | "Page" |
+                        "Group" | "Decoration" | "CommandBar" | "Button" => {
+                            if in_child_items || current_tag_stack.contains(&"ChildItems".to_string()) {
+                                current_element = Some(self.start_real_form_element(&tag_name, e)?);
+                            }
                         }
                         
-                        // Команды формы
-                        "Command" if current_section == Some("commands") => {
-                            current_command = Some(self.start_form_command(e)?);
+                        // События
+                        "Events" => {
+                            // Контекст для обработки событий
                         }
                         
-                        // Свойства элементов
-                        _property_tag if current_element.is_some() => {
-                            self.process_element_property(&mut current_element, &tag_name, &mut reader)?;
+                        "Event" => {
+                            // Обрабатываем конкретное событие
+                            if let Some(ref mut element) = current_element {
+                                self.add_event_to_element(element, e)?;
+                            }
                         }
                         
                         _ => {}
                     }
                 }
                 
+                Ok(Event::Text(ref e)) => {
+                    let text = e.unescape()?.trim().to_string();
+                    if !text.is_empty() {
+                        // Обрабатываем текстовое содержимое
+                        if let Some(current_tag) = current_tag_stack.last() {
+                            match current_tag.as_str() {
+                                "DataPath" => {
+                                    current_data_path = Some(text.clone());
+                                    if let Some(ref mut element) = current_element {
+                                        element.data_path = Some(text);
+                                    }
+                                }
+                                "Title" => {
+                                    if let Some(ref mut element) = current_element {
+                                        element.title = Some(text);
+                                    }
+                                }
+                                _ => {}
+                            }
+                        }
+                    }
+                }
+                
                 Ok(Event::End(ref e)) => {
                     let tag_name = String::from_utf8_lossy(e.name().as_ref()).into_owned();
+                    current_tag_stack.pop();
                     
                     match tag_name.as_str() {
-                        // Завершение секций
-                        "Items" | "Attributes" | "Commands" => current_section = None,
+                        "ChildItems" => {
+                            in_child_items = false;
+                        }
                         
-                        // Завершение элемента управления
-                        _tag if element_stack.last() == Some(&tag_name) => {
-                            element_stack.pop();
+                        // Завершение элементов управления
+                        "InputField" | "Table" | "RadioButtonField" | "CheckBoxField" | 
+                        "ButtonField" | "LabelField" | "PictureField" | "SpreadsheetDocumentField" |
+                        "TextDocumentField" | "FormattedDocumentField" | "Pages" | "Page" |
+                        "Group" | "Decoration" | "CommandBar" | "Button" => {
                             if let Some(element) = current_element.take() {
                                 form_contract.structure.elements.push(element);
-                            }
-                        }
-                        
-                        // Завершение реквизита
-                        "Attribute" if current_section == Some("attributes") => {
-                            if let Some(attribute) = current_attribute.take() {
-                                form_contract.structure.attributes.push(attribute);
-                            }
-                        }
-                        
-                        // Завершение команды
-                        "Command" if current_section == Some("commands") => {
-                            if let Some(command) = current_command.take() {
-                                form_contract.structure.commands.push(command);
                             }
                         }
                         
@@ -327,6 +346,7 @@ impl FormXmlParser {
         // Определяем тип формы по имени и структуре
         form_contract.form_type = self.determine_form_type(&form_contract);
         
+        tracing::debug!("Parsed {} elements from real form", form_contract.structure.elements_count);
         Ok(form_contract)
     }
     
@@ -538,6 +558,93 @@ impl FormXmlParser {
         Ok(())
     }
     
+    /// Извлекает атрибуты реальной формы 1С
+    fn extract_real_form_attributes(&self, form_contract: &mut FormContract, element: &quick_xml::events::BytesStart) -> Result<()> {
+        // В реальных формах атрибуты редко находятся в корневом элементе
+        // Большинство информации извлекается из подэлементов
+        tracing::debug!("Extracting real form attributes");
+        Ok(())
+    }
+    
+    /// Начинает парсинг элемента реальной формы 1С
+    fn start_real_form_element(&self, tag_name: &str, element: &quick_xml::events::BytesStart) -> Result<FormElement> {
+        let mut form_element = FormElement {
+            name: String::new(),
+            element_type: self.parse_real_element_type(tag_name),
+            title: None,
+            data_path: None,
+            properties: HashMap::new(),
+            events: Vec::new(),
+            parent: None,
+            children: Vec::new(),
+        };
+        
+        // Извлекаем атрибуты элемента из реальной структуры
+        for attr in element.attributes() {
+            let attr = attr?;
+            let key = String::from_utf8_lossy(attr.key.as_ref());
+            let value = String::from_utf8_lossy(&attr.value);
+            
+            match key.as_ref() {
+                "name" => form_element.name = value.to_string(),
+                "id" => {
+                    form_element.properties.insert("id".to_string(), serde_json::Value::String(value.to_string()));
+                }
+                _ => {
+                    form_element.properties.insert(key.to_string(), serde_json::Value::String(value.to_string()));
+                }
+            }
+        }
+        
+        tracing::debug!("Created real form element: {} ({})", form_element.name, tag_name);
+        Ok(form_element)
+    }
+    
+    /// Добавляет событие к элементу формы
+    fn add_event_to_element(&self, element: &mut FormElement, event_element: &quick_xml::events::BytesStart) -> Result<()> {
+        let mut event_name = String::new();
+        
+        // Извлекаем атрибуты события
+        for attr in event_element.attributes() {
+            let attr = attr?;
+            let key = String::from_utf8_lossy(attr.key.as_ref());
+            let value = String::from_utf8_lossy(&attr.value);
+            
+            match key.as_ref() {
+                "name" => event_name = value.to_string(),
+                _ => {}
+            }
+        }
+        
+        if !event_name.is_empty() {
+            element.events.push(event_name);
+        }
+        
+        Ok(())
+    }
+    
+    /// Парсит тип элемента управления для реальных форм
+    fn parse_real_element_type(&self, tag_name: &str) -> FormElementType {
+        match tag_name {
+            "InputField" => FormElementType::InputField,
+            "Table" => FormElementType::Table,
+            "RadioButtonField" => FormElementType::RadioButton,
+            "CheckBoxField" => FormElementType::CheckBox,
+            "ButtonField" | "Button" => FormElementType::Button,
+            "LabelField" => FormElementType::Label,
+            "PictureField" => FormElementType::Picture,
+            "SpreadsheetDocumentField" => FormElementType::SpreadsheetDocument,
+            "TextDocumentField" => FormElementType::TextDocument,
+            "FormattedDocumentField" => FormElementType::FormattedDocument,
+            "Pages" => FormElementType::Group, // Страницы как группы
+            "Page" => FormElementType::Group,
+            "Group" => FormElementType::Group,
+            "Decoration" => FormElementType::Decoration,
+            "CommandBar" => FormElementType::CommandBar,
+            _ => FormElementType::Unknown(tag_name.to_string()),
+        }
+    }
+
     /// Парсит тип элемента управления
     fn parse_element_type(&self, tag_name: &str) -> FormElementType {
         match tag_name {
@@ -595,6 +702,94 @@ impl FormXmlParser {
             FormType::ObjectForm
         } else {
             FormType::CommonForm
+        }
+    }
+    
+    /// Парсит все формы и записывает в гибридное хранилище
+    pub fn parse_to_hybrid_storage<P: AsRef<Path>>(
+        &self, 
+        config_dir: P,
+        storage: &mut HybridDocumentationStorage
+    ) -> Result<()> {
+        let form_files = self.find_form_files(config_dir)?;
+        
+        for form_file in form_files {
+            let form_contract = self.parse_form_xml(&form_file)?;
+            let type_def = self.convert_to_type_definition(form_contract);
+            storage.add_configuration_type(type_def)?;
+        }
+        
+        Ok(())
+    }
+    
+    /// Преобразует FormContract в TypeDefinition
+    fn convert_to_type_definition(&self, contract: FormContract) -> TypeDefinition {
+        let mut methods = HashMap::new();
+        let mut properties = HashMap::new();
+        
+        // Добавляем элементы формы как свойства
+        for element in &contract.structure.elements {
+            properties.insert(element.name.clone(), PropertyDefinition {
+                name: element.name.clone(),
+                english_name: None,
+                description: format!("Элемент формы типа {:?}", element.element_type),
+                property_type: format!("{:?}", element.element_type),
+                readonly: false,
+                availability: vec!["Клиент".to_string()],
+                deprecated: false,
+            });
+        }
+        
+        // Добавляем реквизиты формы как свойства
+        for attr in &contract.structure.attributes {
+            properties.insert(attr.name.clone(), PropertyDefinition {
+                name: attr.name.clone(),
+                english_name: None,
+                description: format!("Реквизит формы типа {}", attr.data_type),
+                property_type: attr.data_type.clone(),
+                readonly: false,
+                availability: vec!["Клиент".to_string(), "Сервер".to_string()],
+                deprecated: false,
+            });
+        }
+        
+        // Добавляем команды формы как методы
+        for cmd in &contract.structure.commands {
+            methods.insert(cmd.name.clone(), MethodDefinition {
+                name: cmd.name.clone(),
+                english_name: None,
+                description: cmd.title.clone().unwrap_or_else(|| "Команда формы".to_string()),
+                parameters: vec![],
+                return_type: None,
+                is_function: false,
+                availability: vec!["Клиент".to_string()],
+                examples: vec![],
+                deprecated: false,
+            });
+        }
+        
+        // Формируем идентификатор формы
+        let form_id = if let Some(ref obj_name) = contract.object_name {
+            format!("Форма.{}.{}", obj_name, contract.name)
+        } else {
+            format!("ОбщаяФорма.{}", contract.name)
+        };
+        
+        TypeDefinition {
+            id: form_id,
+            name: contract.name.clone(),
+            english_name: None,
+            category: TypeCategory::Configuration,
+            description: format!("{:?} {}", 
+                contract.form_type,
+                contract.object_name.as_ref().map(|o| format!("объекта {}", o)).unwrap_or_default()
+            ).trim().to_string(),
+            methods,
+            properties,
+            constructors: vec![],
+            parent_types: vec![],
+            interfaces: vec![],
+            availability: vec!["Клиент".to_string(), "Сервер".to_string()],
         }
     }
 }

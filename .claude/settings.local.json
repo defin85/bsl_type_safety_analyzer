@@ -37,7 +37,10 @@
       "Bash(target/release/enhance_index.exe:*)",
       "Bash(./analyze_objects.exe)",
       "Bash(echo)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(mv:*)",
+      "Bash(RUST_LOG=debug cargo run --bin extract_config_metadata -- --report \"C:\\Users\\Egor\\Downloads\\ОтчетПоКонфигурации888.txt\" --output output/hybrid_docs_direct)",
+      "Bash(set RUST_LOG=debug)"
     ],
     "deny": []
   }

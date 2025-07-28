@@ -1,0 +1,34 @@
+[
+  {
+    "id": "Константа.ОсновнаяОрганизация",
+    "name": "ОсновнаяОрганизация",
+    "english_name": null,
+    "category": "Configuration",
+    "description": "Константа конфигурации",
+    "methods": {},
+    "properties": {},
+    "constructors": [],
+    "parent_types": [],
+    "interfaces": [],
+    "availability": [
+      "Сервер",
+      "Клиент"
+    ]
+  },
+  {
+    "id": "Константа.ОсновнойСклад",
+    "name": "ОсновнойСклад",
+    "english_name": null,
+    "category": "Configuration",
+    "description": "Константа конфигурации",
+    "methods": {},
+    "properties": {},
+    "constructors": [],
+    "parent_types": [],
+    "interfaces": [],
+    "availability": [
+      "Сервер",
+      "Клиент"
+    ]
+  }
+]
