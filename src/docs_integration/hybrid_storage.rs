@@ -233,6 +233,9 @@ impl HybridDocumentationStorage {
         self.write_builtin_types()?;
         self.write_global_context()?;
         
+        // Создаем индекс форм
+        self.create_forms_index()?;
+        
         // Создаем оптимизированные индексы
         self.build_indices()?;
         
@@ -661,6 +664,155 @@ impl HybridDocumentationStorage {
                     .entry(method_name.clone())
                     .or_insert_with(Vec::new)
                     .push(type_id.clone());
+            }
+        }
+        
+        Ok(())
+    }
+
+    /// Добавляет форму в оптимизированное хранилище
+    pub fn add_form_optimized(&mut self, form_contract: &super::super::configuration::form_parser::FormContract) -> Result<()> {
+        // Определяем тип объекта и имя на основе типа формы и object_name
+        let (object_type, object_name) = if let Some(ref obj_name) = form_contract.object_name {
+            // Если есть object_name, используем его для определения типа
+            ("objects", obj_name.as_str())
+        } else {
+            // Иначе используем тип формы
+            match form_contract.form_type {
+                super::super::configuration::form_parser::FormType::CommonForm => ("common", "forms"),
+                super::super::configuration::form_parser::FormType::ReportForm => ("reports", "forms"),
+                super::super::configuration::form_parser::FormType::DataProcessorForm => ("dataprocessors", "forms"),
+                _ => ("unknown", "forms")
+            }
+        };
+        
+        // Создаем директорию
+        let form_dir = self.base_path
+            .join("configuration")
+            .join("forms")
+            .join(object_type)
+            .join(object_name);
+        
+        fs::create_dir_all(&form_dir)?;
+        
+        // Создаем файл формы
+        let form_file = form_dir.join(format!("{}.json", form_contract.name));
+        let json = serde_json::to_string_pretty(form_contract)?;
+        fs::write(form_file, json)?;
+        
+        tracing::debug!("Saved form {} to optimized storage", form_contract.name);
+        Ok(())
+    }
+
+    /// Очищает хранилище перед новым парсингом
+    pub fn clear_storage(&self) -> Result<()> {
+        tracing::info!("Clearing old storage data");
+        
+        let paths_to_clear = [
+            "configuration/metadata_types",
+            "configuration/forms", 
+            "indices",
+            "runtime"
+        ];
+        
+        for path in paths_to_clear {
+            let full_path = self.base_path.join(path);
+            if full_path.exists() {
+                fs::remove_dir_all(&full_path)?;
+                tracing::debug!("Cleared directory: {}", path);
+            }
+        }
+        
+        // Пересоздаем структуру директорий
+        self.create_directory_structure()?;
+        
+        tracing::info!("Storage cleared successfully");
+        Ok(())
+    }
+
+    /// Очищает только формы, сохраняя метаданные
+    pub fn clear_forms_only(&self) -> Result<()> {
+        tracing::info!("Clearing only forms data");
+        
+        let paths_to_clear = [
+            "configuration/forms"
+        ];
+        
+        for path in paths_to_clear {
+            let full_path = self.base_path.join(path);
+            if full_path.exists() {
+                fs::remove_dir_all(&full_path)?;
+                tracing::debug!("Cleared directory: {}", path);
+            }
+        }
+        
+        // Пересоздаем только папку forms
+        fs::create_dir_all(self.base_path.join("configuration").join("forms"))?;
+        
+        tracing::info!("Forms storage cleared successfully");
+        Ok(())
+    }
+
+    /// Создает индекс форм для быстрого поиска
+    pub fn create_forms_index(&self) -> Result<()> {
+        let forms_dir = self.base_path.join("configuration").join("forms");
+        let index_file = forms_dir.join("index.json");
+        
+        if !forms_dir.exists() {
+            return Ok(()); // Нет форм для индексирования
+        }
+        
+        let mut forms_index = std::collections::HashMap::new();
+        
+        // Рекурсивно обходим все файлы форм
+        self.collect_forms_for_index(&forms_dir, &mut forms_index)?;
+        
+        // Записываем индекс
+        let json = serde_json::to_string_pretty(&forms_index)?;
+        fs::write(index_file, json)?;
+        
+        tracing::info!("Created forms index with {} entries", forms_index.len());
+        Ok(())
+    }
+
+    /// Собирает информацию о формах для индекса
+    fn collect_forms_for_index(
+        &self, 
+        dir: &Path, 
+        index: &mut std::collections::HashMap<String, serde_json::Value>
+    ) -> Result<()> {
+        for entry in fs::read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            
+            if path.is_dir() {
+                self.collect_forms_for_index(&path, index)?;
+            } else if path.extension().map_or(false, |ext| ext == "json") && path.file_name() != Some(std::ffi::OsStr::new("index.json")) {
+                // Читаем файл формы и добавляем в индекс
+                let content = fs::read_to_string(&path)?;
+                if let Ok(form_data) = serde_json::from_str::<serde_json::Value>(&content) {
+                    if let Some(form_name) = form_data.get("name").and_then(|v| v.as_str()) {
+                        let relative_path = path.strip_prefix(&self.base_path.join("configuration").join("forms"))
+                            .unwrap_or(&path)
+                            .to_string_lossy()
+                            .to_string();
+                        
+                        // Создаем составной ключ для уникальности
+                        let index_key = if let Some(obj_name) = form_data.get("object_name").and_then(|v| v.as_str()) {
+                            format!("{}.{}", obj_name, form_name)
+                        } else {
+                            form_name.to_string()
+                        };
+                        
+                        index.insert(index_key, serde_json::json!({
+                            "path": relative_path,
+                            "name": form_name,
+                            "form_type": form_data.get("form_type").unwrap_or(&serde_json::Value::Null),
+                            "object_name": form_data.get("object_name").unwrap_or(&serde_json::Value::Null),
+                            "metadata_type": form_data.get("metadata_type").unwrap_or(&serde_json::Value::Null)
+                        }));
+                    }
+                }
             }
         }
         

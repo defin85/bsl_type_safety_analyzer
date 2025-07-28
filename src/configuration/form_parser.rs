@@ -32,10 +32,7 @@ use quick_xml::{Reader, events::Event};
 use walkdir::WalkDir;
 use anyhow::{Context, Result};
 use chrono::Utc;
-use crate::docs_integration::hybrid_storage::{
-    HybridDocumentationStorage, TypeDefinition, TypeCategory,
-    MethodDefinition, PropertyDefinition, ParameterDefinition
-};
+use crate::docs_integration::hybrid_storage::HybridDocumentationStorage;
 
 /// Контракт формы 1С (замена Python FormContract)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -715,82 +712,12 @@ impl FormXmlParser {
         
         for form_file in form_files {
             let form_contract = self.parse_form_xml(&form_file)?;
-            let type_def = self.convert_to_type_definition(form_contract);
-            storage.add_configuration_type(type_def)?;
+            
+            // Сохраняем форму в оптимизированное хранилище
+            storage.add_form_optimized(&form_contract)?;
         }
         
         Ok(())
-    }
-    
-    /// Преобразует FormContract в TypeDefinition
-    fn convert_to_type_definition(&self, contract: FormContract) -> TypeDefinition {
-        let mut methods = HashMap::new();
-        let mut properties = HashMap::new();
-        
-        // Добавляем элементы формы как свойства
-        for element in &contract.structure.elements {
-            properties.insert(element.name.clone(), PropertyDefinition {
-                name: element.name.clone(),
-                english_name: None,
-                description: format!("Элемент формы типа {:?}", element.element_type),
-                property_type: format!("{:?}", element.element_type),
-                readonly: false,
-                availability: vec!["Клиент".to_string()],
-                deprecated: false,
-            });
-        }
-        
-        // Добавляем реквизиты формы как свойства
-        for attr in &contract.structure.attributes {
-            properties.insert(attr.name.clone(), PropertyDefinition {
-                name: attr.name.clone(),
-                english_name: None,
-                description: format!("Реквизит формы типа {}", attr.data_type),
-                property_type: attr.data_type.clone(),
-                readonly: false,
-                availability: vec!["Клиент".to_string(), "Сервер".to_string()],
-                deprecated: false,
-            });
-        }
-        
-        // Добавляем команды формы как методы
-        for cmd in &contract.structure.commands {
-            methods.insert(cmd.name.clone(), MethodDefinition {
-                name: cmd.name.clone(),
-                english_name: None,
-                description: cmd.title.clone().unwrap_or_else(|| "Команда формы".to_string()),
-                parameters: vec![],
-                return_type: None,
-                is_function: false,
-                availability: vec!["Клиент".to_string()],
-                examples: vec![],
-                deprecated: false,
-            });
-        }
-        
-        // Формируем идентификатор формы
-        let form_id = if let Some(ref obj_name) = contract.object_name {
-            format!("Форма.{}.{}", obj_name, contract.name)
-        } else {
-            format!("ОбщаяФорма.{}", contract.name)
-        };
-        
-        TypeDefinition {
-            id: form_id,
-            name: contract.name.clone(),
-            english_name: None,
-            category: TypeCategory::Configuration,
-            description: format!("{:?} {}", 
-                contract.form_type,
-                contract.object_name.as_ref().map(|o| format!("объекта {}", o)).unwrap_or_default()
-            ).trim().to_string(),
-            methods,
-            properties,
-            constructors: vec![],
-            parent_types: vec![],
-            interfaces: vec![],
-            availability: vec!["Клиент".to_string(), "Сервер".to_string()],
-        }
     }
 }
 

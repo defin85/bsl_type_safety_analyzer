@@ -48,6 +48,9 @@ fn main() -> Result<()> {
     // Инициализируем хранилище
     let mut storage = HybridDocumentationStorage::new(args.output);
     
+    // Очищаем только формы, сохраняя метаданные
+    storage.clear_forms_only()?;
+    
     // Создаем парсер форм
     let parser = FormXmlParser::new();
     
