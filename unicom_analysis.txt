@@ -1,9 +1,0 @@
-BSL Analysis Report
-==================================================
-
-Summary:
-  Errors: 0
-  Warnings: 0
-  Files analyzed: 0
-
-✅ No issues found!

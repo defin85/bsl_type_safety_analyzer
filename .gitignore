@@ -13,6 +13,19 @@ __pycache__/
 *.temp
 debug*.bsl
 test_*.bsl
+*.txt
+unicom_analysis.txt
+enhance_index.rs
+test_chunked_export.rs
+test_hbk_parser.rs
+test_new_attributes.rs
+analyze_results.ps1
+analyze_results_simple.ps1
+
+# Test and output directories
+test_output/
+test_parallel/
+output/
 
 # Documentation drafts and obsolete files
 *_REPORT.md

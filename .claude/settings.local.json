@@ -51,7 +51,8 @@
       "Bash(set RUST_LOG=bsl_analyzer=debug)",
       "Bash(RUST_LOG=debug cargo run --bin parse_metadata_full -- --report \"C:\\Users\\Egor\\Downloads\\ОтчетПоКонфигурации888.txt\" --output \"./output\")",
       "Bash(timeout 30 cargo run --bin parse_metadata_full -- --report \"C:\\Users\\Egor\\Downloads\\ОтчетПоКонфигурации888.txt\" --output \"./output\")",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(cargo clean:*)"
     ],
     "deny": []
   }
