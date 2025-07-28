@@ -47,7 +47,7 @@ pub use bsl_syntax_extractor::{
 use anyhow::Result;
 use std::path::Path;
 
-use chunked_loader::{ChunkedDocsLoader, DocumentationStats};
+use chunked_loader::ChunkedDocsLoader;
 
 /// Основной фасад для работы с документацией 1С
 pub struct DocsIntegration {

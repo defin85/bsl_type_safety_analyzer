@@ -1,0 +1,27 @@
+[
+  {
+    "metadata_type": "Metadata",
+    "name": "Русский",
+    "object_type": "Language",
+    "structure": {
+      "attributes": [],
+      "tabular_sections": [],
+      "forms": [],
+      "templates": [],
+      "commands": [],
+      "comments": "",
+      "dimensions": null,
+      "resources": null
+    },
+    "search_keywords": [
+      "Русский",
+      "Русский"
+    ],
+    "generation_metadata": {
+      "timestamp": "2025-07-28T16:57:14.609888400+00:00",
+      "generator_version": "1.0.0",
+      "source_file": "C:\\Users\\Egor\\Downloads\\ОтчетПоКонфигурации888.txt",
+      "encoding_used": "UTF-16LE"
+    }
+  }
+]

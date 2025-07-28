@@ -1,0 +1,177 @@
+[
+  {
+    "metadata_type": "Metadata",
+    "name": "ЗаказНаряды",
+    "object_type": "Document",
+    "structure": {
+      "attributes": [
+        {
+          "name": "НомерЗаказ",
+          "data_type": "Строка(10, Переменная)",
+          "length": 10,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "СтроковыйТип1",
+          "data_type": "Строка(10, Переменная)",
+          "length": 10,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "СтроковыйТип2",
+          "data_type": "Строка(50, Переменная)",
+          "length": 50,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "СтроковыйТип3",
+          "data_type": "Строка(0, Переменная)",
+          "length": 0,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "СтроковыйТип4",
+          "data_type": "Строка(10, Фиксированная)",
+          "length": 10,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "ЧисловойТип1",
+          "data_type": "Число(10, 0)",
+          "length": 10,
+          "precision": 0,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "ЧисловойТип2",
+          "data_type": "Число(10, 5)",
+          "length": 10,
+          "precision": 5,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "ЧисловойТип3",
+          "data_type": "Число(10, 5, Неотрицательный)",
+          "length": null,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "РеквизитИндексируемый",
+          "data_type": "Строка(10, Переменная)",
+          "length": 10,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "РеквизитИндексируемыйДопУпорядочивание",
+          "data_type": "Строка(10, Переменная)",
+          "length": 10,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "РеквизитДата",
+          "data_type": "Дата(Дата)",
+          "length": null,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "РеквизитДатаВремя",
+          "data_type": "Дата(ДатаВремя)",
+          "length": null,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        },
+        {
+          "name": "РеквизитВремя",
+          "data_type": "Дата(Время)",
+          "length": null,
+          "precision": null,
+          "attribute_use": "ForFolderAndItem",
+          "indexing": "DontIndex",
+          "fill_checking": "DontCheck"
+        }
+      ],
+      "tabular_sections": [
+        {
+          "name": "Работы",
+          "attributes": [
+            {
+              "name": "ВидРаботы",
+              "data_type": "Строка(10, Переменная)",
+              "length": 10,
+              "precision": null,
+              "attribute_use": "ForFolderAndItem",
+              "indexing": "DontIndex",
+              "fill_checking": "DontCheck"
+            }
+          ],
+          "indexing": null
+        },
+        {
+          "name": "Стороны",
+          "attributes": [
+            {
+              "name": "Сторона",
+              "data_type": "СправочникСсылка.Контрагенты, СправочникСсылка.Организации, Строка(10, Переменная)",
+              "length": 10,
+              "precision": null,
+              "attribute_use": "ForFolderAndItem",
+              "indexing": "DontIndex",
+              "fill_checking": "DontCheck"
+            }
+          ],
+          "indexing": null
+        }
+      ],
+      "forms": [],
+      "templates": [],
+      "commands": [],
+      "comments": "",
+      "dimensions": null,
+      "resources": null
+    },
+    "search_keywords": [
+      "ЗаказНаряды",
+      "Заказ",
+      "Наряды"
+    ],
+    "generation_metadata": {
+      "timestamp": "2025-07-28T16:57:14.709212800+00:00",
+      "generator_version": "1.0.0",
+      "source_file": "C:\\Users\\Egor\\Downloads\\ОтчетПоКонфигурации888.txt",
+      "encoding_used": "UTF-16LE"
+    }
+  }
+]

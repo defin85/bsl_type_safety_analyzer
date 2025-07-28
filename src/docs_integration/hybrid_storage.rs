@@ -312,14 +312,16 @@ impl HybridDocumentationStorage {
     }
 
     /// Конвертирует встроенные типы из chunked формата
-    fn convert_builtin_types<P: AsRef<Path>>(&self, chunked_path: P) -> Result<()> {
+    #[allow(dead_code)]
+    fn convert_builtin_types<P: AsRef<Path>>(&self, _chunked_path: P) -> Result<()> {
         // TODO: Реализовать конвертацию
         tracing::info!("Converting builtin types...");
         Ok(())
     }
 
     /// Конвертирует глобальный контекст
-    fn convert_global_context<P: AsRef<Path>>(&self, chunked_path: P) -> Result<()> {
+    #[allow(dead_code)]
+    fn convert_global_context<P: AsRef<Path>>(&self, _chunked_path: P) -> Result<()> {
         // TODO: Реализовать конвертацию
         tracing::info!("Converting global context...");
         Ok(())
@@ -340,7 +342,7 @@ impl HybridDocumentationStorage {
     }
 
     /// Загружает тип из хранилища
-    fn load_type_from_storage(&self, type_id: &str) -> Result<Option<TypeDefinition>> {
+    fn load_type_from_storage(&self, _type_id: &str) -> Result<Option<TypeDefinition>> {
         // TODO: Реализовать загрузку из файлов
         Ok(None)
     }
@@ -750,6 +752,23 @@ impl HybridDocumentationStorage {
         fs::create_dir_all(self.base_path.join("configuration").join("forms"))?;
         
         tracing::info!("Forms storage cleared successfully");
+        Ok(())
+    }
+
+    /// Очищает только metadata_types, сохраняя формы (для MetadataReportParser)
+    pub fn clear_metadata_types_only(&self) -> Result<()> {
+        tracing::info!("Clearing only metadata_types data");
+        
+        let metadata_types_path = self.base_path.join("configuration").join("metadata_types");
+        if metadata_types_path.exists() {
+            fs::remove_dir_all(&metadata_types_path)?;
+            tracing::debug!("Cleared directory: configuration/metadata_types");
+        }
+        
+        // Пересоздаем папку metadata_types
+        fs::create_dir_all(&metadata_types_path)?;
+        
+        tracing::info!("Metadata types storage cleared successfully (forms preserved)");
         Ok(())
     }
 

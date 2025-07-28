@@ -160,6 +160,7 @@ pub struct CollectionElementsInfo {
 /// Извлекатель синтаксиса BSL (замена Python BSLSyntaxExtractor)
 pub struct BslSyntaxExtractor {
     hbk_parser: HbkArchiveParser,
+    #[allow(dead_code)]
     syntax_patterns: HashMap<String, Regex>,
     type_mapping: HashMap<String, TypeInfo>,
 }
@@ -980,6 +981,7 @@ impl BslSyntaxExtractor {
     }
     
     /// Парсит параметры из строки синтаксиса
+    #[allow(dead_code)]
     fn parse_parameters_from_syntax(&self, syntax: &str) -> Result<Vec<ParameterInfo>> {
         let mut parameters = Vec::new();
         
@@ -1003,6 +1005,7 @@ impl BslSyntaxExtractor {
     }
     
     /// Парсит один параметр
+    #[allow(dead_code)]
     fn parse_single_parameter(&self, param: &str) -> Result<ParameterInfo> {
         let mut parameter = ParameterInfo {
             name: param.to_string(),
@@ -1031,6 +1034,7 @@ impl BslSyntaxExtractor {
     }
     
     /// Извлекает дополнительную информацию из описания
+    #[allow(dead_code)]
     fn extract_additional_info_from_description(&self, description: &str, method_info: &mut BslMethodInfo) {
         // Извлекаем доступность
         if let Some(availability_regex) = self.syntax_patterns.get("availability") {

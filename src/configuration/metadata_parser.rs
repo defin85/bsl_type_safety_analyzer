@@ -147,6 +147,9 @@ pub struct ObjectStructure {
     pub templates: Vec<String>,
     pub commands: Vec<String>,
     pub comments: Option<String>,
+    // Специальные поля для регистров
+    pub dimensions: Option<Vec<AttributeInfo>>, // Измерения (только для регистров)
+    pub resources: Option<Vec<AttributeInfo>>,  // Ресурсы (только для регистров)
 }
 
 /// Информация о реквизите (замена Python AttributeInfo)
@@ -182,7 +185,8 @@ pub enum AttributeUse {
 pub enum AttributeIndexing {
     Index,            // Индексировать
     DontIndex,        // НеИндексировать
-    IndexWithAdditionalOrder, // ИндексироватьСДополнительнымПорядком
+    IndexWithOrdering, // ИндексироватьСДопУпорядочиванием
+    IndexWithAdditionalOrder, // ИндексироватьСДополнительнымПорядком (legacy)
 }
 
 /// Проверка заполнения
@@ -208,6 +212,28 @@ enum ReportFormat {
     RealReport,        // Реальный отчет из 1С с табуляцией и "-"
     PythonStyle,       // Формат из Python проекта с "-" и отступами
     SimplifiedExample, // Упрощенный формат примера
+}
+
+/// Временная структура для сбора свойств атрибута
+#[derive(Debug, Clone)]
+struct TempAttributeInfo {
+    name: String,
+    data_type: Option<String>,
+    indexing: AttributeIndexing,
+    fill_checking: FillChecking,
+    attribute_use: AttributeUse,
+}
+
+impl TempAttributeInfo {
+    fn new(name: String) -> Self {
+        Self {
+            name,
+            data_type: None,
+            indexing: AttributeIndexing::DontIndex,
+            fill_checking: FillChecking::DontCheck,
+            attribute_use: AttributeUse::ForFolderAndItem,
+        }
+    }
 }
 
 pub struct MetadataReportParser {
@@ -392,6 +418,9 @@ impl MetadataReportParser {
         let mut object_info: HashMap<String, String> = HashMap::new();
         let mut current_tabular_section: Option<String> = None;
         let mut last_attribute_name: Option<String> = None;
+        let mut collecting_composite_type = false;
+        let mut composite_type_parts: Vec<String> = Vec::new();
+        
         
         let mut i = 0;
         while i < lines.len() {
@@ -399,6 +428,91 @@ impl MetadataReportParser {
             let trimmed = line.trim();
             
             if trimmed.is_empty() {
+                i += 1;
+                continue;
+            }
+            
+            // Если собираем составной тип
+            if collecting_composite_type {
+                
+                // Проверяем, содержит ли строка часть составного типа
+                if trimmed.contains('"') {
+                    // Извлекаем содержимое между кавычек
+                    let start_quote = trimmed.find('"');
+                    let end_quote = trimmed.rfind('"');
+                    
+                    if let (Some(start), Some(end)) = (start_quote, end_quote) {
+                        if start != end {
+                            // Полная строка в кавычках на одной строке
+                            let content = &trimmed[start + 1..end];
+                            let type_part = content.trim_end_matches(',').trim();
+                            let has_comma = content.ends_with(',');
+                            
+                            if !type_part.is_empty() {
+                                composite_type_parts.push(type_part.to_string());
+                                
+                                if !has_comma {
+                                    // Завершаем сбор - это последняя часть
+                                    let composite_type = composite_type_parts.join(", ");
+                                    if let Some(ref attr_name) = last_attribute_name {
+                                        self.create_attribute_with_type(attr_name, &composite_type, &current_section, &current_tabular_section, &mut current_structure, None, None);
+                                    }
+                                    collecting_composite_type = false;
+                                    composite_type_parts.clear();
+                                    last_attribute_name = None;
+                                }
+                            }
+                        } else {
+                            // Одна кавычка - начало или конец многострочного типа
+                            if trimmed.starts_with('"') {
+                                // Начало многострочного типа: "СправочникСсылка.Контрагенты,
+                                let content = trimmed.trim_start_matches('"');
+                                let type_part = content.trim_end_matches(',').trim();
+                                if !type_part.is_empty() {
+                                    composite_type_parts.push(type_part.to_string());
+                                }
+                            } else if trimmed.ends_with('"') {
+                                // Конец многострочного типа:  Строка(10, Переменная)"
+                                let content = trimmed.trim_end_matches('"');
+                                let type_part = content.trim_end_matches(',').trim();
+                                let _has_comma = content.ends_with(',');
+                                
+                                if !type_part.is_empty() {
+                                    composite_type_parts.push(type_part.to_string());
+                                }
+                                
+                                // Завершаем сбор многострочного типа
+                                let composite_type = composite_type_parts.join(", ");
+                                if let Some(ref attr_name) = last_attribute_name {
+                                    self.create_attribute_with_type(attr_name, &composite_type, &current_section, &current_tabular_section, &mut current_structure, None, None);
+                                }
+                                collecting_composite_type = false;
+                                composite_type_parts.clear();
+                                last_attribute_name = None;
+                            }
+                        }
+                    }
+                } else if !trimmed.is_empty() && (line.starts_with('\t') || line.starts_with(' ')) {
+                    // Средняя строка многострочного типа с отступом
+                    let type_part = trimmed.trim_end_matches(',').trim();
+                    if !type_part.is_empty() && !type_part.contains(':') {
+                        composite_type_parts.push(type_part.to_string());
+                    }
+                } else {
+                    // Не строка типа - завершаем сбор с тем, что есть
+                    
+                    if !composite_type_parts.is_empty() {
+                        let composite_type = composite_type_parts.join(", ");
+                        if let Some(ref attr_name) = last_attribute_name {
+                            self.create_attribute_with_type(attr_name, &composite_type, &current_section, &current_tabular_section, &mut current_structure, None, None);
+                        }
+                    } else if let Some(ref attr_name) = last_attribute_name {
+                        self.create_attribute_with_type(attr_name, "Строка", &current_section, &current_tabular_section, &mut current_structure, None, None);
+                    }
+                    collecting_composite_type = false;
+                    composite_type_parts.clear();
+                    last_attribute_name = None;
+                }
                 i += 1;
                 continue;
             }
@@ -435,6 +549,8 @@ impl MetadataReportParser {
                             templates: Vec::new(),
                             commands: Vec::new(),
                             comments: None,
+                            dimensions: None,
+                            resources: None,
                         });
                         object_info.clear();
                         current_section = None;
@@ -466,11 +582,21 @@ impl MetadataReportParser {
                     // Проверяем Справочники.Организации.Реквизиты.КраткоеНаименование
                     if parts.len() >= 4 {
                         let element_type = self.clean_type_string(parts[2]).to_lowercase();
-                        if element_type == "реквизиты" {
-                            current_section = Some("attributes".to_string());
+                        if element_type == "реквизиты" || element_type == "измерения" || element_type == "ресурсы" {
+                            // Для регистров: различаем секции (Измерения, Ресурсы, Реквизиты)
+                            let section_type = match element_type.as_str() {
+                                "измерения" => "dimensions",
+                                "ресурсы" => "resources", 
+                                "реквизиты" => "attributes",
+                                _ => "attributes"
+                            };
+                            current_section = Some(section_type.to_string());
                             let attr_name = self.clean_type_string(parts[3]);
-                            // Создаем реквизит, тип будет определен позже
+                            // Очищаем предыдущий атрибут перед установкой нового
+                            last_attribute_name = None;
+                            // Создаем реквизит/измерение/ресурс, тип будет определен позже
                             last_attribute_name = Some(attr_name.clone());
+                            tracing::debug!("Found {} element: {} (section: {})", element_type, attr_name, section_type);
                         } else if element_type == "табличныечасти" {
                             if parts.len() == 4 {
                                 // Табличная часть: Документы.ЗаказНаряды.ТабличныеЧасти.Работы
@@ -516,47 +642,25 @@ impl MetadataReportParser {
                     // Если это строка с типом и у нас есть имя атрибута
                     else if key == "Тип" && last_attribute_name.is_some() {
                         if let Some(ref attr_name) = last_attribute_name {
-                            // Определяем тип: если пустой, используем значение по умолчанию
-                            let data_type = if value.is_empty() { "Строка" } else { value };
-                            // Создаем атрибут с типом
-                            if let Some(ref section) = current_section {
-                                if section == "attributes" {
-                                    if let Some(ref mut structure) = current_structure {
-                                        let attr = AttributeInfo {
-                                            name: attr_name.clone(),
-                                            data_type: data_type.to_string(),
-                                            length: None,
-                                            precision: None,
-                                            attribute_use: AttributeUse::ForFolderAndItem,
-                                            indexing: AttributeIndexing::DontIndex,
-                                            fill_checking: FillChecking::DontCheck,
-                                        };
-                                        structure.attributes.push(attr);
-                                    }
-                                } else if section == "tabular" {
-                                    if let Some(ref ts_name) = current_tabular_section {
-                                        if let Some(ref mut structure) = current_structure {
-                                            if let Some(ts) = structure.tabular_sections.iter_mut()
-                                                .find(|t| t.name == *ts_name) {
-                                                let attr = AttributeInfo {
-                                                    name: attr_name.clone(),
-                                                    data_type: if value.is_empty() { "Строка".to_string() } else { value.to_string() },
-                                                    length: None,
-                                                    precision: None,
-                                                    attribute_use: AttributeUse::ForFolderAndItem,
-                                                    indexing: AttributeIndexing::DontIndex,
-                                                    fill_checking: FillChecking::DontCheck,
-                                                };
-                                                ts.attributes.push(attr);
-                                                tracing::debug!("Added tabular attribute {} to {} with type {}", attr_name, ts_name, value);
-                                            }
-                                        }
-                                    }
-                                }
+                            if value.is_empty() {
+                                // Пустое значение типа - начинаем собирать составной тип
+                                collecting_composite_type = true;
+                                composite_type_parts.clear();
+                                tracing::debug!("Starting composite type collection for attribute: {}", attr_name);
+                            } else {
+                                // Простой тип - сразу создаем атрибут
+                                self.create_attribute_with_type(attr_name, value, &current_section, &current_tabular_section, &mut current_structure, None, None);
+                                // НЕ очищаем last_attribute_name здесь - он нужен для последующих свойств
                             }
-                            // Сбрасываем имя атрибута после обработки типа
-                            last_attribute_name = None;
                         }
+                    }
+                    // Обработка свойств атрибута (Индексирование, ПроверкаЗаполнения и т.д.)
+                    else if key == "Индексирование" && last_attribute_name.is_some() {
+                        println!("🔍 DEBUG: Processing indexing for {}: {}", last_attribute_name.as_ref().unwrap(), value);
+                        self.update_last_attribute_indexing(&last_attribute_name, value, &current_section, &current_tabular_section, &mut current_structure);
+                    }
+                    else if key == "ПроверкаЗаполнения" && last_attribute_name.is_some() {
+                        self.update_last_attribute_fill_checking(&last_attribute_name, value, &current_section, &current_tabular_section, &mut current_structure);
                     }
                     // Сохраняем общие свойства объекта
                     else if key != "Тип" && current_section.is_none() {
@@ -618,7 +722,7 @@ impl MetadataReportParser {
     }
     
     /// Парсит Python формат (совместимость)
-    fn parse_python_format(&self, content: &str, source_path: &Path, encoding: &str) -> Result<Vec<MetadataContract>> {
+    fn parse_python_format(&self, _content: &str, _source_path: &Path, _encoding: &str) -> Result<Vec<MetadataContract>> {
         // TODO: Реализовать парсинг Python формата
         tracing::warn!("Python format parsing not yet implemented");
         Ok(vec![])
@@ -662,6 +766,8 @@ impl MetadataReportParser {
                         templates: Vec::new(),
                         commands: Vec::new(),
                         comments: None,
+                        dimensions: None,
+                        resources: None,
                     });
                 }
             }
@@ -966,6 +1072,332 @@ impl MetadataReportParser {
             ObjectType::Style => "Стиль",
             ObjectType::StyleItem => "Элемент стиля",
         }
+    }
+    
+    /// Создает атрибут с указанным типом и добавляет в соответствующую секцию
+    fn create_attribute_with_type(
+        &self,
+        attr_name: &str,
+        data_type: &str,
+        current_section: &Option<String>,
+        current_tabular_section: &Option<String>,
+        current_structure: &mut Option<ObjectStructure>,
+        indexing: Option<AttributeIndexing>,
+        fill_checking: Option<FillChecking>
+    ) {
+        self.create_attribute_with_properties(
+            attr_name, 
+            data_type, 
+            current_section, 
+            current_tabular_section, 
+            current_structure,
+            indexing.unwrap_or(AttributeIndexing::DontIndex), // По умолчанию без индексирования
+            fill_checking.unwrap_or(FillChecking::DontCheck)  // По умолчанию без проверки заполнения
+        );
+    }
+
+    /// Создает атрибут с полными свойствами и добавляет в соответствующую секцию  
+    fn create_attribute_with_properties(
+        &self,
+        attr_name: &str,
+        data_type: &str,
+        current_section: &Option<String>,
+        current_tabular_section: &Option<String>,
+        current_structure: &mut Option<ObjectStructure>,
+        indexing: AttributeIndexing,
+        fill_checking: FillChecking
+    ) {
+        let final_type = if data_type.is_empty() { "Строка" } else { data_type };
+        
+        // Извлекаем длину и точность из типа данных
+        let (length, precision) = self.extract_type_constraints(final_type);
+        
+        if let Some(ref section) = current_section {
+            if section == "attributes" {
+                if let Some(ref mut structure) = current_structure {
+                    let attr = AttributeInfo {
+                        name: attr_name.to_string(),
+                        data_type: final_type.to_string(),
+                        length,
+                        precision,
+                        attribute_use: AttributeUse::ForFolderAndItem,
+                        indexing,
+                        fill_checking,
+                    };
+                    structure.attributes.push(attr);
+                    tracing::debug!("Added attribute {} with type {} (length: {:?}, precision: {:?})", 
+                        attr_name, final_type, length, precision);
+                }
+            } else if section == "dimensions" {
+                // Добавляем в секцию измерений для регистров
+                if let Some(ref mut structure) = current_structure {
+                    if structure.dimensions.is_none() {
+                        structure.dimensions = Some(Vec::new());
+                    }
+                    let attr = AttributeInfo {
+                        name: attr_name.to_string(),
+                        data_type: final_type.to_string(),
+                        length,
+                        precision,
+                        attribute_use: AttributeUse::ForFolderAndItem,
+                        indexing,
+                        fill_checking,
+                    };
+                    structure.dimensions.as_mut().unwrap().push(attr);
+                    tracing::debug!("Added dimension {} with type {} (length: {:?}, precision: {:?})", 
+                        attr_name, final_type, length, precision);
+                }
+            } else if section == "resources" {
+                // Добавляем в секцию ресурсов для регистров
+                if let Some(ref mut structure) = current_structure {
+                    if structure.resources.is_none() {
+                        structure.resources = Some(Vec::new());
+                    }
+                    let attr = AttributeInfo {
+                        name: attr_name.to_string(),
+                        data_type: final_type.to_string(),
+                        length,
+                        precision,
+                        attribute_use: AttributeUse::ForFolderAndItem,
+                        indexing,
+                        fill_checking,
+                    };
+                    structure.resources.as_mut().unwrap().push(attr);
+                    tracing::debug!("Added resource {} with type {} (length: {:?}, precision: {:?})", 
+                        attr_name, final_type, length, precision);
+                }
+            } else if section == "tabular" {
+                if let Some(ref ts_name) = current_tabular_section {
+                    if let Some(ref mut structure) = current_structure {
+                        if let Some(ts) = structure.tabular_sections.iter_mut()
+                            .find(|t| t.name == *ts_name) {
+                            let attr = AttributeInfo {
+                                name: attr_name.to_string(),
+                                data_type: final_type.to_string(),
+                                length,
+                                precision,
+                                attribute_use: AttributeUse::ForFolderAndItem,
+                                indexing: AttributeIndexing::DontIndex,
+                                fill_checking: FillChecking::DontCheck,
+                            };
+                            ts.attributes.push(attr);
+                            tracing::debug!("Added tabular attribute {} to {} with type {} (length: {:?}, precision: {:?})", 
+                                attr_name, ts_name, final_type, length, precision);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /// Парсит значение индексирования атрибута
+    fn parse_indexing(&self, value: &str) -> AttributeIndexing {
+        match value {
+            "Индексировать" => AttributeIndexing::Index,
+            "ИндексироватьСДопУпорядочиванием" => AttributeIndexing::IndexWithOrdering,
+            "ИндексироватьСДополнительнымПорядком" => AttributeIndexing::IndexWithAdditionalOrder,
+            "НеИндексировать" => AttributeIndexing::DontIndex,
+            _ => {
+                tracing::warn!("Unknown indexing value: {}, defaulting to DontIndex", value);
+                AttributeIndexing::DontIndex
+            }
+        }
+    }
+
+    /// Парсит значение проверки заполнения атрибута
+    fn parse_fill_checking(&self, value: &str) -> FillChecking {
+        match value {
+            "ВыдаватьОшибку" => FillChecking::ShowError,
+            "НеПроверять" => FillChecking::DontCheck,
+            _ => {
+                tracing::warn!("Unknown fill checking value: {}, defaulting to DontCheck", value);
+                FillChecking::DontCheck
+            }
+        }
+    }
+
+    fn update_last_attribute_indexing(
+        &self,
+        last_attr_name: &Option<String>,
+        value: &str,
+        current_section: &Option<String>,
+        current_tabular_section: &Option<String>,
+        current_structure: &mut Option<ObjectStructure>
+    ) {
+        if let (Some(attr_name), Some(ref mut structure)) = (last_attr_name, current_structure) {
+            let indexing = self.parse_indexing(value);
+            
+            // Найти и обновить атрибут в соответствующей секции
+            if let Some(ref ts_name) = current_tabular_section {
+                // Табличная часть
+                for ts in &mut structure.tabular_sections {
+                    if ts.name == *ts_name {
+                        for attr in &mut ts.attributes {
+                            if attr.name == *attr_name {
+                                attr.indexing = indexing.clone();
+                                println!("🔍 Updated indexing for tabular attribute {}: {:?}", attr_name, indexing);
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else if let Some(ref section) = current_section {
+                // Регистр: измерения, ресурсы, реквизиты
+                match section.as_str() {
+                    "dimensions" => {
+                        if let Some(ref mut dims) = structure.dimensions {
+                            for attr in dims {
+                                if attr.name == *attr_name {
+                                    attr.indexing = indexing.clone();
+                                    println!("🔍 Updated indexing for dimension {}: {:?}", attr_name, indexing);
+                                    return;
+                                }
+                            }
+                        }
+                    },
+                    "resources" => {
+                        if let Some(ref mut res) = structure.resources {
+                            for attr in res {
+                                if attr.name == *attr_name {
+                                    attr.indexing = indexing.clone();
+                                    println!("🔍 Updated indexing for resource {}: {:?}", attr_name, indexing);
+                                    return;
+                                }
+                            }
+                        }
+                    },
+                    _ => {
+                        // Обычные атрибуты
+                        for attr in &mut structure.attributes {
+                            if attr.name == *attr_name {
+                                attr.indexing = indexing.clone();
+                                println!("🔍 Updated indexing for attribute {}: {:?}", attr_name, indexing);
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Обычные атрибуты объекта
+                for attr in &mut structure.attributes {
+                    if attr.name == *attr_name {
+                        attr.indexing = indexing.clone();
+                        println!("🔍 Updated indexing for attribute {}: {:?}", attr_name, indexing);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    fn update_last_attribute_fill_checking(
+        &self,
+        last_attr_name: &Option<String>,
+        value: &str,
+        current_section: &Option<String>,
+        current_tabular_section: &Option<String>,
+        current_structure: &mut Option<ObjectStructure>
+    ) {
+        if let (Some(attr_name), Some(ref mut structure)) = (last_attr_name, current_structure) {
+            let fill_checking = self.parse_fill_checking(value);
+            
+            // Найти и обновить атрибут в соответствующей секции
+            if let Some(ref ts_name) = current_tabular_section {
+                // Табличная часть
+                for ts in &mut structure.tabular_sections {
+                    if ts.name == *ts_name {
+                        for attr in &mut ts.attributes {
+                            if attr.name == *attr_name {
+                                attr.fill_checking = fill_checking;
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else if let Some(ref section) = current_section {
+                // Регистр: измерения, ресурсы, реквизиты
+                match section.as_str() {
+                    "dimensions" => {
+                        if let Some(ref mut dims) = structure.dimensions {
+                            for attr in dims {
+                                if attr.name == *attr_name {
+                                    attr.fill_checking = fill_checking;
+                                    return;
+                                }
+                            }
+                        }
+                    },
+                    "resources" => {
+                        if let Some(ref mut res) = structure.resources {
+                            for attr in res {
+                                if attr.name == *attr_name {
+                                    attr.fill_checking = fill_checking;
+                                    return;
+                                }
+                            }
+                        }
+                    },
+                    _ => {
+                        // Обычные атрибуты
+                        for attr in &mut structure.attributes {
+                            if attr.name == *attr_name {
+                                attr.fill_checking = fill_checking;
+                                return;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Обычные атрибуты объекта
+                for attr in &mut structure.attributes {
+                    if attr.name == *attr_name {
+                        attr.fill_checking = fill_checking;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /// Извлекает ограничения длины и точности из типа данных
+    fn extract_type_constraints(&self, data_type: &str) -> (Option<u32>, Option<u32>) {
+        use regex::Regex;
+        
+        // Regex for extracting constraints from types like "Строка(10, Переменная)" or "Число(15, 2)"
+        let string_regex = Regex::new(r"Строка\((\d+)(?:,\s*(\w+))?\)").unwrap();
+        let number_regex = Regex::new(r"Число\((\d+)(?:,\s*(\d+))?\)").unwrap();
+        
+        // Check for string type constraints
+        if let Some(captures) = string_regex.captures(data_type) {
+            if let Some(length_str) = captures.get(1) {
+                if let Ok(length) = length_str.as_str().parse::<u32>() {
+                    return (Some(length), None);
+                }
+            }
+        }
+        
+        // Check for number type constraints  
+        if let Some(captures) = number_regex.captures(data_type) {
+            let length = captures.get(1)
+                .and_then(|m| m.as_str().parse::<u32>().ok());
+            let precision = captures.get(2)
+                .and_then(|m| m.as_str().parse::<u32>().ok());
+            return (length, precision);
+        }
+        
+        // Check composite types - extract constraints from each part
+        if data_type.contains(',') {
+            let parts: Vec<&str> = data_type.split(',').collect();
+            for part in parts {
+                let part = part.trim();
+                let (length, precision) = self.extract_type_constraints(part);
+                if length.is_some() || precision.is_some() {
+                    return (length, precision);
+                }
+            }
+        }
+        
+        (None, None)
     }
 }
 

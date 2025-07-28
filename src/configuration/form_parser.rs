@@ -232,7 +232,7 @@ impl FormXmlParser {
         let mut current_element: Option<FormElement> = None;
         let mut in_child_items = false;
         let mut current_tag_stack: Vec<String> = Vec::new();
-        let mut current_data_path: Option<String> = None;
+        let mut _current_data_path: Option<String> = None;
         
         // Парсим XML с реальной структурой форм 1С
         loop {
@@ -286,7 +286,7 @@ impl FormXmlParser {
                         if let Some(current_tag) = current_tag_stack.last() {
                             match current_tag.as_str() {
                                 "DataPath" => {
-                                    current_data_path = Some(text.clone());
+                                    _current_data_path = Some(text.clone());
                                     if let Some(ref mut element) = current_element {
                                         element.data_path = Some(text);
                                     }
@@ -415,6 +415,7 @@ impl FormXmlParser {
     }
     
     /// Извлекает атрибуты основного элемента Form
+    #[allow(dead_code)]
     fn extract_form_attributes(&self, form_contract: &mut FormContract, element: &quick_xml::events::BytesStart) -> Result<()> {
         for attr in element.attributes() {
             let attr = attr?;
@@ -431,6 +432,7 @@ impl FormXmlParser {
     }
     
     /// Проверяет, является ли тег элементом формы
+    #[allow(dead_code)]
     fn is_form_element_tag(&self, tag_name: &str) -> bool {
         matches!(tag_name, 
             "InputField" | "Label" | "Button" | "Picture" | "Table" | 
@@ -441,6 +443,7 @@ impl FormXmlParser {
     }
     
     /// Начинает парсинг элемента формы
+    #[allow(dead_code)]
     fn start_form_element(&self, tag_name: &str, element: &quick_xml::events::BytesStart) -> Result<FormElement> {
         let mut form_element = FormElement {
             name: String::new(),
@@ -473,6 +476,7 @@ impl FormXmlParser {
     }
     
     /// Начинает парсинг реквизита формы
+    #[allow(dead_code)]
     fn start_form_attribute(&self, element: &quick_xml::events::BytesStart) -> Result<FormAttribute> {
         let mut form_attribute = FormAttribute {
             name: String::new(),
@@ -503,6 +507,7 @@ impl FormXmlParser {
     }
     
     /// Начинает парсинг команды формы
+    #[allow(dead_code)]
     fn start_form_command(&self, element: &quick_xml::events::BytesStart) -> Result<FormCommand> {
         let mut form_command = FormCommand {
             name: String::new(),
@@ -533,6 +538,7 @@ impl FormXmlParser {
     }
     
     /// Обрабатывает свойство элемента формы
+    #[allow(dead_code)]
     fn process_element_property(
         &self,
         current_element: &mut Option<FormElement>,
@@ -556,7 +562,7 @@ impl FormXmlParser {
     }
     
     /// Извлекает атрибуты реальной формы 1С
-    fn extract_real_form_attributes(&self, form_contract: &mut FormContract, element: &quick_xml::events::BytesStart) -> Result<()> {
+    fn extract_real_form_attributes(&self, _form_contract: &mut FormContract, _element: &quick_xml::events::BytesStart) -> Result<()> {
         // В реальных формах атрибуты редко находятся в корневом элементе
         // Большинство информации извлекается из подэлементов
         tracing::debug!("Extracting real form attributes");
@@ -643,6 +649,7 @@ impl FormXmlParser {
     }
 
     /// Парсит тип элемента управления
+    #[allow(dead_code)]
     fn parse_element_type(&self, tag_name: &str) -> FormElementType {
         match tag_name {
             "InputField" => FormElementType::InputField,
@@ -669,6 +676,7 @@ impl FormXmlParser {
     }
     
     /// Парсит представление команды
+    #[allow(dead_code)]
     fn parse_command_representation(&self, value: &str) -> CommandRepresentation {
         match value {
             "Auto" => CommandRepresentation::Auto,

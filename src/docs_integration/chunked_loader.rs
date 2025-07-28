@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use anyhow::{Result, Context};
 
-use super::chunked_writer::{SyntaxItem, ItemMetadata};
+use super::chunked_writer::SyntaxItem;
 
 /// Загрузчик chunked документации
 pub struct ChunkedDocsLoader {
@@ -31,6 +31,7 @@ struct MainIndexCache {
 #[derive(Debug, Clone, Deserialize)]
 struct CategoryInfo {
     items_count: usize,
+    #[allow(dead_code)]
     chunks_count: usize,
     files: Vec<String>,
 }
@@ -40,6 +41,7 @@ struct CategoryInfo {
 struct ItemLocation {
     category: String,
     file: String,
+    #[allow(dead_code)]
     title: String,
     object_name: String,
 }

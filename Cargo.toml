@@ -85,6 +85,25 @@ panic = "abort"
 name = "bsl-analyzer"
 path = "src/main.rs"
 
+# BSL Documentation parsers
+[[bin]]
+name = "extract_hybrid_docs"
+path = "src/bin/extract_hybrid_docs.rs"
+
+# 1C Metadata parsers (renamed for clarity)
+[[bin]]
+name = "parse_metadata_full"
+path = "src/bin/parse_test_metadata.rs"
+
+[[bin]]
+name = "parse_metadata_simple"
+path = "src/bin/test_metadata_parser.rs"
+
+[[bin]]
+name = "analyze_metadata_types"
+path = "src/bin/test_new_attributes.rs"
+
+# Legacy binaries (kept for compatibility)
 [[bin]]
 name = "test_hbk_parser"
 path = "test_hbk_parser.rs"
@@ -92,10 +111,6 @@ path = "test_hbk_parser.rs"
 [[bin]]
 name = "test_chunked_export"
 path = "test_chunked_export.rs"
-
-[[bin]]
-name = "process_all_docs"
-path = "process_all_docs.rs"
 
 [[bin]]
 name = "enhance_index"
@@ -110,10 +125,6 @@ name = "convert_to_hybrid"
 path = "src/bin/convert_to_hybrid.rs"
 
 [[bin]]
-name = "extract_hybrid_docs"
-path = "src/bin/extract_hybrid_docs.rs"
-
-[[bin]]
 name = "extract_config_metadata"
 path = "src/bin/extract_config_metadata.rs"
 
@@ -124,5 +135,3 @@ path = "src/bin/extract_forms.rs"
 [[bin]]
 name = "analyze_real_report"
 path = "src/bin/analyze_real_report.rs"
-
-# Убираем бинарник bsl-lsp так как файл был удален

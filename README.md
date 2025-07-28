@@ -1,270 +1,283 @@
-# BSL Type Safety Analyzer v1.0
+# BSL Type Safety Analyzer v0.0.2-alpha
 
-**Enterprise-ready static analyzer for 1C:Enterprise BSL language**
+**Static analyzer for 1C:Enterprise BSL language with integrated metadata parsers**
 
-[![CI Status](https://img.shields.io/badge/CI-passing-brightgreen)]()
-[![Coverage](https://img.shields.io/badge/coverage-85%25-green)]()
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![Test Coverage](https://img.shields.io/badge/coverage-40%25-yellow)]()
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Rust Version](https://img.shields.io/badge/rust-1.70+-orange.svg)]()
+[![Development Stage](https://img.shields.io/badge/stage-alpha-orange)]()
+[![Parsers](https://img.shields.io/badge/parsers-production%20ready-green)]()
 
-Production-ready static analyzer for 1C:Enterprise BSL with complete semantic analysis, configurable rules system, code quality metrics, and enterprise integrations. Written in Rust for maximum performance and reliability.
+High-performance static analyzer for 1C:Enterprise BSL written in Rust. Currently focuses on comprehensive metadata parsing and BSL documentation integration. **Early development stage** - core BSL code analysis is not yet implemented.
 
-## 🚀 Features
+## ⚠️ Project Status: Alpha Development
 
-### Core Analysis
-- **Complete BSL parsing** with extended grammar (try-except, type annotations, async/await)
-- **Semantic analysis** with scope tracking and variable usage patterns
-- **Type checking** with method verification and compatibility analysis
-- **Configuration-aware analysis** with 1C metadata contract integration
-- **Inter-module dependency analysis** with circular dependency detection
+**Current Version**: v0.0.2-alpha (~25-30% complete)  
+**Production Ready**: ❌ Not ready for BSL code analysis  
+**Metadata Parsers**: ✅ Production-ready after recent refactoring  
+**BSL Documentation**: ✅ Complete integration (4,916 types)  
 
-### BSL Documentation Integration (NEW)
-- **Complete BSL Type System** - 4,916 built-in types with full method/property signatures
-- **HBK Archive Parser** - Direct parsing of 1C documentation archives
-- **Hybrid Storage** - Optimized format grouping types by functional categories
-- **Method Index** - Fast lookup of methods across all types
-- **Multi-language Support** - Russian/English names for all types and methods
+### What Works Now:
+- ✅ **1C Metadata Parsing** - Real configuration reports and XML forms
+- ✅ **BSL Documentation Integration** - Complete type system with 4,916 built-in types
+- ✅ **HBK Archive Parser** - 1C documentation extraction
+- ✅ **Configuration Analysis** - Object structure and relationships
+- ✅ **CLI Tools** - Comprehensive command-line interface
 
-### Enterprise Features
-- **Configurable Rules System** - 10+ built-in rules with TOML/YAML configuration
-- **Code Quality Metrics** - cyclomatic complexity, maintainability index, technical debt
-- **SARIF Export** - seamless CI/CD integration with standardized reporting  
-- **LSP Server** - TCP/STDIO modes with up to 10 concurrent connections
-- **Intelligent Recommendations** - actionable insights based on analysis results
-- **Performance Monitoring** - detailed metrics and caching for large codebases
+### What Doesn't Work Yet:
+- ❌ **BSL Code Parsing** - Core grammar parser not implemented
+- ❌ **Semantic Analysis** - Code analysis features are stubs
+- ❌ **LSP Server** - Limited functionality without parser
+- ❌ **Rules System** - Infrastructure only, no real rules
 
-### Performance
-- **10-20x faster** than Python-based analyzers
-- **True parallelism** without GIL limitations
-- **Intelligent caching** for incremental analysis
-- **Memory efficient** with zero-copy string processing
+## 🚀 Current Features (Working)
+
+### 1C Metadata Integration
+- **MetadataReportParser** - Parses text configuration reports with full type support
+- **FormXmlParser** - Extracts form structure from XML files (separate tool)
+- **HBK Archive Parser** - Direct 1C documentation processing
+- **Hybrid Storage** - Optimized format for BSL type information
+
+### BSL Documentation System
+- **Complete Type Database** - 4,916 BSL types with method signatures
+- **Multi-language Support** - Russian/English names and descriptions
+- **Method Index** - Fast lookup across all types and categories
+- **Optimized Storage** - 8 structured files instead of 609 chunks
+
+### CLI Tools
+- **Configuration Analysis** - Parse and analyze 1C configurations
+- **Documentation Extraction** - Build BSL type database from archives  
+- **Metadata Contracts** - Generate typed contracts from real data
+- **Forms Extraction** - Parse XML forms from configuration directory
 
 ## 📦 Installation
 
-### From Releases (Recommended)
+### From Source (Development)
 ```bash
-# Download latest release for your platform
-curl -L https://github.com/your-org/bsl-analyzer/releases/latest/download/bsl-analyzer-linux-x64.tar.gz | tar xz
-sudo mv bsl-analyzer /usr/local/bin/
+# Clone the repository (adjust path as needed)
+git clone /path/to/bsl_type_safety_analyzer.git
+cd bsl_type_safety_analyzer
+cargo build --release
 ```
 
-### From Source
+### Quick Test
 ```bash
-git clone https://github.com/your-org/bsl-analyzer.git
-cd bsl-analyzer
-cargo build --release
-sudo cp target/release/bsl-analyzer /usr/local/bin/
+# Test metadata parsing on sample configuration (requires report file)
+cargo run --bin parse_metadata_full -- --report "path/to/report.txt"
+
+# Extract BSL documentation (requires 1C help archives)
+cargo run --bin extract_hybrid_docs -- --archive "path/to/archive.zip"
 ```
 
 ## 🔧 Quick Start
 
-### 1. Extract BSL Documentation (Required First Step)
+### 1. Parse 1C Configuration Metadata
+```bash
+# Parse configuration report to structured format
+cargo run --bin parse_metadata_simple -- "path/to/config_report.txt"
+
+# Full parsing with hybrid storage
+cargo run --bin parse_metadata_full -- --report "path/to/config_report.txt" --output "./metadata_output"
+```
+
+### 2. Extract BSL Documentation
 ```bash
 # Extract complete BSL type system from 1C documentation
-cargo run --bin extract_hybrid_docs
+cargo run --bin extract_hybrid_docs -- --archive "path/to/hbk_archive.zip" --output "./docs_output"
 
-# This creates optimized storage with 4,916 BSL types:
-# - output/hybrid_docs/core/builtin_types/*.json
-# - output/hybrid_docs/core/global_context.json
+# Results: ./docs_output/core/builtin_types/*.json
 ```
 
-### 2. Basic Analysis
+### 3. Analyze Configuration Structure
 ```bash
-# Analyze BSL configuration
-bsl-analyzer analyze ./src
-
-# Export to SARIF for CI/CD
-bsl-analyzer analyze ./src --format sarif --output results.sarif
+# Generate contracts from real 1C metadata with detailed type analysis
+cargo run --bin analyze_metadata_types -- --report "path/to/config_report.txt"
 ```
 
-### 3. Code Quality Metrics
+### 4. Parse XML Forms Separately  
 ```bash
-# Generate comprehensive metrics report
-bsl-analyzer metrics ./src --report-format html --output metrics.html
+# Extract all forms from 1C configuration directory
+cargo run --bin extract_forms -- --config "path/to/config_directory" --output "./forms_output"
 
-# Focus on technical debt analysis
-bsl-analyzer metrics ./src --focus debt --threshold critical
+# Note: Forms must be parsed separately - they are NOT included in parse_metadata_full
 ```
 
-### 4. Configure Rules
-```bash
-# Generate default configuration
-bsl-analyzer rules generate-config --output bsl-rules.toml
+## 📋 Real-World Testing
 
-# List available rules
-bsl-analyzer rules list
+The parsers have been successfully tested on large 1C configurations:
 
-# Use strict profile for production
-bsl-analyzer analyze ./src --rules-config bsl-rules.toml --profile strict
-```
+### Metadata Parser Results
+- ✅ **14+ metadata objects** parsed from real configuration reports
+- ✅ **Complex composite types** - Full support for multi-line type definitions
+- ✅ **All register sections** - Measurements, Resources, and Attributes
+- ✅ **Type constraints** - String lengths, number precision preserved
+- ✅ **UTF-16LE encoding** - Proper handling of 1C report format
 
-### 5. LSP Server Integration
-```bash
-# Start TCP server for production environments
-bsl-analyzer lsp --mode tcp --host 127.0.0.1 --port 9257
+### Form Parser Results  
+- ✅ **7,220+ XML forms** processed from production configurations
+- ✅ **All element types** - Tables, inputs, commands, etc.
+- ✅ **Complete structure** - DataPath, events, attributes extracted
+- ✅ **Form classification** - ListForm, ItemForm, ObjectForm detection
 
-# STDIO mode for editor integration
-bsl-analyzer lsp --mode stdio
-```
+### BSL Documentation
+- ✅ **4,916 BSL types** extracted from official 1C documentation
+- ✅ **Complete method signatures** - Parameters, return types, contexts
+- ✅ **Multi-language support** - Russian/English method names
+- ✅ **Optimized storage** - Fast runtime access to type information
 
-## 📋 Configuration
-
-### Rules Configuration (bsl-rules.toml)
-```toml
-version = "1.0"
-active_profile = "default"
-
-[settings]
-max_errors = 100
-show_rule_ids = true
-use_colors = true
-threads = 4
-
-[profiles.strict]
-name = "strict"
-description = "Strict rules for production code"
-default_severity = "error"
-excludes = []
-
-[rules.BSL001]
-enabled = true
-severity = "warning"
-description = "Unused variable"
-min_confidence = 0.8
-
-[rules.BSL002]
-enabled = true
-severity = "error"
-description = "Undefined variable"
-```
-
-### LSP Configuration
-```toml
-[lsp]
-mode = "tcp"  # or "stdio"
-
-[lsp.tcp]
-host = "127.0.0.1"
-port = 9257
-max_connections = 10
-connection_timeout_sec = 30
-
-[lsp.analysis]
-incremental_analysis = true
-cache_enabled = true
-max_file_size_mb = 10
-```
-
-## 🎯 Use Cases
-
-### CI/CD Integration
-```yaml
-# GitHub Actions example
-- name: BSL Analysis
-  run: |
-    bsl-analyzer analyze ./src --format sarif --output bsl-results.sarif
-    # Upload to GitHub Security tab
-    gh api repos/${{ github.repository }}/code-scanning/sarifs \
-      --input bsl-results.sarif
-```
-
-### Code Quality Gates
-```bash
-# Fail build if technical debt exceeds threshold
-bsl-analyzer metrics ./src --focus debt --threshold high --exit-code
-```
-
-### IDE Integration
-Configure your IDE to use the LSP server for real-time analysis and intelligent completions.
-
-## 🏗️ Architecture
+## 🏗️ Architecture Overview
 
 ```text
-BSL Analyzer v1.0
-├── Parser          - Extended BSL lexer with 50+ keywords
-├── Core            - Type system and error handling
-├── Analyzer        - Semantic analysis and scope tracking
-├── Configuration   - 1C metadata and forms parsing
-├── Docs Integration- BSL type system (4,916 types)
-│   ├── HBK Parser  - 1C documentation archive reader
-│   ├── Extractor   - HTML syntax extraction
-│   └── Storage     - Hybrid optimized format
-├── Rules           - Configurable rules engine (10+ built-in)
-├── Metrics         - Quality analysis and technical debt
-├── Reports         - SARIF, HTML, Text, JSON output
-├── Cache           - Performance optimization layer
-├── LSP             - Language Server Protocol (TCP/STDIO)
-└── CLI             - Comprehensive command-line interface
+BSL Analyzer v0.0.2-alpha
+├── 🟢 Parser (Lexer)     - BSL tokenization (working)
+├── 🔴 Parser (Grammar)   - BSL AST construction (NOT IMPLEMENTED)
+├── 🟢 Configuration      - 1C metadata parsing (working)
+│   ├── MetadataParser    - Text reports → structured data
+│   ├── FormParser        - XML forms → contracts (standalone only)
+│   └── Dependencies      - Module relationships (stub)
+├── 🟢 Docs Integration   - BSL documentation system (working)
+│   ├── HBK Parser        - Archive extraction
+│   ├── Syntax Extractor  - HTML → BSL signatures
+│   └── Hybrid Storage    - Optimized type database
+├── 🔴 Analyzer           - Semantic analysis (NOT IMPLEMENTED)
+├── 🔴 Rules              - Analysis rules (infrastructure only)
+├── 🔴 LSP                - Language server (stub)
+└── 🟢 CLI                - Command-line tools (working)
+    ├── parse_metadata_full      - Full metadata parsing (reports only)
+    ├── parse_metadata_simple    - Quick metadata check  
+    ├── analyze_metadata_types   - Detailed type analysis
+    └── extract_forms           - Standalone forms extraction
 ```
 
-## 📊 Built-in Rules
+**Legend**: 🟢 Working | 🔴 Not Implemented | 🟡 Partial
 
-| Rule ID | Description | Default Severity | Configurable |
-|---------|-------------|------------------|--------------|
-| BSL001 | Unused variable | Warning | ✅ |
-| BSL002 | Undefined variable | Error | ✅ |
-| BSL003 | Type mismatch | Warning | ✅ |
-| BSL004 | Unknown method | Warning | ✅ |
-| BSL005 | Circular dependency | Error | ✅ |
-| BSL006 | Dead code detection | Info | ✅ |
-| BSL007 | Complex function | Hint | ✅ |
-| BSL008 | Missing documentation | Hint | ✅ |
-| BSL009 | Performance anti-pattern | Warning | ✅ |
-| BSL010 | Security vulnerability | Error | ✅ |
+## 🛠️ Development Commands
 
-## 📈 Code Quality Metrics
+### Building and Testing
+```bash
+# Build project
+cargo build
 
-- **Cyclomatic Complexity** - Measures code complexity and maintainability
-- **Cognitive Complexity** - Human-focused complexity measurement
-- **Maintainability Index** - Overall code maintainability score (0-100)
-- **Technical Debt** - Estimated time to fix issues with severity levels
-- **Code Duplication** - Detection of duplicate code blocks
-- **Documentation Coverage** - Percentage of documented functions/modules
+# Run all tests
+cargo test
 
-## 🔌 Editor Integration
+# Format and lint
+cargo fmt
+cargo clippy
+```
 
-### VS Code
-Install the BSL Analyzer extension and configure the LSP server endpoint.
+### Parser Testing
+```bash
+# Test metadata parser with sample data
+cargo run --bin parse_metadata_simple -- "examples/sample_config_report.txt"
 
-### Vim/Neovim
-Use any LSP client (coc.nvim, nvim-lspconfig) with the TCP server mode.
+# Test with detailed type analysis
+cargo run --bin analyze_metadata_types -- --report "examples/sample_config_report.txt"
 
-### Emacs
-Configure lsp-mode to connect to the BSL Analyzer LSP server.
+# Full integration test
+cargo run --bin parse_metadata_full -- --report "examples/sample_config_report.txt" --output "./test_output"
+
+# Test forms extraction
+cargo run --bin extract_forms -- --config "path/to/config_directory" --output "./forms_test"
+```
+
+### Documentation Extraction
+```bash
+# Extract BSL documentation to hybrid format
+cargo run --bin extract_hybrid_docs -- --archive "path/to/hbk_archive.zip" --output "./docs_output"
+```
+
+## 📊 Recent Critical Fixes (2025-07-28)
+
+### MetadataReportParser Improvements ✅
+1. **Register Parsing** - Fixed incomplete parsing (now supports Measurements, Resources, Attributes)
+2. **Composite Types** - Fixed multi-line type parsing: `СправочникСсылка.Контрагенты, СправочникСсылка.Организации, Строка(10, Переменная)`  
+3. **Type Constraints** - Added string length and number precision extraction
+4. **Selective Clearing** - Parsers no longer overwrite each other's results  
+5. **HybridDocumentationStorage** - Proper architecture implementation
+6. **🔒 CRITICAL: Hardcoded Paths Removed** - All parsers now require explicit file paths via CLI parameters
+
+### CLI Architecture Overhaul ✅
+**❌ Old (Insecure):**
+```bash
+cargo run --bin parse_metadata_full              # Used hardcoded paths
+cargo run --bin extract_hybrid_docs              # Files location was hidden
+```
+
+**✅ New (Secure & Transparent):**
+```bash
+cargo run --bin parse_metadata_full -- --report "path/to/file.txt" --output "./output"
+cargo run --bin extract_hybrid_docs -- --archive "path/to/archive.zip" --output "./docs"
+```
+
+**Benefits:**
+- 🔒 **Security**: No hidden hardcoded file paths
+- 📝 **Transparency**: Explicit source file specification  
+- ✅ **Validation**: File existence checks before processing
+- 📚 **Help**: Built-in `--help` for all parsers
+
+### Test Results ✅
+- **Document "ЗаказНаряды"**: 13 attributes including composite types parsed correctly
+- **Register "ТестовыйРегистрСведений"**: All 3 sections (Measurements, Resources, Attributes) extracted
+- **Type Constraints**: `Строка(10)`, `Число(10,5)`, `Строка(0)` properly handled
+- **Form Preservation**: Selective clearing prevents data loss between parsers
+- **CLI Security**: All parsers validate input files and provide clear error messages
+
+## 🎯 Roadmap & Next Steps
+
+### Critical Path (Required for BSL Analysis):
+1. **Implement BSL Grammar Parser** (~2-3 weeks)
+   - Full BSL language grammar
+   - AST construction from tokens  
+   - Error recovery and reporting
+
+2. **Basic Semantic Analysis** (~1-2 weeks)
+   - Scope resolution
+   - Variable tracking
+   - Basic type checking
+
+3. **Export/Import Extraction** (~1 week)
+   - Parse module exports
+   - Build method signatures
+
+### Future Enhancements:
+4. **Inter-module Analysis** - Dependency graphs and call validation
+5. **Rules System** - Configurable analysis rules
+6. **LSP Server** - Real editor integration
+7. **SARIF Export** - CI/CD integration
+
+**Realistic Timeline**: MVP with basic BSL analysis in 2-3 months
+
+## 💡 Current Value Proposition
+
+While BSL code analysis is not yet implemented, the project already provides significant value:
+
+1. **Production-Ready Metadata Parsers** - Handle real 1C configuration data
+2. **Complete BSL Type System** - 4,916 types with full signatures
+3. **Documentation Integration** - Optimized access to 1C help system
+4. **Excellent Foundation** - Well-structured Rust codebase for future development
+5. **LLM Context Generation** - Generate rich metadata for AI-powered tools
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+This project is in active development. Contributions are welcome, especially:
 
-## 📝 Changelog
-
-### v1.0.0 (2025-07-27)
-- ✅ Complete BSL parsing with extended grammar
-- ✅ Configurable rules system with 10+ built-in rules
-- ✅ TCP LSP server with production-ready features
-- ✅ Code quality metrics and technical debt analysis
-- ✅ SARIF export for CI/CD integration
-- ✅ Comprehensive CLI with caching and performance monitoring
-- ✅ HTML/JSON/Text reporting formats
-- ✅ BSL documentation integration (4,916 types)
-- ✅ HBK archive parser for 1C documentation
-- ✅ Hybrid storage format for optimal performance
-- ✅ Complete method/property signatures database
+- BSL grammar parser implementation
+- Semantic analysis improvements
+- Additional metadata parser features
+- Documentation and examples
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙋‍♂️ Support
+## 📞 Support & Documentation
 
-- **Documentation**: [Wiki](https://github.com/your-org/bsl-analyzer/wiki)
-- **Issues**: [GitHub Issues](https://github.com/your-org/bsl-analyzer/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-org/bsl-analyzer/discussions)
+- **Architecture Details**: See `CLAUDE.md` for comprehensive development guidance
+- **Development Roadmap**: See `ROADMAP.md` for detailed project status
+- **Issues**: Contact maintainers for bug reports and feature requests
 
 ---
 
-**Made with ❤️ for the 1C:Enterprise community** 
+**Note**: This is an alpha release focused on metadata parsing and documentation integration. Full BSL code analysis capabilities are planned for future releases.

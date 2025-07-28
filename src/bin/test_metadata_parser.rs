@@ -6,9 +6,9 @@ use std::path::Path;
 use std::fs;
 
 fn main() {
-    let report_path = "examples/sample_config_report.txt";
+    let report_path = std::env::args().nth(1).unwrap_or("examples/sample_config_report.txt".to_string());
     
-    if !Path::new(report_path).exists() {
+    if !Path::new(&report_path).exists() {
         eprintln!("Файл {} не найден", report_path);
         return;
     }

@@ -102,7 +102,7 @@ struct ChunkMetadata {
 
 /// Информация о категории в главном индексе
 #[derive(Debug, Serialize, Deserialize)]
-struct CategoryInfo {
+pub struct CategoryInfo {
     items_count: usize,
     chunks_count: usize,
     files: Vec<String>,
