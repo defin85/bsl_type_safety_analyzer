@@ -45,6 +45,7 @@ thiserror = "1.0"
 # Логирование
 tracing = "0.1"                       
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+log = "0.4"                          # Для совместимости с log макросами
 
 # Утилиты
 regex = "1.10"                        
@@ -67,6 +68,12 @@ chrono = { version = "0.4", features = ["serde"] }
 # Кэширование и сжатие
 flate2 = "1.0"                       # Для сжатия данных кэша
 bincode = "1.3"                      # Для сериализации кэша
+
+# Графы для наследования типов
+petgraph = "0.6"                     # Для графов наследования в UnifiedBslIndex
+
+# Директории пользователя
+dirs = "5.0"                         # Для определения домашней директории
 
 # Тестирование
 [dev-dependencies]
@@ -135,3 +142,16 @@ path = "src/bin/extract_forms.rs"
 [[bin]]
 name = "analyze_real_report"
 path = "src/bin/analyze_real_report.rs"
+
+# Unified Type System binaries
+[[bin]]
+name = "build_unified_index"
+path = "src/bin/build_unified_index.rs"
+
+[[bin]]
+name = "query_type"
+path = "src/bin/query_type.rs"
+
+[[bin]]
+name = "extract_platform_docs"
+path = "src/bin/extract_platform_docs.rs"

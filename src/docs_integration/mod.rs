@@ -41,7 +41,7 @@ pub mod hybrid_storage;
 pub use hbk_parser::{HbkArchiveParser, HtmlContent, ArchiveAnalysis, FileInfo};
 pub use bsl_syntax_extractor::{
     BslSyntaxExtractor, BslSyntaxDatabase, BslMethodInfo, BslObjectInfo,
-    BslPropertyInfo, BslFunctionInfo, CompletionItem, ParameterInfo
+    BslPropertyInfo, BslFunctionInfo, CompletionItem, ParameterInfo, AccessMode
 };
 
 use anyhow::Result;

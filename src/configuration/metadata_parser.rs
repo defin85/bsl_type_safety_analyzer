@@ -214,27 +214,6 @@ enum ReportFormat {
     SimplifiedExample, // Упрощенный формат примера
 }
 
-/// Временная структура для сбора свойств атрибута
-#[derive(Debug, Clone)]
-struct TempAttributeInfo {
-    name: String,
-    data_type: Option<String>,
-    indexing: AttributeIndexing,
-    fill_checking: FillChecking,
-    attribute_use: AttributeUse,
-}
-
-impl TempAttributeInfo {
-    fn new(name: String) -> Self {
-        Self {
-            name,
-            data_type: None,
-            indexing: AttributeIndexing::DontIndex,
-            fill_checking: FillChecking::DontCheck,
-            attribute_use: AttributeUse::ForFolderAndItem,
-        }
-    }
-}
 
 pub struct MetadataReportParser {
     allowed_root_types: HashMap<String, ObjectType>,
@@ -592,8 +571,6 @@ impl MetadataReportParser {
                             };
                             current_section = Some(section_type.to_string());
                             let attr_name = self.clean_type_string(parts[3]);
-                            // Очищаем предыдущий атрибут перед установкой нового
-                            last_attribute_name = None;
                             // Создаем реквизит/измерение/ресурс, тип будет определен позже
                             last_attribute_name = Some(attr_name.clone());
                             tracing::debug!("Found {} element: {} (section: {})", element_type, attr_name, section_type);

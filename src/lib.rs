@@ -103,6 +103,7 @@ pub mod reports;  // NEW: Reports module for SARIF, HTML, Text output
 pub mod rules;    // NEW: Rules system for configurable analysis
 pub mod verifiers;
 pub mod contract_generator;  // NEW: Contract generator launcher
+pub mod unified_index;  // NEW: Unified BSL Type System
 
 // Re-export main types for convenience
 pub use analyzer::{BslAnalyzer, SemanticAnalyzer};
@@ -135,6 +136,13 @@ pub use rules::{
     BuiltinRules, CustomRule
 };
 pub use rules::custom::CustomRulesManager;
+
+// NEW: Re-export Unified BSL Type System
+pub use unified_index::{
+    UnifiedBslIndex, UnifiedIndexBuilder, BslEntity, BslEntityId,
+    BslEntityType, BslEntityKind, BslMethod, BslProperty,
+    ConfigurationXmlParser, PlatformDocsCache
+};
 
 use anyhow::Result;
 use std::path::Path;
