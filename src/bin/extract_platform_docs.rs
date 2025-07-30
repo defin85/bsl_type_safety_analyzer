@@ -78,13 +78,15 @@ fn main() -> Result<()> {
     
     // Convert to BslEntity format and save to cache
     println!("\nConverting to unified format...");
-    let entities = convert_syntax_db_to_entities(&syntax_db, &args.version)?;
+    // Нормализуем версию - убираем префикс "v" если есть для консистентности
+    let normalized_version = args.version.strip_prefix("v").unwrap_or(&args.version);
+    let entities = convert_syntax_db_to_entities(&syntax_db, normalized_version)?;
     
     println!("Converted {} entities", entities.len());
     
     // Save to cache
     println!("\nSaving to platform cache...");
-    cache.save_to_cache(&args.version, &entities)
+    cache.save_to_cache(normalized_version, &entities)
         .context("Failed to save to cache")?;
     
     println!("✅ Platform types cached at: {}", cache_file.display());
@@ -113,6 +115,8 @@ fn convert_syntax_db_to_entities(
     
     let mut entities = Vec::new();
     let mut entity_map: HashMap<String, BslEntity> = HashMap::new();
+    // Дополнительный маппинг русских имен к полным именам для связывания методов
+    let mut russian_name_map: HashMap<String, String> = HashMap::new();
     
     // First, create entities for all objects
     for (name, obj) in &syntax_db.objects {
@@ -134,16 +138,58 @@ fn convert_syntax_db_to_entities(
                 .collect();
         }
         
+        // Add properties from object
+        for prop_name in &obj.properties {
+            // Пытаемся определить тип свойства по имени
+            let type_name = match prop_name.as_str() {
+                "Колонки" | "Columns" => Some("КоллекцияКолонокТаблицыЗначений"),
+                "Индексы" | "Indexes" => Some("ИндексыКоллекция"),
+                _ => None,
+            };
+            
+            let bsl_property = BslProperty {
+                name: prop_name.clone(),
+                english_name: None,
+                type_name: type_name.map(String::from).unwrap_or_default(),
+                is_readonly: false, // По умолчанию, можно уточнить
+                is_indexed: false,
+                documentation: None,
+                availability: entity.availability.clone(),
+            };
+            entity.interface.properties.insert(prop_name.clone(), bsl_property);
+        }
+        
         entity_map.insert(name.clone(), entity);
+        
+        // Добавляем маппинг русского имени к полному имени
+        if let Some(pos) = name.find(" (") {
+            let russian_name = name[..pos].to_string();
+            russian_name_map.insert(russian_name, name.clone());
+        }
     }
     
     // Add methods to their respective objects
     for (method_name, method_info) in &syntax_db.methods {
         // Find which object this method belongs to
         if let Some(object_name) = &method_info.object_context {
-            if let Some(entity) = entity_map.get_mut(object_name) {
-                let bsl_method = convert_method_info_to_bsl_method(method_info);
-                entity.interface.methods.insert(method_name.clone(), bsl_method);
+            // Сначала пытаемся найти по точному имени
+            let entity_key = if entity_map.contains_key(object_name) {
+                Some(object_name.clone())
+            } else if let Some(full_name) = russian_name_map.get(object_name) {
+                // Если не нашли, пробуем через маппинг русских имен
+                Some(full_name.clone())
+            } else {
+                // В крайнем случае ищем по префиксу
+                entity_map.keys()
+                    .find(|key| key.starts_with(object_name))
+                    .cloned()
+            };
+            
+            if let Some(key) = entity_key {
+                if let Some(entity) = entity_map.get_mut(&key) {
+                    let bsl_method = convert_method_info_to_bsl_method(method_info);
+                    entity.interface.methods.insert(method_name.clone(), bsl_method);
+                }
             }
         } else {
             // Global method - create a special "Global" entity if needed
@@ -166,9 +212,22 @@ fn convert_syntax_db_to_entities(
     // Add properties to their respective objects
     for (prop_name, prop_info) in &syntax_db.properties {
         if let Some(object_name) = &prop_info.object_context {
-            if let Some(entity) = entity_map.get_mut(object_name) {
-                let bsl_property = convert_property_info_to_bsl_property(prop_info);
-                entity.interface.properties.insert(prop_name.clone(), bsl_property);
+            // Используем ту же логику поиска, что и для методов
+            let entity_key = if entity_map.contains_key(object_name) {
+                Some(object_name.clone())
+            } else if let Some(full_name) = russian_name_map.get(object_name) {
+                Some(full_name.clone())
+            } else {
+                entity_map.keys()
+                    .find(|key| key.starts_with(object_name))
+                    .cloned()
+            };
+            
+            if let Some(key) = entity_key {
+                if let Some(entity) = entity_map.get_mut(&key) {
+                    let bsl_property = convert_property_info_to_bsl_property(prop_info);
+                    entity.interface.properties.insert(prop_name.clone(), bsl_property);
+                }
             }
         }
     }

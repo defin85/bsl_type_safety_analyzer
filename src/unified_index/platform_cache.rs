@@ -49,7 +49,9 @@ impl PlatformDocsCache {
     }
     
     fn get_cache_file_path(&self, version: &str) -> PathBuf {
-        self.cache_dir.join(format!("{}.jsonl", version))
+        // Нормализуем версию - убираем префикс "v" если есть
+        let normalized_version = version.strip_prefix("v").unwrap_or(version);
+        self.cache_dir.join(format!("{}.jsonl", normalized_version))
     }
     
     fn load_from_cache(&self, cache_file: &Path) -> Result<Vec<BslEntity>> {

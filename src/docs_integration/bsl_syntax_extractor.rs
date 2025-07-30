@@ -467,6 +467,7 @@ impl BslSyntaxExtractor {
             version: String::new(),
             methods: Vec::new(),
             collection_elements: None,
+            object_context: None,
         };
         
         // Извлекаем заголовок
@@ -475,15 +476,27 @@ impl BslSyntaxExtractor {
             syntax_info.title = title_elem.text().collect::<String>().trim().to_string();
         }
         
+        // Извлекаем контекст объекта для методов (p.V8SH_title)
+        let object_title_selector = Selector::parse("p.V8SH_title").unwrap();
+        if let Some(object_elem) = document.select(&object_title_selector).next() {
+            let object_name = object_elem.text().collect::<String>().trim().to_string();
+            // Извлекаем только русское название до скобки
+            if let Some(pos) = object_name.find(" (") {
+                syntax_info.object_context = Some(object_name[..pos].to_string());
+            } else {
+                syntax_info.object_context = Some(object_name);
+            }
+        }
+        
         // Определяем категорию по пути файла
-        if filename.contains("objects/") {
+        if filename.contains("/methods/") {
+            syntax_info.category = "method".to_string();
+        } else if filename.contains("/properties/") {
+            syntax_info.category = "property".to_string();
+        } else if filename.contains("objects/") && !filename.contains("/methods/") && !filename.contains("/properties/") {
             syntax_info.category = "object".to_string();
         } else if filename.contains("tables/") {
             syntax_info.category = "table".to_string();
-        } else if filename.contains("methods/") {
-            syntax_info.category = "method".to_string();
-        } else if filename.contains("properties/") {
-            syntax_info.category = "property".to_string();
         }
         
         // Извлекаем синтаксис и другие элементы
@@ -495,6 +508,7 @@ impl BslSyntaxExtractor {
         self.extract_version(&document, &mut syntax_info)?;
         self.extract_example(&document, &mut syntax_info)?;
         self.extract_object_methods(&document, &mut syntax_info)?;
+        self.extract_object_properties(&document, &mut syntax_info)?;
         self.extract_collection_elements(&document, &mut syntax_info)?;
         self.extract_links(&document, &mut syntax_info)?;
         
@@ -508,16 +522,16 @@ impl BslSyntaxExtractor {
             return;
         }
         
-        // Определяем тип по заголовку и синтаксису
+        // Определяем тип по заголовку, категории и синтаксису
         if title.contains("Функция") || title.to_lowercase().contains("function") {
             if let Ok(function_info) = self.convert_to_function_info(syntax_info) {
                 database.functions.insert(function_info.name.clone(), function_info);
             }
-        } else if title.contains("Метод") || title.to_lowercase().contains("method") {
+        } else if title.contains("Метод") || title.to_lowercase().contains("method") || syntax_info.category == "method" {
             if let Ok(method_info) = self.convert_to_method_info(syntax_info) {
                 database.methods.insert(method_info.name.clone(), method_info);
             }
-        } else if title.contains("Свойство") || title.to_lowercase().contains("property") {
+        } else if title.contains("Свойство") || title.to_lowercase().contains("property") || syntax_info.category == "property" {
             if let Ok(property_info) = self.convert_to_property_info(syntax_info) {
                 database.properties.insert(property_info.name.clone(), property_info);
             }
@@ -650,23 +664,92 @@ impl BslSyntaxExtractor {
         Ok(param_info)
     }
     
-    /// Извлекает возвращаемое значение
+    /// Извлекает возвращаемое значение из HTML документации 1С
     fn extract_return_value(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
         let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
         
         for elem in document.select(&chapter_selector) {
             let text = elem.text().collect::<String>().trim().to_string();
             if text.contains("Возвращаемое значение") {
-                if let Some(return_elem) = elem.next_siblings()
-                    .filter_map(ElementRef::wrap)
-                    .find(|e| e.value().name() == "p") {
-                    syntax_info.return_value = return_elem.text().collect::<String>().trim().to_string();
+                // Извлекаем секцию возвращаемого значения из HTML
+                if let Some(return_section) = self.extract_return_value_section_html(elem) {
+                    syntax_info.return_value = self.parse_return_type_from_html(&return_section);
                 }
                 break;
             }
         }
         
         Ok(())
+    }
+    
+    /// Извлекает HTML секцию возвращаемого значения
+    fn extract_return_value_section_html(&self, chapter_elem: ElementRef) -> Option<String> {
+        let mut html_content = String::new();
+        let mut current = chapter_elem.next_sibling();
+        
+        // Собираем HTML до следующего заголовка V8SH_chapter
+        while let Some(node) = current {
+            if let Some(elem_ref) = ElementRef::wrap(node) {
+                // Прерываемся на следующем заголовке
+                if elem_ref.value().name() == "p" && 
+                   elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                    break;
+                }
+                html_content.push_str(&elem_ref.html());
+            } else {
+                // Текстовые узлы тоже добавляем
+                html_content.push_str(&node.value().as_text()?.trim());
+            }
+            current = node.next_sibling();
+        }
+        
+        if html_content.is_empty() { None } else { Some(html_content) }
+    }
+    
+    /// Парсит тип возврата из HTML секции на основе реальной структуры документации 1С
+    fn parse_return_type_from_html(&self, html_section: &str) -> String {
+        // Паттерн 1: Тип: <a href="...">ИмяТипа</a>. <br>
+        if let Some(type_match) = Regex::new(r#"Тип:\s*<a href="[^"]*">([^<]+)</a>\.\s*<br>"#)
+            .ok()
+            .and_then(|re| re.captures(html_section)) {
+            return type_match[1].trim().to_string();
+        }
+        
+        // Паттерн 2: Type: <a href="...">TypeName</a>. <br>
+        if let Some(type_match) = Regex::new(r#"Type:\s*<a href="[^"]*">([^<]+)</a>\.\s*<br>"#)
+            .ok()
+            .and_then(|re| re.captures(html_section)) {
+            return type_match[1].trim().to_string();
+        }
+        
+        // Паттерн 3: Тип: <a href="...">ИмяТипа</a>
+        if let Some(type_match) = Regex::new(r#"Тип:\s*<a href="[^"]*">([^<]+)</a>"#)
+            .ok()
+            .and_then(|re| re.captures(html_section)) {
+            return type_match[1].trim().to_string();
+        }
+        
+        // Паттерн 4: Простой текст "Тип: ИмяТипа"
+        if let Some(type_match) = Regex::new(r"Тип:\s*([А-ЯA-Z][а-яА-Яa-zA-Z0-9]*(?:\.[А-ЯA-Z][а-яА-Яa-zA-Z0-9]*)*)")
+            .ok()
+            .and_then(|re| re.captures(html_section)) {
+            return type_match[1].trim().to_string();
+        }
+        
+        // Паттерн 5: Извлекаем любой тип из ссылки <a href="...">ТипВозврата</a>
+        if let Some(type_match) = Regex::new(r#"<a href="[^"]*">([А-ЯA-Z][а-яА-Яa-zA-Z0-9]*(?:\.[А-ЯA-Z][а-яА-Яa-zA-Z0-9]*)*)</a>"#)
+            .ok()
+            .and_then(|re| re.captures(html_section)) {
+            let potential_type = type_match[1].trim();
+            
+            // Исключаем служебные слова
+            if !matches!(potential_type, "Описание" | "Description" | "Примечание" | "Note") {
+                return potential_type.to_string();
+            }
+        }
+        
+        // Если ничего не нашли, возвращаем пустую строку (метод ничего не возвращает)
+        String::new()
     }
     
     /// Извлекает версию
@@ -774,6 +857,63 @@ impl BslSyntaxExtractor {
                 }
             }
         }
+    }
+    
+    /// Извлекает свойства объекта
+    fn extract_object_properties(&self, document: &Html, syntax_info: &mut SyntaxInfo) -> Result<()> {
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            if text.contains("Свойства:") {
+                // Ищем ссылки на свойства после заголовка
+                let mut current = elem.next_sibling();
+                while let Some(node) = current {
+                    if let Some(elem_ref) = ElementRef::wrap(node) {
+                        // Прерываемся, если встретили следующий заголовок
+                        if elem_ref.value().name() == "p" && elem_ref.value().attr("class").unwrap_or("").contains("V8SH_chapter") {
+                            break;
+                        }
+                        
+                        // Ищем ссылки на свойства
+                        if elem_ref.value().name() == "a" {
+                            if let Some(href) = elem_ref.value().attr("href") {
+                                if href.contains("properties/") {
+                                    let property_text = elem_ref.text().collect::<String>().trim().to_string();
+                                    if !property_text.is_empty() {
+                                        // Парсим имя свойства и английское название
+                                        let (rus_name, eng_name) = if let Some(pos) = property_text.find(" (") {
+                                            let rus = property_text[..pos].to_string();
+                                            let eng = property_text[pos+2..property_text.len()-1].to_string();
+                                            (rus, Some(eng))
+                                        } else {
+                                            (property_text, None)
+                                        };
+                                        
+                                        // Добавляем в параметры как временное решение
+                                        // TODO: добавить отдельную структуру для свойств в SyntaxInfo
+                                        let param_info = ParameterInfo {
+                                            name: rus_name,
+                                            param_type: eng_name,
+                                            type_description: Some("property".to_string()),
+                                            description: None,
+                                            is_optional: false,
+                                            default_value: None,
+                                            link: None,
+                                        };
+                                        syntax_info.parameters.push(param_info);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    current = node.next_sibling();
+                }
+                break;
+            }
+        }
+        
+        Ok(())
     }
     
     /// Парсит информацию о методе из текста
@@ -898,20 +1038,27 @@ impl BslSyntaxExtractor {
             links: syntax_info.links,
         };
         
-        // Определяем контекст объекта
-        method_info.object_context = self.extract_object_context(&method_info.name);
+        // Используем контекст объекта из HTML или пытаемся извлечь из имени
+        method_info.object_context = syntax_info.object_context
+            .or_else(|| self.extract_object_context(&method_info.name));
         
         Ok(method_info)
     }
     
     /// Преобразует SyntaxInfo в BslObjectInfo
     fn convert_to_object_info(&self, syntax_info: SyntaxInfo) -> Result<BslObjectInfo> {
+        // Извлекаем свойства из parameters, где type_description == "property"
+        let properties: Vec<String> = syntax_info.parameters.iter()
+            .filter(|p| p.type_description.as_ref().map(|d| d == "property").unwrap_or(false))
+            .map(|p| p.name.clone())
+            .collect();
+        
         let object_info = BslObjectInfo {
             name: syntax_info.title.clone(),
             object_type: syntax_info.category,
             description: if syntax_info.description.is_empty() { None } else { Some(syntax_info.description) },
             methods: syntax_info.methods.iter().map(|m| m.name.clone()).collect(),
-            properties: Vec::new(), // TODO: извлечь из описания
+            properties,
             constructors: Vec::new(), // TODO: извлечь из описания
             availability: if syntax_info.availability.is_empty() { None } else { Some(syntax_info.availability.join(", ")) },
         };
@@ -1398,6 +1545,7 @@ impl BslSyntaxExtractor {
             version,
             methods,
             collection_elements: None,
+            object_context: None,
         })
     }
     
@@ -1520,6 +1668,7 @@ pub struct SyntaxInfo {
     pub version: String,
     pub methods: Vec<MethodInfo>,
     pub collection_elements: Option<CollectionElementsInfo>,
+    pub object_context: Option<String>,
 }
 
 /// Информация о методе объекта
