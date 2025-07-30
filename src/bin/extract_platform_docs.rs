@@ -28,16 +28,10 @@ struct Args {
 fn main() -> Result<()> {
     let args = Args::parse();
     
-    // Initialize logging
-    if args.verbose {
-        tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::DEBUG)
-            .init();
-    } else {
-        tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::INFO)
-            .init();
-    }
+    // Initialize logging - keep INFO level even for verbose to avoid spam
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::INFO)
+        .init();
     
     // Validate archive path
     if !args.archive.exists() {
@@ -95,13 +89,15 @@ fn main() -> Result<()> {
     
     println!("✅ Platform types cached at: {}", cache_file.display());
     
-    // Show some examples
+    // Show summary for verbose mode
     if args.verbose {
-        println!("\n=== Example types ===");
-        for entity in entities.iter().take(5) {
-            println!("\n{} ({:?})", entity.display_name, entity.entity_kind);
-            println!("  Methods: {}", entity.interface.methods.len());
-            println!("  Properties: {}", entity.interface.properties.len());
+        println!("\n=== Type categories ===");
+        let mut categories: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        for entity in &entities {
+            *categories.entry(format!("{:?}", entity.entity_kind)).or_insert(0) += 1;
+        }
+        for (category, count) in categories {
+            println!("  {}: {}", category, count);
         }
     }
     

@@ -408,12 +408,12 @@ impl BslSyntaxExtractor {
             html_files
         };
         
-        tracing::info!("Processing {} HTML files", files_to_process.len());
+        tracing::debug!("Processing {} HTML files", files_to_process.len());
         
         // Обрабатываем каждый HTML файл
         for (i, filename) in files_to_process.iter().enumerate() {
-            if i > 0 && i % 100 == 0 {
-                tracing::info!("Processed {} files...", i);
+            if i > 0 && i % 1000 == 0 {
+                tracing::debug!("Processed {} files...", i);
             }
             
             // Извлекаем содержимое файла
@@ -424,7 +424,7 @@ impl BslSyntaxExtractor {
                         self.categorize_syntax(syntax_info, &mut database);
                     }
                     Err(e) => {
-                        tracing::warn!("Failed to extract syntax from {}: {}", filename, e);
+                        tracing::debug!("Failed to extract syntax from {}: {}", filename, e);
                     }
                 }
             }
@@ -1232,7 +1232,6 @@ impl BslSyntaxExtractor {
         let process_count = max_files.unwrap_or(total_files);
         
         tracing::info!("Processing {} HTML files...", process_count);
-        tracing::info!("Progress: 0/{} files", process_count);
         
         // Счетчики для статистики
         let mut objects_count = 0;
@@ -1242,8 +1241,8 @@ impl BslSyntaxExtractor {
         let mut operators_count = 0;
         
         for (index, file_path) in html_files.iter().take(process_count).enumerate() {
-            if index % 1000 == 0 && index > 0 {
-                tracing::info!("Progress: {}/{} files", index, process_count);
+            if index > 0 && index == process_count / 2 {
+                tracing::info!("Progress: 50% ({}/{} files)", index, process_count);
             }
             
             // Извлекаем содержимое файла
@@ -1265,7 +1264,7 @@ impl BslSyntaxExtractor {
                     
                     // Добавляем элемент в гибридное хранилище
                     if let Err(e) = storage.add_syntax_item(item) {
-                        tracing::warn!("Failed to add syntax item from {}: {}", file_path, e);
+                        tracing::debug!("Failed to add syntax item from {}: {}", file_path, e);
                     }
                 }
             }
@@ -1312,8 +1311,8 @@ impl BslSyntaxExtractor {
         tracing::info!("Processing {} HTML files...", files_to_process);
         
         for (idx, filename) in html_files.iter().take(files_to_process).enumerate() {
-            if idx % 1000 == 0 {
-                tracing::info!("Progress: {}/{} files", idx, files_to_process);
+            if idx > 0 && idx == files_to_process / 2 {
+                tracing::info!("Progress: 50% ({}/{} files)", idx, files_to_process);
             }
             
             match self.hbk_parser.extract_file_content(filename) {

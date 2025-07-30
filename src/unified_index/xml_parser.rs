@@ -169,7 +169,12 @@ impl ConfigurationXmlParser {
             let entry = entry?;
             let path = entry.path();
             
+            // Поддержка двух структур:
+            // 1. Старая: Catalogs/Контрагенты/Контрагенты.xml
+            // 2. Новая: Catalogs/Контрагенты.xml
+            
             if path.is_dir() {
+                // Старая структура - XML внутри папки
                 let xml_path = path.join(format!("{}.xml", path.file_name().unwrap().to_string_lossy()));
                 if xml_path.exists() {
                     if let Ok(mut entity) = self.parse_metadata_object(&xml_path) {
@@ -195,6 +200,34 @@ impl ConfigurationXmlParser {
                         
                         entities.push(entity);
                     }
+                }
+            } else if path.extension().map_or(false, |ext| ext == "xml") {
+                // Новая структура - XML файлы прямо в папке
+                if let Ok(mut entity) = self.parse_metadata_object(&path) {
+                    entity.entity_kind = kind.clone();
+                    
+                    // Формируем квалифицированное имя из имени файла
+                    let object_name = path.file_stem().unwrap().to_string_lossy().to_string();
+                    entity.qualified_name = format!("{}.{}", self.get_kind_prefix(&kind), object_name);
+                    entity.id.0 = entity.qualified_name.clone();
+                    
+                    // Устанавливаем родительские типы
+                    entity.constraints.parent_types = self.get_parent_types(&kind);
+                    
+                    // Проверяем наличие папки с таким же именем для форм
+                    let object_dir = self.config_path.join(folder_name).join(&object_name);
+                    if object_dir.exists() {
+                        let forms_path = object_dir.join("Forms");
+                        if forms_path.exists() {
+                            for form_entry in fs::read_dir(&forms_path)? {
+                                let form_entry = form_entry?;
+                                let form_name = form_entry.file_name().to_string_lossy().to_string();
+                                entity.relationships.forms.push(form_name);
+                            }
+                        }
+                    }
+                    
+                    entities.push(entity);
                 }
             }
         }

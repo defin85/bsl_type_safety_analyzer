@@ -34,13 +34,16 @@ struct Args {
 fn main() -> Result<()> {
     let args = Args::parse();
     
-    println!("Loading unified BSL index...");
-    
     // For now, we need to rebuild the index each time
     // TODO: Implement persistent index storage
     let config_path = args.config
         .or_else(|| std::env::current_dir().ok())
         .ok_or_else(|| anyhow::anyhow!("Please specify configuration path with --config"))?;
+    
+    // Suppress logging for query tool
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::WARN)
+        .init();
     
     let builder = UnifiedIndexBuilder::new()
         .context("Failed to create index builder")?;

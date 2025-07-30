@@ -312,6 +312,57 @@ The analyzer understands 1C:Enterprise configuration structure:
 - Parsing uses `nom` combinators for efficient memory usage
 - LSP implementation supports incremental parsing for editor responsiveness
 
+### Console Output Design Guidelines
+When designing console output for CLI tools, follow these principles:
+
+1. **Use Grouped/Summary Output by Default**
+   - Display progress in grouped format (e.g., "Processing 1000/5000 files...")
+   - Show summary statistics instead of individual items
+   - Use progress indicators for long operations
+   - For operations with 1000+ items, show progress every 1000 items, not every 100
+
+2. **Verbose Mode Should Be Optional**
+   - Full output only with `--verbose` flag
+   - Individual item processing details only when explicitly requested
+   - Consider file output for detailed logs
+   - Even in verbose mode, limit detailed output to reasonable amounts
+
+3. **Output Limitations**
+   - Implement configurable limits for console output
+   - Redirect detailed output to files when exceeding thresholds
+   - Provide `--output-file` option for full results
+   - For platform docs extraction (4000+ types), use minimal console output
+
+4. **Example Implementation Pattern**
+   ```rust
+   // Good: Grouped progress for large datasets
+   if index % 1000 == 0 && index > 0 {
+       tracing::info!("Progress: {}/{} files", index, total);
+   }
+   
+   // Better: Final summary only for very large operations
+   tracing::info!("Processed {} items in {:.2?}", total, elapsed);
+   
+   // Bad: Individual item output
+   for item in items {
+       println!("Processing: {}", item); // Avoid this
+   }
+   ```
+
+5. **Use Logging Levels Appropriately**
+   - `INFO`: Summary and major milestones only
+   - `DEBUG`: Progress updates and grouped statistics
+   - `TRACE`: Individual item processing details
+   - For extract_platform_docs specifically: Use INFO only for start/end messages
+
+6. **Specific Guidelines for Platform Extraction**
+   - Extracting 4,916 platform types should show:
+     - Start message
+     - One progress update at 50%
+     - Final summary with counts
+   - Avoid showing individual type processing
+   - Save detailed type list to cache file, not console
+
 ### Code Organization
 - Each major component is in its own module with a `mod.rs` that re-exports public APIs
 - Analysis phases are designed to be composable and can run independently

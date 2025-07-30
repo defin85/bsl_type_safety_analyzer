@@ -25,17 +25,15 @@ impl UnifiedIndexBuilder {
     ) -> Result<UnifiedBslIndex> {
         let config_path = config_path.as_ref();
         
-        info!("Building unified BSL index for configuration at: {}", config_path.display());
-        info!("Platform version: {}", platform_version);
+        info!("Building unified BSL index for: {}", config_path.display());
         
         let mut index = UnifiedBslIndex::new();
         
         // 1. Загружаем платформенные типы
         let start = std::time::Instant::now();
-        info!("Loading platform types...");
         let platform_entities = self.platform_cache.get_or_create(platform_version)
             .context("Failed to load platform types")?;
-        info!("Loaded {} platform types in {:?}", platform_entities.len(), start.elapsed());
+        info!("Platform types: {} (loaded in {:?})", platform_entities.len(), start.elapsed());
         
         // Добавляем платформенные типы в индекс
         for entity in platform_entities {
@@ -44,11 +42,10 @@ impl UnifiedIndexBuilder {
         
         // 2. Парсим конфигурацию
         let start = std::time::Instant::now();
-        info!("Parsing configuration XML...");
         let xml_parser = ConfigurationXmlParser::new(config_path);
         let config_entities = xml_parser.parse_configuration()
             .context("Failed to parse configuration")?;
-        info!("Parsed {} configuration objects in {:?}", config_entities.len(), start.elapsed());
+        info!("Configuration objects: {} (parsed in {:?})", config_entities.len(), start.elapsed());
         
         // Добавляем объекты конфигурации в индекс
         for entity in config_entities {
@@ -60,11 +57,10 @@ impl UnifiedIndexBuilder {
         
         // 4. Строим граф наследования
         let start = std::time::Instant::now();
-        info!("Building inheritance relationships...");
         index.build_inheritance_relationships()?;
-        info!("Built inheritance graph in {:?}", start.elapsed());
         
-        info!("Unified index built successfully. Total entities: {}", index.get_entity_count());
+        info!("✅ Index built successfully: {} entities (total time: {:?})", 
+            index.get_entity_count(), start.elapsed());
         
         Ok(index)
     }
@@ -74,8 +70,6 @@ impl UnifiedIndexBuilder {
         let output_dir = std::path::PathBuf::from("output/hybrid_docs");
         
         if output_dir.exists() {
-            info!("Found legacy parser data, importing...");
-            
             // Загружаем metadata_types
             let metadata_types_dir = output_dir.join("configuration/metadata_types");
             if metadata_types_dir.exists() {
@@ -94,7 +88,9 @@ impl UnifiedIndexBuilder {
                         }
                     }
                 }
-                info!("Imported {} entities from legacy metadata parser", count);
+                if count > 0 {
+                    info!("Legacy metadata: {} entities", count);
+                }
             }
             
             // Загружаем формы
@@ -116,7 +112,9 @@ impl UnifiedIndexBuilder {
                         }
                     }
                 }
-                info!("Imported {} forms from legacy parser", count);
+                if count > 0 {
+                    info!("Legacy forms: {} entities", count);
+                }
             }
         }
         
