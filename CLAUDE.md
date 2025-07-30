@@ -16,29 +16,30 @@ cargo build
 # Build optimized release version
 cargo build --release
 
-# Build unified index from configuration (NEW!)
+# Build unified index from configuration (with automatic caching!)
 cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25"
 
 # Extract platform documentation (one-time per version)
 cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
 
-# Query unified index
-cargo run --bin query_type -- --name "Справочники.Номенклатура" --show-all-methods
+# Query unified index (uses project cache automatically)
+cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods
 ```
 
-### Единый индекс BSL типов (NEW!)
+### Единый индекс BSL типов (v0.0.4) - с автоматическим кешированием!
 ```bash
-# Построение единого индекса из XML конфигурации
+# Построение единого индекса из XML конфигурации (автоматически кешируется)
 cargo run --bin build_unified_index -- --config "C:\Config\MyConfig" --platform-version "8.3.25"
+# Первый запуск: ~795ms, последующие: ~588ms (25% быстрее)
 
 # Извлечение платформенных типов (один раз для версии)
 cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
 # Результат: ~/.bsl_analyzer/platform_cache/v8.3.25.jsonl
 
-# Запросы к единому индексу
-cargo run --bin query_type -- --name "Массив" --show-methods
-cargo run --bin query_type -- --name "Справочники.Номенклатура" --show-all-methods
-cargo run --bin check_type -- --from "Справочники.Номенклатура" --to "СправочникСсылка"
+# Запросы к единому индексу (требуется указать конфигурацию)
+cargo run --bin query_type -- --name "Массив (Array)" --config "path/to/config" --show-methods
+cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods
+cargo run --bin check_type -- --from "Справочники.Номенклатура" --to "СправочникСсылка" --config "path/to/config"
 ```
 
 ### Legacy парсеры (использовать только для совместимости)
@@ -78,21 +79,23 @@ cargo clippy
 cargo clippy -- -D warnings
 ```
 
-## 🚀 Архитектура Unified BSL Index (v0.0.3)
+## 🚀 Архитектура Unified BSL Index (v0.0.4)
 
 ### UnifiedBslIndex - Единый индекс всех BSL типов
-**Революционный подход к анализу BSL**
+**Революционный подход к анализу BSL с автоматическим кешированием**
 
 **Ключевые компоненты:**
 - **BslEntity** - универсальное представление любого BSL типа
 - **ConfigurationXmlParser** - прямой парсинг XML без промежуточных отчетов
 - **PlatformDocsCache** - версионное кеширование платформенных типов
+- **ProjectIndexCache** - автоматическое кеширование проектов (NEW!)
 - **UnifiedIndexBuilder** - объединение всех источников в единый индекс
 
-**Производительность (80,000 объектов):**
-- Индексация: 45-90 секунд
+**Производительность (24,055 объектов):**
+- Первая индексация: ~795ms
+- Загрузка из кеша: ~588ms (25% быстрее)
 - Поиск типа: <1ms
-- Память: ~300MB RAM
+- Размер кеша проекта: ~7KB
 
 **Основные API:**
 ```rust
@@ -114,18 +117,21 @@ let compatible = index.is_assignable("Справочники.Номенклат�
 
 ## 📚 Примеры файлов и структура
 
-### Структура хранения Unified Index
+### Структура хранения Unified Index (v2.0)
 ```
 ~/.bsl_analyzer/
-├── platform_cache/              # Переиспользуется между проектами
-│   ├── v8.3.24.jsonl           # 4,916 типов платформы
+├── platform_cache/                          # Переиспользуется между проектами
+│   ├── v8.3.24.jsonl                       # 24,050 типов платформы
 │   ├── v8.3.25.jsonl           
 │   └── v8.3.26.jsonl
-└── project_indices/            # Индексы проектов
-    └── my_project/
-        ├── config_entities.jsonl   # 80K объектов конфигурации
-        ├── unified_index.json      # Индексы поиска
-        └── manifest.json          # Метаданные
+└── project_indices/                        # Индексы проектов
+    └── ProjectName_<hash>/                 # Уникальное имя (хеш полного пути)
+        ├── v8.3.25/                        # Версия платформы
+        │   ├── config_entities.jsonl       # Объекты конфигурации (~5KB)
+        │   ├── unified_index.json          # Только индексы конфигурации (~1KB)
+        │   └── manifest.json               # Метаданные проекта
+        └── v8.3.26/                        # Другая версия платформы
+            └── ...
 ```
 
 ### Пример BslEntity
@@ -597,5 +603,6 @@ form_parser.parse_to_hybrid_storage("./config", &mut storage)?;
 
 ### Example Files
 - `examples/sample_config_report.txt` - comprehensive example of 1C configuration report format
+- `examples/ConfTest/` - test configuration with 5 objects for testing
 - `data/rebuilt.shcntx_ru.zip` - rebuilt 1C documentation archive (required for extraction)
-- `docs/HYBRID_STORAGE_ARCHITECTURE.md` - detailed architecture documentation
+- `docs/UNIFIED_INDEX_ARCHITECTURE.md` - detailed unified index architecture documentation

@@ -5,16 +5,19 @@ use log::info;
 use super::index::UnifiedBslIndex;
 use super::entity::{BslEntity, BslProperty};
 use super::platform_cache::PlatformDocsCache;
+use super::project_cache::ProjectIndexCache;
 use super::xml_parser::ConfigurationXmlParser;
 
 pub struct UnifiedIndexBuilder {
     platform_cache: PlatformDocsCache,
+    project_cache: ProjectIndexCache,
 }
 
 impl UnifiedIndexBuilder {
     pub fn new() -> Result<Self> {
         Ok(Self {
             platform_cache: PlatformDocsCache::new()?,
+            project_cache: ProjectIndexCache::new()?,
         })
     }
     
@@ -26,6 +29,23 @@ impl UnifiedIndexBuilder {
         let config_path = config_path.as_ref();
         
         info!("Building unified BSL index for: {}", config_path.display());
+        
+        // Используем project cache для автоматического кеширования
+        let index = self.project_cache.get_or_create(
+            config_path,
+            platform_version,
+            &|| self.build_index_from_scratch(config_path, platform_version)
+        )?;
+        
+        Ok(index)
+    }
+    
+    fn build_index_from_scratch(
+        &self,
+        config_path: &Path,
+        platform_version: &str
+    ) -> Result<UnifiedBslIndex> {
+        info!("Building index from scratch for: {}", config_path.display());
         
         let mut index = UnifiedBslIndex::new();
         

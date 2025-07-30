@@ -275,4 +275,17 @@ impl UnifiedBslIndex {
             })
             .unwrap_or_default()
     }
+    
+    // Методы для ProjectIndexCache
+    pub fn get_all_entities(&self) -> Vec<&BslEntity> {
+        self.entities.values().collect()
+    }
+    
+    pub fn get_by_name_index(&self) -> &HashMap<String, BslEntityId> {
+        &self.by_name
+    }
+    
+    pub fn get_by_qualified_name_index(&self) -> &HashMap<String, BslEntityId> {
+        &self.by_qualified_name
+    }
 }
