@@ -56,7 +56,10 @@
       "Bash(unzip:*)",
       "Bash(xxd:*)",
       "Bash(touch:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"ТаблицаЗначений (ValueTable)\" --config \"examples/ConfTest\")",
+      "Bash(RUST_LOG=info cargo run --bin build_unified_index -- --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

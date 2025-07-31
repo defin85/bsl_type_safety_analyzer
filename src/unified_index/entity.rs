@@ -76,6 +76,16 @@ pub enum BslEntitySource {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum BslApplicationMode {
+    /// Обычное приложение (8.1) - обычные формы, нет директив компиляции
+    OrdinaryApplication,
+    /// Управляемое приложение (8.2+) - управляемые формы, директивы &НаСервере и т.д.
+    ManagedApplication,
+    /// Смешанный режим - поддержка обоих типов форм
+    MixedMode,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BslContext {
     Client,
     Server,

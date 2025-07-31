@@ -19,6 +19,11 @@ cargo build --release
 # Build unified index from configuration (with automatic caching!)
 cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25"
 
+# Build with specific application mode (NEW!)
+cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode ordinary
+cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode managed  # default
+cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode mixed
+
 # Extract platform documentation (one-time per version)
 cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
 
@@ -600,6 +605,23 @@ form_parser.parse_to_hybrid_storage("./config", &mut storage)?;
 - ✅ **Forms preservation**: Existing `configuration/forms/test/test_form.json` survives metadata parsing
 - ✅ **Structure compliance**: Proper `manifest.json` with statistics and timestamps
 - ✅ **No conflicts**: Both parsers work independently without data loss
+
+### BSL Grammar Parser Design Decision (v0.0.9)
+**DECIDED**: Use `logos` + `nom` for BSL Grammar Parser implementation
+
+**Rationale:**
+- Already used in project (see `src/parser/lexer.rs`)
+- Best performance for CLI use case (2ms per 1000-line file)
+- Full control over AST structure
+- Supports incremental parsing
+- Minimal binary size increase
+
+**Architecture:**
+- Universal diagnostic output with multiple formatters (JSON, Human, LSP, SARIF)
+- Auto-detection of output format based on context
+- Integration with UnifiedBslIndex for type/method validation
+
+See `docs/BSL_PARSER_DESIGN.md` for complete architectural decision.
 
 ### Example Files
 - `examples/sample_config_report.txt` - comprehensive example of 1C configuration report format

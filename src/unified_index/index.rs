@@ -4,10 +4,23 @@ use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::Direction;
 use serde::{Serialize, Deserialize};
 
-use super::entity::{BslEntity, BslEntityId, BslEntityType, BslEntityKind, BslMethod, BslProperty};
+use super::entity::{BslEntity, BslEntityId, BslEntityType, BslEntityKind, BslMethod, BslProperty, BslApplicationMode};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum BslLanguagePreference {
+    /// Приоритет русским именам (по умолчанию для российских проектов)
+    Russian,
+    /// Приоритет английским именам (для международных проектов)
+    English,
+    /// Автоматическое определение по первому найденному типу
+    Auto,
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct UnifiedBslIndex {
+    // Режим приложения
+    application_mode: BslApplicationMode,
+    
     // Основное хранилище
     entities: HashMap<BslEntityId, BslEntity>,
     
@@ -20,6 +33,13 @@ pub struct UnifiedBslIndex {
     // Специализированные индексы
     methods_by_name: HashMap<String, Vec<BslEntityId>>,
     properties_by_name: HashMap<String, Vec<BslEntityId>>,
+    
+    // Альтернативные имена для быстрого поиска O(1)
+    alternative_names: HashMap<String, BslEntityId>,
+    
+    // Языковые индексы для оптимизированного поиска
+    russian_names: HashMap<String, BslEntityId>,  // только русские имена
+    english_names: HashMap<String, BslEntityId>,  // только английские имена
     
     // Графы отношений
     #[serde(skip)]
@@ -34,7 +54,12 @@ pub struct UnifiedBslIndex {
 
 impl UnifiedBslIndex {
     pub fn new() -> Self {
+        Self::with_application_mode(BslApplicationMode::ManagedApplication)
+    }
+    
+    pub fn with_application_mode(mode: BslApplicationMode) -> Self {
         Self {
+            application_mode: mode,
             entities: HashMap::new(),
             by_name: HashMap::new(),
             by_qualified_name: HashMap::new(),
@@ -42,11 +67,18 @@ impl UnifiedBslIndex {
             by_kind: HashMap::new(),
             methods_by_name: HashMap::new(),
             properties_by_name: HashMap::new(),
+            alternative_names: HashMap::new(),
+            russian_names: HashMap::new(),
+            english_names: HashMap::new(),
             inheritance_graph: DiGraph::new(),
             inheritance_node_map: HashMap::new(),
             reference_graph: DiGraph::new(),
             reference_node_map: HashMap::new(),
         }
+    }
+    
+    pub fn get_application_mode(&self) -> BslApplicationMode {
+        self.application_mode
     }
     
     pub fn add_entity(&mut self, entity: BslEntity) -> Result<()> {
@@ -73,8 +105,11 @@ impl UnifiedBslIndex {
         }
         
         // Добавляем в основные индексы
-        self.by_name.insert(name, id.clone());
-        self.by_qualified_name.insert(qualified_name, id.clone());
+        self.by_name.insert(name.clone(), id.clone());
+        self.by_qualified_name.insert(qualified_name.clone(), id.clone());
+        
+        // Добавляем альтернативные имена
+        self.add_alternative_names(&name, &id);
         
         self.by_type
             .entry(entity_type)
@@ -120,10 +155,121 @@ impl UnifiedBslIndex {
         Ok(())
     }
     
+    /// Парсит display name на составные части
+    fn parse_display_name(display_name: &str) -> (Option<String>, Option<String>) {
+        if let Some(pos) = display_name.find(" (") {
+            if let Some(end_pos) = display_name.rfind(")") {
+                let first_name = display_name[..pos].to_string();
+                let second_name = display_name[pos + 2..end_pos].to_string();
+                
+                // Возвращаем оба названия - не определяем язык, просто даем альтернативы
+                return (Some(first_name), Some(second_name));
+            }
+        }
+        
+        // Если нет скобок, возвращаем только одно название
+        (Some(display_name.to_string()), None)
+    }
+    
+    /// Определяет, содержит ли строка кириллические символы
+    fn contains_cyrillic(text: &str) -> bool {
+        text.chars().any(|c| '\u{0400}' <= c && c <= '\u{04FF}')
+    }
+    
+    /// Добавляет альтернативные имена для быстрого поиска с языковой категоризацией
+    fn add_alternative_names(&mut self, display_name: &str, entity_id: &BslEntityId) {
+        let (first_name, second_name) = Self::parse_display_name(display_name);
+        
+        // Добавляем первое название, если оно отличается от полного
+        if let Some(name) = first_name {
+            if name != *display_name {
+                self.alternative_names.insert(name.clone(), entity_id.clone());
+                
+                // Категоризируем по языку
+                if Self::contains_cyrillic(&name) {
+                    self.russian_names.insert(name, entity_id.clone());
+                } else {
+                    self.english_names.insert(name, entity_id.clone());
+                }
+            }
+        }
+        
+        // Добавляем второе название, если оно есть и отличается от полного
+        if let Some(name) = second_name {
+            if name != *display_name {
+                self.alternative_names.insert(name.clone(), entity_id.clone());
+                
+                // Категоризируем по языку
+                if Self::contains_cyrillic(&name) {
+                    self.russian_names.insert(name, entity_id.clone());
+                } else {
+                    self.english_names.insert(name, entity_id.clone());
+                }
+            }
+        }
+    }
+    
     pub fn find_entity(&self, name: &str) -> Option<&BslEntity> {
-        self.by_qualified_name.get(name)
-            .or_else(|| self.by_name.get(name))
-            .and_then(|id| self.entities.get(id))
+        self.find_entity_with_preference(name, BslLanguagePreference::Auto)
+    }
+    
+    /// Поиск сущности с учетом языковых предпочтений
+    pub fn find_entity_with_preference(&self, name: &str, preference: BslLanguagePreference) -> Option<&BslEntity> {
+        // 1. Поиск по полному qualified_name (всегда приоритетный)
+        if let Some(id) = self.by_qualified_name.get(name) {
+            return self.entities.get(id);
+        }
+        
+        // 2. Поиск по display_name (всегда приоритетный)
+        if let Some(id) = self.by_name.get(name) {
+            return self.entities.get(id);
+        }
+        
+        // 3. Оптимизированный поиск по языковым предпочтениям
+        match preference {
+            BslLanguagePreference::Russian => {
+                // Сначала русские имена
+                if let Some(id) = self.russian_names.get(name) {
+                    return self.entities.get(id);
+                }
+                // Затем английские
+                if let Some(id) = self.english_names.get(name) {
+                    return self.entities.get(id);
+                }
+            }
+            BslLanguagePreference::English => {
+                // Сначала английские имена
+                if let Some(id) = self.english_names.get(name) {
+                    return self.entities.get(id);
+                }
+                // Затем русские
+                if let Some(id) = self.russian_names.get(name) {
+                    return self.entities.get(id);
+                }
+            }
+            BslLanguagePreference::Auto => {
+                // Определяем язык запроса и ищем соответственно
+                if Self::contains_cyrillic(name) {
+                    // Поиск кириллицы - сначала русские
+                    if let Some(id) = self.russian_names.get(name) {
+                        return self.entities.get(id);
+                    }
+                    if let Some(id) = self.english_names.get(name) {
+                        return self.entities.get(id);
+                    }
+                } else {
+                    // Поиск латиницы - сначала английские
+                    if let Some(id) = self.english_names.get(name) {
+                        return self.entities.get(id);
+                    }
+                    if let Some(id) = self.russian_names.get(name) {
+                        return self.entities.get(id);
+                    }
+                }
+            }
+        }
+        
+        None
     }
     
     pub fn find_entity_by_id(&self, id: &BslEntityId) -> Option<&BslEntity> {
@@ -287,5 +433,45 @@ impl UnifiedBslIndex {
     
     pub fn get_by_qualified_name_index(&self) -> &HashMap<String, BslEntityId> {
         &self.by_qualified_name
+    }
+    
+    /// Предлагает похожие имена для неточного поиска
+    pub fn suggest_similar_names(&self, search_term: &str) -> Vec<String> {
+        let search_lower = search_term.to_lowercase();
+        let mut suggestions = Vec::new();
+        
+        // Ищем среди display_name
+        for name in self.by_name.keys() {
+            if name.to_lowercase().contains(&search_lower) {
+                suggestions.push(name.clone());
+            }
+        }
+        
+        // Ищем среди qualified_name
+        for name in self.by_qualified_name.keys() {
+            if name.to_lowercase().contains(&search_lower) && !suggestions.contains(name) {
+                suggestions.push(name.clone());
+            }
+        }
+        
+        // Ищем среди альтернативных имен
+        for name in self.alternative_names.keys() {
+            if name.to_lowercase().contains(&search_lower) {
+                // Получаем полное имя из entity
+                if let Some(entity_id) = self.alternative_names.get(name) {
+                    if let Some(entity) = self.entities.get(entity_id) {
+                        let full_name = &entity.display_name;
+                        if !suggestions.contains(full_name) {
+                            suggestions.push(full_name.clone());
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Ограничиваем до 10 предложений и сортируем
+        suggestions.sort();
+        suggestions.truncate(10);
+        suggestions
     }
 }

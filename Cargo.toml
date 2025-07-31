@@ -111,17 +111,6 @@ name = "analyze_metadata_types"
 path = "src/bin/test_new_attributes.rs"
 
 # Legacy binaries (kept for compatibility)
-[[bin]]
-name = "test_hbk_parser"
-path = "test_hbk_parser.rs"
-
-[[bin]]
-name = "test_chunked_export"
-path = "test_chunked_export.rs"
-
-[[bin]]
-name = "enhance_index"
-path = "enhance_index.rs"
 
 [[bin]]
 name = "analyze_objects"

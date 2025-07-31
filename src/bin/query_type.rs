@@ -1,7 +1,27 @@
 use std::path::PathBuf;
 use anyhow::{Result, Context};
-use clap::Parser;
-use bsl_analyzer::unified_index::{UnifiedIndexBuilder};
+use clap::{Parser, ValueEnum};
+use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslLanguagePreference};
+
+#[derive(ValueEnum, Debug, Clone)]
+enum LanguagePreference {
+    /// Приоритет русским именам (по умолчанию)
+    Russian,
+    /// Приоритет английским именам
+    English,
+    /// Автоматическое определение по языку запроса
+    Auto,
+}
+
+impl From<LanguagePreference> for BslLanguagePreference {
+    fn from(pref: LanguagePreference) -> Self {
+        match pref {
+            LanguagePreference::Russian => BslLanguagePreference::Russian,
+            LanguagePreference::English => BslLanguagePreference::English,
+            LanguagePreference::Auto => BslLanguagePreference::Auto,
+        }
+    }
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about = "Query unified BSL type index", long_about = None)]
@@ -21,6 +41,10 @@ struct Args {
     /// Show only properties
     #[arg(long)]
     show_properties: bool,
+    
+    /// Language preference for type search optimization
+    #[arg(short, long, value_enum, default_value = "auto")]
+    language: LanguagePreference,
     
     /// Configuration path (required if index not cached)
     #[arg(short, long)]
@@ -51,8 +75,14 @@ fn main() -> Result<()> {
     let index = builder.build_index(&config_path, &args.platform_version)
         .context("Failed to build unified index")?;
     
-    // Query the type
-    if let Some(entity) = index.find_entity(&args.name) {
+    // Show application mode if verbose
+    if args.show_all_methods || args.show_methods || args.show_properties {
+        println!("Application mode: {:?}", index.get_application_mode());
+    }
+    
+    // Query the type with language preference
+    let language_pref: BslLanguagePreference = args.language.into();
+    if let Some(entity) = index.find_entity_with_preference(&args.name, language_pref) {
         println!("\n✅ Found type: {}", entity.qualified_name);
         println!("Display name: {}", entity.display_name);
         if let Some(eng_name) = &entity.english_name {
@@ -136,26 +166,15 @@ fn main() -> Result<()> {
     } else {
         println!("❌ Type '{}' not found in index", args.name);
         
-        // Suggest similar types
-        println!("\nDid you mean one of these?");
-        // Simple suggestion - types that contain the search term
-        let search_lower = args.name.to_lowercase();
-        let mut suggestions = Vec::new();
-        
-        for entity in index.get_entities_by_type(&bsl_analyzer::unified_index::BslEntityType::Platform) {
-            if entity.display_name.to_lowercase().contains(&search_lower) {
-                suggestions.push(&entity.display_name);
+        // Suggest similar types using the improved suggestion engine
+        let suggestions = index.suggest_similar_names(&args.name);
+        if !suggestions.is_empty() {
+            println!("\nDid you mean one of these?");
+            for (i, suggestion) in suggestions.iter().enumerate() {
+                println!("  {}. {}", i + 1, suggestion);
             }
-        }
-        
-        for entity in index.get_entities_by_type(&bsl_analyzer::unified_index::BslEntityType::Configuration) {
-            if entity.qualified_name.to_lowercase().contains(&search_lower) {
-                suggestions.push(&entity.qualified_name);
-            }
-        }
-        
-        for (i, suggestion) in suggestions.iter().take(10).enumerate() {
-            println!("  {}. {}", i + 1, suggestion);
+        } else {
+            println!("\nNo similar types found. Try a different search term.");
         }
     }
     

@@ -1,7 +1,27 @@
 use std::path::PathBuf;
 use anyhow::{Result, Context};
-use clap::Parser;
-use bsl_analyzer::unified_index::{UnifiedIndexBuilder};
+use clap::{Parser, ValueEnum};
+use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslApplicationMode};
+
+#[derive(ValueEnum, Debug, Clone)]
+enum ApplicationMode {
+    /// Обычное приложение (8.1) - обычные формы, нет директив компиляции
+    Ordinary,
+    /// Управляемое приложение (8.2+) - управляемые формы, директивы &НаСервере и т.д.
+    Managed,
+    /// Смешанный режим - поддержка обоих типов форм
+    Mixed,
+}
+
+impl From<ApplicationMode> for BslApplicationMode {
+    fn from(mode: ApplicationMode) -> Self {
+        match mode {
+            ApplicationMode::Ordinary => BslApplicationMode::OrdinaryApplication,
+            ApplicationMode::Managed => BslApplicationMode::ManagedApplication,
+            ApplicationMode::Mixed => BslApplicationMode::MixedMode,
+        }
+    }
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about = "Build unified BSL type index from 1C configuration", long_about = None)]
@@ -13,6 +33,10 @@ struct Args {
     /// Platform version (e.g., "8.3.25")
     #[arg(short, long)]
     platform_version: String,
+    
+    /// Application mode (ordinary/managed/mixed)
+    #[arg(short = 'm', long, value_enum, default_value = "managed")]
+    mode: ApplicationMode,
     
     /// Output directory for the index (optional)
     #[arg(short, long)]
@@ -55,10 +79,12 @@ fn main() -> Result<()> {
     println!("Building unified BSL index...");
     println!("Configuration: {}", args.config.display());
     println!("Platform version: {}", args.platform_version);
+    println!("Application mode: {:?}", args.mode);
     
-    // Create builder
+    // Create builder with application mode
     let builder = UnifiedIndexBuilder::new()
-        .context("Failed to create index builder")?;
+        .context("Failed to create index builder")?
+        .with_application_mode(args.mode.into());
     
     // Build index
     let start = std::time::Instant::now();

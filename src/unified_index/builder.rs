@@ -3,7 +3,7 @@ use anyhow::{Result, Context};
 use log::info;
 
 use super::index::UnifiedBslIndex;
-use super::entity::{BslEntity, BslProperty};
+use super::entity::{BslEntity, BslProperty, BslApplicationMode};
 use super::platform_cache::PlatformDocsCache;
 use super::project_cache::ProjectIndexCache;
 use super::xml_parser::ConfigurationXmlParser;
@@ -11,6 +11,7 @@ use super::xml_parser::ConfigurationXmlParser;
 pub struct UnifiedIndexBuilder {
     platform_cache: PlatformDocsCache,
     project_cache: ProjectIndexCache,
+    application_mode: BslApplicationMode,
 }
 
 impl UnifiedIndexBuilder {
@@ -18,7 +19,13 @@ impl UnifiedIndexBuilder {
         Ok(Self {
             platform_cache: PlatformDocsCache::new()?,
             project_cache: ProjectIndexCache::new()?,
+            application_mode: BslApplicationMode::ManagedApplication, // по умолчанию управляемый режим
         })
+    }
+    
+    pub fn with_application_mode(mut self, mode: BslApplicationMode) -> Self {
+        self.application_mode = mode;
+        self
     }
     
     pub fn build_index(
@@ -46,8 +53,9 @@ impl UnifiedIndexBuilder {
         platform_version: &str
     ) -> Result<UnifiedBslIndex> {
         info!("Building index from scratch for: {}", config_path.display());
+        info!("Application mode: {:?}", self.application_mode);
         
-        let mut index = UnifiedBslIndex::new();
+        let mut index = UnifiedBslIndex::with_application_mode(self.application_mode);
         
         // 1. Загружаем платформенные типы
         let start = std::time::Instant::now();
