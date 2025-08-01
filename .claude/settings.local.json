@@ -79,7 +79,8 @@
       "Bash(timeout:*)",
       "Bash(echo:*)",
       "Bash(test:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "WebFetch(domain:libraries.io)"
     ],
     "deny": []
   }

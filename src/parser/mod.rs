@@ -42,28 +42,31 @@ pub use incremental::{IncrementalParser, TextEdit};
 use anyhow::{Context, Result};
 use std::path::Path;
 
-/// Main BSL parser
+/// Main BSL parser - теперь использует tree-sitter внутри
 pub struct BslParser {
-    lexer: BslLexer,
+    tree_sitter_parser: crate::bsl_parser::BslParser,
 }
 
 impl BslParser {
     /// Creates a new parser instance
     pub fn new() -> Self {
         Self {
-            lexer: BslLexer::new(),
+            tree_sitter_parser: crate::bsl_parser::BslParser::new().expect("Failed to create tree-sitter parser"),
         }
     }
     
     /// Parses BSL code from string
     pub fn parse_text(&self, input: &str) -> Result<AstNode> {
-        // Tokenize
-        let tokens = self.lexer.tokenize(input)
-            .map_err(|e| anyhow::anyhow!("Lexical analysis failed: {}", e))?;
+        // Используем tree-sitter парсер
+        let parse_result = self.tree_sitter_parser.parse(input, "<string>");
         
-        // Parse tokens into AST
-        grammar::parse_module(&tokens)
-            .context("Syntax analysis failed")
+        if let Some(bsl_ast) = parse_result.ast {
+            // Конвертируем BSL AST в старый формат
+            let ast_node = crate::bsl_parser::AstBridge::convert_bsl_ast_to_ast_node(&bsl_ast);
+            Ok(ast_node)
+        } else {
+            Err(anyhow::anyhow!("Failed to parse BSL code"))
+        }
     }
     
     /// Parses BSL file with proper encoding detection and BOM handling
@@ -76,11 +79,14 @@ impl BslParser {
     
     /// Parses only procedure/function declarations (fast)
     pub fn parse_declarations(&self, input: &str) -> Result<Vec<AstNode>> {
-        let tokens = self.lexer.tokenize(input)
-            .map_err(|e| anyhow::anyhow!("Lexical analysis failed: {}", e))?;
-            
-        grammar::parse_declarations(&tokens)
-            .context("Declaration parsing failed")
+        // Парсим весь модуль и извлекаем только объявления
+        let ast = self.parse_text(input)?;
+        let declarations = ast.find_children(AstNodeType::Procedure)
+            .into_iter()
+            .chain(ast.find_children(AstNodeType::Function))
+            .cloned()
+            .collect();
+        Ok(declarations)
     }
 }
 

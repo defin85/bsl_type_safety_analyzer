@@ -47,6 +47,11 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 log = "0.4"                          # Для совместимости с log макросами
 
+# Tree-sitter для BSL парсера
+tree-sitter = "0.22"
+tree-sitter-highlight = "0.22"
+tree-sitter-bsl = { git = "https://github.com/alkoleft/tree-sitter-bsl" }
+
 # Утилиты
 regex = "1.10"                        
 uuid = { version = "1.6", features = ["v4"] }
@@ -155,3 +160,8 @@ path = "src/bin/extract_platform_docs.rs"
 [[bin]]
 name = "bsl-mcp-server"
 path = "src/bin/mcp_server.rs"
+
+# BSL Syntax Checker
+[[bin]]
+name = "syntaxcheck"
+path = "src/bin/syntaxcheck.rs"

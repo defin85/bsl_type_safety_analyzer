@@ -105,6 +105,7 @@ pub mod verifiers;
 pub mod contract_generator;  // NEW: Contract generator launcher
 pub mod unified_index;  // NEW: Unified BSL Type System
 pub mod mcp_server;  // NEW: Model Context Protocol server
+pub mod bsl_parser;  // NEW: Tree-sitter based BSL parser
 
 // Re-export main types for convenience
 pub use analyzer::{BslAnalyzer, SemanticAnalyzer};
