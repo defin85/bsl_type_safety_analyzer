@@ -104,6 +104,7 @@ pub mod rules;    // NEW: Rules system for configurable analysis
 pub mod verifiers;
 pub mod contract_generator;  // NEW: Contract generator launcher
 pub mod unified_index;  // NEW: Unified BSL Type System
+pub mod mcp_server;  // NEW: Model Context Protocol server
 
 // Re-export main types for convenience
 pub use analyzer::{BslAnalyzer, SemanticAnalyzer};

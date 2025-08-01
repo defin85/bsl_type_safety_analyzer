@@ -69,11 +69,17 @@ chrono = { version = "0.4", features = ["serde"] }
 flate2 = "1.0"                       # Для сжатия данных кэша
 bincode = "1.3"                      # Для сериализации кэша
 
+# Schema generation for MCP
+schemars = "0.8"                     # Для генерации JSON схем в MCP
+
 # Графы для наследования типов
 petgraph = "0.6"                     # Для графов наследования в UnifiedBslIndex
 
 # Директории пользователя
 dirs = "5.0"                         # Для определения домашней директории
+
+# MCP Server - временно отключено до выбора стабильной версии SDK
+# rmcp = { version = "0.3.2", features = ["server", "transport-io"] }
 
 # Тестирование
 [dev-dependencies]
@@ -144,3 +150,8 @@ path = "src/bin/query_type.rs"
 [[bin]]
 name = "extract_platform_docs"
 path = "src/bin/extract_platform_docs.rs"
+
+# MCP Server
+[[bin]]
+name = "bsl-mcp-server"
+path = "src/bin/mcp_server.rs"

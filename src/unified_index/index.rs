@@ -16,7 +16,7 @@ pub enum BslLanguagePreference {
     Auto,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UnifiedBslIndex {
     // Режим приложения
     application_mode: BslApplicationMode,
@@ -209,11 +209,42 @@ impl UnifiedBslIndex {
         }
     }
     
+    /// <api-method>
+    ///   <name>find_entity</name>
+    ///   <purpose>Поиск сущности по имени с автоопределением языка</purpose>
+    ///   <parameters>
+    ///     <param name="name" type="&str">Имя сущности для поиска (русское или английское)</param>
+    ///   </parameters>
+    ///   <returns>Option<&BslEntity></returns>
+    ///   <examples>
+    ///     <example lang="rust">
+    ///       // Поиск платформенного типа
+    ///       let entity = index.find_entity("Массив")?;
+    ///       let entity = index.find_entity("Array")?; // английский вариант
+    ///       
+    ///       // Поиск объекта конфигурации
+    ///       let entity = index.find_entity("Справочники.Номенклатура")?;
+    ///     </example>
+    ///   </examples>
+    /// </api-method>
     pub fn find_entity(&self, name: &str) -> Option<&BslEntity> {
         self.find_entity_with_preference(name, BslLanguagePreference::Auto)
     }
     
-    /// Поиск сущности с учетом языковых предпочтений
+    /// <api-method>
+    ///   <name>find_entity_with_preference</name>
+    ///   <purpose>Поиск сущности с указанием языковых предпочтений</purpose>
+    ///   <parameters>
+    ///     <param name="name" type="&str">Имя сущности для поиска</param>
+    ///     <param name="preference" type="BslLanguagePreference">Языковое предпочтение (Russian/English/Auto)</param>
+    ///   </parameters>
+    ///   <returns>Option<&BslEntity></returns>
+    ///   <algorithm>
+    ///     <step>Поиск по полному qualified_name (приоритетный)</step>
+    ///     <step>Поиск по display_name</step>
+    ///     <step>Поиск с учетом языковых предпочтений</step>
+    ///   </algorithm>
+    /// </api-method>
     pub fn find_entity_with_preference(&self, name: &str, preference: BslLanguagePreference) -> Option<&BslEntity> {
         // 1. Поиск по полному qualified_name (всегда приоритетный)
         if let Some(id) = self.by_qualified_name.get(name) {
@@ -296,6 +327,30 @@ impl UnifiedBslIndex {
             .unwrap_or_default()
     }
     
+    /// <api-method>
+    ///   <name>get_all_methods</name>
+    ///   <purpose>Получение всех методов типа включая унаследованные</purpose>
+    ///   <parameters>
+    ///     <param name="entity_name" type="&str">Имя типа</param>
+    ///   </parameters>
+    ///   <returns>HashMap<String, BslMethod></returns>
+    ///   <algorithm>
+    ///     <step>Рекурсивный сбор методов от родительских типов</step>
+    ///     <step>Добавление собственных методов (с переопределением)</step>
+    ///   </algorithm>
+    ///   <examples>
+    ///     <example lang="rust">
+    ///       // Получить все методы справочника
+    ///       let methods = index.get_all_methods("Справочники.Номенклатура");
+    ///       // Включает методы от СправочникОбъект, ОбъектБД и т.д.
+    ///       
+    ///       // Проверка конкретного метода
+    ///       if methods.contains_key("Записать") {
+    ///           println!("Объект можно записать");
+    ///       }
+    ///     </example>
+    ///   </examples>
+    /// </api-method>
     pub fn get_all_methods(&self, entity_name: &str) -> HashMap<String, BslMethod> {
         let mut all_methods = HashMap::new();
         
@@ -363,6 +418,31 @@ impl UnifiedBslIndex {
         }
     }
     
+    /// <api-method>
+    ///   <name>is_assignable</name>
+    ///   <purpose>Проверка совместимости типов для присваивания</purpose>
+    ///   <parameters>
+    ///     <param name="from_type" type="&str">Исходный тип</param>
+    ///     <param name="to_type" type="&str">Целевой тип</param>
+    ///   </parameters>
+    ///   <returns>bool - true если from_type можно присвоить to_type</returns>
+    ///   <algorithm>
+    ///     <step>Проверка точного совпадения типов</step>
+    ///     <step>Проверка наследования через граф типов</step>
+    ///     <step>Проверка интерфейсов (implements)</step>
+    ///   </algorithm>
+    ///   <examples>
+    ///     <example lang="rust">
+    ///       // Проверка совместимости справочника
+    ///       let ok = index.is_assignable("Справочники.Номенклатура", "СправочникСсылка");
+    ///       assert!(ok); // true - справочник реализует интерфейс СправочникСсылка
+    ///       
+    ///       // Проверка несовместимых типов
+    ///       let ok = index.is_assignable("Число", "Строка");
+    ///       assert!(!ok); // false - типы несовместимы
+    ///     </example>
+    ///   </examples>
+    /// </api-method>
     pub fn is_assignable(&self, from_type: &str, to_type: &str) -> bool {
         if from_type == to_type {
             return true;

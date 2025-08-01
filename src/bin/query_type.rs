@@ -159,7 +159,12 @@ fn main() -> Result<()> {
         if !entity.relationships.tabular_sections.is_empty() {
             println!("\nTabular sections:");
             for ts in &entity.relationships.tabular_sections {
-                println!("  - {}", ts);
+                println!("  - {} ({})", ts.name, ts.display_name);
+                if args.show_all_methods {
+                    for attr in &ts.attributes {
+                        println!("      {}: {}", attr.name, attr.type_name);
+                    }
+                }
             }
         }
         

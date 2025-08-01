@@ -1,0 +1,52 @@
+warning: method `get_project_dir` is never used
+   --> src\unified_index\project_cache.rs:245:8
+    |
+29  | impl ProjectIndexCache {
+    | ---------------------- method in this implementation
+...
+245 |     fn get_project_dir(&self, project_name: &str) -> PathBuf {
+    |        ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: field `config_path` is never read
+  --> src\mcp_server\analyzer.rs:32:5
+   |
+30 | pub struct BslTypeAnalyzer {
+   |            --------------- field in this struct
+31 |     index: Arc<RwLock<Option<UnifiedBslIndex>>>,
+32 |     config_path: Option<PathBuf>,
+   |     ^^^^^^^^^^^
+   |
+   = note: `BslTypeAnalyzer` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `bsl-analyzer` (lib) generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running `target\debug\build_unified_index.exe --config 'C:\1CProject\Unicom\conf_files' --platform-version 8.3.25`
+Building unified BSL index...
+Configuration: C:\1CProject\Unicom\conf_files
+Platform version: 8.3.25
+Application mode: Managed
+[2m2025-08-01T15:53:01.667192Z[0m [32m INFO[0m [2mbsl_analyzer::unified_index::builder[0m[2m:[0m Building unified BSL index for: C:\1CProject\Unicom\conf_files    
+
+✅ Index built successfully!
+Total entities: 7000
+Build time: 491.22ms
+
+Entity statistics:
+  Platform types: 3918
+  Configuration objects: 2488
+  Forms: 594
+  Modules: 0
+
+Configuration objects by type:
+  Catalogs: 682
+  Documents: 410
+  Information registers: 1242
+  Accumulation registers: 104
+  Charts of accounts: 1
+  Charts of characteristic types: 8
+  Charts of calculation types: 3
+  Business processes: 9
+  Tasks: 1
+  Exchange plans: 26

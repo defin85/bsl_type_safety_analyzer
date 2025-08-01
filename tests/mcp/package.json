@@ -1,0 +1,28 @@
+{
+  "name": "bsl_type_safety_analyzer",
+  "version": "1.0.0",
+  "description": "**High-performance static analyzer for 1C:Enterprise BSL with unified type system**",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/defin85/bsl_type_safety_analyzer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/defin85/bsl_type_safety_analyzer/issues"
+  },
+  "homepage": "https://github.com/defin85/bsl_type_safety_analyzer#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.1"
+  }
+}

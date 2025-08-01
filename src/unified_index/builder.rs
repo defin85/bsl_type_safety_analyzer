@@ -188,7 +188,13 @@ impl UnifiedIndexBuilder {
         if let Some(tabular_sections) = legacy_data.get("tabular_sections").and_then(|v| v.as_array()) {
             for ts in tabular_sections {
                 if let Some(ts_name) = ts.get("name").and_then(|v| v.as_str()) {
-                    entity.relationships.tabular_sections.push(ts_name.to_string());
+                    // Создаем упрощенную табличную часть без атрибутов для legacy данных
+                    let tabular_section = super::entity::BslTabularSection {
+                        name: ts_name.to_string(),
+                        display_name: ts_name.to_string(),
+                        attributes: Vec::new(),
+                    };
+                    entity.relationships.tabular_sections.push(tabular_section);
                 }
             }
         }

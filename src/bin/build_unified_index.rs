@@ -57,7 +57,7 @@ fn main() -> Result<()> {
             .init();
     } else {
         tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::INFO)
+            .with_max_level(tracing::Level::WARN)
             .init();
     }
     
@@ -123,6 +123,7 @@ fn main() -> Result<()> {
         (BslEntityKind::BusinessProcess, "Business processes"),
         (BslEntityKind::Task, "Tasks"),
         (BslEntityKind::ExchangePlan, "Exchange plans"),
+        (BslEntityKind::Constant, "Constants"),
         (BslEntityKind::CommonModule, "Common modules"),
     ];
     

@@ -4,7 +4,7 @@ use anyhow::{Result, Context};
 use quick_xml::events::Event;
 use quick_xml::Reader;
 
-use super::entity::{BslEntity, BslEntityType, BslEntityKind, BslEntitySource, BslProperty, BslContext};
+use super::entity::{BslEntity, BslEntityType, BslEntityKind, BslEntitySource, BslProperty, BslContext, BslEntityId, BslInterface, BslConstraints, BslRelationships, BslLifecycle, BslTabularSection};
 
 pub struct ConfigurationXmlParser {
     config_path: PathBuf,
@@ -27,27 +27,90 @@ impl ConfigurationXmlParser {
             entities.push(config_entity);
         }
         
-        // Парсим все объекты метаданных
-        entities.extend(self.parse_metadata_objects("Catalogs", BslEntityKind::Catalog)?);
-        entities.extend(self.parse_metadata_objects("Documents", BslEntityKind::Document)?);
-        entities.extend(self.parse_metadata_objects("ChartsOfCharacteristicTypes", BslEntityKind::ChartOfCharacteristicTypes)?);
-        entities.extend(self.parse_metadata_objects("ChartsOfAccounts", BslEntityKind::ChartOfAccounts)?);
-        entities.extend(self.parse_metadata_objects("ChartsOfCalculationTypes", BslEntityKind::ChartOfCalculationTypes)?);
-        entities.extend(self.parse_metadata_objects("InformationRegisters", BslEntityKind::InformationRegister)?);
-        entities.extend(self.parse_metadata_objects("AccumulationRegisters", BslEntityKind::AccumulationRegister)?);
-        entities.extend(self.parse_metadata_objects("AccountingRegisters", BslEntityKind::AccountingRegister)?);
-        entities.extend(self.parse_metadata_objects("CalculationRegisters", BslEntityKind::CalculationRegister)?);
-        entities.extend(self.parse_metadata_objects("BusinessProcesses", BslEntityKind::BusinessProcess)?);
-        entities.extend(self.parse_metadata_objects("Tasks", BslEntityKind::Task)?);
-        entities.extend(self.parse_metadata_objects("ExchangePlans", BslEntityKind::ExchangePlan)?);
+        // Парсим все объекты метаданных с их формами
+        entities.extend(self.parse_metadata_objects_with_forms("Catalogs", BslEntityKind::Catalog)?);
+        entities.extend(self.parse_metadata_objects_with_forms("Documents", BslEntityKind::Document)?);
+        entities.extend(self.parse_metadata_objects_with_forms("ChartsOfCharacteristicTypes", BslEntityKind::ChartOfCharacteristicTypes)?);
+        entities.extend(self.parse_metadata_objects_with_forms("ChartsOfAccounts", BslEntityKind::ChartOfAccounts)?);
+        entities.extend(self.parse_metadata_objects_with_forms("ChartsOfCalculationTypes", BslEntityKind::ChartOfCalculationTypes)?);
+        entities.extend(self.parse_metadata_objects_with_forms("InformationRegisters", BslEntityKind::InformationRegister)?);
+        entities.extend(self.parse_metadata_objects_with_forms("AccumulationRegisters", BslEntityKind::AccumulationRegister)?);
+        entities.extend(self.parse_metadata_objects_with_forms("AccountingRegisters", BslEntityKind::AccountingRegister)?);
+        entities.extend(self.parse_metadata_objects_with_forms("CalculationRegisters", BslEntityKind::CalculationRegister)?);
+        entities.extend(self.parse_metadata_objects_with_forms("BusinessProcesses", BslEntityKind::BusinessProcess)?);
+        entities.extend(self.parse_metadata_objects_with_forms("Tasks", BslEntityKind::Task)?);
+        entities.extend(self.parse_metadata_objects_with_forms("ExchangePlans", BslEntityKind::ExchangePlan)?);
+        
+        // Парсим константы (они не имеют форм)
+        entities.extend(self.parse_metadata_objects("Constants", BslEntityKind::Constant)?);
         
         // Парсим общие модули
         entities.extend(self.parse_common_modules()?);
         
+        // Парсим общие формы
+        entities.extend(self.parse_common_forms()?);
+        
         Ok(entities)
     }
     
-    pub fn parse_metadata_object(&self, xml_path: &Path) -> Result<BslEntity> {
+    fn parse_metadata_objects_with_forms(&self, folder_name: &str, kind: BslEntityKind) -> Result<Vec<BslEntity>> {
+        let mut all_entities = Vec::new();
+        
+        // Сначала парсим сами объекты
+        let objects = self.parse_metadata_objects(folder_name, kind)?;
+        
+        // Затем для каждого объекта парсим его формы
+        for object in objects {
+            let object_name = object.display_name.clone();
+            let qualified_name = object.qualified_name.clone();
+            all_entities.push(object);
+            
+            // Определяем путь к объекту
+            let object_path = self.config_path.join(folder_name).join(&object_name);
+            if object_path.exists() {
+                // Парсим формы объекта с полным квалифицированным именем
+                let forms = self.parse_object_forms(&object_path, &qualified_name)?;
+                all_entities.extend(forms);
+            }
+        }
+        
+        Ok(all_entities)
+    }
+    
+    fn parse_common_forms(&self) -> Result<Vec<BslEntity>> {
+        let mut entities = Vec::new();
+        let forms_path = self.config_path.join("CommonForms");
+        
+        if !forms_path.exists() {
+            return Ok(entities);
+        }
+        
+        for entry in fs::read_dir(&forms_path)? {
+            let entry = entry?;
+            let form_path = entry.path();
+            
+            if form_path.is_dir() {
+                let form_xml = form_path.join("Form.xml");
+                let ext_form_xml = form_path.join("Ext").join("Form.xml");
+                
+                let actual_form_xml = if form_xml.exists() {
+                    form_xml
+                } else if ext_form_xml.exists() {
+                    ext_form_xml
+                } else {
+                    continue;
+                };
+                
+                let form_name = form_path.file_name().unwrap().to_string_lossy().to_string();
+                let form_entity = self.parse_form_xml(&actual_form_xml, "ОбщиеФормы", &form_name)?;
+                entities.push(form_entity);
+            }
+        }
+        
+        Ok(entities)
+    }
+    
+    pub fn parse_metadata_object(&self, xml_path: &Path, kind: Option<&BslEntityKind>) -> Result<BslEntity> {
         let content = fs::read_to_string(xml_path)
             .context("Failed to read metadata XML file")?;
             
@@ -58,13 +121,12 @@ impl ConfigurationXmlParser {
             String::new(),
             String::new(),
             BslEntityType::Configuration,
-            BslEntityKind::Other(String::new())
+            kind.cloned().unwrap_or(BslEntityKind::Other(String::new()))
         );
         
         let mut buf = Vec::new();
         let mut in_properties = false;
         let mut in_attributes = false;
-        let mut _in_tabular_sections = false;
         let mut current_element = String::new();
         
         loop {
@@ -88,14 +150,35 @@ impl ConfigurationXmlParser {
                             }
                         }
                         "Properties" => in_properties = true,
+                        "Type" if in_properties => {
+                            // Для констант парсим тип как свойство
+                            if entity.entity_kind == BslEntityKind::Constant {
+                                if let Ok(type_name) = self.parse_constant_type(&mut reader, &mut buf) {
+                                let prop = BslProperty {
+                                    name: "Значение".to_string(),
+                                    type_name,
+                                    is_readonly: false,
+                                    documentation: None,
+                                    availability: vec![BslContext::Client, BslContext::Server],
+                                    english_name: Some("Value".to_string()),
+                                    is_indexed: false,
+                                };
+                                entity.interface.properties.insert("Значение".to_string(), prop);
+                            }
+                            }
+                        }
                         "ChildObjects" => {
-                            if let Ok(Event::Start(ref child)) = reader.read_event_into(&mut buf) {
-                                let child_name = String::from_utf8_lossy(child.name().as_ref()).to_string();
-                                match child_name.as_str() {
-                                    "Attribute" => in_attributes = true,
-                                    "TabularSection" => _in_tabular_sections = true,
-                                    _ => {}
-                                }
+                            // Нам нужно продолжить парсинг ChildObjects, а не читать следующий элемент
+                            // Установим флаг, что мы в ChildObjects
+                        }
+                        "Attribute" if !in_attributes => {
+                            // Это атрибут объекта, не табличной части
+                            in_attributes = true;
+                        }
+                        "TabularSection" => {
+                            // Парсим табличную часть
+                            if let Ok(ts) = self.parse_tabular_section(&mut reader, &mut buf) {
+                                entity.relationships.tabular_sections.push(ts);
                             }
                         }
                         _ => current_element = tag_name,
@@ -165,6 +248,7 @@ impl ConfigurationXmlParser {
             return Ok(entities);
         }
         
+        
         for entry in fs::read_dir(&objects_path)? {
             let entry = entry?;
             let path = entry.path();
@@ -177,8 +261,7 @@ impl ConfigurationXmlParser {
                 // Старая структура - XML внутри папки
                 let xml_path = path.join(format!("{}.xml", path.file_name().unwrap().to_string_lossy()));
                 if xml_path.exists() {
-                    if let Ok(mut entity) = self.parse_metadata_object(&xml_path) {
-                        entity.entity_kind = kind.clone();
+                    if let Ok(mut entity) = self.parse_metadata_object(&xml_path, Some(&kind)) {
                         
                         // Формируем квалифицированное имя
                         let object_name = path.file_name().unwrap().to_string_lossy().to_string();
@@ -188,7 +271,7 @@ impl ConfigurationXmlParser {
                         // Устанавливаем родительские типы
                         entity.constraints.parent_types = self.get_parent_types(&kind);
                         
-                        // Парсим формы объекта
+                        // Собираем только имена форм для relationships
                         let forms_path = path.join("Forms");
                         if forms_path.exists() {
                             for form_entry in fs::read_dir(&forms_path)? {
@@ -203,8 +286,7 @@ impl ConfigurationXmlParser {
                 }
             } else if path.extension().map_or(false, |ext| ext == "xml") {
                 // Новая структура - XML файлы прямо в папке
-                if let Ok(mut entity) = self.parse_metadata_object(&path) {
-                    entity.entity_kind = kind.clone();
+                if let Ok(mut entity) = self.parse_metadata_object(&path, Some(&kind)) {
                     
                     // Формируем квалифицированное имя из имени файла
                     let object_name = path.file_stem().unwrap().to_string_lossy().to_string();
@@ -232,6 +314,7 @@ impl ConfigurationXmlParser {
             }
         }
         
+        
         Ok(entities)
     }
     
@@ -250,7 +333,7 @@ impl ConfigurationXmlParser {
             if path.is_dir() {
                 let xml_path = path.join(format!("{}.xml", path.file_name().unwrap().to_string_lossy()));
                 if xml_path.exists() {
-                    if let Ok(mut entity) = self.parse_metadata_object(&xml_path) {
+                    if let Ok(mut entity) = self.parse_metadata_object(&xml_path, None) {
                         entity.entity_kind = BslEntityKind::CommonModule;
                         entity.entity_type = BslEntityType::Module;
                         
@@ -330,6 +413,7 @@ impl ConfigurationXmlParser {
             BslEntityKind::BusinessProcess => "БизнесПроцессы",
             BslEntityKind::Task => "Задачи",
             BslEntityKind::ExchangePlan => "ПланыОбмена",
+            BslEntityKind::Constant => "Константы",
             _ => "Прочие",
         }
     }
@@ -345,6 +429,7 @@ impl ConfigurationXmlParser {
             BslEntityKind::AccumulationRegister => vec!["РегистрНакопленияНаборЗаписей".to_string()],
             BslEntityKind::AccountingRegister => vec!["РегистрБухгалтерииНаборЗаписей".to_string()],
             BslEntityKind::CalculationRegister => vec!["РегистрРасчетаНаборЗаписей".to_string()],
+            BslEntityKind::Constant => vec!["КонстантаМенеджерЗначения".to_string()],
             _ => vec![],
         }
     }
@@ -360,13 +445,119 @@ impl ConfigurationXmlParser {
         }
     }
     
+    fn parse_constant_type(&self, reader: &mut Reader<&[u8]>, buf: &mut Vec<u8>) -> Result<String> {
+        let mut type_name = String::new();
+        let mut in_v8_type = false;
+        
+        loop {
+            match reader.read_event_into(buf) {
+                Ok(Event::Start(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    match tag_name.as_str() {
+                        "v8:Type" => in_v8_type = true,
+                        _ => {}
+                    }
+                }
+                Ok(Event::Text(e)) => {
+                    let text = e.unescape()?.to_string();
+                    if in_v8_type {
+                        type_name = match text.as_str() {
+                            "xs:string" => "Строка".to_string(),
+                            "xs:boolean" => "Булево".to_string(),
+                            "xs:decimal" => "Число".to_string(),
+                            "xs:dateTime" => "ДатаВремя".to_string(),
+                            _ => text,
+                        };
+                    }
+                }
+                Ok(Event::End(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    match tag_name.as_str() {
+                        "Type" => break,
+                        "v8:Type" => in_v8_type = false,
+                        _ => {}
+                    }
+                }
+                Ok(Event::Eof) => break,
+                _ => {}
+            }
+            buf.clear();
+        }
+        
+        Ok(type_name)
+    }
+    
+    fn parse_tabular_section(&self, reader: &mut Reader<&[u8]>, buf: &mut Vec<u8>) -> Result<BslTabularSection> {
+        let mut tabular_section = BslTabularSection {
+            name: String::new(),
+            display_name: String::new(),
+            attributes: Vec::new(),
+        };
+        
+        let mut in_properties = false;
+        let mut in_child_objects = false;
+        let mut current_element = String::new();
+        
+        loop {
+            match reader.read_event_into(buf) {
+                Ok(Event::Start(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    match tag_name.as_str() {
+                        "Properties" => in_properties = true,
+                        "ChildObjects" => in_child_objects = true,
+                        "Attribute" if in_child_objects => {
+                            if let Ok(attr) = self.parse_attribute(reader, buf) {
+                                tabular_section.attributes.push(attr);
+                            }
+                        }
+                        _ => current_element = tag_name,
+                    }
+                }
+                Ok(Event::Text(e)) => {
+                    if in_properties {
+                        let text = e.unescape()?.to_string();
+                        match current_element.as_str() {
+                            "Name" => tabular_section.name = text,
+                            "Synonym" => {
+                                if let Some(ru_synonym) = self.extract_ru_synonym(&text) {
+                                    tabular_section.display_name = ru_synonym;
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+                Ok(Event::End(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    match tag_name.as_str() {
+                        "TabularSection" => break,
+                        "Properties" => in_properties = false,
+                        "ChildObjects" => in_child_objects = false,
+                        _ => {}
+                    }
+                }
+                Ok(Event::Eof) => break,
+                Err(e) => return Err(anyhow::anyhow!("XML parsing error in tabular section: {}", e)),
+                _ => {}
+            }
+            buf.clear();
+        }
+        
+        // Если display_name пустой, используем name
+        if tabular_section.display_name.is_empty() {
+            tabular_section.display_name = tabular_section.name.clone();
+        }
+        
+        Ok(tabular_section)
+    }
+    
     fn parse_type_definition(&self, type_str: &str) -> String {
         // Упрощенный парсинг типов
         // TODO: Полная реализация парсинга составных типов
         type_str.to_string()
     }
     
-    pub fn parse_object_forms(&self, object_path: &Path) -> Result<Vec<BslEntity>> {
+    pub fn parse_object_forms(&self, object_path: &Path, parent_qualified_name: &str) -> Result<Vec<BslEntity>> {
         let mut forms = Vec::new();
         let forms_path = object_path.join("Forms");
         
@@ -380,25 +571,187 @@ impl ConfigurationXmlParser {
             
             if form_path.is_dir() {
                 let form_xml = form_path.join("Form.xml");
-                if form_xml.exists() {
-                    let form_name = form_path.file_name().unwrap().to_string_lossy().to_string();
-                    let parent_name = object_path.file_name().unwrap().to_string_lossy().to_string();
-                    
-                    let mut form_entity = BslEntity::new(
-                        format!("{}.{}", parent_name, form_name),
-                        format!("{}.{}", parent_name, form_name),
-                        BslEntityType::Form,
-                        BslEntityKind::ManagedForm
-                    );
-                    
-                    form_entity.source = BslEntitySource::FormXml { path: form_xml.to_string_lossy().to_string() };
-                    form_entity.relationships.owner = Some(parent_name);
-                    
-                    forms.push(form_entity);
-                }
+                let ext_form_xml = form_path.join("Ext").join("Form.xml");
+                
+                // Поддержка двух структур: Forms/FormName/Form.xml и Forms/FormName/Ext/Form.xml
+                let actual_form_xml = if form_xml.exists() {
+                    form_xml
+                } else if ext_form_xml.exists() {
+                    ext_form_xml
+                } else {
+                    continue;
+                };
+                
+                let form_name = form_path.file_name().unwrap().to_string_lossy().to_string();
+                
+                // Парсим детальную информацию о форме с полным квалифицированным именем
+                let form_entity = self.parse_form_xml(&actual_form_xml, parent_qualified_name, &form_name)?;
+                forms.push(form_entity);
             }
         }
         
         Ok(forms)
     }
+    
+    fn parse_form_xml(&self, form_xml_path: &Path, parent_name: &str, form_name: &str) -> Result<BslEntity> {
+        let content = fs::read_to_string(form_xml_path)
+            .context("Failed to read form XML file")?;
+            
+        let mut reader = Reader::from_str(&content);
+        reader.trim_text(true);
+        
+        let qualified_name = format!("{}.Form.{}", parent_name, form_name);
+        let mut form_entity = BslEntity {
+            id: BslEntityId(qualified_name.clone()),
+            qualified_name: qualified_name.clone(),
+            display_name: form_name.to_string(),
+            english_name: None,
+            entity_type: BslEntityType::Form,
+            entity_kind: BslEntityKind::ManagedForm,
+            source: BslEntitySource::FormXml { path: String::new() },
+            interface: BslInterface::default(),
+            constraints: BslConstraints::default(),
+            relationships: BslRelationships::default(),
+            documentation: None,
+            availability: vec![],
+            lifecycle: BslLifecycle {
+                introduced_version: None,
+                deprecated_version: None,
+                removed_version: None,
+                replacement: None,
+            },
+            extended_data: serde_json::Map::new(),
+        };
+        
+        form_entity.source = BslEntitySource::FormXml { 
+            path: form_xml_path.to_string_lossy().to_string() 
+        };
+        form_entity.relationships.owner = Some(parent_name.to_string());
+        
+        let mut buf = Vec::new();
+        let mut _in_form = false;
+        let mut _in_items = false;
+        let mut _current_item_name = String::new();
+        let mut in_commands = false;
+        let mut form_commands = Vec::new();
+        let mut form_items = Vec::new();
+        
+        loop {
+            match reader.read_event_into(&mut buf) {
+                Ok(Event::Start(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    
+                    match tag_name.as_str() {
+                        "Form" => {
+                            _in_form = true;
+                            // Извлекаем атрибуты формы
+                            for attr in e.attributes() {
+                                if let Ok(attr) = attr {
+                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let value = String::from_utf8_lossy(&attr.value).to_string();
+                                    
+                                    // Сохраняем важные атрибуты как свойства
+                                    if key == "xmlns" || key.starts_with("xmlns:") {
+                                        continue; // Пропускаем namespace декларации
+                                    }
+                                    
+                                    let prop = BslProperty {
+                                        name: key.clone(),
+                                        english_name: None,
+                                        type_name: "String".to_string(),
+                                        is_readonly: true,
+                                        is_indexed: false,
+                                        documentation: Some(value.clone()),
+                                        availability: vec![BslContext::Client, BslContext::Server],
+                                    };
+                                    form_entity.interface.properties.insert(key, prop);
+                                }
+                            }
+                        }
+                        "Items" => _in_items = true,
+                        "Table" | "CommandBar" | "Button" | "InputField" | "Field" | "UsualGroup" | "Group" => {
+                            // Парсим элементы формы
+                            for attr in e.attributes() {
+                                if let Ok(attr) = attr {
+                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let value = String::from_utf8_lossy(&attr.value).to_string();
+                                    
+                                    if key == "name" {
+                                        _current_item_name = value.clone();
+                                        form_items.push(format!("{} ({})", value, tag_name));
+                                    }
+                                }
+                            }
+                        }
+                        "Command" if in_commands => {
+                            // Парсим команды формы внутри Commands
+                            for attr in e.attributes() {
+                                if let Ok(attr) = attr {
+                                    let key = String::from_utf8_lossy(attr.key.as_ref()).to_string();
+                                    let value = String::from_utf8_lossy(&attr.value).to_string();
+                                    
+                                    if key == "name" {
+                                        form_commands.push(value);
+                                    }
+                                }
+                            }
+                        }
+                        "Commands" => {
+                            // Входим в секцию команд
+                            in_commands = true;
+                        }
+                        _ => {}
+                    }
+                }
+                Ok(Event::End(ref e)) => {
+                    let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
+                    match tag_name.as_str() {
+                        "Form" => _in_form = false,
+                        "Items" => _in_items = false,
+                        "Commands" => in_commands = false,
+                        _ => {}
+                    }
+                }
+                Ok(Event::Eof) => break,
+                Err(e) => return Err(anyhow::anyhow!("Form XML parsing error: {}", e)),
+                _ => {}
+            }
+            buf.clear();
+        }
+        
+        // Добавляем команды как методы формы
+        for command in form_commands {
+            let method = super::entity::BslMethod {
+                name: command.clone(),
+                english_name: None,
+                parameters: vec![],
+                return_type: None,
+                documentation: Some(format!("Команда формы {}", command)),
+                availability: vec![BslContext::Client],
+                is_function: false,
+                is_export: false,
+                is_deprecated: false,
+                deprecation_info: None,
+            };
+            form_entity.interface.methods.insert(command, method);
+        }
+        
+        // Сохраняем информацию об элементах управления в extended_data
+        if !form_items.is_empty() {
+            form_entity.extended_data.insert(
+                "form_items".to_string(), 
+                serde_json::Value::Array(
+                    form_items.into_iter()
+                        .map(serde_json::Value::String)
+                        .collect()
+                )
+            );
+        }
+        
+        Ok(form_entity)
+    }
 }
+
+#[cfg(test)]
+#[path = "xml_parser_test.rs"]
+mod xml_parser_test;

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
@@ -59,7 +60,21 @@
       "Bash(tree:*)",
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"ТаблицаЗначений (ValueTable)\" --config \"examples/ConfTest\")",
       "Bash(RUST_LOG=info cargo run --bin build_unified_index -- --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(set BSL_CONFIG_PATH=examplesConfTest)",
+      "Bash(set BSL_PLATFORM_VERSION=8.3.25)",
+      "Bash(python test_mcp_server.py:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(cargo search:*)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:autognosi.medium.com)",
+      "WebFetch(domain:paulyu.dev)",
+      "Bash(npm test)",
+      "Bash(RUST_LOG=debug cargo run --bin build_unified_index -- --config \"C:\\1CProject\\Unicom\\conf_files\" --platform-version \"8.3.25\")",
+      "Bash(set RUST_LOG=info)"
     ],
     "deny": []
   }

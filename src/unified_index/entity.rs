@@ -1,9 +1,28 @@
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
+/// <entity-type>
+///   <name>BslEntityId</name>
+///   <purpose>Уникальный идентификатор BSL сущности</purpose>
+///   <usage>
+///     <example>
+///       let id = BslEntityId("Справочники.Номенклатура".to_string());
+///     </example>
+///   </usage>
+/// </entity-type>
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct BslEntityId(pub String);
 
+/// <entity-type>
+///   <name>BslEntityType</name>
+///   <purpose>Источник определения BSL типа</purpose>
+///   <variants>
+///     <variant name="Platform">Встроенные типы платформы 1С</variant>
+///     <variant name="Configuration">Объекты конфигурации (справочники, документы)</variant>
+///     <variant name="Form">Формы объектов</variant>
+///     <variant name="Module">Модули с экспортными методами</variant>
+///   </variants>
+/// </entity-type>
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum BslEntityType {
     Platform,
@@ -12,6 +31,27 @@ pub enum BslEntityType {
     Module,
 }
 
+/// <entity-type>
+///   <name>BslEntityKind</name>
+///   <purpose>Конкретный вид BSL сущности</purpose>
+///   <categories>
+///     <category name="Primitives">
+///       <description>Примитивные типы: Число, Строка, Дата, Булево</description>
+///     </category>
+///     <category name="Collections">
+///       <description>Коллекции: Массив, Структура, Соответствие, СписокЗначений</description>
+///     </category>
+///     <category name="ConfigurationObjects">
+///       <description>Объекты конфигурации: справочники, документы, регистры</description>
+///     </category>
+///     <category name="Forms">
+///       <description>Формы: управляемые и обычные</description>
+///     </category>
+///     <category name="Modules">
+///       <description>Модули различного назначения</description>
+///     </category>
+///   </categories>
+/// </entity-type>
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum BslEntityKind {
     // Примитивные типы
@@ -38,6 +78,7 @@ pub enum BslEntityKind {
     BusinessProcess,
     Task,
     ExchangePlan,
+    Constant,
     
     // Формы
     Form,
@@ -159,12 +200,19 @@ pub struct BslConstraints {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct BslRelationships {
     pub owner: Option<String>,
-    pub tabular_sections: Vec<String>,
+    pub tabular_sections: Vec<BslTabularSection>,
     pub attributes: Vec<String>,
     pub forms: Vec<String>,
     pub commands: Vec<String>,
     pub referenced_by: Vec<String>,
     pub references: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BslTabularSection {
+    pub name: String,
+    pub display_name: String,
+    pub attributes: Vec<BslProperty>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -175,6 +223,34 @@ pub struct BslLifecycle {
     pub replacement: Option<String>,
 }
 
+/// <entity-type>
+///   <name>BslEntity</name>
+///   <purpose>Универсальное представление любого BSL типа в единой системе</purpose>
+///   <description>
+///     Центральная структура данных, представляющая любой тип в BSL:
+///     платформенные типы, объекты конфигурации, формы и модули.
+///   </description>
+///   <usage>
+///     <example>
+///       // Поиск типа в индексе
+///       let entity = index.find_entity("Справочники.Номенклатура")?;
+///       
+///       // Проверка наличия метода
+///       if entity.has_method("Записать") {
+///           let method = &entity.interface.methods["Записать"];
+///       }
+///       
+///       // Получение всех свойств
+///       let properties = entity.get_all_property_names();
+///     </example>
+///   </usage>
+///   <fields>
+///     <field name="id">Уникальный идентификатор</field>
+///     <field name="interface">Методы, свойства и события</field>
+///     <field name="constraints">Ограничения типа и наследование</field>
+///     <field name="relationships">Связи с другими типами</field>
+///   </fields>
+/// </entity-type>
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BslEntity {
     // Идентификация
@@ -197,6 +273,9 @@ pub struct BslEntity {
     pub documentation: Option<String>,
     pub availability: Vec<BslContext>,
     pub lifecycle: BslLifecycle,
+    
+    // Расширенные данные для специфичной информации
+    pub extended_data: serde_json::Map<String, serde_json::Value>,
 }
 
 impl BslEntity {
@@ -220,6 +299,7 @@ impl BslEntity {
                 removed_version: None,
                 replacement: None,
             },
+            extended_data: serde_json::Map::new(),
         }
     }
     

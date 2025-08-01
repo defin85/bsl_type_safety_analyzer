@@ -9,43 +9,112 @@ BSL Type Safety Analyzer is an enterprise-ready static analyzer for 1C:Enterpris
 ## Development Commands
 
 ### Building and Running
-```bash
-# Build the project
-cargo build
 
-# Build optimized release version
-cargo build --release
+<commands>
+  <command-group name="Building">
+    <command>
+      <description>Build the project</description>
+      <code>cargo build</code>
+    </command>
+    <command>
+      <description>Build optimized release version</description>
+      <code>cargo build --release</code>
+    </command>
+  </command-group>
 
-# Build unified index from configuration (with automatic caching!)
-cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25"
+  <command-group name="Unified Index Operations">
+    <command>
+      <description>Build unified index from configuration (with automatic caching!)</description>
+      <code>cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25"</code>
+      <performance>
+        <first-run>~795ms</first-run>
+        <cached>~588ms (25% faster)</cached>
+      </performance>
+    </command>
+    
+    <command>
+      <description>Build with specific application mode</description>
+      <variants>
+        <variant mode="ordinary">cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode ordinary</variant>
+        <variant mode="managed" default="true">cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode managed</variant>
+        <variant mode="mixed">cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode mixed</variant>
+      </variants>
+    </command>
+  </command-group>
 
-# Build with specific application mode (NEW!)
-cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode ordinary
-cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode managed  # default
-cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25" --mode mixed
+  <command-group name="Platform Documentation">
+    <command>
+      <description>Extract platform documentation (one-time per version)</description>
+      <code>cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"</code>
+      <result>~/.bsl_analyzer/platform_cache/v8.3.25.jsonl</result>
+    </command>
+  </command-group>
 
-# Extract platform documentation (one-time per version)
-cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
-
-# Query unified index (uses project cache automatically)
-cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods
-```
+  <command-group name="Type Queries">
+    <command>
+      <description>Query unified index (uses project cache automatically)</description>
+      <code>cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods</code>
+    </command>
+  </command-group>
+</commands>
 
 ### Единый индекс BSL типов (v0.0.4) - с автоматическим кешированием!
-```bash
-# Построение единого индекса из XML конфигурации (автоматически кешируется)
-cargo run --bin build_unified_index -- --config "C:\Config\MyConfig" --platform-version "8.3.25"
-# Первый запуск: ~795ms, последующие: ~588ms (25% быстрее)
 
-# Извлечение платформенных типов (один раз для версии)
-cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
-# Результат: ~/.bsl_analyzer/platform_cache/v8.3.25.jsonl
+<examples>
+  <example-group name="Index Building">
+    <example>
+      <description>Построение единого индекса из XML конфигурации (автоматически кешируется)</description>
+      <code>cargo run --bin build_unified_index -- --config "C:\Config\MyConfig" --platform-version "8.3.25"</code>
+      <performance>
+        <first-run>~795ms</first-run>
+        <cached>~588ms (25% быстрее)</cached>
+      </performance>
+    </example>
+    
+    <example>
+      <description>Извлечение платформенных типов (один раз для версии)</description>
+      <code>cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"</code>
+      <result>~/.bsl_analyzer/platform_cache/v8.3.25.jsonl</result>
+    </example>
+  </example-group>
 
-# Запросы к единому индексу (требуется указать конфигурацию)
-cargo run --bin query_type -- --name "Массив (Array)" --config "path/to/config" --show-methods
-cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods
-cargo run --bin check_type -- --from "Справочники.Номенклатура" --to "СправочникСсылка" --config "path/to/config"
-```
+  <example-group name="Type Queries">
+    <example>
+      <description>Поиск платформенного типа</description>
+      <code>cargo run --bin query_type -- --name "Массив (Array)" --config "path/to/config" --show-methods</code>
+      <expected-output>
+Найден тип: Массив (Array)
+Тип: Platform
+Методы: 15
+- Вставить(Индекс: Число, Значение: Произвольный)
+- Добавить(Значение: Произвольный)
+- Найти(Значение: Произвольный): Число
+...
+      </expected-output>
+    </example>
+    
+    <example>
+      <description>Поиск объекта конфигурации со всеми методами</description>
+      <code>cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods</code>
+      <expected-output>
+Найден тип: Справочники.Номенклатура
+Тип: Configuration
+Всего методов (включая унаследованные): 45
+Собственные методы: 3
+Унаследованные методы: 42 (от СправочникОбъект, ОбъектБД)
+      </expected-output>
+    </example>
+    
+    <example>
+      <description>Проверка совместимости типов</description>
+      <code>cargo run --bin check_type -- --from "Справочники.Номенклатура" --to "СправочникСсылка" --config "path/to/config"</code>
+      <expected-output>
+✓ Тип "Справочники.Номенклатура" совместим с "СправочникСсылка"
+Путь наследования: Справочники.Номенклатура → реализует → СправочникСсылка
+      </expected-output>
+    </example>
+  </example-group>
+</examples>
 
 ### Legacy парсеры (использовать только для совместимости)
 ```bash
@@ -103,16 +172,47 @@ cargo clippy -- -D warnings
 - Размер кеша проекта: ~7KB
 
 **Основные API:**
-```rust
-// Поиск любой сущности
+
+<api-examples>
+  <api-method name="find_entity">
+    <description>Поиск любой сущности по имени</description>
+    <code lang="rust">
+// Поиск платформенного типа
+let entity = index.find_entity("Массив")?;
+let entity = index.find_entity("Array")?; // английский вариант
+
+// Поиск объекта конфигурации  
 let entity = index.find_entity("Справочники.Номенклатура")?;
-
-// Все методы объекта (включая унаследованные)
+    </code>
+  </api-method>
+  
+  <api-method name="get_all_methods">
+    <description>Получение всех методов объекта (включая унаследованные)</description>
+    <code lang="rust">
 let methods = index.get_all_methods("Справочники.Номенклатура");
+// Возвращает HashMap с 45+ методами от СправочникОбъект, ОбъектБД и т.д.
 
-// Проверка совместимости типов
-let compatible = index.is_assignable("Справочники.Номенклатура", "СправочникСсылка");
-```
+// Проверка наличия метода
+if methods.contains_key("Записать") {
+    let method = &methods["Записать"];
+    println!("Параметры: {:?}", method.parameters);
+}
+    </code>
+  </api-method>
+  
+  <api-method name="is_assignable">
+    <description>Проверка совместимости типов</description>
+    <code lang="rust">
+// Проверка через интерфейсы
+let ok = index.is_assignable("Справочники.Номенклатура", "СправочникСсылка");
+assert!(ok); // true - справочник реализует СправочникСсылка
+
+// Проверка несовместимых типов
+let ok = index.is_assignable("Число", "Строка");  
+assert!(!ok); // false - типы несовместимы
+    </code>
+  </api-method>
+</api-examples>
 
 ### Legacy парсеры (оставлены для совместимости)
 
@@ -622,6 +722,7 @@ form_parser.parse_to_hybrid_storage("./config", &mut storage)?;
 - Integration with UnifiedBslIndex for type/method validation
 
 See `docs/BSL_PARSER_DESIGN.md` for complete architectural decision.
+See `docs/BSL_GRAMMAR_DEVELOPMENT.md` for grammar development guide and ANTLR adaptation examples.
 
 ### Example Files
 - `examples/sample_config_report.txt` - comprehensive example of 1C configuration report format
