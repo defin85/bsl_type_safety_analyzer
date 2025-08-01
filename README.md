@@ -260,9 +260,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support & Documentation
 
-- **Architecture Details**: See `CLAUDE.md` for comprehensive development guidance
-- **Development Roadmap**: See `ROADMAP.md` for detailed project status
-- **Issues**: Contact maintainers for bug reports and feature requests
+### 📚 [Full Documentation](docs/README.md)
+
+**Quick Links:**
+- **[Project Concept](docs/01-overview/unified-concept.md)** - Core + Shell architecture
+- **[Current Decisions](docs/CURRENT_DECISIONS.md)** - Resolved architectural conflicts
+- **[API Reference](docs/04-api/README.md)** - Rust, CLI and MCP APIs
+- **[Integration Guide](docs/03-guides/integration.md)** - VSCode, CLI, Git integration
+- **[Development Guide](docs/03-guides/development.md)** - Requirements and setup
+- **[LLM Usage](docs/03-guides/llm-usage.md)** - Using with Claude/GPT
+
+**Project Files:**
+- **[CLAUDE.md](CLAUDE.md)** - AI assistant instructions
+- **[ROADMAP.md](ROADMAP.md)** - Development roadmap and status
+- **Issues**: GitHub issues for bug reports and features
 
 ---
 

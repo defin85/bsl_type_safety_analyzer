@@ -124,6 +124,10 @@ fn main() -> Result<()> {
         (BslEntityKind::Task, "Tasks"),
         (BslEntityKind::ExchangePlan, "Exchange plans"),
         (BslEntityKind::Constant, "Constants"),
+        (BslEntityKind::Enum, "Enums"),
+        (BslEntityKind::Report, "Reports"),
+        (BslEntityKind::DataProcessor, "Data processors"),
+        (BslEntityKind::DocumentJournal, "Document journals"),
         (BslEntityKind::CommonModule, "Common modules"),
     ];
     

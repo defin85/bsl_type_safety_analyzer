@@ -74,7 +74,12 @@
       "WebFetch(domain:paulyu.dev)",
       "Bash(npm test)",
       "Bash(RUST_LOG=debug cargo run --bin build_unified_index -- --config \"C:\\1CProject\\Unicom\\conf_files\" --platform-version \"8.3.25\")",
-      "Bash(set RUST_LOG=info)"
+      "Bash(set RUST_LOG=info)",
+      "Bash(timeout 30s cargo run --bin build_unified_index -- --config \"C:\\1CProject\\Unicom\\conf_files\" --platform-version \"8.3.25\")",
+      "Bash(timeout:*)",
+      "Bash(echo:*)",
+      "Bash(test:*)",
+      "Bash(bash:*)"
     ],
     "deny": []
   }

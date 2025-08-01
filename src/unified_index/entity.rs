@@ -79,6 +79,10 @@ pub enum BslEntityKind {
     Task,
     ExchangePlan,
     Constant,
+    Enum,
+    Report,
+    DataProcessor,
+    DocumentJournal,
     
     // Формы
     Form,

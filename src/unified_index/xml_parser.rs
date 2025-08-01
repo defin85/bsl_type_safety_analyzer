@@ -44,6 +44,18 @@ impl ConfigurationXmlParser {
         // Парсим константы (они не имеют форм)
         entities.extend(self.parse_metadata_objects("Constants", BslEntityKind::Constant)?);
         
+        // Парсим перечисления (они не имеют форм)
+        entities.extend(self.parse_metadata_objects("Enums", BslEntityKind::Enum)?);
+        
+        // Парсим отчеты с их формами
+        entities.extend(self.parse_metadata_objects_with_forms("Reports", BslEntityKind::Report)?);
+        
+        // Парсим обработки с их формами
+        entities.extend(self.parse_metadata_objects_with_forms("DataProcessors", BslEntityKind::DataProcessor)?);
+        
+        // Парсим журналы документов с их формами
+        entities.extend(self.parse_metadata_objects_with_forms("DocumentJournals", BslEntityKind::DocumentJournal)?);
+        
         // Парсим общие модули
         entities.extend(self.parse_common_modules()?);
         
@@ -127,7 +139,12 @@ impl ConfigurationXmlParser {
         let mut buf = Vec::new();
         let mut in_properties = false;
         let mut in_attributes = false;
+        let mut in_child_objects = false;
+        let mut in_enum_value = false;
+        let mut in_enum_properties = false;
         let mut current_element = String::new();
+        let mut current_enum_name = String::new();
+        let mut current_enum_synonym = String::new();
         
         loop {
             match reader.read_event_into(&mut buf) {
@@ -149,7 +166,7 @@ impl ConfigurationXmlParser {
                                 }
                             }
                         }
-                        "Properties" => in_properties = true,
+                        "Properties" if !in_enum_value => in_properties = true,
                         "Type" if in_properties => {
                             // Для констант парсим тип как свойство
                             if entity.entity_kind == BslEntityKind::Constant {
@@ -168,8 +185,15 @@ impl ConfigurationXmlParser {
                             }
                         }
                         "ChildObjects" => {
-                            // Нам нужно продолжить парсинг ChildObjects, а не читать следующий элемент
-                            // Установим флаг, что мы в ChildObjects
+                            in_child_objects = true;
+                        }
+                        "EnumValue" if in_child_objects => {
+                            in_enum_value = true;
+                            current_enum_name.clear();
+                            current_enum_synonym.clear();
+                        }
+                        "Properties" if in_enum_value => {
+                            in_enum_properties = true;
                         }
                         "Attribute" if !in_attributes => {
                             // Это атрибут объекта, не табличной части
@@ -187,7 +211,7 @@ impl ConfigurationXmlParser {
                 Ok(Event::Text(e)) => {
                     let text = e.unescape()?.to_string();
                     
-                    if in_properties {
+                    if in_properties && !in_enum_value {
                         match current_element.as_str() {
                             "Name" => entity.display_name = text.clone(),
                             "Synonym" => {
@@ -197,12 +221,36 @@ impl ConfigurationXmlParser {
                             }
                             _ => {}
                         }
+                    } else if in_enum_properties && in_enum_value {
+                        match current_element.as_str() {
+                            "Name" => current_enum_name = text,
+                            "v8:content" => current_enum_synonym = text,
+                            _ => {}
+                        }
                     }
                 }
                 Ok(Event::End(ref e)) => {
                     let tag_name = String::from_utf8_lossy(e.name().as_ref()).to_string();
                     match tag_name.as_str() {
+                        "Properties" if in_enum_value => in_enum_properties = false,
                         "Properties" => in_properties = false,
+                        "EnumValue" => {
+                            // Сохраняем значение перечисления
+                            if !current_enum_name.is_empty() {
+                                let enum_prop = BslProperty {
+                                    name: current_enum_name.clone(),
+                                    english_name: None,
+                                    type_name: "EnumValue".to_string(),
+                                    is_readonly: true,
+                                    is_indexed: false,
+                                    documentation: if current_enum_synonym.is_empty() { None } else { Some(current_enum_synonym.clone()) },
+                                    availability: vec![BslContext::Client, BslContext::Server],
+                                };
+                                entity.interface.properties.insert(current_enum_name.clone(), enum_prop);
+                            }
+                            in_enum_value = false;
+                        }
+                        "ChildObjects" => in_child_objects = false,
                         "Attribute" => {
                             if in_attributes {
                                 // Добавляем атрибут как свойство
@@ -414,6 +462,10 @@ impl ConfigurationXmlParser {
             BslEntityKind::Task => "Задачи",
             BslEntityKind::ExchangePlan => "ПланыОбмена",
             BslEntityKind::Constant => "Константы",
+            BslEntityKind::Enum => "Перечисления",
+            BslEntityKind::Report => "Отчеты",
+            BslEntityKind::DataProcessor => "Обработки",
+            BslEntityKind::DocumentJournal => "ЖурналыДокументов",
             _ => "Прочие",
         }
     }
@@ -430,18 +482,22 @@ impl ConfigurationXmlParser {
             BslEntityKind::AccountingRegister => vec!["РегистрБухгалтерииНаборЗаписей".to_string()],
             BslEntityKind::CalculationRegister => vec!["РегистрРасчетаНаборЗаписей".to_string()],
             BslEntityKind::Constant => vec!["КонстантаМенеджерЗначения".to_string()],
+            BslEntityKind::Enum => vec!["ПеречислениеСсылка".to_string()],
+            BslEntityKind::Report => vec!["ОтчетОбъект".to_string()],
+            BslEntityKind::DataProcessor => vec!["ОбработкаОбъект".to_string()],
+            BslEntityKind::DocumentJournal => vec!["ЖурналДокументовОбъект".to_string()],
             _ => vec![],
         }
     }
     
-    fn extract_ru_synonym(&self, synonym: &str) -> Option<String> {
-        // Извлекаем русский синоним из мультиязычной строки
-        if synonym.contains("ru='") {
-            let start = synonym.find("ru='")? + 4;
-            let end = synonym[start..].find('\'')?;
-            Some(synonym[start..start+end].to_string())
+    fn extract_ru_synonym(&self, synonym_xml: &str) -> Option<String> {
+        // Для XML синонимов (не text) нужен специальный парсинг
+        // В данном случае синоним приходит как текст между тегами v8:content
+        // Возвращаем как есть, так как это уже извлеченное содержимое
+        if synonym_xml.trim().is_empty() {
+            None
         } else {
-            Some(synonym.to_string())
+            Some(synonym_xml.trim().to_string())
         }
     }
     
@@ -556,6 +612,7 @@ impl ConfigurationXmlParser {
         // TODO: Полная реализация парсинга составных типов
         type_str.to_string()
     }
+    
     
     pub fn parse_object_forms(&self, object_path: &Path, parent_qualified_name: &str) -> Result<Vec<BslEntity>> {
         let mut forms = Vec::new();
