@@ -2,7 +2,6 @@
 
 use crate::parser::ast::{AstNode, AstNodeType, Position, Span};
 use crate::bsl_parser::ast::{BslAst, Declaration, Statement, Expression, Literal, CompilerDirective};
-use std::collections::HashMap;
 
 /// Преобразует новый BSL AST в старый формат для совместимости
 pub struct AstBridge;

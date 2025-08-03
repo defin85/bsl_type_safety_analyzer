@@ -36,13 +36,16 @@ impl UnifiedIndexBuilder {
         let config_path = config_path.as_ref();
         
         info!("Building unified BSL index for: {}", config_path.display());
+        info!("DEBUG: About to call project_cache.get_or_create");
         
         // Используем project cache для автоматического кеширования
-        let index = self.project_cache.get_or_create(
+        let mut index = self.project_cache.get_or_create(
             config_path,
             platform_version,
             &|| self.build_index_from_scratch(config_path, platform_version)
         )?;
+        
+        // Примитивные типы теперь добавляются в platform_cache автоматически
         
         Ok(index)
     }
@@ -86,6 +89,9 @@ impl UnifiedIndexBuilder {
         // 4. Строим граф наследования
         let start = std::time::Instant::now();
         index.build_inheritance_relationships()?;
+        
+        // 5. Инициализируем глобальные алиасы 1С
+        index.initialize_global_aliases()?;
         
         info!("✅ Index built successfully: {} entities (total time: {:?})", 
             index.get_entity_count(), start.elapsed());
@@ -281,4 +287,5 @@ impl UnifiedIndexBuilder {
         
         Ok(entity)
     }
+    
 }

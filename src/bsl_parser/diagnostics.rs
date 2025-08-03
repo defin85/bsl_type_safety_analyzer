@@ -9,6 +9,7 @@ pub enum DiagnosticSeverity {
     Error,
     Warning,
     Information,
+    Info,
     Hint,
 }
 
@@ -118,6 +119,14 @@ pub mod codes {
     pub const UNKNOWN_PROPERTY: &str = "BSL005";
     /// Несовместимые типы
     pub const TYPE_MISMATCH: &str = "BSL006";
+    /// Необъявленная переменная
+    pub const UNDECLARED_VARIABLE: &str = "BSL007";
+    /// Неиспользуемая переменная
+    pub const UNUSED_VARIABLE: &str = "BSL008";
+    /// Неинициализированная переменная
+    pub const UNINITIALIZED_VARIABLE: &str = "BSL009";
+    /// Дублированный параметр
+    pub const DUPLICATE_PARAMETER: &str = "BSL010";
 }
 
 #[cfg(test)]

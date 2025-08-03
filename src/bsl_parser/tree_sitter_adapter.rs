@@ -1,7 +1,7 @@
 //! Адаптер для конвертации tree-sitter дерева в наш AST
 
-use tree_sitter::{Node, Tree};
 use crate::bsl_parser::{ast::*, diagnostics::*, Location};
+use tree_sitter::{Node, Tree};
 
 /// Конвертер tree-sitter дерева в BSL AST
 #[derive(Clone)]
@@ -21,12 +21,12 @@ impl TreeSitterAdapter {
         diagnostics: &mut Vec<Diagnostic>,
     ) -> Option<BslAst> {
         let root_node = tree.root_node();
-        
+
         // Проверяем на синтаксические ошибки
         if root_node.has_error() {
             self.collect_syntax_errors(&root_node, source, file_path, diagnostics);
         }
-        
+
         // Конвертируем в AST
         self.parse_module(root_node, source, file_path, diagnostics)
     }
@@ -40,33 +40,31 @@ impl TreeSitterAdapter {
         diagnostics: &mut Vec<Diagnostic>,
     ) {
         let mut cursor = node.walk();
-        
+
         loop {
             let node = cursor.node();
-            
+
             if node.is_error() {
                 let location = self.node_to_location(&node, file_path);
                 let text = node.utf8_text(source.as_bytes()).unwrap_or("<invalid>");
-                
-                diagnostics.push(
-                    Diagnostic::new(
-                        DiagnosticSeverity::Error,
-                        location,
-                        codes::SYNTAX_ERROR,
-                        format!("Синтаксическая ошибка: неожиданный токен '{}'", text),
-                    )
-                );
+
+                diagnostics.push(Diagnostic::new(
+                    DiagnosticSeverity::Error,
+                    location,
+                    codes::SYNTAX_ERROR,
+                    format!("Синтаксическая ошибка: неожиданный токен '{}'", text),
+                ));
             }
-            
+
             if cursor.goto_first_child() {
                 continue;
             }
-            
+
             loop {
                 if cursor.goto_next_sibling() {
                     break;
                 }
-                
+
                 if !cursor.goto_parent() {
                     return;
                 }
@@ -80,7 +78,7 @@ impl TreeSitterAdapter {
         node: Node,
         source: &str,
         file_path: &str,
-        diagnostics: &mut Vec<Diagnostic>,
+        _diagnostics: &mut Vec<Diagnostic>,
     ) -> Option<BslAst> {
         let mut module = Module {
             directives: vec![],
@@ -124,19 +122,30 @@ impl TreeSitterAdapter {
         match text {
             "&НаКлиенте" | "&AtClient" => Some(CompilerDirective::AtClient),
             "&НаСервере" | "&AtServer" => Some(CompilerDirective::AtServer),
-            "&НаСервереБезКонтекста" | "&AtServerNoContext" => Some(CompilerDirective::AtServerNoContext),
-            "&НаКлиентеНаСервереБезКонтекста" | "&AtClientAtServerNoContext" => Some(CompilerDirective::AtClientAtServerNoContext),
-            "&НаКлиентеНаСервере" | "&AtClientAtServer" => Some(CompilerDirective::AtClientAtServer),
+            "&НаСервереБезКонтекста" | "&AtServerNoContext" => {
+                Some(CompilerDirective::AtServerNoContext)
+            }
+            "&НаКлиентеНаСервереБезКонтекста" | "&AtClientAtServerNoContext" => {
+                Some(CompilerDirective::AtClientAtServerNoContext)
+            }
+            "&НаКлиентеНаСервере" | "&AtClientAtServer" => {
+                Some(CompilerDirective::AtClientAtServer)
+            }
             _ => None,
         }
     }
 
     /// Парсит объявление процедуры
-    fn parse_procedure_declaration(&self, node: Node, source: &str, file_path: &str) -> Option<ProcedureDecl> {
+    fn parse_procedure_declaration(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<ProcedureDecl> {
         let mut name = String::new();
         let mut export = false;
         let mut params = vec![];
-        let mut directives = vec![];
+        let directives = vec![];
         let mut body = vec![];
 
         let mut cursor = node.walk();
@@ -144,7 +153,10 @@ impl TreeSitterAdapter {
             match child.kind() {
                 "identifier" => {
                     if name.is_empty() {
-                        name = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                        name = child
+                            .utf8_text(source.as_bytes())
+                            .unwrap_or_default()
+                            .to_string();
                     }
                 }
                 "export_keyword" => export = true,
@@ -169,11 +181,16 @@ impl TreeSitterAdapter {
     }
 
     /// Парсит объявление функции
-    fn parse_function_declaration(&self, node: Node, source: &str, file_path: &str) -> Option<FunctionDecl> {
+    fn parse_function_declaration(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<FunctionDecl> {
         let mut name = String::new();
         let mut export = false;
         let mut params = vec![];
-        let mut directives = vec![];
+        let directives = vec![];
         let mut body = vec![];
 
         let mut cursor = node.walk();
@@ -181,7 +198,10 @@ impl TreeSitterAdapter {
             match child.kind() {
                 "identifier" => {
                     if name.is_empty() {
-                        name = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                        name = child
+                            .utf8_text(source.as_bytes())
+                            .unwrap_or_default()
+                            .to_string();
                     }
                 }
                 "export_keyword" => export = true,
@@ -206,7 +226,12 @@ impl TreeSitterAdapter {
     }
 
     /// Парсит объявление переменной
-    fn parse_variable_declaration(&self, node: Node, source: &str, file_path: &str) -> Option<VariableDecl> {
+    fn parse_variable_declaration(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<VariableDecl> {
         let mut names = vec![];
         let mut export = false;
 
@@ -214,7 +239,12 @@ impl TreeSitterAdapter {
         for child in node.children(&mut cursor) {
             match child.kind() {
                 "identifier" => {
-                    names.push(child.utf8_text(source.as_bytes()).unwrap_or_default().to_string());
+                    names.push(
+                        child
+                            .utf8_text(source.as_bytes())
+                            .unwrap_or_default()
+                            .to_string(),
+                    );
                 }
                 "export_keyword" => export = true,
                 _ => {}
@@ -231,7 +261,7 @@ impl TreeSitterAdapter {
     /// Парсит список параметров
     fn parse_parameter_list(&self, node: Node, source: &str, file_path: &str) -> Vec<Parameter> {
         let mut params = vec![];
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             if child.kind() == "parameter" {
@@ -240,7 +270,7 @@ impl TreeSitterAdapter {
                 }
             }
         }
-        
+
         params
     }
 
@@ -255,7 +285,10 @@ impl TreeSitterAdapter {
             match child.kind() {
                 "val_keyword" => by_val = true,
                 "identifier" => {
-                    name = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                    name = child
+                        .utf8_text(source.as_bytes())
+                        .unwrap_or_default()
+                        .to_string();
                 }
                 "default_value" => {
                     default_value = self.parse_expression(child, source, file_path);
@@ -275,38 +308,43 @@ impl TreeSitterAdapter {
     /// Парсит список операторов
     fn parse_statement_list(&self, node: Node, source: &str, file_path: &str) -> Vec<Statement> {
         let mut statements = vec![];
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             if let Some(stmt) = self.parse_statement(child, source, file_path) {
                 statements.push(stmt);
             }
         }
-        
+
         statements
     }
 
     /// Парсит оператор
     fn parse_statement(&self, node: Node, source: &str, file_path: &str) -> Option<Statement> {
         match node.kind() {
-            "assignment_statement" => {
-                self.parse_assignment_statement(node, source, file_path).map(Statement::Assignment)
-            }
-            "if_statement" => {
-                self.parse_if_statement(node, source, file_path).map(Statement::If)
-            }
-            "return_statement" => {
-                self.parse_return_statement(node, source, file_path).map(Statement::Return)
-            }
-            "expression_statement" => {
-                self.parse_expression(node, source, file_path).map(Statement::Expression)
-            }
+            "assignment_statement" => self
+                .parse_assignment_statement(node, source, file_path)
+                .map(Statement::Assignment),
+            "if_statement" => self
+                .parse_if_statement(node, source, file_path)
+                .map(Statement::If),
+            "return_statement" => self
+                .parse_return_statement(node, source, file_path)
+                .map(Statement::Return),
+            "expression_statement" => self
+                .parse_expression(node, source, file_path)
+                .map(Statement::Expression),
             _ => None,
         }
     }
 
     /// Парсит присваивание
-    fn parse_assignment_statement(&self, node: Node, source: &str, file_path: &str) -> Option<Assignment> {
+    fn parse_assignment_statement(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<Assignment> {
         let mut target = None;
         let mut value = None;
 
@@ -331,7 +369,7 @@ impl TreeSitterAdapter {
     fn parse_if_statement(&self, node: Node, source: &str, file_path: &str) -> Option<IfStatement> {
         let mut condition = None;
         let mut then_branch = vec![];
-        let mut else_ifs = vec![];
+        let else_ifs = vec![];
         let mut else_branch = None;
 
         let mut cursor = node.walk();
@@ -360,7 +398,12 @@ impl TreeSitterAdapter {
     }
 
     /// Парсит оператор возврата
-    fn parse_return_statement(&self, node: Node, source: &str, file_path: &str) -> Option<ReturnStatement> {
+    fn parse_return_statement(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<ReturnStatement> {
         let mut value = None;
 
         let mut cursor = node.walk();
@@ -381,26 +424,30 @@ impl TreeSitterAdapter {
     fn parse_expression(&self, node: Node, source: &str, file_path: &str) -> Option<Expression> {
         match node.kind() {
             "identifier" => {
-                let name = node.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                let name = node
+                    .utf8_text(source.as_bytes())
+                    .unwrap_or_default()
+                    .to_string();
                 Some(Expression::Identifier(name))
             }
             "number" => {
-                let value = node.utf8_text(source.as_bytes()).unwrap_or_default().parse().unwrap_or(0.0);
+                let value = node
+                    .utf8_text(source.as_bytes())
+                    .unwrap_or_default()
+                    .parse()
+                    .unwrap_or(0.0);
                 Some(Expression::Literal(Literal::Number(value)))
             }
             "string" => {
-                let value = node.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                let value = node
+                    .utf8_text(source.as_bytes())
+                    .unwrap_or_default()
+                    .to_string();
                 Some(Expression::Literal(Literal::String(value)))
             }
-            "method_call" => {
-                self.parse_method_call(node, source, file_path)
-            }
-            "property_access" => {
-                self.parse_property_access(node, source, file_path)
-            }
-            "new_expression" => {
-                self.parse_new_expression(node, source, file_path)
-            }
+            "method_call" => self.parse_method_call(node, source, file_path),
+            "property_access" => self.parse_property_access(node, source, file_path),
+            "new_expression" => self.parse_new_expression(node, source, file_path),
             _ => None,
         }
     }
@@ -420,7 +467,10 @@ impl TreeSitterAdapter {
                     }
                 }
                 "identifier" => {
-                    method = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                    method = child
+                        .utf8_text(source.as_bytes())
+                        .unwrap_or_default()
+                        .to_string();
                 }
                 "argument_list" => {
                     args = self.parse_argument_list(child, source, file_path);
@@ -438,7 +488,12 @@ impl TreeSitterAdapter {
     }
 
     /// Парсит обращение к свойству
-    fn parse_property_access(&self, node: Node, source: &str, file_path: &str) -> Option<Expression> {
+    fn parse_property_access(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<Expression> {
         let mut object = None;
         let mut property = String::new();
 
@@ -449,7 +504,10 @@ impl TreeSitterAdapter {
                     object = Some(Box::new(self.parse_expression(child, source, file_path)?));
                 }
                 "identifier" => {
-                    property = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                    property = child
+                        .utf8_text(source.as_bytes())
+                        .unwrap_or_default()
+                        .to_string();
                 }
                 _ => {}
             }
@@ -463,7 +521,12 @@ impl TreeSitterAdapter {
     }
 
     /// Парсит создание объекта
-    fn parse_new_expression(&self, node: Node, source: &str, file_path: &str) -> Option<Expression> {
+    fn parse_new_expression(
+        &self,
+        node: Node,
+        source: &str,
+        file_path: &str,
+    ) -> Option<Expression> {
         let mut type_name = String::new();
         let mut args = vec![];
 
@@ -471,7 +534,10 @@ impl TreeSitterAdapter {
         for child in node.children(&mut cursor) {
             match child.kind() {
                 "identifier" => {
-                    type_name = child.utf8_text(source.as_bytes()).unwrap_or_default().to_string();
+                    type_name = child
+                        .utf8_text(source.as_bytes())
+                        .unwrap_or_default()
+                        .to_string();
                 }
                 "argument_list" => {
                     args = self.parse_argument_list(child, source, file_path);
@@ -490,22 +556,22 @@ impl TreeSitterAdapter {
     /// Парсит список аргументов
     fn parse_argument_list(&self, node: Node, source: &str, file_path: &str) -> Vec<Expression> {
         let mut args = vec![];
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             if let Some(expr) = self.parse_expression(child, source, file_path) {
                 args.push(expr);
             }
         }
-        
+
         args
     }
 
     /// Конвертирует Node в Location
     fn node_to_location(&self, node: &Node, file_path: &str) -> Location {
         let start = node.start_position();
-        let end = node.end_position();
-        
+        let _end = node.end_position();
+
         Location::new(
             file_path.to_string(),
             start.row + 1,

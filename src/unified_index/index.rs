@@ -16,7 +16,7 @@ pub enum BslLanguagePreference {
     Auto,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnifiedBslIndex {
     // Режим приложения
     application_mode: BslApplicationMode,
@@ -36,6 +36,9 @@ pub struct UnifiedBslIndex {
     
     // Альтернативные имена для быстрого поиска O(1)
     alternative_names: HashMap<String, BslEntityId>,
+    
+    // Глобальные алиасы 1С: глобальная переменная -> реальный тип платформы
+    global_aliases: HashMap<String, BslEntityId>,
     
     // Языковые индексы для оптимизированного поиска
     russian_names: HashMap<String, BslEntityId>,  // только русские имена
@@ -68,6 +71,7 @@ impl UnifiedBslIndex {
             methods_by_name: HashMap::new(),
             properties_by_name: HashMap::new(),
             alternative_names: HashMap::new(),
+            global_aliases: HashMap::new(),
             russian_names: HashMap::new(),
             english_names: HashMap::new(),
             inheritance_graph: DiGraph::new(),
@@ -128,8 +132,14 @@ impl UnifiedBslIndex {
         let ref_node_idx = self.reference_graph.add_node(id.clone());
         self.reference_node_map.insert(id.clone(), ref_node_idx);
         
+        // ООП-подход: Автоматическое наследование методов менеджеров
+        let mut enhanced_entity = entity;
+        if enhanced_entity.entity_type == BslEntityType::Configuration {
+            enhanced_entity = self.inherit_manager_methods(enhanced_entity)?;
+        }
+        
         // Сохраняем сущность
-        self.entities.insert(id, entity);
+        self.entities.insert(id, enhanced_entity);
         
         Ok(())
     }
@@ -153,6 +163,98 @@ impl UnifiedBslIndex {
         }
         
         Ok(())
+    }
+    
+    /// Инициализирует глобальные алиасы 1С для общих объектов платформы
+    pub fn initialize_global_aliases(&mut self) -> Result<()> {
+        // Маппинг глобальных алиасов 1С к реальным типам платформы
+        let aliases = [
+            // Пользователи информационной базы
+            ("ПользователиИнформационнойБазы", "МенеджерПользователейИнформационнойБазы (InfoBaseUsersManager)"),
+            ("InfoBaseUsers", "МенеджерПользователейИнформационнойБазы (InfoBaseUsersManager)"),
+            
+            // Метаданные (глобальный объект)
+            ("Метаданные", "МенеджерМетаданных"),
+            ("Metadata", "MetadataManager"),
+            
+            // Константы
+            ("Константы", "МенеджерКонстант"),
+            ("Constants", "ConstantsManager"),
+            
+            // Справочники (общий доступ через СправочникиМенеджер)
+            ("Справочники", "СправочникиМенеджер (CatalogsManager)"),
+            ("Catalogs", "СправочникиМенеджер (CatalogsManager)"),
+            
+            // Документы
+            ("Документы", "МенеджерДокументов"),
+            ("Documents", "DocumentsManager"),
+            
+            // Регистры сведений
+            ("РегистрыСведений", "МенеджерРегистровСведений"),
+            ("InformationRegisters", "InformationRegistersManager"),
+            
+            // Регистры накопления
+            ("РегистрыНакопления", "МенеджерРегистровНакопления"),
+            ("AccumulationRegisters", "AccumulationRegistersManager"),
+            
+            // Обработки
+            ("Обработки", "МенеджерОбработок"),
+            ("DataProcessors", "DataProcessorsManager"),
+            
+            // Отчеты
+            ("Отчеты", "МенеджерОтчетов"),
+            ("Reports", "ReportsManager"),
+        ];
+        
+        // Создаем алиасы для найденных типов
+        for (alias, target_type) in &aliases {
+            if let Some(target_id) = self.find_target_for_alias(target_type) {
+                self.global_aliases.insert(alias.to_string(), target_id.clone());
+                println!("🔗 Создан глобальный алиас: {} → {}", alias, target_type);
+            } else {
+                println!("⚠️ Целевой тип '{}' для алиаса '{}' не найден", target_type, alias);
+            }
+        }
+        
+        println!("✅ Инициализировано {} глобальных алиасов 1С", self.global_aliases.len());
+        Ok(())
+    }
+    
+    /// Ищет целевой тип для алиаса с различными стратегиями поиска
+    fn find_target_for_alias(&self, target_type: &str) -> Option<&BslEntityId> {
+        println!("🔍 Поиск target для алиаса: '{}'", target_type);
+        
+        // 1. Точный поиск по qualified_name
+        if let Some(id) = self.by_qualified_name.get(target_type) {
+            println!("✅ Найден по qualified_name: {}", target_type);
+            return Some(id);
+        }
+        
+        // 2. Поиск по display_name
+        if let Some(id) = self.by_name.get(target_type) {
+            if let Some(entity) = self.entities.get(id) {
+                println!("✅ Найден по display_name: {} -> {} ({:?})", 
+                    target_type, entity.qualified_name, entity.entity_kind);
+                return Some(id);
+            }
+        }
+        
+        // 3. Поиск по альтернативным именам
+        if let Some(id) = self.alternative_names.get(target_type) {
+            println!("✅ Найден по альтернативным именам: {}", target_type);
+            return Some(id);
+        }
+        
+        // 4. Гибкий поиск с частичным совпадением (для сложных имен) - только если точно не найдено
+        for (qualified_name, id) in &self.by_qualified_name {
+            if qualified_name.contains(target_type) {
+                println!("✅ Найден по частичному совпадению: {} -> {}", target_type, qualified_name);
+                return Some(id);
+            }
+        }
+        
+        println!("❌ Тип '{}' не найден", target_type);
+        None
     }
     
     /// Парсит display name на составные части
@@ -246,17 +348,22 @@ impl UnifiedBslIndex {
     ///   </algorithm>
     /// </api-method>
     pub fn find_entity_with_preference(&self, name: &str, preference: BslLanguagePreference) -> Option<&BslEntity> {
-        // 1. Поиск по полному qualified_name (всегда приоритетный)
+        // 1. Поиск по глобальным алиасам 1С (МАКСИМАЛЬНЫЙ приоритет)
+        if let Some(id) = self.global_aliases.get(name) {
+            return self.entities.get(id);
+        }
+        
+        // 2. Поиск по полному qualified_name (высокий приоритет)
         if let Some(id) = self.by_qualified_name.get(name) {
             return self.entities.get(id);
         }
         
-        // 2. Поиск по display_name (всегда приоритетный)
+        // 3. Поиск по display_name (высокий приоритет)
         if let Some(id) = self.by_name.get(name) {
             return self.entities.get(id);
         }
         
-        // 3. Оптимизированный поиск по языковым предпочтениям
+        // 4. Оптимизированный поиск по языковым предпочтениям
         match preference {
             BslLanguagePreference::Russian => {
                 // Сначала русские имена
@@ -553,5 +660,78 @@ impl UnifiedBslIndex {
         suggestions.sort();
         suggestions.truncate(10);
         suggestions
+    }
+    
+    /// ООП-подход: Автоматически наследует методы от соответствующего менеджера
+    fn inherit_manager_methods(&self, mut entity: BslEntity) -> Result<BslEntity> {
+        println!("🔍 Проверка наследования для: {} (вид: {:?})", entity.qualified_name, entity.entity_kind);
+        
+        // Мапинг типов конфигурации на их менеджеры (с правильными qualified_name)
+        let manager_mappings = [
+            (BslEntityKind::Catalog, "СправочникМенеджер.<Имя справочника> (CatalogManager.<Catalog name>)"),
+            (BslEntityKind::Document, "ДокументМенеджер.<Имя документа> (DocumentManager.<Document name>)"),
+            (BslEntityKind::InformationRegister, "РегистрСведенийМенеджер.<Имя регистра сведений> (InformationRegisterManager.<Information register name>)"),
+            (BslEntityKind::AccumulationRegister, "РегистрНакопленияМенеджер.<Имя регистра накопления> (AccumulationRegisterManager.<Accumulation register name>)"),
+            (BslEntityKind::DataProcessor, "ОбработкаМенеджер.<Имя обработки> (DataProcessorManager.<Data processor name>)"),
+            (BslEntityKind::Report, "ОтчетМенеджер.<Имя отчета> (ReportManager.<Report name>)"),
+        ];
+        
+        // Находим соответствующий менеджер для данного типа
+        for (kind, manager_template) in &manager_mappings {
+            if entity.entity_kind == *kind {
+                println!("  ✅ Совпадение типа: {:?} → ищем шаблон {}", kind, manager_template);
+                
+                // Ищем шаблонный тип менеджера в платформенных типах
+                if let Some(manager_entity) = self.entities.values()
+                    .find(|e| e.qualified_name == *manager_template && e.entity_type == BslEntityType::Platform) {
+                    
+                    println!("🔄 Наследование методов: {} ← {}", entity.qualified_name, manager_template);
+                    
+                    // Копируем методы из менеджера в объект конфигурации
+                    for (method_name, method) in &manager_entity.interface.methods {
+                        if !entity.interface.methods.contains_key(method_name) {
+                            entity.interface.methods.insert(method_name.clone(), method.clone());
+                            println!("  ✅ Унаследован метод: {}", method_name);
+                        }
+                    }
+                    
+                    // Копируем свойства из менеджера
+                    for (prop_name, prop) in &manager_entity.interface.properties {
+                        if !entity.interface.properties.contains_key(prop_name) {
+                            entity.interface.properties.insert(prop_name.clone(), prop.clone());
+                            println!("  ✅ Унаследовано свойство: {}", prop_name);
+                        }
+                    }
+                    
+                    break; // Найден соответствующий менеджер
+                } else {
+                    println!("  ❌ Шаблонный тип {} не найден среди {} платформенных типов", 
+                        manager_template, 
+                        self.entities.values().filter(|e| e.entity_type == BslEntityType::Platform).count());
+                    
+                    // Отладка: ищем точный qualified_name
+                    let exact_template = "СправочникМенеджер.<Имя справочника>";
+                    if let Some(catalog_manager) = self.entities.values()
+                        .find(|e| e.entity_type == BslEntityType::Platform && 
+                                 e.qualified_name == exact_template) {
+                        println!("    ✅ ТОЧНОЕ совпадение найдено!");
+                        println!("       qualified_name: '{}'", catalog_manager.qualified_name);
+                        println!("       методы: {}", catalog_manager.interface.methods.len());
+                    } else {
+                        // Покажем все типы, которые начинаются с "СправочникМенеджер.<Имя справочника>"
+                        let related: Vec<_> = self.entities.values()
+                            .filter(|e| e.entity_type == BslEntityType::Platform && 
+                                       e.qualified_name.starts_with("СправочникМенеджер.<Имя справочника>"))
+                            .map(|e| &e.qualified_name)
+                            .take(5)
+                            .collect();
+                        println!("    ❌ Точное совпадение НЕ найдено");
+                        println!("    📋 Связанные типы: {:?}", related);
+                    }
+                }
+            }
+        }
+        
+        Ok(entity)
     }
 }

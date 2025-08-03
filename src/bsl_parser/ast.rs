@@ -163,6 +163,7 @@ pub enum Expression {
     Literal(Literal),
     Identifier(String),
     MethodCall(MethodCall),
+    FunctionCall(FunctionCall),
     PropertyAccess(PropertyAccess),
     New(NewExpression),
     Binary(BinaryOp),
@@ -187,6 +188,14 @@ pub enum Literal {
 pub struct MethodCall {
     pub object: Box<Expression>,
     pub method: String,
+    pub args: Vec<Expression>,
+    pub location: Location,
+}
+
+/// Вызов глобальной функции
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FunctionCall {
+    pub name: String,
     pub args: Vec<Expression>,
     pub location: Location,
 }

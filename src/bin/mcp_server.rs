@@ -30,7 +30,7 @@ pub struct BslMcpServer {
 
 #[derive(Debug, Deserialize)]
 struct JsonRpcRequest {
-    jsonrpc: String,
+    _jsonrpc: String,
     method: String,
     params: Option<Value>,
     id: Value,

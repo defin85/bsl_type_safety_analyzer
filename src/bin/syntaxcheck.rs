@@ -167,6 +167,7 @@ fn print_human_format(result: &ParseResult, path: &Path, errors_only: bool) {
             DiagnosticSeverity::Warning => style("warning").yellow().bold(),
             DiagnosticSeverity::Information => style("info").blue(),
             DiagnosticSeverity::Hint => style("hint").cyan(),
+            DiagnosticSeverity::Info => style("info").blue(),
         };
         
         println!(
@@ -232,6 +233,7 @@ fn print_lsp_format(result: &ParseResult, path: &Path) {
                 DiagnosticSeverity::Warning => 2,
                 DiagnosticSeverity::Information => 3,
                 DiagnosticSeverity::Hint => 4,
+                DiagnosticSeverity::Info => 3,
             },
             "code": diag.code,
             "message": diag.message,

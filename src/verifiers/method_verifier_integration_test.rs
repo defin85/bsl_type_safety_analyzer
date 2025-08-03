@@ -6,13 +6,13 @@ Tests verifying that MethodVerifier is properly integrated into the analysis pip
 
 #[cfg(test)]
 mod tests {
-    use crate::analyzer::engine::AnalysisEngine;
+    use crate::bsl_parser::BslAnalyzer;
     use serde_json;
     
     #[test]
     fn test_method_verification_integration() {
-        let mut engine = AnalysisEngine::new();
-        let config = serde_json::Value::Object(serde_json::Map::new());
+        let mut engine = BslAnalyzer::new().unwrap();
+        let _config = serde_json::Value::Object(serde_json::Map::new());
         
         // Код с правильным вызовом метода
         let valid_code = r#"
@@ -22,18 +22,18 @@ mod tests {
             КонецПроцедуры
         "#;
         
-        let result = engine.analyze_code(valid_code, "test_valid.bsl", &config);
+        let result = engine.analyze_code(valid_code, "test_valid.bsl");
         assert!(result.is_ok());
         
         // Пока проверяем базовую функциональность
-        let diagnostics = engine.get_diagnostics();
-        println!("Diagnostics count for valid code: {}", diagnostics.len());
+        let (errors, warnings) = engine.get_errors_and_warnings();
+        println!("Diagnostics count for valid code: {}", errors.len() + warnings.len());
     }
     
     #[test]
     fn test_method_verification_with_invalid_method() {
-        let mut engine = AnalysisEngine::new();
-        let config = serde_json::Value::Object(serde_json::Map::new());
+        let mut engine = BslAnalyzer::new().unwrap();
+        let _config = serde_json::Value::Object(serde_json::Map::new());
         
         // Код с неправильным вызовом метода
         let invalid_code = r#"
@@ -43,11 +43,11 @@ mod tests {
             КонецПроцедуры
         "#;
         
-        let result = engine.analyze_code(invalid_code, "test_invalid.bsl", &config);
+        let result = engine.analyze_code(invalid_code, "test_invalid.bsl");
         assert!(result.is_ok());
         
-        let diagnostics = engine.get_diagnostics();
-        println!("Diagnostics count for invalid code: {}", diagnostics.len());
+        let (errors, warnings) = engine.get_errors_and_warnings();
+        println!("Diagnostics count for invalid code: {}", errors.len() + warnings.len());
         
         // В идеале здесь должны быть диагностики об ошибке
         // но пока что просто проверяем, что анализ не падает
@@ -55,10 +55,7 @@ mod tests {
     
     #[test]
     fn test_method_verifier_access() {
-        let engine = AnalysisEngine::new();
-        
-        // Проверяем доступ к верификатору методов
-        let verifier = engine.get_method_verifier();
+        let verifier = crate::verifiers::MethodVerifier::new();
         
         // Тестируем базовую функциональность верификатора
         assert!(verifier.verify_method_exists("ТаблицаЗначений", "Добавить"));
@@ -72,8 +69,7 @@ mod tests {
     
     #[test]
     fn test_method_suggestions() {
-        let engine = AnalysisEngine::new();
-        let verifier = engine.get_method_verifier();
+        let verifier = crate::verifiers::MethodVerifier::new();
         
         // Тестируем получение предложений для исправления
         let suggestions = verifier.get_suggestions_for_method("ТаблицаЗначений", "Добавт");
@@ -86,8 +82,7 @@ mod tests {
     
     #[test]
     fn test_type_compatibility() {
-        let engine = AnalysisEngine::new();
-        let verifier = engine.get_method_verifier();
+        let verifier = crate::verifiers::MethodVerifier::new();
         
         // Тестируем проверку совместимости типов
         assert!(verifier.verify_type_compatibility("Строка", "Строка"));
@@ -104,8 +99,7 @@ mod tests {
     
     #[test]
     fn test_expression_type_analysis() {
-        let engine = AnalysisEngine::new();
-        let verifier = engine.get_method_verifier();
+        let verifier = crate::verifiers::MethodVerifier::new();
         
         // Тестируем анализ типов выражений
         assert_eq!(verifier.analyze_expression_type("\"строка\""), "Строка");

@@ -1,4 +1,4 @@
-use bsl_analyzer::docs_integration::{hbk_parser_full::HbkArchiveParser, bsl_syntax_extractor::BslSyntaxExtractor};
+use bsl_analyzer::docs_integration::bsl_syntax_extractor::BslSyntaxExtractor;
 use anyhow::Result;
 use tracing_subscriber;
 use clap::Parser;

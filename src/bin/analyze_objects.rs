@@ -12,7 +12,7 @@ struct MainIndex {
 #[derive(Debug, Deserialize)]
 struct ItemIndexEntry {
     category: String,
-    file: String,
+    _file: String,
     title: String,
     object_name: String,
 }

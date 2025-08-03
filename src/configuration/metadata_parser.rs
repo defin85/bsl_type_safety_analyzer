@@ -1382,8 +1382,8 @@ impl Default for MetadataReportParser {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::TempDir;
-    use std::fs;
+    // use tempfile::TempDir;
+    // use std::fs;
 
     #[test]
     fn test_parser_creation() {

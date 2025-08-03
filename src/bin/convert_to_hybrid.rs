@@ -11,11 +11,11 @@ fn main() -> Result<()> {
     println!("=== BSL Documentation Hybrid Converter ===");
     println!("Converting chunked format to hybrid storage format...");
 
-    let chunked_path = "output/docs_search";
+    let _chunked_path = "output/docs_search";
     let hybrid_path = "output/hybrid_docs";
 
     // Создаем новое гибридное хранилище
-    let mut storage = HybridDocumentationStorage::new(hybrid_path);
+    let _storage = HybridDocumentationStorage::new(hybrid_path);
 
     // Конвертируем из chunked формата
     // TODO: Реализовать convert_from_chunked метод

@@ -242,6 +242,7 @@ impl ProjectIndexCache {
         format!("{}_{:x}", project_name, hash)
     }
     
+    #[allow(dead_code)]
     fn get_project_dir(&self, project_name: &str) -> PathBuf {
         self.cache_dir.join(project_name)
     }

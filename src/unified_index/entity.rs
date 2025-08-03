@@ -118,6 +118,7 @@ pub enum BslEntitySource {
     FormXml { path: String },
     Module { path: String },
     TextReport { path: String },
+    Synthetic, // Программно созданные типы (примитивные типы BSL)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

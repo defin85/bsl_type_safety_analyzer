@@ -50,11 +50,13 @@ log = "0.4"                          # Для совместимости с log 
 # Tree-sitter для BSL парсера
 tree-sitter = "0.22"
 tree-sitter-highlight = "0.22"
-tree-sitter-bsl = { git = "https://github.com/alkoleft/tree-sitter-bsl" }
+tree-sitter-language = "0.1"
+# tree-sitter-bsl = { git = "https://github.com/alkoleft/tree-sitter-bsl" } # Временно отключено
 
 # Утилиты
 regex = "1.10"                        
 uuid = { version = "1.6", features = ["v4"] }
+once_cell = "1.19"                    # Для lazy static инициализации
 
 # XML парсинг для метаданных 1С
 quick-xml = { version = "0.31", features = ["serialize"] }
@@ -165,3 +167,46 @@ path = "src/bin/mcp_server.rs"
 [[bin]]
 name = "syntaxcheck"
 path = "src/bin/syntaxcheck.rs"
+
+# BSL Semantic Analysis Testing
+[[bin]]
+name = "test_advanced_semantic"
+path = "src/bin/test_advanced_semantic.rs"
+
+[[bin]]
+name = "test_method_validation"
+path = "src/bin/test_method_validation.rs"
+
+[[bin]]
+name = "test_full_integration"
+path = "src/bin/test_full_integration.rs"
+
+[[bin]]
+name = "test_cli_integration"
+path = "src/bin/test_cli_integration.rs"
+
+# Debug and testing binaries
+[[bin]]
+name = "debug_local_functions"
+path = "src/bin/debug_local_functions.rs"
+
+
+[[bin]]
+name = "test_analyzer"
+path = "src/bin/test_analyzer.rs"
+
+[[bin]]
+name = "test_auto_keywords"
+path = "src/bin/test_auto_keywords.rs"
+
+[[bin]]
+name = "test_client"
+path = "src/bin/test_client.rs"
+
+[[bin]]
+name = "test_semantic"
+path = "src/bin/test_semantic.rs"
+
+[[bin]]
+name = "demo_context_analysis"
+path = "src/bin/demo_context_analysis.rs"

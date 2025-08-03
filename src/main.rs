@@ -5,10 +5,11 @@ Command-line interface for BSL (1C:Enterprise) static analyzer.
 */
 
 use anyhow::{Context, Result};
-use bsl_analyzer::{Configuration, AnalysisEngine, ReportManager, ReportFormat, ReportConfig};
+use bsl_analyzer::{Configuration, ReportManager, ReportFormat, ReportConfig};
+use bsl_analyzer::bsl_parser::BslAnalyzer;
 use bsl_analyzer::{RulesManager, RulesConfig, BuiltinRules, CustomRulesManager};
 use bsl_analyzer::{ContractGeneratorLauncher, GenerationComponents};
-use bsl_analyzer::analyzer::AnalysisResult;
+// use bsl_analyzer::analyzer::AnalysisResult; // Удален с analyzer
 use bsl_analyzer::core::AnalysisResults;
 use bsl_analyzer::metrics::QualityMetricsManager;
 use clap::{Parser, Subcommand};
@@ -75,6 +76,18 @@ enum Commands {
         /// Active rules profile to use
         #[arg(long)]
         rules_profile: Option<String>,
+        
+        /// Enable enhanced semantic analysis with UnifiedBslIndex
+        #[arg(long)]
+        enable_enhanced_semantics: bool,
+        
+        /// Platform version for UnifiedBslIndex (default: 8.3.25)
+        #[arg(long, default_value = "8.3.25")]
+        platform_version: String,
+        
+        /// Enable method call validation
+        #[arg(long)]
+        enable_method_validation: bool,
     },
     
     /// Start Language Server Protocol (LSP) server
@@ -315,8 +328,24 @@ async fn main() -> Result<()> {
             include_performance,
             rules_config,
             rules_profile,
+            enable_enhanced_semantics,
+            platform_version,
+            enable_method_validation,
         } => {
-            analyze_command(path, output, workers, inter_module, include_dependencies, include_performance, &cli.format, rules_config, rules_profile).await?;
+            analyze_command(
+                path, 
+                output, 
+                workers, 
+                inter_module, 
+                include_dependencies, 
+                include_performance, 
+                &cli.format, 
+                rules_config, 
+                rules_profile,
+                enable_enhanced_semantics,
+                platform_version,
+                enable_method_validation,
+            ).await?;
         }
         
         Commands::Lsp { port } => {
@@ -723,6 +752,9 @@ async fn analyze_command(
     format: &str,
     rules_config: Option<PathBuf>,
     rules_profile: Option<String>,
+    enable_enhanced_semantics: bool,
+    platform_version: String,
+    enable_method_validation: bool,
 ) -> Result<()> {
     let term = Term::stdout();
     term.write_line(&format!(
@@ -778,99 +810,152 @@ async fn analyze_command(
         }
     }
     
-    // Create analysis engine
-    let mut engine = AnalysisEngine::new();
+    // Create analysis engine with enhanced semantics if requested
+    let mut engine = if enable_enhanced_semantics || enable_method_validation {
+        pb.set_message("Creating UnifiedBslIndex for enhanced analysis...");
+        
+        use bsl_analyzer::unified_index::UnifiedIndexBuilder;
+        let builder = UnifiedIndexBuilder::new()?;
+        let index = builder.build_index(&path, &platform_version)
+            .context("Failed to create UnifiedBslIndex")?;
+        
+        term.write_line(&format!(
+            "✅ UnifiedBslIndex created: {} entities loaded",
+            style(index.get_all_entities().len()).green()
+        ))?;
+        
+        BslAnalyzer::with_index(index)?
+    } else {
+        BslAnalyzer::new()?
+    };
+    
     if let Some(workers) = workers {
         engine.set_worker_count(workers);
     }
     engine.set_inter_module_analysis(inter_module);
     
-    pb.set_message("Analyzing configuration...");
+    pb.set_message("Analyzing BSL files...");
     
-    // Run analysis
-    let results = engine.analyze_configuration(&config)
-        .await
-        .context("Analysis failed")?;
+    // NEW: Use file-by-file analysis instead of analyze_configuration
+    let mut total_errors = 0;
+    let mut total_warnings = 0;
+    let mut analyzed_files = 0;
+    let mut all_results = Vec::new();
+    
+    for module in config.get_modules() {
+        if let Ok(content) = std::fs::read_to_string(&module.path) {
+            match engine.analyze_code(&content, &module.path.to_string_lossy()) {
+                Ok(()) => {
+                    analyzed_files += 1;
+                    let (errors, warnings) = engine.get_errors_and_warnings();
+                    total_errors += errors.len();
+                    total_warnings += warnings.len();
+                    
+                    // Store results for each file
+                    all_results.push((module.path.clone(), errors, warnings));
+                }
+                Err(e) => {
+                    term.write_line(&format!(
+                        "❌ Failed to analyze {}: {}",
+                        module.path.display(),
+                        e
+                    ))?;
+                }
+            }
+        }
+    }
     
     pb.finish_and_clear();
     
     let analysis_time = start_time.elapsed();
     
-    // Convert engine results to AnalysisResults format for reports
+    // Convert results to AnalysisResults format for compatibility with reports
     let mut combined_results = AnalysisResults::new();
-    for result in &results {
-        for error in &result.errors {
+    for (_file_path, errors, warnings) in &all_results {
+        for error in errors {
             combined_results.add_error(error.clone());
         }
-        for warning in &result.warnings {
+        for warning in warnings {
             combined_results.add_warning(warning.clone());
         }
     }
     
     // Apply rules to filter and transform results
-    pb.set_message("Applying rules...");
-    let original_errors = combined_results.get_errors().len();
-    let original_warnings = combined_results.get_warnings().len();
+    let original_errors = total_errors;
+    let original_warnings = total_warnings;
     
-    combined_results = rules_manager.apply_rules(&combined_results)
-        .context("Failed to apply rules")?;
-    
-    let filtered_errors = combined_results.get_errors().len();
-    let filtered_warnings = combined_results.get_warnings().len();
-    
-    // Report rules application results
-    if original_errors != filtered_errors || original_warnings != filtered_warnings {
-        let rules_summary = rules_manager.get_engine_summary();
-        term.write_line(&format!(
-            "🔧 Rules applied: {} enabled rules, {} → {} errors, {} → {} warnings",
-            rules_summary.enabled_rules,
-            original_errors, filtered_errors,
-            original_warnings, filtered_warnings
-        ))?;
+    if !rules_config.is_none() || rules_profile.is_some() {
+        pb.set_message("Applying rules...");
+        combined_results = rules_manager.apply_rules(&combined_results)
+            .context("Failed to apply rules")?;
+        
+        let filtered_errors = combined_results.get_errors().len();
+        let filtered_warnings = combined_results.get_warnings().len();
+        
+        // Report rules application results
+        if original_errors != filtered_errors || original_warnings != filtered_warnings {
+            let rules_summary = rules_manager.get_engine_summary();
+            term.write_line(&format!(
+                "🔧 Rules applied: {} enabled rules, {} → {} errors, {} → {} warnings",
+                rules_summary.enabled_rules,
+                original_errors, filtered_errors,
+                original_warnings, filtered_warnings
+            ))?;
+        }
+        
+        // Update totals after rules application
+        total_errors = filtered_errors;
+        total_warnings = filtered_warnings;
     }
-    
-    // Collect statistics
-    let total_files = results.len();
-    let total_errors = combined_results.get_errors().len();
-    let total_warnings = combined_results.get_warnings().len();
-    let total_suggestions: usize = 0; // results.iter().map(|r| r.suggestions.len()).sum();
-    
-    // Create report configuration
-    let report_config = ReportConfig {
-        format: format.parse().unwrap_or(ReportFormat::Text),
-        output_path: output.as_ref().map(|p| p.to_string_lossy().to_string()),
-        include_details: true,
-        include_performance,
-        include_dependencies,
-        min_severity: None,
-    };
-    
-    // Generate report using ReportManager
-    let report_manager = ReportManager::new();
-    let report_content = report_manager.generate_with_config(&combined_results, &report_config)
-        .context("Failed to generate report")?;
     
     // Output results
     if let Some(output_path) = output {
+        // Generate report using ReportManager
+        let report_config = ReportConfig {
+            format: format.parse().unwrap_or(ReportFormat::Text),
+            output_path: Some(output_path.to_string_lossy().to_string()),
+            include_details: true,
+            include_performance,
+            include_dependencies,
+            min_severity: None,
+        };
+        
+        let report_manager = ReportManager::new();
+        let report_content = report_manager.generate_with_config(&combined_results, &report_config)
+            .context("Failed to generate report")?;
+        
         std::fs::write(&output_path, report_content)
             .with_context(|| format!("Failed to write to {}", output_path.display()))?;
         term.write_line(&format!("Results written to {}", output_path.display()))?;
     } else {
-        // For text output, use our custom formatter to maintain CLI compatibility
+        // For text output, use our new custom formatter
         match format {
             "text" => {
-                print_text_results(&results, &term)?;
+                print_new_text_results(&all_results, &term)?;
             }
             _ => {
+                let report_config = ReportConfig {
+                    format: format.parse().unwrap_or(ReportFormat::Json),
+                    output_path: None,
+                    include_details: true,
+                    include_performance,
+                    include_dependencies,
+                    min_severity: None,
+                };
+                
+                let report_manager = ReportManager::new();
+                let report_content = report_manager.generate_with_config(&combined_results, &report_config)
+                    .context("Failed to generate report")?;
+                
                 println!("{}", report_content);
             }
         }
     }
     
-    // Print summary
+    // Enhanced summary with feature status
     term.write_line("")?;
     term.write_line(&format!("📊 {}", style("Analysis Summary").bold()))?;
-    term.write_line(&format!("   Files analyzed: {}", style(total_files).green()))?;
+    term.write_line(&format!("   Files analyzed: {}", style(analyzed_files).green()))?;
     term.write_line(&format!("   Errors found: {}", 
         if total_errors > 0 { 
             style(total_errors).red() 
@@ -879,9 +964,35 @@ async fn analyze_command(
         }
     ))?;
     term.write_line(&format!("   Warnings: {}", style(total_warnings).yellow()))?;
-    term.write_line(&format!("   Suggestions: {}", style(total_suggestions).blue()))?;
     term.write_line(&format!("   Analysis time: {:.2?}", style(analysis_time).dim()))?;
     
+    // Show enhanced features status
+    if enable_enhanced_semantics || enable_method_validation {
+        term.write_line("")?;
+        term.write_line(&format!("🚀 {}", style("Enhanced Features").bold().cyan()))?;
+        term.write_line(&format!("   Enhanced semantics: {}", 
+            if enable_enhanced_semantics { 
+                style("✅ ENABLED").green() 
+            } else { 
+                style("❌ DISABLED").dim() 
+            }
+        ))?;
+        term.write_line(&format!("   Method validation: {}", 
+            if enable_method_validation { 
+                style("✅ ENABLED").green() 
+            } else { 
+                style("❌ DISABLED").dim() 
+            }
+        ))?;
+        term.write_line(&format!("   Platform version: {}", style(&platform_version).cyan()))?;
+    } else {
+        term.write_line("")?;
+        term.write_line(&format!("💡 {}", style("Tip").bold().blue()))?;
+        term.write_line("   Use --enable-enhanced-semantics for advanced BSL analysis with UnifiedBslIndex")?;
+        term.write_line("   Use --enable-method-validation for method call validation")?;
+    }
+    
+    // Exit with error code if issues found (standard behavior for static analyzers)
     if total_errors > 0 {
         std::process::exit(1);
     }
@@ -990,12 +1101,11 @@ async fn generate_reports_command(
     pb.set_message("Analyzing configuration...");
     
     // Create analysis engine
-    let mut engine = AnalysisEngine::new();
+    let mut engine = BslAnalyzer::new()?;
     engine.set_inter_module_analysis(true);
     
     // Run analysis
     let results = engine.analyze_configuration(&config)
-        .await
         .context("Analysis failed")?;
     
     pb.set_message("Converting results...");
@@ -1003,10 +1113,10 @@ async fn generate_reports_command(
     // Convert engine results to AnalysisResults format
     let mut combined_results = AnalysisResults::new();
     for result in &results {
-        for error in &result.errors {
+        for error in result.get_errors() {
             combined_results.add_error(error.clone());
         }
-        for warning in &result.warnings {
+        for warning in result.get_warnings() {
             combined_results.add_warning(warning.clone());
         }
     }
@@ -1073,19 +1183,66 @@ async fn generate_reports_command(
     Ok(())
 }
 
+fn print_new_text_results(
+    results: &[(PathBuf, Vec<bsl_analyzer::AnalysisError>, Vec<bsl_analyzer::AnalysisError>)],
+    term: &Term
+) -> Result<()> {
+    for (file_path, errors, warnings) in results {
+        if !errors.is_empty() || !warnings.is_empty() {
+            term.write_line(&format!(
+                "\n📄 {}", 
+                style(file_path.display()).bold()
+            ))?;
+            
+            // Print errors
+            for error in errors {
+                term.write_line(&format!(
+                    "   {}:{} {} {}", 
+                    style(error.position.line).dim(),
+                    style(error.position.column).dim(),
+                    style("ERROR").red().bold(),
+                    error.message
+                ))?;
+                
+                if let Some(ref code) = error.error_code {
+                    term.write_line(&format!("      Code: {}", style(code).dim()))?;
+                }
+            }
+            
+            // Print warnings  
+            for warning in warnings {
+                term.write_line(&format!(
+                    "   {}:{} {} {}", 
+                    style(warning.position.line).dim(),
+                    style(warning.position.column).dim(),
+                    style("WARN").yellow().bold(),
+                    warning.message
+                ))?;
+                
+                if let Some(ref code) = warning.error_code {
+                    term.write_line(&format!("      Code: {}", style(code).dim()))?;
+                }
+            }
+        }
+    }
+    
+    Ok(())
+}
+
+#[allow(dead_code)]
 fn print_text_results(
-    results: &[AnalysisResult], 
+    results: &[AnalysisResults], 
     term: &Term
 ) -> Result<()> {
     for result in results {
         if result.has_issues() {
             term.write_line(&format!(
                 "\n📄 {}", 
-                style(result.file_path.display()).bold()
+                style("unknown").bold() // TODO: добавить file_path в AnalysisResults
             ))?;
             
             // Print errors
-            for error in &result.errors {
+            for error in result.get_errors() {
                 term.write_line(&format!(
                     "   {}:{} {} {}", 
                     style(error.position.line).dim(),
@@ -1096,7 +1253,7 @@ fn print_text_results(
             }
             
             // Print warnings  
-            for warning in &result.warnings {
+            for warning in result.get_warnings() {
                 term.write_line(&format!(
                     "   {}:{} {} {}", 
                     style(warning.position.line).dim(),

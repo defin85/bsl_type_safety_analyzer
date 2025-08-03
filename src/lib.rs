@@ -90,7 +90,7 @@ println!("{}", result);
 ```
 */
 
-pub mod analyzer;
+// pub mod analyzer; // Удален - заменен на bsl_parser
 pub mod cache;
 pub mod configuration;
 pub mod core;
@@ -108,12 +108,15 @@ pub mod mcp_server;  // NEW: Model Context Protocol server
 pub mod bsl_parser;  // NEW: Tree-sitter based BSL parser
 
 // Re-export main types for convenience
-pub use analyzer::{BslAnalyzer, SemanticAnalyzer};
-pub use analyzer::engine::AnalysisEngine;
+// Новый объединенный анализатор на базе tree-sitter
+pub use bsl_parser::BslAnalyzer;
+// Новые анализаторы из bsl_parser
+pub use bsl_parser::{SemanticAnalyzer, DataFlowAnalyzer};
 pub use verifiers::MethodVerifier;
 pub use configuration::Configuration;
 pub use core::{AnalysisError, ErrorLevel, ErrorCollector};
-pub use parser::{BslParser, BslLexer};
+pub use bsl_parser::BslParser;
+pub use parser::BslLexer;
 
 // NEW: Re-export integrated parsers and documentation tools
 pub use docs_integration::{DocsIntegration, BslSyntaxDatabase, CompletionItem};
@@ -157,8 +160,8 @@ pub fn analyze_configuration<P: AsRef<Path>>(config_path: P) -> Result<String> {
     let config = Configuration::load_from_directory(path)?;
     
     // Create parser and analyzer
-    let parser = BslParser::new();
-    let mut analyzer = BslAnalyzer::new();
+    let parser = BslParser::new()?;
+    let mut analyzer = BslAnalyzer::new()?;
     
     let mut total_errors = 0;
     let mut total_warnings = 0;
@@ -167,10 +170,11 @@ pub fn analyze_configuration<P: AsRef<Path>>(config_path: P) -> Result<String> {
     for module in config.get_modules() {
         if let Ok(content) = std::fs::read_to_string(&module.path) {
             // Parse the module
-            match parser.parse_text(&content) {
-                Ok(ast) => {
+            let parse_result = parser.parse(&content, &module.path.to_string_lossy());
+            match parse_result.ast {
+                Some(_ast) => {
                     // Run semantic analysis
-                    if let Err(e) = analyzer.analyze(&ast) {
+                    if let Err(e) = analyzer.analyze_code(&content, &module.path.to_string_lossy()) {
                         eprintln!("Analysis failed for {}: {}", module.path.display(), e);
                         continue;
                     }
@@ -185,8 +189,8 @@ pub fn analyze_configuration<P: AsRef<Path>>(config_path: P) -> Result<String> {
                         println!("{}", results);
                     }
                 },
-                Err(e) => {
-                    eprintln!("Parse error in {}: {}", module.path.display(), e);
+                None => {
+                    eprintln!("Parse error in {}", module.path.display());
                     total_errors += 1;
                 }
             }
@@ -204,15 +208,11 @@ pub fn analyze_file<P: AsRef<Path>>(file_path: P) -> Result<String> {
     let path = file_path.as_ref();
     let content = std::fs::read_to_string(path)?;
     
-    // Create parser and analyzer
-    let parser = BslParser::new();
-    let mut analyzer = BslAnalyzer::new();
+    // Create analyzer
+    let mut analyzer = BslAnalyzer::new()?;
     
-    // Parse the file
-    let ast = parser.parse_text(&content)?;
-    
-    // Run analysis
-    analyzer.analyze(&ast)?;
+    // Run analysis (includes parsing)
+    analyzer.analyze_code(&content, &path.to_string_lossy())?;
     
     let results = analyzer.get_results();
     
@@ -230,13 +230,14 @@ mod tests {
     #[test]
     fn test_basic_functionality() {
         // Test that the library can be used
-        let parser = BslParser::new();
-        assert!(parser.parse_text("").is_ok());
+        let parser = BslParser::new().unwrap();
+        let result = parser.parse("", "test.bsl");
+        assert!(result.ast.is_some());
     }
     
     #[test] 
     fn test_analyzer_creation() {
-        let analyzer = BslAnalyzer::new();
+        let analyzer = BslAnalyzer::new().unwrap();
         assert_eq!(analyzer.get_results().error_count(), 0);
     }
     

@@ -29,7 +29,7 @@ use tracing::info;
 #[derive(Debug, Clone)]
 pub struct BslTypeAnalyzer {
     index: Arc<RwLock<Option<UnifiedBslIndex>>>,
-    config_path: Option<PathBuf>,
+    _config_path: Option<PathBuf>,
     platform_version: String,
 }
 
@@ -40,17 +40,17 @@ impl BslTypeAnalyzer {
     /// </method>
     pub async fn new() -> McpResult<Self> {
         // Читаем параметры из окружения
-        let config_path = env::var("BSL_CONFIG_PATH").ok().map(PathBuf::from);
+        let _config_path = env::var("BSL_CONFIG_PATH").ok().map(PathBuf::from);
         let platform_version = env::var("BSL_PLATFORM_VERSION").unwrap_or_else(|_| "8.3.25".to_string());
         
         let analyzer = Self {
             index: Arc::new(RwLock::new(None)),
-            config_path: config_path.clone(),
+            _config_path: _config_path.clone(),
             platform_version: platform_version.clone(),
         };
         
         // Пытаемся загрузить индекс если есть конфигурация
-        if let Some(ref path) = config_path {
+        if let Some(ref path) = _config_path {
             eprintln!("Loading BSL index from: {:?}", path);
             analyzer.load_index(path.to_str().unwrap_or_default()).await?;
         } else {

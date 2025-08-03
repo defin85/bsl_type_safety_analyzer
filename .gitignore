@@ -21,6 +21,7 @@ test_hbk_parser.rs
 test_new_attributes.rs
 analyze_results.ps1
 analyze_results_simple.ps1
+temp_html_analysis/
 
 # Test and output directories
 test_output/

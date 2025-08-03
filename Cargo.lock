@@ -223,6 +223,7 @@ dependencies = [
  "logos",
  "nom",
  "num_cpus",
+ "once_cell",
  "petgraph",
  "pretty_assertions",
  "quick-xml",
@@ -241,8 +242,8 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "tree-sitter",
- "tree-sitter-bsl",
  "tree-sitter-highlight",
+ "tree-sitter-language",
  "uuid",
  "walkdir",
  "zip",
@@ -2324,15 +2325,6 @@ checksum = "df7cc499ceadd4dcdf7ec6d4cbc34ece92c3fa07821e287aedecd4416c516dca"
 dependencies = [
  "cc",
  "regex",
-]
-
-[[package]]
-name = "tree-sitter-bsl"
-version = "0.1.5"
-source = "git+https://github.com/alkoleft/tree-sitter-bsl#91efca3c969fe21cadd98e94e631c430cbc75f74"
-dependencies = [
- "cc",
- "tree-sitter-language",
 ]
 
 [[package]]

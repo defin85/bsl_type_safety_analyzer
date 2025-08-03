@@ -2,7 +2,7 @@
 mod tests {
     use crate::unified_index::{
         ConfigurationXmlParser,
-        BslEntity, BslEntityType, BslEntityKind, BslContext,
+        BslEntityType, BslEntityKind, BslContext,
     };
     use std::fs;
     use tempfile::TempDir;

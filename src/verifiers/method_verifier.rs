@@ -6,7 +6,7 @@
 */
 
 use std::collections::HashMap;
-use crate::analyzer::semantic::TypeSystem;
+// use crate::bsl_parser::semantic::TypeSystem; // TODO: перенести TypeSystem
 use crate::diagnostics::Diagnostic;
 
 /// Результат проверки вызова метода
@@ -70,16 +70,16 @@ pub struct ArgumentInfo {
 /// Верификатор методов BSL
 pub struct MethodVerifier {
     /// Система типов для проверки
-    type_system: TypeSystem,
+    // type_system: TypeSystem, // TODO: перенести TypeSystem в bsl_parser
     /// Кэш результатов проверки для производительности
     verification_cache: HashMap<String, MethodCallResult>,
 }
 
 impl MethodVerifier {
     /// Создает новый верификатор методов
-    pub fn new(type_system: TypeSystem) -> Self {
+    pub fn new(/* type_system: TypeSystem */) -> Self {
         Self {
-            type_system,
+            // type_system,
             verification_cache: HashMap::new(),
         }
     }
@@ -137,23 +137,23 @@ impl MethodVerifier {
     }
     
     /// Проверяет существование метода у типа
-    pub fn verify_method_exists(&self, object_type: &str, method_name: &str) -> bool {
-        self.type_system.method_exists(object_type, method_name)
+    pub fn verify_method_exists(&self, _object_type: &str, _method_name: &str) -> bool {
+        false // TODO: реализовать после переноса TypeSystem
     }
     
     /// Получает сигнатуру метода
-    pub fn get_method_signature(&self, object_type: &str, method_name: &str) -> Option<String> {
-        self.type_system.get_method_signature(object_type, method_name)
+    pub fn get_method_signature(&self, _object_type: &str, _method_name: &str) -> Option<String> {
+        None // TODO: реализовать после переноса TypeSystem
     }
     
     /// Возвращает список доступных методов для типа
-    pub fn get_available_methods(&self, object_type: &str) -> Vec<String> {
-        self.type_system.get_available_methods(object_type)
+    pub fn get_available_methods(&self, _object_type: &str) -> Vec<String> {
+        vec![] // TODO: реализовать после переноса TypeSystem
     }
     
     /// Проверяет существование типа объекта
-    pub fn verify_object_type(&self, object_type: &str) -> bool {
-        self.type_system.get_type_info(object_type).is_some()
+    pub fn verify_object_type(&self, _object_type: &str) -> bool {
+        false // TODO: реализовать после переноса TypeSystem
     }
     
     /// Получает предложения для исправления ошибочного вызова метода
@@ -227,28 +227,14 @@ impl MethodVerifier {
     }
     
     /// Проверяет совместимость типов
-    pub fn verify_type_compatibility(&self, source_type: &str, target_type: &str) -> bool {
-        self.type_system.types_compatible(source_type, target_type)
+    pub fn verify_type_compatibility(&self, _source_type: &str, _target_type: &str) -> bool {
+        false // TODO: реализовать после переноса TypeSystem
     }
     
     /// Получает информацию об иерархии типов
-    pub fn get_type_hierarchy_info(&self, type_name: &str) -> Option<HashMap<String, String>> {
-        let type_info = self.type_system.get_type_info(type_name)?;
-        
-        let mut hierarchy = HashMap::new();
-        hierarchy.insert("name".to_string(), type_info.name.clone());
-        
-        if let Some(parent) = &type_info.parent {
-            hierarchy.insert("parent".to_string(), parent.clone());
-        }
-        
-        hierarchy.insert("description".to_string(), 
-            type_info.description.clone().unwrap_or_else(|| "Нет описания".to_string()));
-        
-        let methods: Vec<String> = type_info.methods.keys().cloned().collect();
-        hierarchy.insert("methods".to_string(), methods.join(", "));
-        
-        Some(hierarchy)
+    pub fn get_type_hierarchy_info(&self, _type_name: &str) -> Option<HashMap<String, String>> {
+        // TODO: реализовать после переноса TypeSystem
+        None
     }
     
     /// Создает диагностическое сообщение из результата проверки
@@ -405,11 +391,10 @@ impl MethodVerifier {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::analyzer::semantic::TypeSystem;
+    // use crate::bsl_parser::semantic::TypeSystem; // TODO: перенести TypeSystem
     
     fn create_test_verifier() -> MethodVerifier {
-        let type_system = TypeSystem::new();
-        MethodVerifier::new(type_system)
+        MethodVerifier::new()
     }
     
     #[test]
