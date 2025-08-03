@@ -4,12 +4,13 @@ use std::io::{BufReader, BufWriter, BufRead, Write};
 use anyhow::{Result, Context};
 use serde_json;
 
-use super::entity::{BslEntity, BslEntityKind, BslEntityType, BslEntitySource, BslMethod, BslProperty, BslParameter, BslContext};
+use super::entity::{BslEntity, BslMethod, BslProperty, BslParameter, BslContext};
 
 pub struct PlatformDocsCache {
     cache_dir: PathBuf,
 }
 
+#[allow(dead_code)]
 impl PlatformDocsCache {
     pub fn new() -> Result<Self> {
         let home_dir = dirs::home_dir()
@@ -72,10 +73,21 @@ impl PlatformDocsCache {
         Ok(entities)
     }
     
-    fn extract_from_hybrid_storage(&self, _version: &str) -> Result<Vec<BslEntity>> {
-        // Legacy function - теперь не используется
-        // Все типы извлекаются через extract_platform_docs binary
-        Ok(Vec::new())
+    fn extract_from_hybrid_storage(&self, version: &str) -> Result<Vec<BslEntity>> {
+        // Создаем пустой вектор и добавляем примитивные типы
+        let mut entities = Vec::new();
+        
+        // Добавляем примитивные типы BSL
+        self.add_primitive_types(&mut entities, version)?;
+        
+        log::info!("Generated {} primitive platform types for version {}", entities.len(), version);
+        
+        // Сохраняем в кеш для будущего использования
+        if !entities.is_empty() {
+            self.save_to_cache(version, &entities)?;
+        }
+        
+        Ok(entities)
     }
     
     
