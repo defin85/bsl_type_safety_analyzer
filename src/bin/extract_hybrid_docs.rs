@@ -3,17 +3,18 @@ use anyhow::Result;
 use tracing_subscriber;
 use clap::Parser;
 use std::path::Path;
+use std::fs;
 
 #[derive(Parser)]
 #[command(name = "extract_hybrid_docs")]
-#[command(about = "Extract BSL documentation from HBK archives to hybrid format")]
+#[command(about = "Extract BSL documentation from HBK archives to syntax database")]
 struct Args {
     /// Path to HBK archive file (.hbk or .zip) (required)
     #[arg(long, short)]
     archive: String,
     
-    /// Output directory for hybrid documentation
-    #[arg(long, short, default_value = "./output/hybrid_docs")]
+    /// Output directory for syntax database
+    #[arg(long, short, default_value = "./output/bsl_syntax_database.json")]
     output: String,
 }
 
@@ -25,31 +26,46 @@ fn main() -> Result<()> {
         .with_max_level(tracing::Level::INFO)
         .init();
 
-    println!("=== BSL Documentation Hybrid Extractor ===");
-    println!("Extracting BSL syntax directly to hybrid format...");
+    println!("=== BSL Syntax Database Extractor ===");
+    println!("Extracting BSL syntax database from documentation...");
 
     // Проверяем существование архива
     if !Path::new(&args.archive).exists() {
         eprintln!("❌ Ошибка: Архив документации не найден: {}", args.archive);
         eprintln!("📝 Пример использования:");
-        eprintln!("   cargo run --bin extract_hybrid_docs -- --archive \"C:\\путь\\к\\архиву.zip\" --output \"./output\"");
+        eprintln!("   cargo run --bin extract_hybrid_docs -- --archive \"C:\\путь\\к\\архиву.zip\" --output \"./database.json\"");
         std::process::exit(1);
     }
 
     let archive_path = &args.archive;
     let output_path = &args.output;
 
-    // Создаем экстрактор синтаксиса напрямую с путем к архиву
+    // Создаем экстрактор синтаксиса
     let mut extractor = BslSyntaxExtractor::new(archive_path);
 
     println!("📁 Source: {}", archive_path);
     println!("📁 Output: {}", output_path);
 
-    // Извлекаем напрямую в гибридный формат
-    extractor.extract_to_hybrid_storage(output_path, None)?;
+    // Извлекаем синтаксисную базу данных
+    let database = extractor.extract_syntax_database(None)?;
 
-    println!("✅ Hybrid extraction completed successfully!");
-    println!("📂 Hybrid documentation saved to: {}", output_path);
+    // Создаем выходную директорию если нужно
+    if let Some(parent) = Path::new(output_path).parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    // Сохраняем в JSON
+    let json_data = serde_json::to_string_pretty(&database)?;
+    fs::write(output_path, json_data)?;
+
+    println!("✅ Extraction completed successfully!");
+    println!("📊 Statistics:");
+    println!("   - Objects: {}", database.objects.len());
+    println!("   - Methods: {}", database.methods.len());
+    println!("   - Properties: {}", database.properties.len());
+    println!("   - Functions: {}", database.functions.len());
+    println!("   - Operators: {}", database.operators.len());
+    println!("📂 Syntax database saved to: {}", output_path);
 
     Ok(())
 }

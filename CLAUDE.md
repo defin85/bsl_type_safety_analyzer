@@ -116,11 +116,13 @@ BSL Type Safety Analyzer is an enterprise-ready static analyzer for 1C:Enterpris
   </example-group>
 </examples>
 
-### Legacy парсеры (использовать только для совместимости)
+### Интеграция с IDE и внешними инструментами
 ```bash
-# Старые парсеры из текстовых отчетов (не рекомендуется)
-cargo run --bin parse_metadata_full -- --report "path/to/report.txt" --output "./output"
-cargo run --bin extract_forms -- --config "path/to/config" --output "./forms_output"
+# MCP сервер для Claude/GPT
+cargo run --bin mcp_server
+
+# Базовый LSP сервер (в разработке)
+cargo run --bin lsp_server
 ```
 
 ### Testing
@@ -153,23 +155,66 @@ cargo clippy
 cargo clippy -- -D warnings
 ```
 
-## 🚀 Архитектура Unified BSL Index (v0.0.4)
+## 🚀 Архитектура BSL Type Safety Analyzer v1.2
+
+### 📋 Актуальная архитектура (основано на docs/)
+
+**Источники:** `docs/CURRENT_DECISIONS.md`, `docs/01-overview/unified-concept.md`  
+**Дата:** 2025-08-01 (последние архитектурные решения)
+
+#### Core + Shell - Двухуровневая система
+```
+┌─────────────────────────────────────────────────────────┐
+│                   BSL Analyzer v1.2                      │
+├─────────────────────────┬───────────────────────────────┤
+│      Core (Heavy)       │        Shell (Light)          │
+│  LLM-oriented          │      Developer-oriented       │
+├─────────────────────────┼───────────────────────────────┤
+│  • UnifiedBslIndex      │  • CLI валидатор              │
+│  • 500MB+ в памяти ОК   │  • <50ms старт, <10MB памяти  │
+│  • MCP Server           │  • tree-sitter парсер         │
+│  • База знаний паттернов│  • Offline режим с кешом      │
+│  • Семантический граф   │  • Human-friendly вывод       │
+└─────────────────────────┴───────────────────────────────┘
+```
+
+### 🔧 Ключевые технологические решения
+
+**1. BSL Parser:** `tree-sitter` (НЕ logos+nom) - решение от 2025-08-01  
+**2. Архитектура:** Core + Shell (НЕ монолит)  
+**3. Приоритет:** LLM-first подход  
+**4. Storage:** UnifiedBslIndex как главное хранилище  
+**5. Парсер документации:** HBK архивы → BSL синтаксис база знаний
 
 ### UnifiedBslIndex - Единый индекс всех BSL типов
 **Революционный подход к анализу BSL с автоматическим кешированием**
 
 **Ключевые компоненты:**
-- **BslEntity** - универсальное представление любого BSL типа
-- **ConfigurationXmlParser** - прямой парсинг XML без промежуточных отчетов
-- **PlatformDocsCache** - версионное кеширование платформенных типов
-- **ProjectIndexCache** - автоматическое кеширование проектов (NEW!)
+- **BslEntity** - универсальное представление любого BSL типа  
+- **ConfigurationXmlParser** - прямой парсинг XML без промежуточных отчетов  
+- **PlatformDocsCache** - версионное кеширование платформенных типов  
+- **ProjectIndexCache** - автоматическое кеширование проектов  
 - **UnifiedIndexBuilder** - объединение всех источников в единый индекс
 
 **Производительность (24,055 объектов):**
 - Первая индексация: ~795ms
-- Загрузка из кеша: ~588ms (25% быстрее)
-- Поиск типа: <1ms
+- Загрузка из кеша: ~588ms (25% быстрее)  
+- Поиск типа: <1ms (O(1) HashMap)
 - Размер кеша проекта: ~7KB
+- Поддержка Enterprise конфигураций: 80,000+ объектов
+
+**Структура кеша v2.0:**
+```
+~/.bsl_analyzer/
+├── platform_cache/           # Переиспользуется между проектами
+│   ├── v8.3.25.jsonl        # 24,050 типов платформы (~8.5MB)
+│   └── v8.3.26.jsonl
+└── project_indices/          # Кеши проектов
+    └── ProjectName_<hash>/   # Уникальное имя (хеш пути)
+        └── v8.3.25/         # Версия платформы
+            ├── config_entities.jsonl  # ~5KB
+            └── unified_index.json     # ~1KB
+```
 
 **Основные API:**
 
@@ -214,11 +259,48 @@ assert!(!ok); // false - типы несовместимы
   </api-method>
 </api-examples>
 
-### Legacy парсеры (оставлены для совместимости)
+### 📚 Парсер синтаксис-помощника и документации
 
-**1. MetadataReportParser** - текстовые отчеты (НЕ рекомендуется)
-**2. FormXmlParser** - отдельный парсинг форм (НЕ рекомендуется)
-**3. HbkArchiveParser** - документация BSL (используется в PlatformDocsCache)
+**Источник:** `docs/archive/syntax-helper.md`
+
+#### HBK Archive Parser - извлечение документации 1С
+- **Компонент:** `src/docs_integration/hbk_parser_full.rs`
+- **Источник данных:** Архивы справки `.hbk` / `rebuilt.shcntx_ru.zip` 
+- **Результат:** 24,979 элементов BSL документации
+- **Производительность:** 7.85 секунд обработки
+
+#### BSL Syntax Extractor - структурированная база знаний
+- **Компонент:** `src/docs_integration/bsl_syntax_extractor.rs`
+- **Категории элементов:**
+  - objects: 354 элемента (Массив, Справочники, etc.)
+  - methods: 15,252 элемента (методы объектов)
+  - properties: 326 элементов (свойства объектов) 
+  - functions: 2,782 элемента (глобальные функции)
+  - operators: 6,265 элементов (операторы языка)
+
+#### Структура извлеченной документации
+```
+~/.bsl_analyzer/ или output/docs_search/
+├── main_index.json          # Главный индекс с item_index
+├── objects/                 # 354 объекта в 8 файлах
+├── methods/                 # 15,252 метода в 376 файлах  
+├── properties/              # 326 свойств в 7 файлах
+├── functions/               # 2,782 функции в 72 файлах
+└── operators/               # 6,265 операторов в 146 файлах
+```
+
+#### Интеграция с UnifiedBslIndex
+- Типы из документации становятся `BslEntity` в едином индексе
+- Автодополнение и подсказки в LSP сервере
+- Верификация вызовов методов в анализаторе
+- Поддержка поиска методов и свойств
+
+### Актуальные компоненты v2.0
+
+**1. UnifiedBslIndex** - единое хранилище всех типов BSL с O(1) поиском
+**2. ConfigurationXmlParser** - прямой парсинг XML без промежуточных отчетов
+**3. PlatformDocsCache** - версионное кеширование в ~/.bsl_analyzer/
+**4. BSL Syntax Extractor** - извлечение документации через extract_syntax_database()
 
 ## 📚 Примеры файлов и структура
 
@@ -265,49 +347,66 @@ BslEntity {
 }
 ```
 
-## 📁 Примеры файлов и команд
+## 📁 Текущее состояние проекта (roadmap.md)
 
-### **MetadataReportParser - Тестовые файлы:**
+### ✅ Завершенные компоненты v1.2.0 (2025-08-02)
+- **Single Analyzer Architecture** - объединение двух анализаторов в один
+- **Tree-sitter Integration** - современный BSL парсер с инкрементальным парсингом
+- **Unified Semantic Analyzer** - единая система анализа на базе tree-sitter  
+- **API Compatibility** - полная совместимость с существующими компонентами
+- **Code Cleanup** - 0 ошибок компиляции, 0 warnings
+
+### 🚧 В разработке (Фаза 1.5 - АКТИВНО)
+- **BSL Syntax Parser Validation** - проверка парсера синтаксис-помощника
+- **Method Signature Verification** - критический приоритет
+- **MCP Server Enhancement** - 60% готов  
+- **LSP Server Enhancement** - 40% готов
+
+### 📋 План проверки парсера синтаксис-помощника
 ```bash
-# Основной тестовый файл (если доступен)
-cargo run --bin parse_metadata_full -- --report "C:\Users\Egor\Downloads\ОтчетПоКонфигурации888.txt"
+# ЭТАП 1: Базовые категории (День 1-2) - КРИТИЧЕСКИЙ ПРИОРИТЕТ
+- Примитивные типы: Строка, Число, Дата, Булево
+- Коллекции: Массив ✅, СписокЗначений, ТаблицаЗначений  
+- Глобальные функции: Сообщить, Тип, ТипЗнч
 
-# Пример файла проекта (если существует)
-cargo run --bin parse_metadata_full -- --report "examples/sample_config_report.txt"
+# ЭТАП 2: Системные объекты (День 3-4)  
+- Файловые операции: ЧтениеXML, ЗаписьXML
+- Сетевые: HTTPСоединение, WSПрокси
+- База данных: Запрос, РезультатЗапроса
 
-# Простое тестирование структуры
-cargo run --bin parse_metadata_simple -- "путь/к/вашему/отчету.txt"
-
-# Детальный анализ типов с ограничениями
-cargo run --bin analyze_metadata_types -- --report "путь/к/вашему/отчету.txt"
+# ЭТАП 3: Специализированные типы (День 5-7)
+- Администрирование сервера
+- Формы и UI элементы  
+- COM-объекты и внешние компоненты
 ```
 
-### **FormXmlParser - Парсинг форм:**
-```bash
-# Извлечение всех XML форм из директории конфигурации
-cargo run --bin extract_forms -- --config "путь/к/конфигурации" --output "./forms_output"
+## 📁 Команды разработки
 
-# Результат: Все формы в структурированном виде
-# Структура: ./forms_output/configuration/forms/*.json
+### **Основные команды проекта:**
+```bash
+# Построение единого индекса (автоматическое кеширование)
+cargo run --bin build_unified_index -- --config "path/to/config" --platform-version "8.3.25"
+
+# Поиск типов в едином индексе  
+cargo run --bin query_type -- --name "Справочники.Номенклатура" --config "path/to/config" --show-all-methods
+
+# Извлечение документации BSL (один раз для версии платформы)
+cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
+
+# Извлечение синтаксис-помощника в UnifiedBslIndex
+cargo run --bin extract_platform_docs -- --archive "examples/rebuilt.shcntx_ru.zip" --version "8.3.25"
 ```
 
-### **HbkArchiveParser - Архивы документации:**
+### **Дополнительные команды:**
 ```bash
-# Если у вас есть архив документации 1С
-cargo run --bin extract_hybrid_docs -- --archive "путь/к/архиву.zip" --output "./docs_output"
+# MCP сервер для интеграции с LLM
+cargo run --bin mcp_server
 
-# Результат: 4,916 типов BSL в оптимизированном формате
-# Структура: ./docs_output/hybrid_docs/core/builtin_types/*.json
-```
+# Тестирование
+cargo test
 
-### **Получение справки по командам:**
-```bash
-# Справка по каждому парсеру
-cargo run --bin parse_metadata_full -- --help
-cargo run --bin parse_metadata_simple -- --help  
-cargo run --bin analyze_metadata_types -- --help
-cargo run --bin extract_forms -- --help
-cargo run --bin extract_hybrid_docs -- --help
+# Проверка кода  
+cargo clippy -- -D warnings
 ```
 
 ## ⚠️ **ВАЖНО: Обязательные параметры (обновлено 2025-07-28)**
@@ -317,13 +416,13 @@ cargo run --bin extract_hybrid_docs -- --help
 ❌ **Больше НЕ работает:**
 ```bash
 cargo run --bin parse_metadata_full              # ОШИБКА - нет --report
-cargo run --bin extract_hybrid_docs              # ОШИБКА - нет --archive  
+cargo run --bin extract_platform_docs           # ОШИБКА - нет --archive  
 ```
 
 ✅ **Правильное использование:**
 ```bash
 cargo run --bin parse_metadata_full -- --report "файл.txt"
-cargo run --bin extract_hybrid_docs -- --archive "архив.zip"
+cargo run --bin extract_platform_docs -- --archive "архив.zip" --version "8.3.25"
 ```
 
 **Преимущества новой архитектуры:**
@@ -335,35 +434,31 @@ cargo run --bin extract_hybrid_docs -- --archive "архив.zip"
 
 ## Исправленные критические проблемы (2025-07-28)
 
-### MetadataReportParser - Критические исправления ✅
+### UnifiedBslIndex - Архитектурные улучшения v2.0 ✅
 
-**1. Проблема: Неполный парсинг регистров**
-- **Было**: Парсились только "Реквизиты", игнорировались "Измерения" и "Ресурсы"
-- **Исправлено**: Поддержка всех трех секций регистров
-- **Код**: `metadata_parser.rs:469` - добавлена проверка `element_type == "измерения" || element_type == "ресурсы"`
+**1. Единое хранилище типов**
+- **Реализовано**: Все типы BSL (платформенные + конфигурационные) в одном индексе
+- **Поиск**: O(1) HashMap lookup по имени типа
+- **Производительность**: 24,055+ типов, поиск < 1ms
+- **Кеширование**: Автоматическое версионное кеширование в ~/.bsl_analyzer/
 
-**2. КРИТИЧЕСКИЙ БАГ: Составные типы парсились частично**
-- **Было**: `СправочникСсылка.Контрагенты, СправочникСсылка.Организации, Строка(10, Переменная)` → только первая часть
-- **Исправлено**: Полный парсинг многострочных составных типов с корректной обработкой кавычек
-- **Код**: `metadata_parser.rs:408-502` - полностью переписана логика обработки составных типов
+**2. Прямой парсинг XML конфигурации**
+- **Подход**: ConfigurationXmlParser напрямую из XML без промежуточных отчетов
+- **Поддержка**: Все объекты конфигурации + формы как BslEntity
+- **Скорость**: Первый запуск ~795ms, с кешем ~588ms (ускорение 25%)
+- **Надежность**: Нет потери данных при парсинге составных типов
 
-**3. КРИТИЧЕСКАЯ ПРОБЛЕМА: Ограничения длины строк не сохранялись**
-- **Было**: `Строка(10, Переменная)` парсилось как просто `Строка`
-- **Исправлено**: Извлечение и сохранение всех ограничений типов
-- **Код**: Добавлен метод `extract_type_constraints()` с regex-парсингом
-- **Результат**: `length: 10, precision: 5` для оптимизации запросов
+**3. Интеграция с документацией платформы**
+- **Источник**: Извлечение из .hbk архивов через extract_syntax_database()
+- **Объем**: 4,916 платформенных типов с полными сигнатурами методов
+- **Формат**: BslSyntaxDatabase → UnifiedBslIndex
+- **API**: Единый интерфейс для поиска любых типов BSL
 
-**4. Конфликты парсеров - селективная очистка**
-- **Было**: MetadataReportParser и FormXmlParser перетирали результаты друг друга
-- **Исправлено**: Реализована селективная очистка с методами `clear_metadata_types_only()` и `clear_forms_only()`
-- **Код**: `hybrid_storage.rs` - добавлены специализированные методы очистки
-- **Результат**: Парсеры работают независимо, сохраняя результаты друг друга
-
-**5. HybridDocumentationStorage - правильная архитектура**
-- **Было**: Парсеры создавали простые JSON файлы вместо структурированного хранилища
-- **Исправлено**: Полная реализация HybridDocumentationStorage согласно архитектуре
-- **Код**: Интеграция с `manifest.json`, правильная структура папок, метаданные
-- **Результат**: Совместимость с существующими компонентами анализатора
+**4. Core + Shell архитектура**
+- **Core (Heavy)**: UnifiedBslIndex + MCP Server для LLM
+- **Shell (Light)**: CLI + LSP инструменты для разработчиков  
+- **Принцип**: Полный контекст для AI, быстрые инструменты для людей
+- **Результат**: Нет компромиссов - каждый компонент оптимизирован под задачу
 
 **6. КРИТИЧЕСКАЯ ПРОБЛЕМА: Хардкодед пути в парсерах**
 - **Было**: Пути к файлам жестко прописаны в коде, невозможно изменить источники данных
@@ -531,8 +626,9 @@ Ported from Python `onec-contract-generator` project:
 - Generates typed contracts for all configuration objects
 
 ```rust
-let parser = MetadataReportParser::new()?;
-let contracts = parser.parse_report("config_report.txt")?;
+// Построение единого индекса из конфигурации
+let index = UnifiedIndexBuilder::new()
+    .build_index(config_path, "8.3.25")?;
 ```
 
 ### Form XML Parser (`src/configuration/form_parser.rs`)
@@ -543,8 +639,9 @@ Ported from Python `onec-contract-generator` project:
 - Generates typed form contracts
 
 ```rust
-let parser = FormXmlParser::new();
-let forms = parser.generate_all_contracts("./config")?;
+// Поиск типов в едином индексе
+let entity = index.find_entity("Справочники.Номенклатура")?;
+let methods = index.get_all_methods("Справочники.Номенклатура");
 ```
 
 ### Documentation Integration (`src/docs_integration/`)
@@ -574,158 +671,60 @@ let database = extractor.extract_syntax_database(None)?;
 // database contains: objects, methods, properties, functions, operators
 ```
 
-#### Hybrid Storage Architecture (`src/docs_integration/hybrid_storage.rs`)
-**NEW**: Optimized storage format for 4,916 BSL types:
-- Groups types by functional categories (Collections, Database, Forms, IO, System, Web)
-- Reduces from 609 chunked files to 8 structured files
-- Provides fast method/property lookups via indices
-- Memory-efficient runtime caching
+#### UnifiedBslIndex Integration (`src/unified_index/`)
+**NEW**: Прямая интеграция документации в единый индекс типов:
+- Все типы из документации становятся BslEntity
+- Единый API для поиска платформенных и конфигурационных типов
+- Автоматическое наследование методов и свойств
+- Эффективное кеширование и версионирование
 
 ```rust
-let mut storage = HybridDocumentationStorage::new(output_dir);
-storage.initialize()?;
-// Direct parsing from HBK to hybrid format
-extractor.extract_to_hybrid_storage(output_dir, None)?;
+let mut index = UnifiedBslIndex::new();
+// Прямое добавление типов из документации
+index.add_platform_entities(platform_entities)?;
+index.add_config_entities(config_entities)?;
 ```
 
-#### Storage Structure
-```
-output/hybrid_docs/
-├── core/
-│   ├── builtin_types/
-│   │   ├── collections.json  # Array, Map, ValueList, etc.
-│   │   ├── database.json     # Query, QueryResult, etc.
-│   │   ├── forms.json        # Form, FormItems, etc.
-│   │   ├── io.json          # TextReader, XMLWriter, etc.
-│   │   ├── system.json      # 4,894 system types
-│   │   └── web.json         # HTTPConnection, etc.
-│   └── global_context.json  # Method index and metadata
-└── manifest.json           # Version and statistics
-```
-
-### BOM and Encoding Support (`src/parser/lexer.rs`)
-Enhanced BSL file reading with proper encoding detection:
-- Automatic BOM detection and removal (UTF-8, UTF-16LE, UTF-16BE)
-- Multi-encoding support with fallback to Windows-1251
-- Safe Unicode character boundary handling
+### 🔧 Поддержка кодировок и BOM (`src/parser/lexer.rs`)
+Улучшенное чтение BSL файлов с автоматическим определением кодировки:
+- Автоматическое определение и удаление BOM (UTF-8, UTF-16LE, UTF-16BE)
+- Поддержка множественных кодировок с fallback на Windows-1251
+- Безопасная обработка границ Unicode символов
 
 ```rust
 use bsl_analyzer::parser::read_bsl_file;
 
-// Read BSL file with automatic encoding detection and BOM handling
+// Чтение BSL файла с автоматическим определением кодировки и BOM
 let content = read_bsl_file("module.bsl")?;
 let lexer = BslLexer::new();
-let tokens = lexer.tokenize(&content)?; // BOM automatically stripped
+let tokens = lexer.tokenize(&content)?; // BOM автоматически удален
 ```
 
-### Enhanced Configuration Module
-The main `Configuration` struct now includes:
-- `metadata_contracts: Vec<MetadataContract>` - parsed configuration objects
-- `forms: Vec<FormContract>` - parsed form definitions with optimized storage
-- **NEW**: `docs_integration: DocsIntegration` - BSL syntax database access
-- Helper methods for searching contracts by type
-- Statistics tracking for integrated components
-- **FIXED**: Eliminated data duplication between parsers (saved 32MB storage)
+### 🎯 BSL Parser - Актуальное решение (v1.2.0)
+**РЕШЕНИЕ:** `tree-sitter` для BSL Grammar Parser (НЕ logos+nom)
 
-### BSL Type System Integration
-The analyzer now has complete knowledge of:
-- **4,916 built-in BSL types** with full method/property signatures
-- Parameter types and return values for all methods
-- Availability contexts (Client, Server, MobileApp, etc.)
-- Deprecated methods and version information
-- Multi-language support (Russian/English names)
+**Источник:** `docs/CURRENT_DECISIONS.md` (2025-08-01)
 
-### Usage Examples
+**Обоснование:**
+- Инкрементальный парсинг из коробки
+- Готовые binding для множества языков  
+- Error recovery для невалидного кода
+- Стандарт де-факто для IDE интеграции
+- Shell Tools ориентация
 
-#### Extracting BSL Documentation
-```bash
-# Extract to hybrid format (recommended)
-cargo run --bin extract_hybrid_docs
+**Архитектура:**
+- Universal diagnostic output с множественными форматерами (JSON, Human, LSP, SARIF)
+- Авто-определение формата вывода по контексту
+- Интеграция с UnifiedBslIndex для валидации типов/методов
 
-# Extract to chunked format (legacy)
-cargo run --bin process_all_docs
-```
+**⚠️ Устарело:** `logos` + `nom` подход (см. docs/BSL_PARSER_DESIGN.md)
 
-#### Accessing Type Information
-```rust
-// Get type definition
-let array_type = storage.get_type("Массив")?;
-println!("Methods: {}", array_type.methods.len());
+## 📁 Структура примеров и данных
 
-// Find methods by name
-let insert_methods = storage.find_methods("Вставить");
-// Returns: ["Массив", "СписокЗначений", "ТаблицаЗначений", ...]
-```
+### Тестовые конфигурации
+- `examples/ConfTest/` - тестовая конфигурация XML с 5 объектами для UnifiedBslIndex
 
-### Integration Tests
-Comprehensive tests in `tests/integration_test.rs` verify:
-- Metadata report parsing with realistic 1C object structures (13,872 objects)
-- Form XML parsing with proper element extraction (7,227 forms)
-- Enhanced Configuration loading with integrated parsers
-- BSL documentation extraction and hybrid storage
-- Error handling for malformed files and missing reports
-- **NEW**: Parser conflict resolution and selective storage clearing
-
-### Parser Architecture Improvements (v1.1)
-**CRITICAL FIX**: Resolved parser conflicts that caused data loss:
-
-1. **Problem**: MetadataReportParser and FormXmlParser were overwriting each other's results
-2. **Solution**: Added selective clearing methods (`clear_metadata_types_only()`, `clear_forms_only()`)
-3. **Result**: Both parsers can now work sequentially without conflicts
-4. **Architecture**: Full HybridDocumentationStorage implementation with proper manifest and structure
-
-#### Selective Clearing Implementation
-```rust
-// HybridDocumentationStorage now supports selective operations
-impl HybridDocumentationStorage {
-    /// Очищает только metadata_types, сохраняя формы (для MetadataReportParser)
-    pub fn clear_metadata_types_only(&self) -> Result<()> { ... }
-    
-    /// Очищает только forms, сохраняя metadata_types (для FormXmlParser)
-    pub fn clear_forms_only(&self) -> Result<()> { ... }
-}
-```
-
-#### Safe Usage Pattern
-```rust
-// 1. Parse metadata (safe - only clears metadata_types/, preserves forms/)
-let mut storage = HybridDocumentationStorage::new(output_dir);
-storage.clear_metadata_types_only()?;
-let metadata_parser = MetadataReportParser::new()?;
-metadata_parser.parse_to_hybrid_storage("report.txt", &mut storage)?;
-
-// 2. Parse forms (safe - only clears forms/, preserves metadata_types/)
-storage.clear_forms_only()?;
-let form_parser = FormXmlParser::new();
-form_parser.parse_to_hybrid_storage("./config", &mut storage)?;
-```
-
-#### Test Results
-- ✅ **Metadata parsing**: Creates `configuration/metadata_types/*.json` with 5 metadata objects
-- ✅ **Forms preservation**: Existing `configuration/forms/test/test_form.json` survives metadata parsing
-- ✅ **Structure compliance**: Proper `manifest.json` with statistics and timestamps
-- ✅ **No conflicts**: Both parsers work independently without data loss
-
-### BSL Grammar Parser Design Decision (v0.0.9)
-**DECIDED**: Use `logos` + `nom` for BSL Grammar Parser implementation
-
-**Rationale:**
-- Already used in project (see `src/parser/lexer.rs`)
-- Best performance for CLI use case (2ms per 1000-line file)
-- Full control over AST structure
-- Supports incremental parsing
-- Minimal binary size increase
-
-**Architecture:**
-- Universal diagnostic output with multiple formatters (JSON, Human, LSP, SARIF)
-- Auto-detection of output format based on context
-- Integration with UnifiedBslIndex for type/method validation
-
-See `docs/BSL_PARSER_DESIGN.md` for complete architectural decision.
-See `docs/BSL_GRAMMAR_DEVELOPMENT.md` for grammar development guide and ANTLR adaptation examples.
-
-### Example Files
-- `examples/sample_config_report.txt` - comprehensive example of 1C configuration report format
-- `examples/ConfTest/` - test configuration with 5 objects for testing
-- `data/rebuilt.shcntx_ru.zip` - rebuilt 1C documentation archive (required for extraction)
-- `docs/UNIFIED_INDEX_ARCHITECTURE.md` - detailed unified index architecture documentation
+### Документация и справка
+- `examples/rebuilt.shcntx_ru.zip` - восстановленный архив справки 1С (обязателен для извлечения)
+- `docs/02-components/unified-index/` - детальная документация архитектуры UnifiedBslIndex
+- `docs/archive/syntax-helper.md` - документация парсера синтаксис-помощника

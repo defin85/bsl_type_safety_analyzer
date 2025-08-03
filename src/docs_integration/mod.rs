@@ -36,7 +36,6 @@ pub mod hbk_parser_full;
 pub mod bsl_syntax_extractor;
 pub mod chunked_writer;
 pub mod chunked_loader;
-pub mod hybrid_storage;
 
 pub use hbk_parser::{HbkArchiveParser, HtmlContent, ArchiveAnalysis, FileInfo};
 pub use bsl_syntax_extractor::{

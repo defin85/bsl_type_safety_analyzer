@@ -119,7 +119,8 @@
       "Bash(RUST_LOG=info cargo run --bin test_auto_keywords)",
       "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"temp_check\")",
       "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_type_inference.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
-      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"output/hybrid_docs\")"
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"output/hybrid_docs\")",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"temp_debug_extraction\")"
     ],
     "deny": []
   }

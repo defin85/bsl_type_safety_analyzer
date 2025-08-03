@@ -32,7 +32,6 @@ use quick_xml::{Reader, events::Event};
 use walkdir::WalkDir;
 use anyhow::{Context, Result};
 use chrono::Utc;
-use crate::docs_integration::hybrid_storage::HybridDocumentationStorage;
 
 /// Контракт формы 1С (замена Python FormContract)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -710,23 +709,6 @@ impl FormXmlParser {
         }
     }
     
-    /// Парсит все формы и записывает в гибридное хранилище
-    pub fn parse_to_hybrid_storage<P: AsRef<Path>>(
-        &self, 
-        config_dir: P,
-        storage: &mut HybridDocumentationStorage
-    ) -> Result<()> {
-        let form_files = self.find_form_files(config_dir)?;
-        
-        for form_file in form_files {
-            let form_contract = self.parse_form_xml(&form_file)?;
-            
-            // Сохраняем форму в оптимизированное хранилище
-            storage.add_form_optimized(&form_contract)?;
-        }
-        
-        Ok(())
-    }
 }
 
 impl Default for FormXmlParser {

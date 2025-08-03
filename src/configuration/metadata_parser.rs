@@ -32,7 +32,7 @@ use anyhow::{Context, Result};
 use regex::Regex;
 use chrono::Utc;
 use crate::docs_integration::hybrid_storage::{
-    HybridDocumentationStorage, TypeDefinition, TypeCategory,
+    TypeDefinition, TypeCategory,
     MethodDefinition, PropertyDefinition, ParameterDefinition
 };
 
@@ -907,149 +907,7 @@ impl MetadataReportParser {
         Ok(None)
     }
     
-    /// Парсит отчет и записывает в гибридное хранилище
-    pub fn parse_to_hybrid_storage<P: AsRef<Path>>(
-        &self, 
-        report_path: P,
-        storage: &mut HybridDocumentationStorage
-    ) -> Result<()> {
-        let contracts = self.parse_report(report_path)?;
-        
-        for contract in contracts {
-            let type_def = self.convert_to_type_definition(contract);
-            storage.add_configuration_type(type_def)?;
-        }
-        
-        Ok(())
-    }
     
-    /// Преобразует MetadataContract в TypeDefinition
-    fn convert_to_type_definition(&self, contract: MetadataContract) -> TypeDefinition {
-        let mut methods = HashMap::new();
-        let mut properties = HashMap::new();
-        
-        // Добавляем реквизиты как свойства
-        for attr in &contract.structure.attributes {
-            properties.insert(attr.name.clone(), PropertyDefinition {
-                name: attr.name.clone(),
-                english_name: None,
-                description: format!("Реквизит типа {}", attr.data_type),
-                property_type: attr.data_type.clone(),
-                readonly: false,
-                availability: vec!["Сервер".to_string(), "Клиент".to_string()],
-                deprecated: false,
-            });
-        }
-        
-        // Добавляем табличные части как свойства-коллекции
-        for ts in &contract.structure.tabular_sections {
-            properties.insert(ts.name.clone(), PropertyDefinition {
-                name: ts.name.clone(),
-                english_name: None,
-                description: format!("Табличная часть"),
-                property_type: "ТабличнаяЧасть".to_string(),
-                readonly: false,
-                availability: vec!["Сервер".to_string(), "Клиент".to_string()],
-                deprecated: false,
-            });
-        }
-        
-        // Добавляем стандартные методы для объектов конфигурации
-        match contract.object_type {
-            ObjectType::Directory => {
-                methods.insert("НайтиПоКоду".to_string(), MethodDefinition {
-                    name: "НайтиПоКоду".to_string(),
-                    english_name: Some("FindByCode".to_string()),
-                    description: "Найти элемент справочника по коду".to_string(),
-                    parameters: vec![ParameterDefinition {
-                        name: "Код".to_string(),
-                        parameter_type: "Строка".to_string(),
-                        required: true,
-                        description: "Код элемента".to_string(),
-                        default_value: None,
-                    }],
-                    return_type: Some(format!("СправочникСсылка.{}", contract.name)),
-                    is_function: true,
-                    availability: vec!["Сервер".to_string()],
-                    examples: vec![],
-                    deprecated: false,
-                });
-            },
-            ObjectType::Document => {
-                methods.insert("Провести".to_string(), MethodDefinition {
-                    name: "Провести".to_string(),
-                    english_name: Some("Post".to_string()),
-                    description: "Провести документ".to_string(),
-                    parameters: vec![],
-                    return_type: Some("Булево".to_string()),
-                    is_function: true,
-                    availability: vec!["Сервер".to_string()],
-                    examples: vec![],
-                    deprecated: false,
-                });
-            },
-            _ => {}
-        }
-        
-        TypeDefinition {
-            id: format!("{}.{}", contract.object_type, contract.name),
-            name: contract.name.clone(),
-            english_name: None,
-            category: TypeCategory::Configuration,
-            description: format!("{} конфигурации", self.get_object_type_description(&contract.object_type)),
-            methods,
-            properties,
-            constructors: vec![],
-            parent_types: vec![],
-            interfaces: vec![],
-            availability: vec!["Сервер".to_string(), "Клиент".to_string()],
-        }
-    }
-    
-    /// Получить описание типа объекта
-    fn get_object_type_description(&self, object_type: &ObjectType) -> &'static str {
-        match object_type {
-            ObjectType::Directory => "Справочник",
-            ObjectType::Document => "Документ", 
-            ObjectType::InformationRegister => "Регистр сведений",
-            ObjectType::AccumulationRegister => "Регистр накопления",
-            ObjectType::AccountingRegister => "Регистр бухгалтерии",
-            ObjectType::Register => "Регистр",
-            ObjectType::Enumeration => "Перечисление",
-            ObjectType::ChartOfCharacteristicTypes => "План видов характеристик",
-            ObjectType::ChartOfAccounts => "План счетов",
-            ObjectType::ChartOfCalculationTypes => "План видов расчета",
-            ObjectType::ExchangePlan => "План обмена",
-            ObjectType::Report => "Отчет",
-            ObjectType::DataProcessor => "Обработка",
-            ObjectType::DocumentJournal => "Журнал документов",
-            ObjectType::Sequence => "Последовательность",
-            ObjectType::Task => "Задача",
-            ObjectType::Constant => "Константа",
-            ObjectType::CommonModule => "Общий модуль",
-            ObjectType::CommonAttribute => "Общий реквизит",
-            ObjectType::BusinessProcess => "Бизнес-процесс",
-            ObjectType::WebService => "Web-сервис",
-            ObjectType::HTTPService => "HTTP-сервис",
-            ObjectType::ScheduledJob => "Регламентное задание",
-            ObjectType::FunctionalOption => "Функциональная опция",
-            ObjectType::DefinedType => "Определяемый тип",
-            ObjectType::SettingsStorage => "Хранилище настроек",
-            ObjectType::FilterCriterion => "Критерий отбора",
-            ObjectType::Subsystem => "Подсистема",
-            ObjectType::Role => "Роль",
-            ObjectType::ExternalDataSource => "Внешний источник данных",
-            ObjectType::Configuration => "Конфигурация",
-            ObjectType::Language => "Язык",
-            ObjectType::CommonForm => "Общая форма",
-            ObjectType::CommonCommand => "Общая команда",
-            ObjectType::CommonPicture => "Общая картинка",
-            ObjectType::CommonTemplate => "Общий макет",
-            ObjectType::XDTOPackage => "XDTO-пакет",
-            ObjectType::Style => "Стиль",
-            ObjectType::StyleItem => "Элемент стиля",
-        }
-    }
     
     /// Создает атрибут с указанным типом и добавляет в соответствующую секцию
     fn create_attribute_with_type(

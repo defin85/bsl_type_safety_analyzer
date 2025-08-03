@@ -111,9 +111,6 @@ name = "extract_hybrid_docs"
 path = "src/bin/extract_hybrid_docs.rs"
 
 # 1C Metadata parsers (renamed for clarity)
-[[bin]]
-name = "parse_metadata_full"
-path = "src/bin/parse_test_metadata.rs"
 
 [[bin]]
 name = "parse_metadata_simple"
@@ -129,17 +126,8 @@ path = "src/bin/test_new_attributes.rs"
 name = "analyze_objects"
 path = "src/bin/analyze_objects.rs"
 
-[[bin]]
-name = "convert_to_hybrid"
-path = "src/bin/convert_to_hybrid.rs"
 
-[[bin]]
-name = "extract_config_metadata"
-path = "src/bin/extract_config_metadata.rs"
 
-[[bin]]
-name = "extract_forms"
-path = "src/bin/extract_forms.rs"
 
 [[bin]]
 name = "analyze_real_report"
