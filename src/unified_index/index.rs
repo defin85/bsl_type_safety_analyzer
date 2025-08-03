@@ -664,7 +664,7 @@ impl UnifiedBslIndex {
     
     /// ООП-подход: Автоматически наследует методы от соответствующего менеджера
     fn inherit_manager_methods(&self, mut entity: BslEntity) -> Result<BslEntity> {
-        println!("🔍 Проверка наследования для: {} (вид: {:?})", entity.qualified_name, entity.entity_kind);
+        tracing::debug!("🔍 Проверка наследования для: {} (вид: {:?})", entity.qualified_name, entity.entity_kind);
         
         // Мапинг типов конфигурации на их менеджеры (с правильными qualified_name)
         let manager_mappings = [
@@ -679,13 +679,13 @@ impl UnifiedBslIndex {
         // Находим соответствующий менеджер для данного типа
         for (kind, manager_template) in &manager_mappings {
             if entity.entity_kind == *kind {
-                println!("  ✅ Совпадение типа: {:?} → ищем шаблон {}", kind, manager_template);
+                tracing::debug!("  ✅ Совпадение типа: {:?} → ищем шаблон {}", kind, manager_template);
                 
                 // Ищем шаблонный тип менеджера в платформенных типах
                 if let Some(manager_entity) = self.entities.values()
                     .find(|e| e.qualified_name == *manager_template && e.entity_type == BslEntityType::Platform) {
                     
-                    println!("🔄 Наследование методов: {} ← {}", entity.qualified_name, manager_template);
+                    tracing::debug!("🔄 Наследование методов: {} ← {}", entity.qualified_name, manager_template);
                     
                     // Копируем методы из менеджера в объект конфигурации
                     for (method_name, method) in &manager_entity.interface.methods {
@@ -705,7 +705,7 @@ impl UnifiedBslIndex {
                     
                     break; // Найден соответствующий менеджер
                 } else {
-                    println!("  ❌ Шаблонный тип {} не найден среди {} платформенных типов", 
+                    tracing::debug!("  ❌ Шаблонный тип {} не найден среди {} платформенных типов", 
                         manager_template, 
                         self.entities.values().filter(|e| e.entity_type == BslEntityType::Platform).count());
                     
@@ -714,7 +714,7 @@ impl UnifiedBslIndex {
                     if let Some(catalog_manager) = self.entities.values()
                         .find(|e| e.entity_type == BslEntityType::Platform && 
                                  e.qualified_name == exact_template) {
-                        println!("    ✅ ТОЧНОЕ совпадение найдено!");
+                        tracing::debug!("    ✅ ТОЧНОЕ совпадение найдено!");
                         println!("       qualified_name: '{}'", catalog_manager.qualified_name);
                         println!("       методы: {}", catalog_manager.interface.methods.len());
                     } else {
@@ -725,8 +725,8 @@ impl UnifiedBslIndex {
                             .map(|e| &e.qualified_name)
                             .take(5)
                             .collect();
-                        println!("    ❌ Точное совпадение НЕ найдено");
-                        println!("    📋 Связанные типы: {:?}", related);
+                        tracing::debug!("    ❌ Точное совпадение НЕ найдено");
+                        tracing::debug!("    📋 Связанные типы: {:?}", related);
                     }
                 }
             }
