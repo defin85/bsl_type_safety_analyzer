@@ -39,7 +39,7 @@ impl UnifiedIndexBuilder {
         info!("DEBUG: About to call project_cache.get_or_create");
         
         // Используем project cache для автоматического кеширования
-        let mut index = self.project_cache.get_or_create(
+        let index = self.project_cache.get_or_create(
             config_path,
             platform_version,
             &|| self.build_index_from_scratch(config_path, platform_version)

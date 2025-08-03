@@ -120,7 +120,24 @@
       "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"temp_check\")",
       "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_type_inference.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
       "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"output/hybrid_docs\")",
-      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"temp_debug_extraction\")"
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples\\rebuilt.shcntx_ru.zip\" --output \"temp_debug_extraction\")",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --output \"temp_directive_search\" --max-files 100)",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --output \"temp_directive_search\" --max-files 50)",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --output \"temp_directive_search\")",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --output \"temp_test_shlang\" --max-files 10)",
+      "Bash(RUST_LOG=info cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --output \"temp_test_shlang\")",
+      "Bash(RUST_LOG=info cargo run --bin test_dual_extractor)",
+      "Bash(RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --output \"temp_debug_shlang_structure\")",
+      "Bash(RUST_LOG=debug cargo run --bin query_type -- --name \"String\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=debug cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(RUST_LOG=debug cargo run --bin extract_hybrid_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --output \"temp_debug_shlang_structure\" --max-files 20)",
+      "Bash(RUST_LOG=debug cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shlang_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Number\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")"
     ],
     "deny": []
   }

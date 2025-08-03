@@ -31,10 +31,8 @@ use encoding_rs::{UTF_16LE, UTF_8, WINDOWS_1251};
 use anyhow::{Context, Result};
 use regex::Regex;
 use chrono::Utc;
-use crate::docs_integration::hybrid_storage::{
-    TypeDefinition, TypeCategory,
-    MethodDefinition, PropertyDefinition, ParameterDefinition
-};
+// Удален импорт HybridDocumentationStorage - функциональность перенесена в UnifiedBslIndex
+// use crate::docs_integration::hybrid_storage::{...};
 
 /// Контракт метаданных объекта 1С (замена Python MetadataContract)
 #[derive(Debug, Clone, Serialize, Deserialize)]
