@@ -8,7 +8,6 @@ use anyhow::{Context, Result};
 use bsl_analyzer::{Configuration, ReportManager, ReportFormat, ReportConfig};
 use bsl_analyzer::bsl_parser::BslAnalyzer;
 use bsl_analyzer::{RulesManager, RulesConfig, BuiltinRules, CustomRulesManager};
-use bsl_analyzer::{ContractGeneratorLauncher, GenerationComponents};
 // use bsl_analyzer::analyzer::AnalysisResult; // Удален с analyzer
 use bsl_analyzer::core::AnalysisResults;
 use bsl_analyzer::metrics::QualityMetricsManager;
@@ -376,12 +375,9 @@ async fn main() -> Result<()> {
             lsp_config_command(command).await?;
         }
         
-        Commands::GenerateContracts { config_path, report_path, output, metadata, forms, modules } => {
-            let mut components = vec![];
-            if metadata { components.push("metadata".to_string()); }
-            if forms { components.push("forms".to_string()); }
-            if modules { components.push("modules".to_string()); }
-            generate_contracts_command(config_path, report_path, output, components).await?;
+        Commands::GenerateContracts { config_path: _, report_path: _, output: _, metadata: _, forms: _, modules: _ } => {
+            eprintln!("❌ Contract generation has been removed. Use UnifiedBslIndex instead.");
+            std::process::exit(1);
         }
         
         Commands::ParseDocs { hbk_path, output, max_files } => {
@@ -1281,72 +1277,6 @@ fn print_text_results(
 }
 
 
-async fn generate_contracts_command(
-    conf_dir: PathBuf,
-    report_path: Option<PathBuf>,
-    output_dir: PathBuf,
-    components: Vec<String>,
-) -> Result<()> {
-    let term = Term::stdout();
-    term.write_line(&format!(
-        "🚀 {} v{}", 
-        style("Contract Generator").bold().cyan(),
-        env!("CARGO_PKG_VERSION")
-    ))?;
-    
-    // Parse components
-    let generation_components = GenerationComponents {
-        metadata: components.is_empty() || components.contains(&"metadata".to_string()),
-        forms: components.is_empty() || components.contains(&"forms".to_string()),
-        modules: components.contains(&"modules".to_string()),
-    };
-    
-    // Create generator
-    let mut generator = ContractGeneratorLauncher::new(&conf_dir, &output_dir);
-    
-    if let Some(report) = report_path {
-        generator = generator.with_report_path(report);
-    }
-    
-    generator = generator.with_components(generation_components);
-    
-    // Run generation
-    let start_time = Instant::now();
-    let result = generator.run_generation()
-        .context("Contract generation failed")?;
-    
-    let elapsed = start_time.elapsed();
-    
-    // Show summary
-    term.write_line("")?;
-    term.write_line(&format!(
-        "✅ Generation completed in {:.2}s",
-        elapsed.as_secs_f64()
-    ))?;
-    
-    if result.metadata_success {
-        term.write_line(&format!(
-            "   Metadata contracts: {}",
-            style(result.metadata_count).green()
-        ))?;
-    }
-    
-    if result.forms_success {
-        term.write_line(&format!(
-            "   Form contracts: {}",
-            style(result.forms_count).green()
-        ))?;
-    }
-    
-    if result.modules_success {
-        term.write_line(&format!(
-            "   Module contracts: {}",
-            style("Stub").yellow()
-        ))?;
-    }
-    
-    Ok(())
-}
 
 async fn parse_docs_command(
     hbk_file: PathBuf,

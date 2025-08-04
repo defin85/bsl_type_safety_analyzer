@@ -249,6 +249,9 @@ fn convert_syntax_db_to_entities(
         global_entity.interface.methods.insert(func_name.clone(), bsl_method);
     }
     
+    // Create primitive types from keywords
+    create_primitive_types_from_keywords(&syntax_db.keywords, &mut entity_map, version);
+    
     // Convert all entities to vector
     entities.extend(entity_map.into_values());
     
@@ -364,5 +367,88 @@ fn parse_context(context_str: &str) -> Option<bsl_analyzer::unified_index::BslCo
         "ThinClient" | "ТонкийКлиент" => Some(BslContext::ThinClient),
         "WebClient" | "ВебКлиент" => Some(BslContext::WebClient),
         _ => None,
+    }
+}
+
+/// Создает примитивные типы BSL из keywords
+fn create_primitive_types_from_keywords(
+    keywords: &[String],
+    entity_map: &mut std::collections::HashMap<String, bsl_analyzer::unified_index::BslEntity>,
+    version: &str
+) {
+    use bsl_analyzer::unified_index::*;
+    
+    // Определяем какие keywords являются примитивными типами
+    let primitive_types = [
+        ("Число", "Number", "Числовой примитивный тип"),
+        ("Строка", "String", "Строковый примитивный тип"),
+        ("Дата", "Date", "Примитивный тип даты"),
+        ("Булево", "Boolean", "Логический примитивный тип"),
+        ("Неопределено", "Undefined", "Неопределенное значение"),
+        ("NULL", "NULL", "Значение NULL"),
+        ("Тип", "Type", "Тип данных"),
+        ("Истина", "True", "Логическое значение Истина"),
+        ("Ложь", "False", "Логическое значение Ложь"),
+    ];
+    
+    for (russian_name, english_name, documentation) in &primitive_types {
+        // Проверяем, есть ли это ключевое слово в списке keywords
+        if keywords.contains(&russian_name.to_string()) {
+            let display_name = format!("{} ({})", russian_name, english_name);
+            let mut entity = BslEntity::new(
+                display_name.clone(),
+                display_name.clone(),
+                BslEntityType::Platform,
+                BslEntityKind::Primitive
+            );
+            
+            entity.english_name = Some(english_name.to_string());
+            entity.documentation = Some(documentation.to_string());
+            entity.availability = vec![BslContext::Server, BslContext::Client];
+            entity.source = BslEntitySource::HBK { version: version.to_string() };
+            
+            // Добавляем методы для строкового типа
+            if *russian_name == "Строка" {
+                add_string_methods(&mut entity);
+            }
+            
+            // Также создаем версии только с русским и английским именами для удобного поиска
+            entity_map.insert(display_name.clone(), entity.clone());
+            entity_map.insert(russian_name.to_string(), entity.clone());
+            entity_map.insert(english_name.to_string(), entity);
+        }
+    }
+}
+
+/// Добавляет основные методы для строкового типа
+fn add_string_methods(entity: &mut bsl_analyzer::unified_index::BslEntity) {
+    use bsl_analyzer::unified_index::*;
+    
+    let string_methods = [
+        ("Длина", "Length", "Number", "Возвращает длину строки"),
+        ("ВРег", "Upper", "String", "Преобразует строку в верхний регистр"),
+        ("НРег", "Lower", "String", "Преобразует строку в нижний регистр"),
+        ("Лев", "Left", "String", "Возвращает левую часть строки"),
+        ("Прав", "Right", "String", "Возвращает правую часть строки"),
+        ("Сред", "Mid", "String", "Возвращает подстроку"),
+        ("СокрЛП", "TrimAll", "String", "Удаляет пробелы слева и справа"),
+        ("Найти", "Find", "Number", "Поиск подстроки в строке"),
+    ];
+    
+    for (method_name, english_name, return_type, doc) in &string_methods {
+        let method = BslMethod {
+            name: method_name.to_string(),
+            english_name: Some(english_name.to_string()),
+            parameters: vec![], // Упрощенно, без параметров
+            return_type: Some(return_type.to_string()),
+            documentation: Some(doc.to_string()),
+            availability: vec![BslContext::Server, BslContext::Client],
+            is_function: true,
+            is_export: false,
+            is_deprecated: false,
+            deprecation_info: None,
+        };
+        
+        entity.interface.methods.insert(method_name.to_string(), method);
     }
 }

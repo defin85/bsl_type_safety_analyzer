@@ -74,10 +74,9 @@ impl BslLanguageServer {
         match Configuration::load_from_directory(&workspace_path) {
             Ok(config) => {
                 tracing::info!(
-                    "Configuration loaded: {} modules, {} metadata contracts, {} forms",
+                    "Configuration loaded: {} modules, {} objects",
                     config.get_modules().len(),
-                    config.metadata_contracts.len(),
-                    config.forms.len()
+                    config.objects.len()
                 );
 
                 *self.configuration.write().await = Some(config);
@@ -258,17 +257,17 @@ impl BslLanguageServer {
                     || line_prefix.contains("Документы.")
                 {
                     // Предлагаем объекты метаданных
-                    for contract in &config.metadata_contracts {
+                    for object in &config.objects {
                         let completion = CompletionItem {
-                            label: contract.name.clone(),
+                            label: object.name.clone(),
                             kind: Some(CompletionItemKind::CLASS),
-                            detail: Some(format!("{:?}", contract.object_type)),
+                            detail: Some(format!("{:?}", object.object_type)),
                             documentation: Some(Documentation::String(format!(
                                 "Объект конфигурации: {} ({})",
-                                contract.name,
-                                contract.object_type.to_string()
+                                object.name,
+                                object.object_type
                             ))),
-                            insert_text: Some(contract.name.clone()),
+                            insert_text: Some(object.name.clone()),
                             ..Default::default()
                         };
                         completions.push(completion);
@@ -535,14 +534,12 @@ impl LanguageServer for BslLanguageServer {
             if let Some(line) = lines.get(position.line as usize) {
                 // Простая реализация hover - показываем информацию о объектах конфигурации
                 if let Some(config) = self.configuration.read().await.as_ref() {
-                    for contract in &config.metadata_contracts {
-                        if line.contains(&contract.name) {
+                    for object in &config.objects {
+                        if line.contains(&object.name) {
                             let hover_text = format!(
-                                "**{}** ({:?})\n\nРеквизиты: {}\nТабличные части: {}",
-                                contract.name,
-                                contract.object_type,
-                                contract.structure.attributes.len(),
-                                contract.structure.tabular_sections.len()
+                                "**{}** ({})\n\nОбъект конфигурации",
+                                object.name,
+                                object.object_type
                             );
 
                             return Ok(Some(Hover {

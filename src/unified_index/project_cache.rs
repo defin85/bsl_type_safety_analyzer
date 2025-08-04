@@ -220,6 +220,39 @@ impl ProjectIndexCache {
     }
     
     fn generate_project_name(&self, config_path: &Path) -> String {
+        // Try to extract UUID from Configuration.xml for stable project ID
+        if let Ok(uuid) = self.extract_config_uuid(config_path) {
+            let project_name = config_path
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("unknown");
+            
+            // Format: projectname_uuid (e.g., "ConfTest_787997b1dd2a4b98a8ccc38eb2830949")
+            return format!("{}_{}", project_name, uuid.replace("-", ""));
+        }
+        
+        // Fallback to path-based hash for non-1C configurations
+        self.generate_project_name_fallback(config_path)
+    }
+    
+    fn extract_config_uuid(&self, config_path: &Path) -> Result<String> {
+        let config_xml = config_path.join("Configuration.xml");
+        let content = fs::read_to_string(&config_xml)
+            .context("Failed to read Configuration.xml")?;
+        
+        // Extract UUID from <Configuration uuid="...">
+        if let Some(start) = content.find(r#"<Configuration uuid=""#) {
+            let start_pos = start + r#"<Configuration uuid=""#.len();
+            if let Some(end_pos) = content[start_pos..].find('"') {
+                let uuid = &content[start_pos..start_pos + end_pos];
+                return Ok(uuid.to_string());
+            }
+        }
+        
+        anyhow::bail!("UUID not found in Configuration.xml")
+    }
+    
+    fn generate_project_name_fallback(&self, config_path: &Path) -> String {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};
         

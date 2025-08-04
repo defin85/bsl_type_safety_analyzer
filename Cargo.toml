@@ -116,9 +116,6 @@ path = "src/bin/extract_hybrid_docs.rs"
 name = "parse_metadata_simple"
 path = "src/bin/test_metadata_parser.rs"
 
-[[bin]]
-name = "analyze_metadata_types"
-path = "src/bin/test_new_attributes.rs"
 
 # Legacy binaries (kept for compatibility)
 

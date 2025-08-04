@@ -616,29 +616,20 @@ When modifying configuration handling:
 3. Update dependency tracking in `src/configuration/dependencies.rs`
 4. Add validation rules in the main `Configuration::validate()` method
 
-## New Integrated Parsers (Phase 1 Complete)
+## Modern UnifiedBslIndex Architecture (v2.0)
 
-### Configuration Report Parser (`src/configuration/metadata_parser.rs`)
-Ported from Python `onec-contract-generator` project:
-- Parses text configuration reports (not XML Configuration.xml)
-- Multi-encoding support: UTF-16LE, UTF-8, Windows-1251
-- Extracts object metadata: directories, documents, registers, reports, etc.
-- Generates typed contracts for all configuration objects
+### Direct XML Configuration Parsing
+Modern approach using UnifiedBslIndex without legacy parsers:
+- Direct XML parsing through ConfigurationXmlParser
+- No need for text configuration reports
+- Unified type system with platform documentation integration
+- Automatic caching for optimal performance
 
 ```rust
 // Построение единого индекса из конфигурации
 let index = UnifiedIndexBuilder::new()
     .build_index(config_path, "8.3.25")?;
-```
 
-### Form XML Parser (`src/configuration/form_parser.rs`)
-Ported from Python `onec-contract-generator` project:
-- Parses XML form files from 1C configuration structure
-- Extracts form elements, attributes, commands
-- Determines form types (ListForm, ItemForm, ObjectForm, etc.)
-- Generates typed form contracts
-
-```rust
 // Поиск типов в едином индексе
 let entity = index.find_entity("Справочники.Номенклатура")?;
 let methods = index.get_all_methods("Справочники.Номенклатура");

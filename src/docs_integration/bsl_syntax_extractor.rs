@@ -616,8 +616,99 @@ impl BslSyntaxExtractor {
         Ok(syntax_info)
     }
     
+    /// Извлекает тип из описания свойства (например, "Тип: МенеджерПользователейИнформационнойБазы")
+    fn extract_type_from_description(&self, html_content: &str) -> Option<String> {
+        tracing::debug!("extract_type_from_description: parsing HTML content, length: {}", html_content.len());
+        let document = Html::parse_document(html_content);
+        
+        // Ищем секцию "Описание:"
+        let chapter_selector = Selector::parse("p.V8SH_chapter").unwrap();
+        tracing::debug!("extract_type_from_description: looking for 'Описание' section");
+        for elem in document.select(&chapter_selector) {
+            let text = elem.text().collect::<String>().trim().to_string();
+            tracing::debug!("extract_type_from_description: found chapter: '{}'", text);
+            if text.contains("Описание") {
+                tracing::debug!("extract_type_from_description: found 'Описание' section");
+                
+                // ИСПРАВЛЕНИЕ: Ищем все элементы и текстовые узлы после "Описание:"
+                for sibling in elem.next_siblings() {
+                    match sibling.value() {
+                        scraper::node::Node::Element(element) => {
+                            let elem_ref = ElementRef::wrap(sibling).unwrap();
+                            let tag_name = element.name();
+                            tracing::debug!("extract_type_from_description: examining element: {}", tag_name);
+                            
+                            // Получаем весь текст из этого элемента включая ссылки
+                            let full_text = elem_ref.text().collect::<String>();
+                            tracing::debug!("extract_type_from_description: element text: '{}'", full_text.trim());
+                            
+                            // Ищем паттерн "Тип:" в тексте
+                            if full_text.contains("Тип:") {
+                                tracing::debug!("extract_type_from_description: found 'Тип:' in element text");
+                                
+                                // Ищем ссылки внутри этого элемента
+                                let link_selector = Selector::parse("a").unwrap();
+                                for link in elem_ref.select(&link_selector) {
+                                    let type_name = link.text().collect::<String>().trim().to_string();
+                                    tracing::debug!("extract_type_from_description: found link text: '{}'", type_name);
+                                    
+                                    if !type_name.is_empty() {
+                                        tracing::debug!("extract_type_from_description: returning type: '{}'", type_name);
+                                        return Some(type_name);
+                                    }
+                                }
+                            }
+                            
+                            // Если это следующий V8SH_chapter - прекращаем поиск
+                            if element.attr("class").unwrap_or("").contains("V8SH_chapter") {
+                                break;
+                            }
+                        }
+                        scraper::node::Node::Text(text_node) => {
+                            let text_content = text_node.text.trim();
+                            tracing::debug!("extract_type_from_description: examining text node: '{}'", text_content);
+                            
+                            // В 1С документации "Тип:" может быть в текстовом узле, но ссылка всё равно в элементе
+                            if text_content.contains("Тип:") {
+                                tracing::debug!("extract_type_from_description: found 'Тип:' in text node");
+                                // Продолжаем искать в следующих узлах - ссылка должна быть в элементе
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+                break;
+            }
+        }
+        
+        // ДОПОЛНИТЕЛЬНЫЙ ПОИСК: Ищем ссылки во всем тексте после "Описание:"
+        // Используем более простой подход - парсим все содержимое после "Описание:"
+        let raw_html = html_content;
+        if let Some(description_pos) = raw_html.find("Описание:</p>") {
+            let after_description = &raw_html[description_pos..];
+            tracing::debug!("extract_type_from_description: content after 'Описание:': '{}'", 
+                           &after_description[..std::cmp::min(200, after_description.len())]);
+            
+            // Ищем первую ссылку после "Описание:"
+            if let Some(link_start) = after_description.find("<a href=") {
+                if let Some(link_content_start) = after_description[link_start..].find('>') {
+                    if let Some(link_content_end) = after_description[link_start + link_content_start + 1..].find("</a>") {
+                        let link_text = &after_description[link_start + link_content_start + 1..link_start + link_content_start + 1 + link_content_end];
+                        let type_name = link_text.trim().to_string();
+                        tracing::debug!("extract_type_from_description: extracted type from raw HTML: '{}'", type_name);
+                        if !type_name.is_empty() {
+                            return Some(type_name);
+                        }
+                    }
+                }
+            }
+        }
+        
+        None
+    }
+
     /// Классифицирует синтаксическую информацию и добавляет в базу данных
-    fn categorize_syntax(&self, syntax_info: SyntaxInfo, database: &mut BslSyntaxDatabase) {
+    fn categorize_syntax(&mut self, syntax_info: SyntaxInfo, database: &mut BslSyntaxDatabase) {
         let title = syntax_info.title.trim();
         if title.is_empty() {
             return;
@@ -633,8 +724,80 @@ impl BslSyntaxExtractor {
                 database.methods.insert(method_info.name.clone(), method_info);
             }
         } else if title.contains("Свойство") || title.to_lowercase().contains("property") || syntax_info.category == "property" {
-            if let Ok(property_info) = self.convert_to_property_info(syntax_info) {
+            if let Ok(property_info) = self.convert_to_property_info(syntax_info.clone()) {
                 database.properties.insert(property_info.name.clone(), property_info);
+            }
+            
+            // ИСПРАВЛЕНИЕ: Для Global context свойств извлекаем типы и создаем объекты
+            tracing::debug!("DEBUG: Checking filename: {}", syntax_info.filename);
+            if syntax_info.filename.contains("Global context/properties/") {
+                tracing::info!("🔍 Processing Global context property: {}", title);
+                
+                // Читаем HTML снова для извлечения типа (у нас есть доступ к parser)
+                tracing::debug!("Trying to extract file content for: '{}'", syntax_info.filename);
+                if let Some(html_content) = self.context_parser.extract_file_content(&syntax_info.filename) {
+                    tracing::debug!("Successfully read HTML content for {}, length: {}", syntax_info.filename, html_content.len());
+                    if let Some(type_name) = self.extract_type_from_description(&html_content) {
+                        tracing::info!("✅ Extracted type from Global context property {}: {}", title, type_name);
+                        
+                        // Создаем объект для типа менеджера
+                        let manager_object = BslObjectInfo {
+                            name: type_name.clone(),
+                            object_type: "Manager".to_string(),
+                            description: Some(format!("Менеджер для работы с {}", title)),
+                            methods: Vec::new(), // Методы будут добавлены отдельно из других файлов
+                            properties: Vec::new(),
+                            constructors: Vec::new(),
+                            availability: Some("Сервер, толстый клиент, внешнее соединение".to_string()),
+                        };
+                        database.objects.insert(type_name.clone(), manager_object);
+                        tracing::debug!("Created manager object: {}", type_name);
+                        
+                        // Создаем также основной тип (например, ПользовательИнформационнойБазы)
+                        let base_type_name = type_name.replace("Менеджер", "");
+                        if !base_type_name.is_empty() && base_type_name != type_name {
+                            let base_object = BslObjectInfo {
+                                name: base_type_name.clone(),
+                                object_type: "InfoBaseEntity".to_string(),
+                                description: Some(format!("Объект информационной базы: {}", base_type_name)),
+                                methods: Vec::new(),
+                                properties: Vec::new(),
+                                constructors: Vec::new(),
+                                availability: Some("Сервер, толстый клиент, внешнее соединение".to_string()),
+                            };
+                            database.objects.insert(base_type_name.clone(), base_object);
+                            tracing::debug!("Created base object: {}", base_type_name);
+                        }
+                        
+                        // Создаем глобальное свойство с наследованием методов от менеджерного типа
+                        let global_property_name = title.split('(').next().unwrap_or(title).trim().to_string();
+                        
+                        // Получаем методы от менеджерного типа
+                        let manager_methods = if let Some(manager_obj) = database.objects.get(&type_name) {
+                            manager_obj.methods.clone()
+                        } else {
+                            Vec::new()
+                        };
+                        
+                        let global_object = BslObjectInfo {
+                            name: global_property_name.clone(),
+                            object_type: "GlobalProperty".to_string(),
+                            description: Some(format!("Глобальное свойство типа {}", type_name)),
+                            methods: manager_methods, // ИСПРАВЛЕНИЕ: Наследуем методы от менеджера
+                            properties: Vec::new(),
+                            constructors: Vec::new(),
+                            availability: Some("Сервер, толстый клиент, внешнее соединение".to_string()),
+                        };
+                        let methods_count = global_object.methods.len();
+                        database.objects.insert(global_property_name.clone(), global_object);
+                        tracing::debug!("🔗 Global property {} inherits {} methods from {}", 
+                                      global_property_name, methods_count, type_name);
+                    } else {
+                        tracing::warn!("⚠️  Could not extract type from Global context property {}", title);
+                    }
+                } else {
+                    tracing::warn!("⚠️  Could not read HTML content for file: '{}'", syntax_info.filename);
+                }
             }
         } else if title.contains("Оператор") || title.to_lowercase().contains("operator") {
             if let Ok(operator_info) = self.convert_to_operator_info(syntax_info) {

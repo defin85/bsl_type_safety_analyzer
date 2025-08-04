@@ -102,7 +102,6 @@ pub mod parser;
 pub mod reports;  // NEW: Reports module for SARIF, HTML, Text output
 pub mod rules;    // NEW: Rules system for configurable analysis
 pub mod verifiers;
-pub mod contract_generator;  // NEW: Contract generator launcher
 pub mod unified_index;  // NEW: Unified BSL Type System
 pub mod mcp_server;  // NEW: Model Context Protocol server
 pub mod bsl_parser;  // NEW: Tree-sitter based BSL parser
@@ -121,10 +120,8 @@ pub use parser::BslLexer;
 // NEW: Re-export integrated parsers and documentation tools
 pub use docs_integration::{DocsIntegration, BslSyntaxDatabase, CompletionItem};
 pub use configuration::{
-    MetadataReportParser, FormXmlParser, MetadataContract, FormContract,
-    ObjectType, FormType, ModuleGenerator, ModuleContract
+    ModuleGenerator, ModuleContract
 };
-pub use contract_generator::{ContractGeneratorLauncher, GenerationComponents};
 
 // NEW: Re-export reports functionality
 pub use reports::{
