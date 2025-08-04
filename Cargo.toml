@@ -148,6 +148,11 @@ path = "src/bin/extract_platform_docs.rs"
 name = "bsl-mcp-server"
 path = "src/bin/mcp_server.rs"
 
+# LSP Server
+[[bin]]
+name = "lsp_server"
+path = "src/lsp_main.rs"
+
 # BSL Syntax Checker
 [[bin]]
 name = "syntaxcheck"
