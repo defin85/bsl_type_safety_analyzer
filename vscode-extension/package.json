@@ -56,19 +56,42 @@
                 },
                 "bslAnalyzer.serverPath": {
                     "type": "string",
-                    "default": "bsl-analyzer",
-                    "description": "Path to BSL Analyzer executable"
+                    "default": "lsp_server.exe",
+                    "description": "Path to BSL Analyzer LSP server executable"
                 },
                 "bslAnalyzer.serverMode": {
                     "type": "string",
-                    "enum": ["stdio", "tcp"],
-                    "default": "tcp",
+                    "enum": [
+                        "stdio",
+                        "tcp"
+                    ],
+                    "default": "stdio",
                     "description": "LSP server communication mode"
                 },
                 "bslAnalyzer.tcpPort": {
                     "type": "number",
                     "default": 8080,
                     "description": "TCP port for LSP server (when using TCP mode)"
+                },
+                "bslAnalyzer.indexServerPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to directory containing BSL Analyzer binaries (build_unified_index.exe, query_type.exe, etc.)"
+                },
+                "bslAnalyzer.configurationPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to 1C configuration directory for index building"
+                },
+                "bslAnalyzer.platformVersion": {
+                    "type": "string",
+                    "default": "8.3.25",
+                    "description": "1C platform version for index building"
+                },
+                "bslAnalyzer.autoIndexBuild": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Automatically build index when opening BSL files"
                 },
                 "bslAnalyzer.rulesConfig": {
                     "type": "string",
@@ -92,7 +115,11 @@
                 },
                 "bslAnalyzer.trace.server": {
                     "type": "string",
-                    "enum": ["off", "messages", "verbose"],
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
                     "default": "off",
                     "description": "Trace communication between VS Code and LSP server"
                 }
@@ -128,6 +155,54 @@
                 "command": "bslAnalyzer.restartServer",
                 "title": "Restart LSP Server",
                 "category": "BSL Analyzer"
+            },
+            {
+                "command": "bslAnalyzer.searchType",
+                "title": "Search BSL Type",
+                "category": "BSL Index",
+                "icon": "$(search)"
+            },
+            {
+                "command": "bslAnalyzer.searchMethod",
+                "title": "Search Method in Type",
+                "category": "BSL Index",
+                "icon": "$(symbol-method)"
+            },
+            {
+                "command": "bslAnalyzer.buildIndex",
+                "title": "Build Unified BSL Index",
+                "category": "BSL Index",
+                "icon": "$(database)"
+            },
+            {
+                "command": "bslAnalyzer.showIndexStats",
+                "title": "Show Index Statistics",
+                "category": "BSL Index",
+                "icon": "$(graph)"
+            },
+            {
+                "command": "bslAnalyzer.incrementalUpdate",
+                "title": "Incremental Index Update",
+                "category": "BSL Index",
+                "icon": "$(sync)"
+            },
+            {
+                "command": "bslAnalyzer.exploreType",
+                "title": "Explore Type Methods & Properties",
+                "category": "BSL Index",
+                "icon": "$(type-hierarchy)"
+            },
+            {
+                "command": "bslAnalyzer.validateMethodCall",
+                "title": "Validate Method Call",
+                "category": "BSL Verification",
+                "icon": "$(check)"
+            },
+            {
+                "command": "bslAnalyzer.checkTypeCompatibility",
+                "title": "Check Type Compatibility",
+                "category": "BSL Verification",
+                "icon": "$(arrow-both)"
             }
         ],
         "menus": {
@@ -142,12 +217,22 @@
                 {
                     "when": "resourceExtname == .bsl",
                     "command": "bslAnalyzer.analyzeFile",
-                    "group": "BSL Analyzer"
+                    "group": "BSL Analyzer@1"
                 },
                 {
                     "when": "resourceExtname == .bsl",
                     "command": "bslAnalyzer.showMetrics",
-                    "group": "BSL Analyzer"
+                    "group": "BSL Analyzer@2"
+                },
+                {
+                    "when": "resourceExtname == .bsl && editorHasSelection",
+                    "command": "bslAnalyzer.validateMethodCall",
+                    "group": "BSL Index@1"
+                },
+                {
+                    "when": "resourceExtname == .bsl && editorHasSelection",
+                    "command": "bslAnalyzer.exploreType",
+                    "group": "BSL Index@2"
                 }
             ],
             "commandPalette": [
@@ -170,6 +255,31 @@
                 },
                 {
                     "command": "bslAnalyzer.restartServer"
+                },
+                {
+                    "command": "bslAnalyzer.searchType"
+                },
+                {
+                    "command": "bslAnalyzer.searchMethod"
+                },
+                {
+                    "command": "bslAnalyzer.buildIndex"
+                },
+                {
+                    "command": "bslAnalyzer.showIndexStats"
+                },
+                {
+                    "command": "bslAnalyzer.incrementalUpdate"
+                },
+                {
+                    "command": "bslAnalyzer.exploreType"
+                },
+                {
+                    "command": "bslAnalyzer.validateMethodCall",
+                    "when": "resourceExtname == .bsl && editorHasSelection"
+                },
+                {
+                    "command": "bslAnalyzer.checkTypeCompatibility"
                 }
             ]
         },
@@ -186,9 +296,9 @@
         "watch": "tsc -watch -p ./"
     },
     "devDependencies": {
-        "@types/vscode": "^1.74.0",
         "@types/node": "16.x",
-        "typescript": "^4.9.4"
+        "@types/vscode": "^1.74.0",
+        "typescript": "^4.9.5"
     },
     "dependencies": {
         "vscode-languageclient": "^8.1.0"

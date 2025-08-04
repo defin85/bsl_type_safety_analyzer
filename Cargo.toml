@@ -143,6 +143,14 @@ path = "src/bin/query_type.rs"
 name = "extract_platform_docs"
 path = "src/bin/extract_platform_docs.rs"
 
+[[bin]]
+name = "incremental_update"
+path = "src/bin/incremental_update.rs"
+
+[[bin]]
+name = "check_type_compatibility"
+path = "src/bin/check_type_compatibility.rs"
+
 # MCP Server
 [[bin]]
 name = "bsl-mcp-server"
