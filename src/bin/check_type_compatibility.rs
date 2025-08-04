@@ -1,23 +1,24 @@
 /// Проверка совместимости BSL типов
-/// 
+///
 /// Утилита для проверки совместимости типов в рамках системы типов BSL.
 /// Использует UnifiedBslIndex для определения возможности присваивания одного типа другому.
-/// 
+///
 /// Пример использования:
 /// ```bash
 /// cargo run --bin check_type_compatibility -- --from "Справочники.Номенклатура" --to "СправочникСсылка" --config "path/to/config"
 /// ```
-
 use anyhow::Result;
+use bsl_analyzer::unified_index::UnifiedIndexBuilder;
 use clap::Parser;
 use std::path::Path;
-use bsl_analyzer::unified_index::UnifiedIndexBuilder;
 
 #[derive(Parser)]
 #[command(name = "check_type_compatibility")]
 #[command(about = "Проверка совместимости BSL типов")]
-#[command(long_about = "Утилита для проверки совместимости типов в системе типов BSL. \
-Проверяет возможность присваивания значения одного типа переменной другого типа.")]
+#[command(
+    long_about = "Утилита для проверки совместимости типов в системе типов BSL. \
+Проверяет возможность присваивания значения одного типа переменной другого типа."
+)]
 struct Args {
     /// Исходный тип (от какого типа преобразуем)
     #[arg(long, help = "Исходный тип для проверки")]
@@ -75,10 +76,13 @@ fn main() -> Result<()> {
         println!("🔍 Анализ совместимости типов");
         println!("================================");
         println!("Исходный тип: {}", args.from);
-        
+
         match from_entity {
             Some(entity) => {
-                println!("  ✓ Найден: {} ({:?})", entity.display_name, entity.entity_type);
+                println!(
+                    "  ✓ Найден: {} ({:?})",
+                    entity.display_name, entity.entity_type
+                );
             }
             None => {
                 println!("  ❌ Не найден в индексе");
@@ -88,7 +92,10 @@ fn main() -> Result<()> {
         println!("Целевой тип: {}", args.to);
         match to_entity {
             Some(entity) => {
-                println!("  ✓ Найден: {} ({:?})", entity.display_name, entity.entity_type);
+                println!(
+                    "  ✓ Найден: {} ({:?})",
+                    entity.display_name, entity.entity_type
+                );
             }
             None => {
                 println!("  ❌ Не найден в индексе");
@@ -99,17 +106,23 @@ fn main() -> Result<()> {
         println!("Результат совместимости:");
         if is_compatible {
             println!("  ✅ СОВМЕСТИМЫ");
-            println!("  Тип '{}' может быть присвоен переменной типа '{}'", args.from, args.to);
+            println!(
+                "  Тип '{}' может быть присвоен переменной типа '{}'",
+                args.from, args.to
+            );
         } else {
             println!("  ❌ НЕ СОВМЕСТИМЫ");
-            println!("  Тип '{}' НЕ может быть присвоен переменной типа '{}'", args.from, args.to);
+            println!(
+                "  Тип '{}' НЕ может быть присвоен переменной типа '{}'",
+                args.from, args.to
+            );
         }
 
         // Показать путь наследования если запрошено
         if args.show_inheritance_path && is_compatible && args.from != args.to {
             println!();
             println!("Путь совместимости:");
-            if let (Some(from_entity), Some(to_entity)) = (from_entity, to_entity) {
+            if let (Some(from_entity), Some(_to_entity)) = (from_entity, to_entity) {
                 // Простая проверка через родительские типы
                 if from_entity.constraints.parent_types.contains(&args.to) {
                     println!("  {} → наследует → {}", args.from, args.to);
@@ -131,22 +144,37 @@ fn main() -> Result<()> {
 
         if let Some(entity) = from_entity {
             if !entity.constraints.parent_types.is_empty() {
-                println!("  {} наследует от: {}", args.from, entity.constraints.parent_types.join(", "));
+                println!(
+                    "  {} наследует от: {}",
+                    args.from,
+                    entity.constraints.parent_types.join(", ")
+                );
             }
             if !entity.constraints.implements.is_empty() {
-                println!("  {} реализует: {}", args.from, entity.constraints.implements.join(", "));
+                println!(
+                    "  {} реализует: {}",
+                    args.from,
+                    entity.constraints.implements.join(", ")
+                );
             }
         }
 
         if let Some(entity) = to_entity {
             if !entity.constraints.parent_types.is_empty() {
-                println!("  {} наследует от: {}", args.to, entity.constraints.parent_types.join(", "));
+                println!(
+                    "  {} наследует от: {}",
+                    args.to,
+                    entity.constraints.parent_types.join(", ")
+                );
             }
             if !entity.constraints.implements.is_empty() {
-                println!("  {} реализует: {}", args.to, entity.constraints.implements.join(", "));
+                println!(
+                    "  {} реализует: {}",
+                    args.to,
+                    entity.constraints.implements.join(", ")
+                );
             }
         }
-
     } else {
         // Краткий вывод
         if is_compatible {

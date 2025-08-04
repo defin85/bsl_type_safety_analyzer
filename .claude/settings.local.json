@@ -188,7 +188,8 @@
       "Bash(npm run compile:*)",
       "Bash(npx tsc:*)",
       "Bash(RUST_LOG=info cargo run --bin check_type_compatibility -- --from \"Массив\" --to \"Массив\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --verbose)",
-      "Bash(npx @vscode/vsce package:*)"
+      "Bash(npx @vscode/vsce package:*)",
+      "Bash(RUST_LOG=debug cargo test test_platform_cache_loading -- --nocapture)"
     ],
     "deny": []
   }
