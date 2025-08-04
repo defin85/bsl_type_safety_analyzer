@@ -7,8 +7,36 @@ use serde_json;
 use std::collections::HashMap;
 use chrono;
 
-use super::entity::BslEntity;
+use super::entity::{BslEntity, BslEntityId};
 use super::index::UnifiedBslIndex;
+use super::configuration_watcher::{ConfigurationWatcher, ChangeImpact};
+
+/// Сериализуемый граф наследования для кеширования
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct InheritanceGraph {
+    /// Ребра графа: (parent_id, child_id)
+    pub edges: Vec<(String, String)>,
+    /// Версия формата графа (для миграций)
+    pub version: u32,
+}
+
+impl InheritanceGraph {
+    pub fn new() -> Self {
+        Self {
+            edges: Vec::new(),
+            version: 1,
+        }
+    }
+    
+    /// Создает граф из UnifiedBslIndex
+    pub fn from_index(index: &UnifiedBslIndex) -> Self {
+        let edges = index.serialize_inheritance_graph();
+        Self {
+            edges,
+            version: 1,
+        }
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct ProjectManifest {
@@ -24,6 +52,10 @@ pub struct ProjectManifest {
 
 pub struct ProjectIndexCache {
     cache_dir: PathBuf,
+    /// Кеш графа наследования в памяти для текущей сессии
+    inheritance_cache: Option<InheritanceGraph>,
+    /// Отслеживание изменений конфигурации для инкрементального обновления
+    pub configuration_watcher: Option<ConfigurationWatcher>,
 }
 
 impl ProjectIndexCache {
@@ -35,12 +67,16 @@ impl ProjectIndexCache {
         fs::create_dir_all(&cache_dir)
             .context("Failed to create project indices directory")?;
             
-        Ok(Self { cache_dir })
+        Ok(Self { 
+            cache_dir,
+            inheritance_cache: None,
+            configuration_watcher: None,
+        })
     }
     
-    /// Gets or creates project index from cache
+    /// Gets or creates project index from cache with advanced change tracking
     pub fn get_or_create(
-        &self, 
+        &mut self, 
         config_path: &Path,
         platform_version: &str,
         builder_fn: &dyn Fn() -> Result<UnifiedBslIndex>
@@ -49,20 +85,56 @@ impl ProjectIndexCache {
         let project_dir = self.get_project_versioned_dir(&project_name, platform_version);
         let manifest_file = project_dir.join("manifest.json");
         
+        // Инициализируем или обновляем ConfigurationWatcher
+        let should_rebuild = if let Some(ref mut watcher) = self.configuration_watcher {
+            // Проверяем изменения через ConfigurationWatcher
+            let changed_files = watcher.check_for_changes()?;
+            let impact = watcher.analyze_change_impact(&changed_files);
+            
+            if !changed_files.is_empty() {
+                tracing::info!(
+                    "Configuration changes detected: {} files changed, impact: {:?}",
+                    changed_files.len(),
+                    impact
+                );
+            }
+            
+            impact.requires_rebuild()
+        } else {
+            // Первый запуск - создаем ConfigurationWatcher
+            match ConfigurationWatcher::new(config_path) {
+                Ok(watcher) => {
+                    tracing::info!(
+                        "Created ConfigurationWatcher for {} files",
+                        watcher.tracked_files_count()
+                    );
+                    self.configuration_watcher = Some(watcher);
+                    false // Не требуем перестройку при первом создании watcher
+                }
+                Err(e) => {
+                    tracing::warn!("Failed to create ConfigurationWatcher: {}", e);
+                    false
+                }
+            }
+        };
+        
         // Check if cached version exists and is valid
-        if manifest_file.exists() {
+        if manifest_file.exists() && !should_rebuild {
             if let Ok(manifest) = self.load_manifest(&manifest_file) {
                 // Check if cache is still valid
                 if manifest.platform_version == platform_version 
                     && self.is_cache_fresh(&manifest, config_path)? {
                     
-                    // Load from cache
+                    tracing::debug!("Loading index from cache");
                     return self.load_from_cache(&project_dir);
                 }
             }
         }
         
         // Build new index and save to cache
+        tracing::info!("Building new unified index{}", 
+            if should_rebuild { " (configuration changed)" } else { "" }
+        );
         let index = builder_fn()?;
         self.save_to_cache(&project_name, config_path, platform_version, &index)?;
         
@@ -108,6 +180,13 @@ impl ProjectIndexCache {
         fs::write(&unified_index_file, index_json)
             .context("Failed to write unified index file")?;
         
+        // Save inheritance graph
+        let inheritance_graph = InheritanceGraph::from_index(index);
+        let inheritance_file = project_dir.join("inheritance_graph.json");
+        let inheritance_json = serde_json::to_string_pretty(&inheritance_graph)?;
+        fs::write(&inheritance_file, inheritance_json)
+            .context("Failed to write inheritance graph file")?;
+
         // Save manifest
         let manifest = ProjectManifest {
             project_name: project_name.to_string(),
@@ -129,7 +208,7 @@ impl ProjectIndexCache {
     }
     
     /// Loads unified index from project cache
-    fn load_from_cache(&self, project_dir: &Path) -> Result<UnifiedBslIndex> {
+    pub fn load_from_cache(&self, project_dir: &Path) -> Result<UnifiedBslIndex> {
         // Read manifest to get platform version
         let manifest_file = project_dir.join("manifest.json");
         let manifest = self.load_manifest(&manifest_file)?;
@@ -153,8 +232,20 @@ impl ProjectIndexCache {
             index.add_entity(entity)?;
         }
         
-        // 3. Build inheritance relationships
-        index.build_inheritance_relationships()?;
+        // 3. Load cached inheritance graph
+        let inheritance_file = project_dir.join("inheritance_graph.json");
+        if inheritance_file.exists() {
+            let inheritance_json = fs::read_to_string(&inheritance_file)
+                .context("Failed to read inheritance graph file")?;
+            let inheritance_graph: InheritanceGraph = serde_json::from_str(&inheritance_json)
+                .context("Failed to deserialize inheritance graph")?;
+            
+            // Load inheritance relationships from cache
+            index.load_inheritance_graph(inheritance_graph)?;
+        } else {
+            // Fallback: build inheritance relationships (legacy)
+            index.build_inheritance_relationships()?;
+        }
         
         Ok(index)
     }
@@ -195,13 +286,13 @@ impl ProjectIndexCache {
         Ok(entities)
     }
     
-    fn load_manifest(&self, manifest_file: &Path) -> Result<ProjectManifest> {
+    pub fn load_manifest(&self, manifest_file: &Path) -> Result<ProjectManifest> {
         let content = fs::read_to_string(manifest_file)?;
         let manifest: ProjectManifest = serde_json::from_str(&content)?;
         Ok(manifest)
     }
     
-    fn is_cache_fresh(&self, manifest: &ProjectManifest, config_path: &Path) -> Result<bool> {
+    pub fn is_cache_fresh(&self, manifest: &ProjectManifest, config_path: &Path) -> Result<bool> {
         // Check if Configuration.xml has been modified since cache creation
         let config_xml = config_path.join("Configuration.xml");
         if config_xml.exists() {
@@ -219,7 +310,7 @@ impl ProjectIndexCache {
         Ok(true)
     }
     
-    fn generate_project_name(&self, config_path: &Path) -> String {
+    pub fn generate_project_name(&self, config_path: &Path) -> String {
         // Try to extract UUID from Configuration.xml for stable project ID
         if let Ok(uuid) = self.extract_config_uuid(config_path) {
             let project_name = config_path
@@ -280,7 +371,7 @@ impl ProjectIndexCache {
         self.cache_dir.join(project_name)
     }
     
-    fn get_project_versioned_dir(&self, project_name: &str, platform_version: &str) -> PathBuf {
+    pub fn get_project_versioned_dir(&self, project_name: &str, platform_version: &str) -> PathBuf {
         // Structure: project_indices/ProjectName_hash/v8.3.25/
         self.cache_dir
             .join(project_name)

@@ -181,7 +181,14 @@
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"ЗаписьXML\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Base64Значение\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Base64Value\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
-      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_base64_example.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")"
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_base64_example.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
+      "Bash(time RUST_LOG=info cargo run --bin build_unified_index -- --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(time RUST_LOG=error cargo run --bin build_unified_index -- --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(cmd /c:*)",
+      "Bash(npm run compile:*)",
+      "Bash(npx tsc:*)",
+      "Bash(RUST_LOG=info cargo run --bin check_type_compatibility -- --from \"Массив\" --to \"Массив\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --verbose)",
+      "Bash(npx @vscode/vsce package:*)"
     ],
     "deny": []
   }

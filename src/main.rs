@@ -811,7 +811,7 @@ async fn analyze_command(
         pb.set_message("Creating UnifiedBslIndex for enhanced analysis...");
         
         use bsl_analyzer::unified_index::UnifiedIndexBuilder;
-        let builder = UnifiedIndexBuilder::new()?;
+        let mut builder = UnifiedIndexBuilder::new()?;
         let index = builder.build_index(&path, &platform_version)
             .context("Failed to create UnifiedBslIndex")?;
         

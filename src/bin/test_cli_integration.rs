@@ -32,7 +32,7 @@ fn main() -> anyhow::Result<()> {
     let config_path = Path::new("examples/ConfTest");
     if config_path.exists() {
         println!("📚 Создание UnifiedBslIndex...");
-        let builder = UnifiedIndexBuilder::new()?;
+        let mut builder = UnifiedIndexBuilder::new()?;
         let index = builder.build_index(config_path, "8.3.25")?;
         println!("✅ UnifiedBslIndex создан: {} сущностей", index.get_all_entities().len());
         

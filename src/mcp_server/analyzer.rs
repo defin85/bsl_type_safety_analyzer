@@ -61,7 +61,7 @@ impl BslTypeAnalyzer {
     }
     
     async fn load_index(&self, config_path: &str) -> McpResult<()> {
-        let builder = UnifiedIndexBuilder::new()
+        let mut builder = UnifiedIndexBuilder::new()
             .map_err(|e| McpError::Internal(e.to_string()))?
             .with_application_mode(BslApplicationMode::ManagedApplication);
         

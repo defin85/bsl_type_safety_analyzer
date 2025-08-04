@@ -2,9 +2,47 @@ use std::collections::HashMap;
 use anyhow::Result;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::Direction;
+use petgraph::visit::EdgeRef;
 use serde::{Serialize, Deserialize};
 
 use super::entity::{BslEntity, BslEntityId, BslEntityType, BslEntityKind, BslMethod, BslProperty, BslApplicationMode};
+
+/// Результат инкрементального обновления индекса
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IncrementalUpdateResult {
+    pub success: bool,
+    pub duration: std::time::Duration,
+    pub added_entities: Vec<String>,
+    pub updated_entities: Vec<String>,
+    pub removed_entities: Vec<String>,
+}
+
+impl IncrementalUpdateResult {
+    pub fn new() -> Self {
+        Self {
+            success: false,
+            duration: std::time::Duration::from_millis(0),
+            added_entities: Vec::new(),
+            updated_entities: Vec::new(),
+            removed_entities: Vec::new(),
+        }
+    }
+    
+    pub fn total_changes(&self) -> usize {
+        self.added_entities.len() + self.updated_entities.len() + self.removed_entities.len()
+    }
+}
+
+/// Статистика производительности индекса
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IndexPerformanceStats {
+    pub total_entities: usize,
+    pub platform_entities: usize,
+    pub config_entities: usize,
+    pub inheritance_edges: usize,
+    pub reference_edges: usize,
+    pub index_memory_estimate: usize,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BslLanguagePreference {
@@ -161,6 +199,79 @@ impl UnifiedBslIndex {
                 }
             }
         }
+        
+        Ok(())
+    }
+    
+    /// Сериализует граф наследования для кеширования
+    pub fn serialize_inheritance_graph(&self) -> Vec<(String, String)> {
+        let mut edges = Vec::new();
+        
+        // Создаем маппинг node_index -> entity_id для обратного поиска
+        let mut idx_to_id = HashMap::new();
+        for (entity_id, &node_idx) in &self.inheritance_node_map {
+            idx_to_id.insert(node_idx, entity_id.0.clone());
+        }
+        
+        // Сериализуем ребра графа
+        for edge in self.inheritance_graph.edge_references() {
+            if let (Some(parent_id), Some(child_id)) = (
+                idx_to_id.get(&edge.source()),
+                idx_to_id.get(&edge.target())
+            ) {
+                edges.push((parent_id.clone(), child_id.clone()));
+            }
+        }
+        
+        tracing::debug!(
+            "Serializing inheritance graph: {} nodes, {} edges",
+            self.inheritance_node_map.len(),
+            edges.len()
+        );
+        
+        edges
+    }
+    
+    /// Загружает граф наследования из кеша
+    pub fn load_inheritance_graph(&mut self, cached_graph: super::project_cache::InheritanceGraph) -> Result<()> {
+        // Очищаем текущий граф
+        self.inheritance_graph.clear();
+        self.inheritance_node_map.clear();
+        
+        // Создаем узлы для всех сущностей, упомянутых в ребрах
+        let mut entity_ids = std::collections::HashSet::new();
+        for (parent_id, child_id) in &cached_graph.edges {
+            entity_ids.insert(parent_id.clone());
+            entity_ids.insert(child_id.clone());
+        }
+        
+        // Добавляем узлы в граф
+        for entity_id_str in entity_ids {
+            let entity_id = BslEntityId(entity_id_str.clone());
+            if self.entities.contains_key(&entity_id) {
+                let node = self.inheritance_graph.add_node(entity_id.clone());
+                self.inheritance_node_map.insert(entity_id, node);
+            }
+        }
+        
+        // Восстанавливаем ребра
+        for (parent_id_str, child_id_str) in &cached_graph.edges {
+            let parent_id = BslEntityId(parent_id_str.clone());
+            let child_id = BslEntityId(child_id_str.clone());
+            
+            if let (Some(&parent_node), Some(&child_node)) = (
+                self.inheritance_node_map.get(&parent_id),
+                self.inheritance_node_map.get(&child_id)
+            ) {
+                self.inheritance_graph.add_edge(parent_node, child_node, ());
+            }
+        }
+        
+        tracing::info!(
+            "Loaded inheritance graph from cache: {} nodes, {} edges",
+            self.inheritance_node_map.len(),
+            cached_graph.edges.len()
+        );
         
         Ok(())
     }
@@ -733,5 +844,207 @@ impl UnifiedBslIndex {
         }
         
         Ok(entity)
+    }
+    
+    // ===== INCREMENTAL UPDATE API =====
+    
+    /// <api-method>
+    ///   <name>update_entities</name>
+    ///   <purpose>Инкрементальное обновление сущностей без полной перестройки индекса</purpose>
+    ///   <parameters>
+    ///     <param name="changed_entities" type="Vec<BslEntity>">Список измененных сущностей</param>
+    ///   </parameters>
+    ///   <returns>Result<IncrementalUpdateResult></returns>
+    ///   <performance>~1-20ms для малых изменений vs ~500ms полная перестройка</performance>
+    /// </api-method>
+    pub fn update_entities(&mut self, changed_entities: Vec<BslEntity>) -> Result<IncrementalUpdateResult> {
+        let start = std::time::Instant::now();
+        let mut result = IncrementalUpdateResult::new();
+        
+        for entity in changed_entities {
+            let entity_id = entity.id.clone();
+            
+            // Проверяем существует ли сущность
+            if self.entities.contains_key(&entity_id) {
+                result.updated_entities.push(entity_id.0.clone());
+                self.remove_entity_from_indices(&entity_id)?;
+            } else {
+                result.added_entities.push(entity_id.0.clone());
+            }
+            
+            // Добавляем обновленную сущность
+            self.add_entity(entity)?;
+        }
+        
+        // Частично обновляем граф наследования только для измененных сущностей
+        self.update_inheritance_relationships_partial(&result.updated_entities, &result.added_entities)?;
+        
+        result.duration = start.elapsed();
+        result.success = true;
+        
+        tracing::info!(
+            "Incremental update completed: {} added, {} updated in {:.2?}",
+            result.added_entities.len(),
+            result.updated_entities.len(),
+            result.duration
+        );
+        
+        Ok(result)
+    }
+    
+    /// <api-method>
+    ///   <name>remove_entities</name>
+    ///   <purpose>Удаление сущностей из индекса</purpose>
+    ///   <parameters>
+    ///     <param name="entity_ids" type="Vec<String>">Список ID сущностей для удаления</param>
+    ///   </parameters>
+    /// </api-method>
+    pub fn remove_entities(&mut self, entity_ids: Vec<String>) -> Result<IncrementalUpdateResult> {
+        let start = std::time::Instant::now();
+        let mut result = IncrementalUpdateResult::new();
+        
+        for entity_id_str in entity_ids {
+            let entity_id = BslEntityId(entity_id_str.clone());
+            
+            if self.entities.contains_key(&entity_id) {
+                self.remove_entity_from_indices(&entity_id)?;
+                self.entities.remove(&entity_id);
+                
+                // Удаляем из графов
+                if let Some(&node_idx) = self.inheritance_node_map.get(&entity_id) {
+                    self.inheritance_graph.remove_node(node_idx);
+                    self.inheritance_node_map.remove(&entity_id);
+                }
+                
+                if let Some(&ref_node_idx) = self.reference_node_map.get(&entity_id) {
+                    self.reference_graph.remove_node(ref_node_idx);
+                    self.reference_node_map.remove(&entity_id);
+                }
+                
+                result.removed_entities.push(entity_id_str);
+            }
+        }
+        
+        result.duration = start.elapsed();
+        result.success = true;
+        
+        tracing::info!(
+            "Entity removal completed: {} entities removed in {:.2?}",
+            result.removed_entities.len(),
+            result.duration
+        );
+        
+        Ok(result)
+    }
+    
+    /// Удаляет сущность из всех индексов поиска
+    fn remove_entity_from_indices(&mut self, entity_id: &BslEntityId) -> Result<()> {
+        if let Some(entity) = self.entities.get(entity_id) {
+            // Удаляем из основных индексов
+            self.by_name.remove(&entity.display_name);
+            self.by_qualified_name.remove(&entity.qualified_name);
+            
+            // Удаляем из индексов по типу и виду
+            if let Some(type_vec) = self.by_type.get_mut(&entity.entity_type) {
+                type_vec.retain(|id| id != entity_id);
+            }
+            
+            if let Some(kind_vec) = self.by_kind.get_mut(&entity.entity_kind) {
+                kind_vec.retain(|id| id != entity_id);
+            }
+            
+            // Удаляем из индексов методов и свойств
+            for method_name in entity.interface.methods.keys() {
+                if let Some(method_vec) = self.methods_by_name.get_mut(method_name) {
+                    method_vec.retain(|id| id != entity_id);
+                }
+            }
+            
+            for property_name in entity.interface.properties.keys() {
+                if let Some(prop_vec) = self.properties_by_name.get_mut(property_name) {
+                    prop_vec.retain(|id| id != entity_id);
+                }
+            }
+            
+            // Удаляем альтернативные имена
+            let alt_names_to_remove: Vec<String> = self.alternative_names
+                .iter()
+                .filter(|(_, id)| *id == entity_id)
+                .map(|(name, _)| name.clone())
+                .collect();
+                
+            for name in alt_names_to_remove {
+                self.alternative_names.remove(&name);
+            }
+            
+            // Удаляем из языковых индексов
+            self.russian_names.retain(|_, id| id != entity_id);
+            self.english_names.retain(|_, id| id != entity_id);
+        }
+        
+        Ok(())
+    }
+    
+    /// Частично обновляет граф наследования только для измененных сущностей
+    fn update_inheritance_relationships_partial(&mut self, updated_ids: &[String], added_ids: &[String]) -> Result<()> {
+        let all_changed_ids: Vec<BslEntityId> = updated_ids.iter()
+            .chain(added_ids.iter())
+            .map(|s| BslEntityId(s.clone()))
+            .collect();
+            
+        for entity_id in all_changed_ids {
+            if let Some(entity) = self.entities.get(&entity_id).cloned() {
+                if let Some(&child_node) = self.inheritance_node_map.get(&entity_id) {
+                    // Удаляем старые связи наследования для этой сущности
+                    let edges_to_remove: Vec<_> = self.inheritance_graph
+                        .edges_directed(child_node, Direction::Incoming)
+                        .map(|edge| edge.id())
+                        .collect();
+                    
+                    for edge_id in edges_to_remove {
+                        self.inheritance_graph.remove_edge(edge_id);
+                    }
+                    
+                    // Добавляем новые связи
+                    for parent_name in &entity.constraints.parent_types {
+                        if let Some(parent_id) = self.by_qualified_name.get(parent_name)
+                            .or_else(|| self.by_name.get(parent_name)) {
+                            if let Some(&parent_node) = self.inheritance_node_map.get(parent_id) {
+                                self.inheritance_graph.add_edge(parent_node, child_node, ());
+                                
+                                tracing::debug!(
+                                    "Updated inheritance: {} -> {}",
+                                    parent_name,
+                                    entity.qualified_name
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        Ok(())
+    }
+    
+    /// Получает статистику производительности последних операций
+    pub fn get_performance_stats(&self) -> IndexPerformanceStats {
+        IndexPerformanceStats {
+            total_entities: self.entities.len(),
+            platform_entities: self.by_type.get(&BslEntityType::Platform).map(|v| v.len()).unwrap_or(0),
+            config_entities: self.by_type.get(&BslEntityType::Configuration).map(|v| v.len()).unwrap_or(0),
+            inheritance_edges: self.inheritance_graph.edge_count(),
+            reference_edges: self.reference_graph.edge_count(),
+            index_memory_estimate: self.estimate_memory_usage(),
+        }
+    }
+    
+    fn estimate_memory_usage(&self) -> usize {
+        // Примерная оценка использования памяти индексами
+        let entities_size = self.entities.len() * std::mem::size_of::<BslEntity>();
+        let indices_size = (self.by_name.len() + self.by_qualified_name.len()) * 64; // примерно
+        let graphs_size = (self.inheritance_graph.node_count() + self.reference_graph.node_count()) * 32;
+        
+        entities_size + indices_size + graphs_size
     }
 }

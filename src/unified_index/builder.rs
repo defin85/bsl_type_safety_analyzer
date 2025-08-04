@@ -29,7 +29,7 @@ impl UnifiedIndexBuilder {
     }
     
     pub fn build_index(
-        &self, 
+        &mut self, 
         config_path: impl AsRef<Path>,
         platform_version: &str
     ) -> Result<UnifiedBslIndex> {
@@ -38,20 +38,82 @@ impl UnifiedIndexBuilder {
         info!("Building unified BSL index for: {}", config_path.display());
         info!("DEBUG: About to call project_cache.get_or_create");
         
-        // Используем project cache для автоматического кеширования
-        let index = self.project_cache.get_or_create(
-            config_path,
-            platform_version,
-            &|| self.build_index_from_scratch(config_path, platform_version)
-        )?;
+        // Проверяем ConfigurationWatcher и кеш, затем строим индекс при необходимости
+        let index = {
+            let project_name = self.project_cache.generate_project_name(config_path);
+            let project_dir = self.project_cache.get_project_versioned_dir(&project_name, platform_version);
+            let manifest_file = project_dir.join("manifest.json");
+            
+            // Получаем информацию о необходимости перестройки
+            let should_rebuild = self.check_configuration_changes(config_path)?;
+            
+            // Проверяем существующий кеш
+            let use_cache = manifest_file.exists() && !should_rebuild &&
+                self.is_cache_valid(&manifest_file, config_path, platform_version)?;
+            
+            if use_cache {
+                tracing::debug!("Loading index from cache");
+                self.project_cache.load_from_cache(&project_dir)?
+            } else {
+                tracing::info!("Building new unified index{}", 
+                    if should_rebuild { " (configuration changed)" } else { "" }
+                );
+                let index = self.build_index_from_scratch(config_path, platform_version)?;
+                self.project_cache.save_to_cache(&project_name, config_path, platform_version, &index)?;
+                index
+            }
+        };
         
         // Примитивные типы теперь добавляются в platform_cache автоматически
         
         Ok(index)
     }
     
+    /// Проверяет изменения конфигурации через ConfigurationWatcher
+    fn check_configuration_changes(&mut self, config_path: &Path) -> Result<bool> {
+        // Инициализируем или обновляем ConfigurationWatcher
+        if let Some(ref mut watcher) = self.project_cache.configuration_watcher {
+            // Проверяем изменения через ConfigurationWatcher
+            let changed_files = watcher.check_for_changes()?;
+            let impact = watcher.analyze_change_impact(&changed_files);
+            
+            if !changed_files.is_empty() {
+                tracing::info!(
+                    "Configuration changes detected: {} files changed, impact: {:?}",
+                    changed_files.len(),
+                    impact
+                );
+            }
+            
+            Ok(impact.requires_rebuild())
+        } else {
+            // Первый запуск - создаем ConfigurationWatcher
+            match super::configuration_watcher::ConfigurationWatcher::new(config_path) {
+                Ok(watcher) => {
+                    tracing::info!(
+                        "Created ConfigurationWatcher for {} files",
+                        watcher.tracked_files_count()
+                    );
+                    self.project_cache.configuration_watcher = Some(watcher);
+                    Ok(false) // Не требуем перестройку при первом создании watcher
+                }
+                Err(e) => {
+                    tracing::warn!("Failed to create ConfigurationWatcher: {}", e);
+                    Ok(false)
+                }
+            }
+        }
+    }
+    
+    /// Проверяет валидность существующего кеша
+    fn is_cache_valid(&self, manifest_file: &Path, config_path: &Path, platform_version: &str) -> Result<bool> {
+        let manifest = self.project_cache.load_manifest(manifest_file)?;
+        Ok(manifest.platform_version == platform_version 
+            && self.project_cache.is_cache_fresh(&manifest, config_path)?)
+    }
+    
     fn build_index_from_scratch(
-        &self,
+        &mut self,
         config_path: &Path,
         platform_version: &str
     ) -> Result<UnifiedBslIndex> {
@@ -286,6 +348,134 @@ impl UnifiedIndexBuilder {
         }
         
         Ok(entity)
+    }
+    
+    // ===== INCREMENTAL UPDATE METHODS =====
+    
+    /// Проверяет возможность инкрементального обновления
+    pub fn check_incremental_update_feasibility(
+        &mut self,
+        config_path: &Path,
+        platform_version: &str
+    ) -> Result<(super::configuration_watcher::ChangeImpact, Vec<(std::path::PathBuf, super::configuration_watcher::ChangeImpact)>)> {
+        use super::configuration_watcher::ConfigurationWatcher;
+        
+        // Инициализируем или получаем ConfigurationWatcher из project_cache
+        if self.project_cache.configuration_watcher.is_none() {
+            self.project_cache.configuration_watcher = Some(ConfigurationWatcher::new(config_path)?);
+        }
+        
+        let watcher = self.project_cache.configuration_watcher.as_mut()
+            .ok_or_else(|| anyhow::anyhow!("ConfigurationWatcher not initialized"))?;
+        
+        let changed_files_paths = watcher.check_for_changes()?;
+        let impact = watcher.analyze_change_impact(&changed_files_paths);
+        
+        // Создаем детализированный список изменений
+        let changed_files_with_impact: Vec<(std::path::PathBuf, super::configuration_watcher::ChangeImpact)> = 
+            changed_files_paths.into_iter()
+                .map(|path| {
+                    let file_impact = if path.file_name().and_then(|n| n.to_str()) == Some("Configuration.xml") {
+                        super::configuration_watcher::ChangeImpact::FullRebuild
+                    } else if path.extension().and_then(|e| e.to_str()) == Some("xml") {
+                        super::configuration_watcher::ChangeImpact::MetadataUpdate
+                    } else if path.extension().and_then(|e| e.to_str()) == Some("bsl") {
+                        super::configuration_watcher::ChangeImpact::ModuleUpdate
+                    } else {
+                        super::configuration_watcher::ChangeImpact::Minor
+                    };
+                    (path, file_impact)
+                })
+                .collect();
+        
+        Ok((impact, changed_files_with_impact))
+    }
+    
+    /// Выполняет инкрементальное обновление индекса
+    pub fn perform_incremental_update(
+        &mut self,
+        config_path: &Path,
+        platform_version: &str,
+        changed_files: Vec<(std::path::PathBuf, super::configuration_watcher::ChangeImpact)>
+    ) -> Result<super::index::IncrementalUpdateResult> {
+        let project_name = self.project_cache.generate_project_name(config_path);
+        let project_dir = self.project_cache.get_project_versioned_dir(&project_name, platform_version);
+        
+        // Загружаем существующий индекс
+        let mut index = self.project_cache.load_from_cache(&project_dir)
+            .context("Failed to load existing index for incremental update")?;
+        
+        let start = std::time::Instant::now();
+        let mut changed_entities = Vec::new();
+        
+        // Анализируем изменения по типам файлов
+        for (file_path, _impact) in changed_files {
+            if let Some(file_name) = file_path.file_name().and_then(|n| n.to_str()) {
+                match file_name {
+                    "Configuration.xml" => {
+                        // Перечитываем основные метаданные
+                        let xml_parser = ConfigurationXmlParser::new(config_path);
+                        let new_entities = xml_parser.parse_configuration()?;
+                        changed_entities.extend(new_entities);
+                    }
+                    name if name.ends_with(".xml") => {
+                        // Отдельные файлы объектов конфигурации
+                        if let Ok(entity) = self.parse_individual_metadata_file(&file_path) {
+                            changed_entities.push(entity);
+                        }
+                    }
+                    name if name.ends_with(".bsl") => {
+                        // BSL модули - пока не поддерживается детальный анализ
+                        tracing::debug!("BSL module changed: {}, skipping detailed analysis", name);
+                    }
+                    _ => {
+                        tracing::debug!("Unknown file type changed: {}", file_name);
+                    }
+                }
+            }
+        }
+        
+        // Выполняем инкрементальное обновление
+        let result = index.update_entities(changed_entities)?;
+        
+        // Сохраняем обновленный индекс в кеш
+        self.project_cache.save_to_cache(&project_name, config_path, platform_version, &index)?;
+        
+        tracing::info!(
+            "Incremental update completed in {:.2?}: {} entities changed",
+            start.elapsed(),
+            result.total_changes()
+        );
+        
+        Ok(result)
+    }
+    
+    /// Парсит отдельный файл метаданных
+    fn parse_individual_metadata_file(&self, file_path: &Path) -> Result<BslEntity> {
+        // Для простоты пока используем базовую реализацию
+        // В будущем можно добавить специализированные парсеры для разных типов объектов
+        
+        let file_content = std::fs::read_to_string(file_path)
+            .context("Failed to read metadata file")?;
+        
+        // Пытаемся извлечь основную информацию из XML
+        if let Some(name_start) = file_content.find("<Properties>") {
+            if let Some(_name_end) = file_content[name_start..].find("</Properties>") {
+                // Простая эвристика для извлечения имени объекта
+                if let Some(file_stem) = file_path.file_stem().and_then(|s| s.to_str()) {
+                    let entity = BslEntity::new(
+                        file_stem.to_string(),
+                        file_stem.to_string(),
+                        super::entity::BslEntityType::Configuration,
+                        super::entity::BslEntityKind::CommonModule, // по умолчанию
+                    );
+                    
+                    return Ok(entity);
+                }
+            }
+        }
+        
+        Err(anyhow::anyhow!("Could not parse metadata file: {}", file_path.display()))
     }
     
 }

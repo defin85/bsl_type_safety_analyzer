@@ -82,7 +82,7 @@ fn main() -> Result<()> {
     println!("Application mode: {:?}", args.mode);
     
     // Create builder with application mode
-    let builder = UnifiedIndexBuilder::new()
+    let mut builder = UnifiedIndexBuilder::new()
         .context("Failed to create index builder")?
         .with_application_mode(args.mode.into());
     

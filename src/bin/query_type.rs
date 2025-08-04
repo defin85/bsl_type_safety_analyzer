@@ -69,7 +69,7 @@ fn main() -> Result<()> {
         .with_max_level(tracing::Level::WARN)
         .init();
     
-    let builder = UnifiedIndexBuilder::new()
+    let mut builder = UnifiedIndexBuilder::new()
         .context("Failed to create index builder")?;
     
     let index = builder.build_index(&config_path, &args.platform_version)

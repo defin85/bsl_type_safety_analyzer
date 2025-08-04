@@ -74,7 +74,7 @@ impl BslMcpServer {
     }
     
     async fn load_index(&self, config_path: &str) -> Result<()> {
-        let builder = UnifiedIndexBuilder::new()?
+        let mut builder = UnifiedIndexBuilder::new()?
             .with_application_mode(BslApplicationMode::ManagedApplication);
         
         let index = builder.build_index(config_path, &self.platform_version)?;

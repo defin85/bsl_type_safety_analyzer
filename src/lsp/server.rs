@@ -67,7 +67,7 @@ impl BslLanguageServer {
         // Поиск конфигурации в workspace
         let config_path = self.find_configuration_path(&workspace_path).await?;
 
-        let builder = UnifiedIndexBuilder::new()?
+        let mut builder = UnifiedIndexBuilder::new()?
             .with_application_mode(BslApplicationMode::ManagedApplication);
 
         match builder.build_index(config_path.to_str().unwrap_or_default(), &self.platform_version) {

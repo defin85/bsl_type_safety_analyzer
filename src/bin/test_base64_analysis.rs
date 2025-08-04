@@ -19,7 +19,7 @@ fn main() -> Result<()> {
     let config_path = Path::new("examples/ConfTest");
     let platform_version = "8.3.25";
     
-    let builder = UnifiedIndexBuilder::new()?;
+    let mut builder = UnifiedIndexBuilder::new()?;
     let index = builder.build_index(config_path, platform_version)?;
     println!("✅ Загружено {} типов BSL в индекс", index.get_entity_count());
     
