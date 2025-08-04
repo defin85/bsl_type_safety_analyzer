@@ -164,7 +164,24 @@
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"СокрЛП\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Сообщить\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
       "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Global\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
-      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Тип\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")"
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Тип\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_sokrlp.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"НачалоГода\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Дата\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Date\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_strnayti.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"СтрНайти\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_fake_function.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Дата\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Массив\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"ЧтениеXML\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Неопределено\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Структура\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Соответствие\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"ЗаписьXML\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Base64Значение\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Base64Value\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_base64_example.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")"
     ],
     "deny": []
   }

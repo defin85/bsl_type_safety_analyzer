@@ -30,7 +30,7 @@ pub struct BslMcpServer {
 
 #[derive(Debug, Deserialize)]
 struct JsonRpcRequest {
-    _jsonrpc: String,
+    jsonrpc: String,
     method: String,
     params: Option<Value>,
     id: Value,
@@ -122,6 +122,56 @@ impl BslMcpServer {
                                 },
                                 "required": ["type_name"]
                             }
+                        },
+                        {
+                            "name": "analyze_code",
+                            "description": "Полный анализ BSL кода с диагностикой ошибок",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "bsl_code": {
+                                        "type": "string",
+                                        "description": "BSL код для анализа"
+                                    },
+                                    "file_name": {
+                                        "type": "string",
+                                        "description": "Имя файла (опционально)"
+                                    }
+                                },
+                                "required": ["bsl_code"]
+                            }
+                        },
+                        {
+                            "name": "validate_syntax",
+                            "description": "Проверка синтаксиса BSL кода",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "bsl_code": {
+                                        "type": "string",
+                                        "description": "BSL код для проверки синтаксиса"
+                                    }
+                                },
+                                "required": ["bsl_code"]
+                            }
+                        },
+                        {
+                            "name": "get_suggestions",
+                            "description": "Получение предложений для исправления кода",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "error_code": {
+                                        "type": "string",
+                                        "description": "Код ошибки BSL"
+                                    },
+                                    "context": {
+                                        "type": "string",
+                                        "description": "Контекст ошибки"
+                                    }
+                                },
+                                "required": ["error_code"]
+                            }
                         }
                     ]
                 });
@@ -142,6 +192,53 @@ impl BslMcpServer {
                     "find_type" => {
                         let type_name = args.get("type_name").and_then(|v| v.as_str()).unwrap_or("");
                         let result = self.find_type(type_name).await;
+                        JsonRpcResponse {
+                            jsonrpc: "2.0".to_string(),
+                            result: Some(json!({
+                                "content": [{
+                                    "type": "text",
+                                    "text": result
+                                }]
+                            })),
+                            error: None,
+                            id: request.id,
+                        }
+                    }
+                    "analyze_code" => {
+                        let bsl_code = args.get("bsl_code").and_then(|v| v.as_str()).unwrap_or("");
+                        let file_name = args.get("file_name").and_then(|v| v.as_str()).unwrap_or("code.bsl");
+                        let result = self.analyze_code(bsl_code, file_name).await;
+                        JsonRpcResponse {
+                            jsonrpc: "2.0".to_string(),
+                            result: Some(json!({
+                                "content": [{
+                                    "type": "text",
+                                    "text": result
+                                }]
+                            })),
+                            error: None,
+                            id: request.id,
+                        }
+                    }
+                    "validate_syntax" => {
+                        let bsl_code = args.get("bsl_code").and_then(|v| v.as_str()).unwrap_or("");
+                        let result = self.validate_syntax(bsl_code).await;
+                        JsonRpcResponse {
+                            jsonrpc: "2.0".to_string(),
+                            result: Some(json!({
+                                "content": [{
+                                    "type": "text",
+                                    "text": result
+                                }]
+                            })),
+                            error: None,
+                            id: request.id,
+                        }
+                    }
+                    "get_suggestions" => {
+                        let error_code = args.get("error_code").and_then(|v| v.as_str()).unwrap_or("");
+                        let context = args.get("context").and_then(|v| v.as_str()).unwrap_or("");
+                        let result = self.get_suggestions(error_code, context).await;
                         JsonRpcResponse {
                             jsonrpc: "2.0".to_string(),
                             result: Some(json!({
@@ -214,6 +311,140 @@ impl BslMcpServer {
                 "suggestions": suggestions.into_iter().take(5).collect::<Vec<_>>()
             }).to_string()
         }
+    }
+    
+    async fn analyze_code(&self, bsl_code: &str, file_name: &str) -> String {
+        use bsl_analyzer::BslAnalyzer;
+        use std::fs;
+        
+        // Создаем временный файл для анализа
+        let temp_file = format!("temp_{}", file_name);
+        if let Err(e) = fs::write(&temp_file, bsl_code) {
+            return json!({
+                "error": format!("Не удалось создать временный файл: {}", e)
+            }).to_string();
+        }
+        
+        let guard = self.index.read().await;
+        let index = match &*guard {
+            Some(idx) => idx,
+            None => {
+                let _ = fs::remove_file(&temp_file);
+                return json!({
+                    "error": "Индекс не загружен"
+                }).to_string();
+            }
+        };
+        
+        // Создаем анализатор с UnifiedBslIndex
+        let result = match BslAnalyzer::with_index(index.clone()) {
+            Ok(mut analyzer) => {
+                match analyzer.analyze_code(bsl_code, file_name) {
+                    Ok(()) => {
+                        let (errors, warnings) = analyzer.get_errors_and_warnings();
+                        
+                        let errors_json: Vec<_> = errors.into_iter().map(|err| {
+                            json!({
+                                "line": err.position.line,
+                                "column": err.position.column,
+                                "code": err.error_code.unwrap_or_else(|| "BSL000".to_string()),
+                                "message": err.message,
+                                "severity": "error"
+                            })
+                        }).collect();
+                        
+                        let warnings_json: Vec<_> = warnings.into_iter().map(|warn| {
+                            json!({
+                                "line": warn.position.line,
+                                "column": warn.position.column,
+                                "code": warn.error_code.unwrap_or_else(|| "BSL000".to_string()),
+                                "message": warn.message,
+                                "severity": "warning"
+                            })
+                        }).collect();
+                        
+                        json!({
+                            "success": true,
+                            "file_name": file_name,
+                            "analysis": {
+                                "errors_count": errors_json.len(),
+                                "warnings_count": warnings_json.len(),
+                                "errors": errors_json,
+                                "warnings": warnings_json,
+                                "has_issues": !errors_json.is_empty() || !warnings_json.is_empty()
+                            }
+                        }).to_string()
+                    }
+                    Err(e) => {
+                        json!({
+                            "error": format!("Ошибка анализа: {}", e)
+                        }).to_string()
+                    }
+                }
+            }
+            Err(e) => {
+                json!({
+                    "error": format!("Не удалось создать анализатор: {}", e)
+                }).to_string()
+            }
+        };
+        
+        // Удаляем временный файл
+        let _ = fs::remove_file(&temp_file);
+        
+        result
+    }
+    
+    async fn validate_syntax(&self, bsl_code: &str) -> String {
+        use bsl_analyzer::parser::BslLexer;
+        
+        let lexer = BslLexer::new();
+        match lexer.tokenize(bsl_code) {
+            Ok(tokens) => {
+                json!({
+                    "valid": true,
+                    "tokens_count": tokens.len(),
+                    "message": "Синтаксис корректен"
+                }).to_string()
+            }
+            Err(e) => {
+                json!({
+                    "valid": false,
+                    "error": format!("Синтаксическая ошибка: {}", e),
+                    "message": "Обнаружены ошибки синтаксиса"
+                }).to_string()
+            }
+        }
+    }
+    
+    async fn get_suggestions(&self, error_code: &str, context: &str) -> String {
+        let suggestions = match error_code {
+            "BSL001" => vec![
+                "Проверьте правильность написания имени переменной",
+                "Убедитесь что переменная объявлена перед использованием"
+            ],
+            "BSL003" => vec![
+                "Проверьте правильность написания имени функции",
+                "Убедитесь что функция доступна в текущем контексте",
+                "Проверьте подключение модулей с нужными функциями"
+            ],
+            "BSL007" => vec![
+                "Объявите переменную с помощью ключевого слова 'Перем'",
+                "Инициализируйте переменную перед использованием",
+                "Проверьте область видимости переменной"
+            ],
+            _ => vec![
+                "Проверьте документацию по ошибке",
+                "Убедитесь в корректности синтаксиса BSL",
+                "Обратитесь к справочной системе 1С"
+            ]
+        };
+        
+        json!({
+            "error_code": error_code,
+            "context": context,
+            "suggestions": suggestions
+        }).to_string()
     }
     
     pub async fn run(&self) -> Result<()> {

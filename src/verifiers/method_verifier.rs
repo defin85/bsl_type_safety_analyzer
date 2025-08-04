@@ -6,7 +6,7 @@
 */
 
 use std::collections::HashMap;
-// use crate::bsl_parser::semantic::TypeSystem; // TODO: перенести TypeSystem
+use crate::unified_index::UnifiedBslIndex;
 use crate::diagnostics::Diagnostic;
 
 /// Результат проверки вызова метода
@@ -69,17 +69,17 @@ pub struct ArgumentInfo {
 
 /// Верификатор методов BSL
 pub struct MethodVerifier {
-    /// Система типов для проверки
-    // type_system: TypeSystem, // TODO: перенести TypeSystem в bsl_parser
+    /// Единый индекс BSL типов для проверки
+    pub unified_index: UnifiedBslIndex,
     /// Кэш результатов проверки для производительности
     verification_cache: HashMap<String, MethodCallResult>,
 }
 
 impl MethodVerifier {
     /// Создает новый верификатор методов
-    pub fn new(/* type_system: TypeSystem */) -> Self {
+    pub fn new(unified_index: UnifiedBslIndex) -> Self {
         Self {
-            // type_system,
+            unified_index,
             verification_cache: HashMap::new(),
         }
     }
@@ -137,23 +137,58 @@ impl MethodVerifier {
     }
     
     /// Проверяет существование метода у типа
-    pub fn verify_method_exists(&self, _object_type: &str, _method_name: &str) -> bool {
-        false // TODO: реализовать после переноса TypeSystem
+    pub fn verify_method_exists(&self, object_type: &str, method_name: &str) -> bool {
+        if let Some(entity) = self.unified_index.find_entity(object_type) {
+            // Проверяем собственные методы
+            if entity.interface.methods.contains_key(method_name) {
+                return true;
+            }
+            
+            // Проверяем все методы (включая унаследованные)
+            let all_methods = self.unified_index.get_all_methods(object_type);
+            all_methods.contains_key(method_name)
+        } else {
+            false
+        }
     }
     
     /// Получает сигнатуру метода
-    pub fn get_method_signature(&self, _object_type: &str, _method_name: &str) -> Option<String> {
-        None // TODO: реализовать после переноса TypeSystem
+    pub fn get_method_signature(&self, object_type: &str, method_name: &str) -> Option<String> {
+        let all_methods = self.unified_index.get_all_methods(object_type);
+        
+        if let Some(method) = all_methods.get(method_name) {
+            // Формируем полную сигнатуру метода
+            let mut signature = format!("{}(", method_name);
+            
+            let param_strings: Vec<String> = method.parameters.iter().map(|param| {
+                let type_name = param.type_name.as_deref().unwrap_or("Произвольный");
+                format!("{}: {}", param.name, type_name)
+            }).collect();
+            
+            signature.push_str(&param_strings.join(", "));
+            signature.push(')');
+            
+            if let Some(return_type) = &method.return_type {
+                signature.push_str(&format!(" -> {}", return_type));
+            }
+            
+            Some(signature)
+        } else {
+            None
+        }
     }
     
     /// Возвращает список доступных методов для типа
-    pub fn get_available_methods(&self, _object_type: &str) -> Vec<String> {
-        vec![] // TODO: реализовать после переноса TypeSystem
+    pub fn get_available_methods(&self, object_type: &str) -> Vec<String> {
+        let all_methods = self.unified_index.get_all_methods(object_type);
+        let mut methods: Vec<String> = all_methods.keys().cloned().collect();
+        methods.sort();
+        methods
     }
     
     /// Проверяет существование типа объекта
-    pub fn verify_object_type(&self, _object_type: &str) -> bool {
-        false // TODO: реализовать после переноса TypeSystem
+    pub fn verify_object_type(&self, object_type: &str) -> bool {
+        self.unified_index.find_entity(object_type).is_some()
     }
     
     /// Получает предложения для исправления ошибочного вызова метода
@@ -227,14 +262,33 @@ impl MethodVerifier {
     }
     
     /// Проверяет совместимость типов
-    pub fn verify_type_compatibility(&self, _source_type: &str, _target_type: &str) -> bool {
-        false // TODO: реализовать после переноса TypeSystem
+    pub fn verify_type_compatibility(&self, source_type: &str, target_type: &str) -> bool {
+        self.unified_index.is_assignable(source_type, target_type)
     }
     
     /// Получает информацию об иерархии типов
-    pub fn get_type_hierarchy_info(&self, _type_name: &str) -> Option<HashMap<String, String>> {
-        // TODO: реализовать после переноса TypeSystem
-        None
+    pub fn get_type_hierarchy_info(&self, type_name: &str) -> Option<HashMap<String, String>> {
+        if let Some(entity) = self.unified_index.find_entity(type_name) {
+            let mut hierarchy = HashMap::new();
+            
+            // Родительские типы
+            for parent in &entity.constraints.parent_types {
+                hierarchy.insert("parent".to_string(), parent.clone());
+            }
+            
+            // Реализуемые интерфейсы
+            for interface in &entity.constraints.implements {
+                hierarchy.insert("implements".to_string(), interface.clone());
+            }
+            
+            // Тип сущности
+            hierarchy.insert("entity_type".to_string(), format!("{:?}", entity.entity_type));
+            hierarchy.insert("entity_kind".to_string(), format!("{:?}", entity.entity_kind));
+            
+            Some(hierarchy)
+        } else {
+            None
+        }
     }
     
     /// Создает диагностическое сообщение из результата проверки
@@ -391,10 +445,11 @@ impl MethodVerifier {
 #[cfg(test)]
 mod tests {
     use super::*;
-    // use crate::bsl_parser::semantic::TypeSystem; // TODO: перенести TypeSystem
+    use crate::unified_index::UnifiedBslIndex;
     
     fn create_test_verifier() -> MethodVerifier {
-        MethodVerifier::new()
+        let index = UnifiedBslIndex::new();
+        MethodVerifier::new(index)
     }
     
     #[test]

@@ -728,7 +728,7 @@ impl BslSyntaxExtractor {
                 database.properties.insert(property_info.name.clone(), property_info);
             }
             
-            // ИСПРАВЛЕНИЕ: Для Global context свойств извлекаем типы и создаем объекты
+            // ИСПРАВЛЕНИЕ: Для Global context свойств и методов извлекаем типы и создаем объекты
             tracing::debug!("DEBUG: Checking filename: {}", syntax_info.filename);
             if syntax_info.filename.contains("Global context/properties/") {
                 tracing::info!("🔍 Processing Global context property: {}", title);
@@ -797,6 +797,63 @@ impl BslSyntaxExtractor {
                     }
                 } else {
                     tracing::warn!("⚠️  Could not read HTML content for file: '{}'", syntax_info.filename);
+                }
+            }
+            
+            // ДОБАВЛЕНО: Обработка Global context методов (глобальных функций)
+            if syntax_info.filename.contains("Global context/methods/") {
+                tracing::info!("🔍 Processing Global context method (global function): {}", title);
+                
+                // Создаем глобальную функцию
+                if let Ok(function_info) = self.convert_to_function_info(syntax_info.clone()) {
+                    // Добавляем как функцию в базу данных
+                    database.functions.insert(function_info.name.clone(), function_info.clone());
+                    tracing::info!("✅ Added global function: {}", function_info.name);
+                    
+                    // ВАЖНО: Также создаем объект "Global" для группировки всех глобальных функций
+                    let global_object_name = "Global".to_string();
+                    let global_method = BslMethodInfo {
+                        name: function_info.name.clone(),
+                        english_name: None, // BslFunctionInfo не имеет english_name
+                        syntax_variants: function_info.syntax_variants.iter().map(|s| SyntaxVariant {
+                            variant_name: "default".to_string(),
+                            syntax: s.clone(),
+                        }).collect(),
+                        parameters: function_info.parameters.clone(),
+                        parameters_by_variant: HashMap::new(),
+                        return_type: function_info.return_type.clone(),
+                        return_type_description: None, // BslFunctionInfo не имеет return_type_description
+                        description: function_info.description.clone(),
+                        availability: function_info.availability.map(|av| vec![av]).unwrap_or_default(),
+                        version: None, // BslFunctionInfo не имеет version
+                        examples: Vec::new(), // BslFunctionInfo не имеет examples
+                        object_context: Some(global_object_name.clone()),
+                        links: Vec::new(), // BslFunctionInfo не имеет links
+                    };
+                    
+                    // Добавляем в коллекцию методов
+                    database.methods.insert(function_info.name.clone(), global_method);
+                    
+                    // Создаем или обновляем объект "Global" с методами
+                    if let Some(global_obj) = database.objects.get_mut(&global_object_name) {
+                        // Добавляем имя метода к существующему объекту Global
+                        global_obj.methods.push(function_info.name.clone());
+                    } else {
+                        // Создаем новый объект Global
+                        let global_object = BslObjectInfo {
+                            name: global_object_name.clone(),
+                            object_type: "GlobalContext".to_string(),
+                            description: Some("Глобальный контекст - коллекция всех глобальных функций и свойств 1С".to_string()),
+                            methods: vec![function_info.name.clone()],
+                            properties: Vec::new(),
+                            constructors: Vec::new(),
+                            availability: Some("Сервер, толстый клиент, веб-клиент, мобильный клиент, внешнее соединение".to_string()),
+                        };
+                        database.objects.insert(global_object_name.clone(), global_object);
+                        tracing::debug!("Created Global context object");
+                    }
+                } else {
+                    tracing::warn!("⚠️  Could not convert Global context method to function: {}", title);
                 }
             }
         } else if title.contains("Оператор") || title.to_lowercase().contains("operator") {
