@@ -1,0 +1,64 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check if any Rust files or extension files were changed in the last commit
+CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
+
+# Check if we need to rebuild extension
+REBUILD_NEEDED=false
+
+# Check for Rust source changes (that affect binaries)
+if echo "$CHANGED_FILES" | grep -qE "^src/.*\.rs$|^Cargo\.(toml|lock)$"; then
+    echo "🦀 Rust source files changed - extension rebuild needed"
+    REBUILD_NEEDED=true
+fi
+
+# Check for VSCode extension changes
+if echo "$CHANGED_FILES" | grep -qE "^vscode-extension/src/.*\.ts$|^vscode-extension/package\.json$"; then
+    echo "📦 VSCode extension files changed - rebuild needed"
+    REBUILD_NEEDED=true
+fi
+
+# Rebuild if needed
+if [ "$REBUILD_NEEDED" = true ]; then
+    echo "🔄 Starting automatic extension rebuild..."
+    
+    # Build Rust binaries
+    echo "Building Rust binaries..."
+    cargo build --release
+    
+    if [ $? -eq 0 ]; then
+        # Copy binaries to extension
+        echo "Copying binaries to extension..."
+        cp target/release/*.exe vscode-extension/bin/ 2>/dev/null || \
+        cp target/release/lsp_server target/release/bsl-analyzer target/release/build_unified_index target/release/query_type vscode-extension/bin/
+        
+        # Build TypeScript
+        echo "Compiling TypeScript..."
+        cd vscode-extension && npm run compile
+        
+        if [ $? -eq 0 ]; then
+            # Package extension
+            echo "Packaging extension..."
+            npx @vscode/vsce package
+            
+            if [ $? -eq 0 ]; then
+                # Move to root and clean up
+                mv bsl-analyzer-*.vsix ../ 2>/dev/null
+                cd ..
+                find . -name "bsl-analyzer-*.vsix" ! -name "bsl-analyzer-1.3.1.vsix" -delete 2>/dev/null || true
+                
+                echo "✅ Extension successfully rebuilt: bsl-analyzer-1.3.1.vsix"
+                echo "📋 To install: Ctrl+Shift+P → Extensions: Install from VSIX"
+            else
+                echo "❌ Failed to package extension"
+            fi
+        else
+            echo "❌ Failed to compile TypeScript"
+        fi
+    else
+        echo "❌ Failed to build Rust binaries"
+    fi
+else
+    echo "ℹ️  No extension rebuild needed (no relevant files changed)"
+fi
