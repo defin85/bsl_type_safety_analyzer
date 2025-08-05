@@ -7,6 +7,36 @@ const path = require('path');
 console.log('🚀 BSL Analyzer Extension Rebuild Tool v1.0');
 console.log('='.repeat(50));
 
+// Проверяем синхронизацию версий
+function checkVersionSync() {
+    try {
+        // Читаем версии
+        const cargoContent = fs.readFileSync('Cargo.toml', 'utf8');
+        const cargoVersion = cargoContent.match(/version\s*=\s*"([^"]+)"/)?.[1];
+        
+        const extensionPackage = JSON.parse(fs.readFileSync(path.join('vscode-extension', 'package.json'), 'utf8'));
+        const extensionVersion = extensionPackage.version;
+        
+        const rootPackage = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+        const rootVersion = rootPackage.version;
+        
+        if (cargoVersion !== extensionVersion || extensionVersion !== rootVersion) {
+            console.log('⚠️  Version mismatch detected:');
+            console.log(`   Cargo.toml: ${cargoVersion}`);
+            console.log(`   Extension:  ${extensionVersion}`);
+            console.log(`   Root:       ${rootVersion}`);
+            console.log('💡 Run: npm run version:sync to fix');
+            console.log('');
+        } else {
+            console.log(`✅ All versions synchronized: ${extensionVersion}`);
+        }
+    } catch (error) {
+        console.log('⚠️  Could not check version sync:', error.message);
+    }
+}
+
+checkVersionSync();
+
 const steps = [
     {
         name: 'Building Rust binaries',
