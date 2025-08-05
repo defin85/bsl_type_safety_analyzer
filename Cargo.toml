@@ -114,7 +114,7 @@ path = "src/bin/extract_hybrid_docs.rs"
 
 [[bin]]
 name = "parse_metadata_simple"
-path = "src/bin/test_metadata_parser.rs"
+path = "tests/bin/test_metadata_parser.rs"
 
 
 # Legacy binaries (kept for compatibility)
@@ -169,41 +169,41 @@ path = "src/bin/syntaxcheck.rs"
 # BSL Semantic Analysis Testing
 [[bin]]
 name = "test_advanced_semantic"
-path = "src/bin/test_advanced_semantic.rs"
+path = "tests/bin/test_advanced_semantic.rs"
 
 [[bin]]
 name = "test_method_validation"
-path = "src/bin/test_method_validation.rs"
+path = "tests/bin/test_method_validation.rs"
 
 [[bin]]
 name = "test_full_integration"
-path = "src/bin/test_full_integration.rs"
+path = "tests/bin/test_full_integration.rs"
 
 [[bin]]
 name = "test_cli_integration"
-path = "src/bin/test_cli_integration.rs"
+path = "tests/bin/test_cli_integration.rs"
 
 # Debug and testing binaries
 [[bin]]
 name = "debug_local_functions"
-path = "src/bin/debug_local_functions.rs"
+path = "tests/bin/debug_local_functions.rs"
 
 
 [[bin]]
 name = "test_analyzer"
-path = "src/bin/test_analyzer.rs"
+path = "tests/bin/test_analyzer.rs"
 
 [[bin]]
 name = "test_auto_keywords"
-path = "src/bin/test_auto_keywords.rs"
+path = "tests/bin/test_auto_keywords.rs"
 
 [[bin]]
 name = "test_client"
-path = "src/bin/test_client.rs"
+path = "tests/bin/test_client.rs"
 
 [[bin]]
 name = "test_semantic"
-path = "src/bin/test_semantic.rs"
+path = "tests/bin/test_semantic.rs"
 
 [[bin]]
 name = "demo_context_analysis"

@@ -202,7 +202,9 @@
       "Bash(npm run rebuild:extension:*)",
       "Bash(npm run copy:binaries:*)",
       "Bash(git rm:*)",
-      "Bash(npm run check:binaries:*)"
+      "Bash(npm run check:binaries:*)",
+      "Bash(true)",
+      "Bash(npm run cleanup:project:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

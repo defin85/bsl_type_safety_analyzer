@@ -64,7 +64,8 @@ bsl_type_safety_analyzer/
 │   └── post-commit                 # Hook после коммита (автопересборка)
 ├── vscode-extension/
 │   ├── bin/                        # Автоматически обновляемые бинарники
-│   └── bsl-analyzer-1.3.1.vsix    # Результат сборки
+│   └── dist/                       # Результаты сборки расширения
+│       └── bsl-analyzer-1.3.1.vsix
 └── target/release/                 # Rust бинарники
     ├── lsp_server.exe
     ├── bsl-analyzer.exe
@@ -136,5 +137,5 @@ npm run compile
   uses: actions/upload-artifact@v3
   with:
     name: bsl-analyzer-extension
-    path: bsl-analyzer-*.vsix
+    path: vscode-extension/dist/bsl-analyzer-*.vsix
 ```

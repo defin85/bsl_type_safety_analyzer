@@ -6,7 +6,7 @@
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {
-        "vscode": "^1.74.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
         "Programming Languages",
@@ -23,9 +23,6 @@
         "enterprise",
         "static-analysis",
         "type-safety"
-    ],
-    "activationEvents": [
-        "onLanguage:bsl"
     ],
     "main": "./out/extension.js",
     "contributes": {

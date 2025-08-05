@@ -51,11 +51,10 @@ core/
 node_modules/
 package-lock.json
 
-# VSCode extension builds (keep only latest)
-vscode-extension/*.vsix
-!vscode-extension/bsl-analyzer-1.3.1.vsix
+# VSCode extension builds
+vscode-extension/dist/
 
-# Extension development files
+# Extension development files  
 vscode-extension/out/
 vscode-extension/node_modules/
 

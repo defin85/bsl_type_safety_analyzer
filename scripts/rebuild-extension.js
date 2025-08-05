@@ -29,14 +29,9 @@ const steps = [
         icon: '📦'
     },
     {
-        name: 'Moving package to root',
-        command: 'mv vscode-extension/bsl-analyzer-*.vsix . 2>/dev/null || true',
-        icon: '🔄'
-    },
-    {
-        name: 'Cleaning old packages',
-        command: 'find . -name "bsl-analyzer-*.vsix" ! -name "bsl-analyzer-1.3.1.vsix" -delete 2>/dev/null || true',
-        icon: '🧹'
+        name: 'Organizing output',
+        command: null, // Special case - handled by Node.js
+        icon: '📁'
     }
 ];
 
@@ -47,11 +42,42 @@ for (let i = 0; i < steps.length; i++) {
     console.log(`\n${step.icon} [${i + 1}/${steps.length}] ${step.name}...`);
     
     try {
-        execSync(step.command, { 
-            stdio: 'inherit', 
-            cwd: process.cwd(),
-            shell: true 
-        });
+        if (step.command === null) {
+            // Special handling for file operations
+            const glob = require('glob');
+            
+            // Create dist directory
+            const distDir = path.join('vscode-extension', 'dist');
+            if (!fs.existsSync(distDir)) {
+                fs.mkdirSync(distDir, { recursive: true });
+            }
+            
+            // Move .vsix files to dist
+            const vsixFiles = glob.sync('vscode-extension/bsl-analyzer-*.vsix');
+            for (const file of vsixFiles) {
+                const filename = path.basename(file);
+                const newPath = path.join(distDir, filename);
+                fs.renameSync(file, newPath);
+                console.log(`   Moved ${filename} to dist/`);
+            }
+            
+            // Clean old packages (keep only latest)
+            const distFiles = glob.sync(path.join(distDir, 'bsl-analyzer-*.vsix'));
+            const latestFile = path.join(distDir, 'bsl-analyzer-1.3.1.vsix');
+            
+            for (const file of distFiles) {
+                if (file !== latestFile) {
+                    fs.unlinkSync(file);
+                    console.log(`   Removed old package: ${path.basename(file)}`);
+                }
+            }
+        } else {
+            execSync(step.command, { 
+                stdio: 'inherit', 
+                cwd: process.cwd(),
+                shell: true 
+            });
+        }
         console.log(`✅ ${step.name} completed`);
     } catch (error) {
         console.error(`❌ ${step.name} failed:`, error.message);
@@ -67,17 +93,18 @@ if (success) {
     
     // Check file size
     try {
-        const stats = fs.statSync('bsl-analyzer-1.3.1.vsix');
+        const stats = fs.statSync('vscode-extension/dist/bsl-analyzer-1.3.1.vsix');
         const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(1);
         console.log(`📊 Package size: ${fileSizeInMB} MB`);
+        console.log(`📁 Location: vscode-extension/dist/bsl-analyzer-1.3.1.vsix`);
     } catch (e) {
-        console.log('📊 Package created');
+        console.log('📊 Package created in vscode-extension/dist/');
     }
     
     console.log('\n📋 To install:');
     console.log('   1. Press Ctrl+Shift+P in VS Code');
     console.log('   2. Type: Extensions: Install from VSIX');
-    console.log('   3. Select: bsl-analyzer-1.3.1.vsix');
+    console.log('   3. Select: vscode-extension/dist/bsl-analyzer-1.3.1.vsix');
 } else {
     console.log('\n' + '='.repeat(50));
     console.log('💥 FAILED: Extension rebuild failed');
