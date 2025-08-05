@@ -189,8 +189,22 @@
       "Bash(npx tsc:*)",
       "Bash(RUST_LOG=info cargo run --bin check_type_compatibility -- --from \"Массив\" --to \"Массив\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --verbose)",
       "Bash(npx @vscode/vsce package:*)",
-      "Bash(RUST_LOG=debug cargo test test_platform_cache_loading -- --nocapture)"
+      "Bash(RUST_LOG=debug cargo test test_platform_cache_loading -- --nocapture)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Справочники.Контрагенты\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_real_project.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\" --config \"examples/ConfTest\")",
+      "Bash(RUST_LOG=info cargo run --bin bsl-analyzer -- analyze --path \"test_real_project.bsl\" --enable-enhanced-semantics --enable-method-validation --platform-version \"8.3.25\")",
+      "Bash(pip install:*)",
+      "Bash(git restore:*)",
+      "WebFetch(domain:code.visualstudio.com)",
+      "Bash(copy:*)",
+      "Bash(npx husky add:*)",
+      "Bash(chmod:*)",
+      "Bash(npm run rebuild:extension:*)",
+      "Bash(npm run copy:binaries:*)",
+      "Bash(git rm:*)",
+      "Bash(npm run check:binaries:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   }
 }

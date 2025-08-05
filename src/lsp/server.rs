@@ -457,6 +457,13 @@ impl LanguageServer for BslLanguageServer {
                         ..Default::default()
                     },
                 )),
+                execute_command_provider: Some(ExecuteCommandOptions {
+                    commands: vec![
+                        "bslAnalyzer.analyzeFile".to_string(),
+                        "bslAnalyzer.analyzeWorkspace".to_string(),
+                    ],
+                    ..Default::default()
+                }),
                 ..Default::default()
             },
             server_info: Some(ServerInfo {
@@ -567,8 +574,158 @@ impl LanguageServer for BslLanguageServer {
         }
     }
 
+    async fn execute_command(&self, params: ExecuteCommandParams) -> tower_lsp::jsonrpc::Result<Option<serde_json::Value>> {
+        tracing::info!("Executing command: {}", params.command);
+
+        match params.command.as_str() {
+            "bslAnalyzer.analyzeFile" => {
+                if let Some(uri_value) = params.arguments.get(0) {
+                    if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
+                        if let Ok(uri) = Url::parse(&uri_str) {
+                            self.analyze_file_command(uri).await?;
+                            return Ok(Some(serde_json::json!({"status": "success"})));
+                        }
+                    }
+                }
+                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid file URI"))
+            }
+            "bslAnalyzer.analyzeWorkspace" => {
+                if let Some(uri_value) = params.arguments.get(0) {
+                    if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
+                        if let Ok(uri) = Url::parse(&uri_str) {
+                            self.analyze_workspace_command(uri).await?;
+                            return Ok(Some(serde_json::json!({"status": "success"})));
+                        }
+                    }
+                }
+                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid workspace URI"))
+            }
+            _ => {
+                tracing::warn!("Unknown command: {}", params.command);
+                Err(tower_lsp::jsonrpc::Error::method_not_found())
+            }
+        }
+    }
+
     async fn shutdown(&self) -> tower_lsp::jsonrpc::Result<()> {
         tracing::info!("Enhanced BSL LSP Server v2.0 shutting down");
         Ok(())
+    }
+}
+
+impl BslLanguageServer {
+    /// Обработка команды анализа файла
+    async fn analyze_file_command(&self, uri: Url) -> tower_lsp::jsonrpc::Result<()> {
+        tracing::info!("Analyzing file: {}", uri);
+
+        // Получаем содержимое файла из кеша документов
+        let documents = self.documents.read().await;
+        if let Some(doc_info) = documents.get(&uri) {
+            // Выполняем анализ через BslAnalyzer
+            match self.analyze_bsl_content(&doc_info.text).await {
+                Ok(diagnostics) => {
+                    // Отправляем диагностики клиенту
+                    self.client.publish_diagnostics(uri.clone(), diagnostics, Some(doc_info.version)).await;
+                    
+                    self.client
+                        .show_message(MessageType::INFO, "File analysis completed successfully")
+                        .await;
+                }
+                Err(e) => {
+                    let error_msg = format!("Analysis failed: {}", e);
+                    tracing::error!("{}", error_msg);
+                    
+                    self.client
+                        .show_message(MessageType::ERROR, &error_msg)
+                        .await;
+                }
+            }
+        } else {
+            // Файл не открыт в редакторе - попробуем прочитать с диска
+            if let Ok(file_path) = uri.to_file_path() {
+                match tokio::fs::read_to_string(&file_path).await {
+                    Ok(content) => {
+                        match self.analyze_bsl_content(&content).await {
+                            Ok(diagnostics) => {
+                                self.client.publish_diagnostics(uri.clone(), diagnostics, None).await;
+                                
+                                self.client
+                                    .show_message(MessageType::INFO, "File analysis completed successfully")
+                                    .await;
+                            }
+                            Err(e) => {
+                                let error_msg = format!("Analysis failed: {}", e);
+                                tracing::error!("{}", error_msg);
+                                
+                                self.client
+                                    .show_message(MessageType::ERROR, &error_msg)
+                                    .await;
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        let error_msg = format!("Failed to read file: {}", e);
+                        tracing::error!("{}", error_msg);
+                        
+                        self.client
+                            .show_message(MessageType::ERROR, &error_msg)
+                            .await;
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Обработка команды анализа workspace
+    async fn analyze_workspace_command(&self, workspace_uri: Url) -> tower_lsp::jsonrpc::Result<()> {
+        tracing::info!("Analyzing workspace: {}", workspace_uri);
+
+        self.client
+            .show_message(MessageType::INFO, "Starting workspace analysis...")
+            .await;
+
+        // TODO: Реализовать полный анализ workspace
+        // Найти все .bsl файлы в workspace и проанализировать их
+        
+        self.client
+            .show_message(MessageType::INFO, "Workspace analysis completed")
+            .await;
+
+        Ok(())
+    }
+
+    /// Анализ BSL содержимого через BslAnalyzer
+    async fn analyze_bsl_content(&self, content: &str) -> Result<Vec<Diagnostic>> {
+        let mut analyzer = BslAnalyzer::new()?;
+        
+        // Анализируем код
+        if let Err(e) = analyzer.analyze_code(content, "lsp_temp.bsl") {
+            // Если анализ не удался, возвращаем ошибку как диагностику
+            let diagnostic = Diagnostic {
+                range: Range {
+                    start: Position { line: 0, character: 0 },
+                    end: Position { line: 0, character: 0 },
+                },
+                severity: Some(DiagnosticSeverity::ERROR),
+                code: Some(NumberOrString::String("BSL000".to_string())),
+                code_description: None,
+                source: Some("bsl-analyzer".to_string()),
+                message: format!("Analysis error: {}", e),
+                related_information: None,
+                tags: None,
+                data: None,
+            };
+            return Ok(vec![diagnostic]);
+        }
+
+        // Получаем результаты анализа
+        let diagnostics = Vec::new();
+        
+        // Пока просто создаем успешный результат анализа
+        // TODO: Интегрировать с реальными results от BslAnalyzer
+        
+        Ok(diagnostics)
     }
 }

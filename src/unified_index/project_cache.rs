@@ -7,9 +7,9 @@ use serde_json;
 use std::collections::HashMap;
 use chrono;
 
-use super::entity::{BslEntity, BslEntityId};
+use super::entity::BslEntity;
 use super::index::UnifiedBslIndex;
-use super::configuration_watcher::{ConfigurationWatcher, ChangeImpact};
+use super::configuration_watcher::ConfigurationWatcher;
 
 /// Сериализуемый граф наследования для кеширования
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -53,6 +53,7 @@ pub struct ProjectManifest {
 pub struct ProjectIndexCache {
     cache_dir: PathBuf,
     /// Кеш графа наследования в памяти для текущей сессии
+    #[allow(dead_code)]
     inheritance_cache: Option<InheritanceGraph>,
     /// Отслеживание изменений конфигурации для инкрементального обновления
     pub configuration_watcher: Option<ConfigurationWatcher>,

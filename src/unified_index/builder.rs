@@ -356,7 +356,7 @@ impl UnifiedIndexBuilder {
     pub fn check_incremental_update_feasibility(
         &mut self,
         config_path: &Path,
-        platform_version: &str
+        _platform_version: &str
     ) -> Result<(super::configuration_watcher::ChangeImpact, Vec<(std::path::PathBuf, super::configuration_watcher::ChangeImpact)>)> {
         use super::configuration_watcher::ConfigurationWatcher;
         

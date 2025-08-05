@@ -1,9 +1,10 @@
 {
     "name": "bsl-analyzer",
     "displayName": "BSL Analyzer",
-    "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking",
-    "version": "1.0.0",
+    "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
+    "version": "1.3.1",
     "publisher": "bsl-analyzer-team",
+    "icon": "images/bsl-analyzer-logo.png",
     "engines": {
         "vscode": "^1.74.0"
     },
@@ -12,6 +13,10 @@
         "Linters",
         "Other"
     ],
+    "galleryBanner": {
+        "color": "#CE422B",
+        "theme": "dark"
+    },
     "keywords": [
         "bsl",
         "1c",
@@ -290,6 +295,14 @@
             }
         ]
     },
+    "files": [
+        "out/**/*",
+        "bin/**/*",
+        "syntaxes/**/*",
+        "snippets/**/*",
+        "images/**/*",
+        "language-configuration.json"
+    ],
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
