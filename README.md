@@ -1,8 +1,8 @@
-# BSL Type Safety Analyzer v1.6.0
+# BSL Type Safety Analyzer v1.7.1
 
 **Enterprise-ready static analyzer for 1C:Enterprise BSL with unified build system and VSCode extension**
 
-[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-1.7.1-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Rust Version](https://img.shields.io/badge/rust-1.70+-orange.svg)]()
 [![VSCode Extension](https://img.shields.io/badge/vscode-extension-green)]()
@@ -12,14 +12,15 @@ Advanced static analyzer for 1C:Enterprise BSL written in Rust with **unified ty
 
 ## 🎯 Project Status: Ready for Publication
 
-**Current Version**: v1.6.0 (Ready for production use)  
+**Current Version**: v1.7.1 (Production ready with Universal Dev Console)  
 **VSCode Extension**: ✅ Ready for publication (~50 MB with all tools)  
 **Build System**: ✅ Complete unified versioning system  
 **Documentation**: ✅ Comprehensive and organized  
 
 ### ✅ What Works Now:
-- **Enhanced Build System v1.6.0** - Smart caching and watch mode for development
-- **Interactive Development Console** - Menu-driven build commands and diagnostics
+- **🎆 Universal Dev Console v2.0** - 39 functions in 6 categories with perfect UI alignment
+- **Enhanced Build System** - Smart caching and watch mode for development
+- **Perfect Menu Experience** - Ideal emoji and text alignment in all prompts menus
 - **Watch Mode** - Automatic rebuilds on file changes for continuous development
 - **Unified Build System** - Single commands for development and releases
 - **Automatic Versioning** - Synchronized versions across all components
@@ -33,6 +34,35 @@ Advanced static analyzer for 1C:Enterprise BSL written in Rust with **unified ty
 - **Semantic Analysis** - Type checking and code analysis
 - **LSP Server** - Full Language Server Protocol implementation  
 - **MCP Server** - Model Context Protocol for LLM integration
+
+## 🎮 Universal Dev Console v2.0 (NEW!)
+
+**Complete interactive development interface with 39 functions in 6 categories**
+
+```bash
+# Launch interactive console (main way)
+npm run interactive
+
+# Quick launch alternatives
+./dev.cmd        # Windows
+./dev.sh         # Linux/Mac
+```
+
+**🌟 Key Features:**
+- ✅ **Perfect UI Alignment** - Ideal emoji and text positioning in all menus
+- ✅ **6 Organized Categories** - Build, Version, Dev, Git, Publish, Utils 
+- ✅ **Safety System** - Confirmation for destructive operations
+- ✅ **Error Logging** - Automatic logging to `.dev-console-errors.log`
+- ✅ **Configurable** - Customize via `.dev-console-config.json`
+- ✅ **Graceful Shutdown** - Proper resource cleanup on exit
+
+**📦 Categories Overview:**
+- **📦 Build & Development** (8 functions) - Smart builds, watch mode, extension rebuilding
+- **🔄 Versioning** (6 functions) - Patch/minor/major versions, sync, versioned builds  
+- **🔧 Development & QA** (5 functions) - Tests, clippy, formatting, binary checks, project info
+- **📋 Git Operations** (8 functions) - Status, smart commit, workflows, history
+- **🚀 Publishing** (7 functions) - Extension packaging, VS Code Marketplace, GitHub releases
+- **⚙️ Utils & Diagnostics** (5 functions) - Cleanup, watch setup, error logs
 
 ## 🚀 Key Features
 

@@ -1,6 +1,6 @@
 # 📚 BSL Analyzer - Документация
 
-**Версия:** 1.6.0  
+**Версия:** 1.7.1  
 **Обновлено:** 2025-08-06  
 **Архитектура:** Единая система сборки и версионирования
 
@@ -22,6 +22,7 @@
 - [shell-tools/](02-components/shell-tools/) - CLI инструменты
 
 ### 📚 03. Руководства
+- [universal-dev-console.md](03-guides/universal-dev-console.md) - 🎆 Universal Dev Console v2.0 (НОВОЕ!)
 - [development.md](03-guides/development.md) - Гид по разработке
 - [integration.md](03-guides/integration.md) - Интеграция с внешними системами
 - [llm-usage.md](03-guides/llm-usage.md) - Использование с LLM
@@ -53,13 +54,15 @@
 
 ### Для новых пользователей:
 1. [QUICK_START.md](../QUICK_START.md) - быстрый старт
-2. [README.md](../README.md) - основная информация  
-3. [01-overview/README.md](01-overview/README.md) - обзор архитектуры
+2. [universal-dev-console.md](03-guides/universal-dev-console.md) - 🎆 интерактивная консоль с 39 функциями
+3. [README.md](../README.md) - основная информация  
+4. [01-overview/README.md](01-overview/README.md) - обзор архитектуры
 
 ### Для разработчиков:
-1. [07-development/CONTRIBUTING.md](07-development/CONTRIBUTING.md) - как контрибьютить
-2. [05-build-system/BUILD_SYSTEM.md](05-build-system/BUILD_SYSTEM.md) - система сборки
-3. [03-guides/development.md](03-guides/development.md) - разработка
+1. [universal-dev-console.md](03-guides/universal-dev-console.md) - 🚀 начните с интерактивной консоли
+2. [07-development/CONTRIBUTING.md](07-development/CONTRIBUTING.md) - как контрибьютить
+3. [05-build-system/BUILD_SYSTEM.md](05-build-system/BUILD_SYSTEM.md) - система сборки
+4. [03-guides/development.md](03-guides/development.md) - разработка
 
 ### Для публикации:
 1. [06-publishing/PUBLISH_QUICK.md](06-publishing/PUBLISH_QUICK.md) - быстрая публикация
