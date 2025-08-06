@@ -1,6 +1,6 @@
 [package]
 name = "bsl-analyzer"
-version = "1.4.2"
+version = "1.6.0"
 edition = "2021"
 authors = ["BSL Analyzer Team"]
 description = "Advanced BSL (1C:Enterprise) static analyzer with type safety checking"
@@ -8,6 +8,23 @@ license = "MIT"
 repository = "https://github.com/your-org/bsl-analyzer"
 keywords = ["bsl", "1c", "static-analysis", "type-safety"]
 categories = ["development-tools", "parser-implementations"]
+
+# Профили сборки для ускорения разработки
+[profile.dev]
+opt-level = 0           # Без оптимизации для быстрой сборки
+debug = true           # Отладочная информация
+incremental = true     # Инкрементальная компиляция
+
+[profile.dev-fast]
+inherits = "dev"
+opt-level = 1          # Минимальная оптимизация для компромисса скорость/производительность
+debug = "line-tables-only"  # Только номера строк для отладки
+
+[profile.release]
+opt-level = 3          # Максимальная оптимизация
+debug = false          # Без отладочной информации
+lto = true            # Link Time Optimization
+panic = "abort"       # Меньший размер бинарников
 
 [dependencies]
 # Парсинг
@@ -92,13 +109,6 @@ dirs = "5.0"                         # Для определения домаш�
 [dev-dependencies]
 tempfile = "3.8"                      
 pretty_assertions = "1.4"            
-
-# Оптимизация для release
-[profile.release]
-opt-level = 3           
-lto = true             
-codegen-units = 1      
-panic = "abort"        
 
 # Бинарники
 [[bin]]

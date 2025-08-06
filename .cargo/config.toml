@@ -1,0 +1,26 @@
+# Конфигурация Cargo для ускорения сборки
+
+[build]
+# Использовать все доступные CPU для сборки
+jobs = 0  # 0 = автоматическое определение количества ядер
+
+# Настройки линкера для Windows
+[target.'cfg(windows)']
+rustflags = [
+  # Более быстрый линкер lld (если установлен)
+  "-C", "link-arg=-fuse-ld=lld",
+  # Включить инкрементальное LTO
+  "-C", "target-feature=+crt-static"
+]
+
+# Настройки кеширования
+[net]
+git-fetch-with-cli = true
+offline = false
+
+# Оптимизация для incremental compilation
+[profile.dev]
+incremental = true
+
+[profile.dev-fast]
+incremental = true

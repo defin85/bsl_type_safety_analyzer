@@ -209,7 +209,13 @@
       "Bash(npm run build:*)",
       "Bash(npm run git:commit:*)",
       "Bash(npm run version:sync:*)",
-      "Bash(npm run publish:check:*)"
+      "Bash(npm run publish:check:*)",
+      "Bash(set)",
+      "Bash(CARGO_BUILD_JOBS=1 cargo build --release)",
+      "Bash(unset CARGO_BUILD_JOBS)",
+      "Bash(git log:*)",
+      "Bash(cargo:*)",
+      "Bash(CARGO_BUILD_JOBS=4 npm run build:smart dev)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

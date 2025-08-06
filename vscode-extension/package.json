@@ -2,7 +2,7 @@
     "name": "bsl-type-safety-analyzer",
     "displayName": "BSL Analyzer",
     "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
-    "version": "1.4.2",
+    "version": "1.6.0",
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {

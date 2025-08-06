@@ -40,12 +40,12 @@ checkVersionSync();
 const steps = [
     {
         name: 'Building Rust binaries',
-        command: 'cargo build --release',
+        command: 'cargo build --profile dev-fast --jobs 4',
         icon: '🦀'
     },
     {
-        name: 'Copying binaries to extension',
-        command: 'cp target/release/*.exe vscode-extension/bin/ 2>/dev/null || cp target/release/lsp_server target/release/bsl-analyzer target/release/build_unified_index target/release/query_type vscode-extension/bin/',
+        name: 'Copying essential binaries to extension',
+        command: 'node scripts/copy-essential-binaries.js dev-fast',
         icon: '📁'
     },
     {
@@ -83,7 +83,7 @@ for (let i = 0; i < steps.length; i++) {
             }
             
             // Move .vsix files to dist
-            const vsixFiles = glob.sync('vscode-extension/bsl-analyzer-*.vsix');
+            const vsixFiles = glob.sync('vscode-extension/bsl-type-safety-analyzer-*.vsix');
             for (const file of vsixFiles) {
                 const filename = path.basename(file);
                 const newPath = path.join(distDir, filename);
@@ -92,8 +92,8 @@ for (let i = 0; i < steps.length; i++) {
             }
             
             // Clean old packages (keep only latest)
-            const distFiles = glob.sync(path.join(distDir, 'bsl-analyzer-*.vsix'));
-            const latestFile = path.join(distDir, 'bsl-analyzer-1.3.1.vsix');
+            const distFiles = glob.sync(path.join(distDir, 'bsl-type-safety-analyzer-*.vsix'));
+            const latestFile = path.join(distDir, 'bsl-type-safety-analyzer-1.6.0.vsix');
             
             for (const file of distFiles) {
                 if (file !== latestFile) {
@@ -123,10 +123,10 @@ if (success) {
     
     // Check file size
     try {
-        const stats = fs.statSync('vscode-extension/dist/bsl-analyzer-1.3.1.vsix');
+        const stats = fs.statSync('vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix');
         const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(1);
         console.log(`📊 Package size: ${fileSizeInMB} MB`);
-        console.log(`📁 Location: vscode-extension/dist/bsl-analyzer-1.3.1.vsix`);
+        console.log(`📁 Location: vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix`);
     } catch (e) {
         console.log('📊 Package created in vscode-extension/dist/');
     }
@@ -134,7 +134,7 @@ if (success) {
     console.log('\n📋 To install:');
     console.log('   1. Press Ctrl+Shift+P in VS Code');
     console.log('   2. Type: Extensions: Install from VSIX');
-    console.log('   3. Select: vscode-extension/dist/bsl-analyzer-1.3.1.vsix');
+    console.log('   3. Select: vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix');
 } else {
     console.log('\n' + '='.repeat(50));
     console.log('💥 FAILED: Extension rebuild failed');
