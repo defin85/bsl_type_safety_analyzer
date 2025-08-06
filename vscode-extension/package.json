@@ -2,7 +2,7 @@
     "name": "bsl-type-safety-analyzer",
     "displayName": "BSL Analyzer",
     "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
-    "version": "1.7.1",
+    "version": "1.8.0",
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {
@@ -317,11 +317,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/yourorg/bsl-analyzer.git"
+        "url": "https://github.com/defin85/bsl_type_safety_analyzer.git"
     },
     "bugs": {
-        "url": "https://github.com/yourorg/bsl-analyzer/issues"
+        "url": "https://github.com/defin85/bsl_type_safety_analyzer/issues"
     },
-    "homepage": "https://github.com/yourorg/bsl-analyzer#readme",
+    "homepage": "https://github.com/defin85/bsl_type_safety_analyzer#readme",
     "license": "MIT"
 }

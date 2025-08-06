@@ -1,6 +1,6 @@
 {
   "name": "bsl-type-safety-analyzer",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "BSL Type Safety Analyzer with automated VSCode extension rebuilding",
   "private": true,
   "scripts": {

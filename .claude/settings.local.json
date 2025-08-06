@@ -217,7 +217,8 @@
       "Bash(cargo:*)",
       "Bash(CARGO_BUILD_JOBS=4 npm run build:smart dev)",
       "Bash(npm run:*)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "mcp__tavily-server__tavily_extract"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
