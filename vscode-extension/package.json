@@ -2,7 +2,7 @@
     "name": "bsl-type-safety-analyzer",
     "displayName": "BSL Analyzer",
     "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {
@@ -12,6 +12,11 @@
         "Programming Languages",
         "Linters",
         "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished",
+        "onLanguage:bsl",
+        "workspaceContains:**/*.bsl"
     ],
     "galleryBanner": {
         "color": "#CE422B",
@@ -75,10 +80,15 @@
                     "default": 8080,
                     "description": "TCP port for LSP server (when using TCP mode)"
                 },
+                "bslAnalyzer.useBundledBinaries": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Use bundled binaries from extension. If false, uses binaries from indexServerPath or workspace."
+                },
                 "bslAnalyzer.indexServerPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to directory containing BSL Analyzer binaries (build_unified_index.exe, query_type.exe, etc.)"
+                    "description": "Path to directory containing BSL Analyzer binaries (build_unified_index.exe, query_type.exe, etc.). Only used if useBundledBinaries is false."
                 },
                 "bslAnalyzer.configurationPath": {
                     "type": "string",
@@ -89,6 +99,11 @@
                     "type": "string",
                     "default": "8.3.25",
                     "description": "1C platform version for index building"
+                },
+                "bslAnalyzer.platformDocsArchive": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to 1C platform documentation archive. Supports both formats: rebuilt.shcntx_ru.zip (context help with objects/methods) or rebuilt.shlang_ru.zip (language help with primitives/directives). For best results, use shcntx format."
                 },
                 "bslAnalyzer.autoIndexBuild": {
                     "type": "boolean",
@@ -205,8 +220,87 @@
                 "title": "Check Type Compatibility",
                 "category": "BSL Verification",
                 "icon": "$(arrow-both)"
+            },
+            {
+                "command": "bslAnalyzer.refreshOverview",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "bslAnalyzer.refreshDiagnostics",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "bslAnalyzer.refreshTypeIndex",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "bslAnalyzer.addPlatformDocs",
+                "title": "Add Platform Documentation",
+                "icon": "$(add)"
+            },
+            {
+                "command": "bslAnalyzer.removePlatformDocs",
+                "title": "Remove Platform Documentation",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "bslAnalyzer.refreshPlatformDocs",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "bslAnalyzer.parsePlatformDocs",
+                "title": "Parse Platform Documentation",
+                "icon": "$(play)"
+            },
+            {
+                "command": "bslAnalyzer.testProgress",
+                "title": "Test Progress System",
+                "category": "BSL Debug",
+                "icon": "$(beaker)"
             }
         ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "bslAnalyzer",
+                    "title": "BSL Analyzer",
+                    "icon": "$(bracket)"
+                }
+            ]
+        },
+        "views": {
+            "bslAnalyzer": [
+                {
+                    "id": "bslAnalyzer.overview",
+                    "name": "Overview",
+                    "type": "tree"
+                },
+                {
+                    "id": "bslAnalyzer.diagnostics",
+                    "name": "Diagnostics",
+                    "type": "tree"
+                },
+                {
+                    "id": "bslAnalyzer.typeIndex",
+                    "name": "Type Index",
+                    "type": "tree"
+                },
+                {
+                    "id": "bslAnalyzer.actions",
+                    "name": "Quick Actions",
+                    "type": "webview"
+                },
+                {
+                    "id": "bslAnalyzer.platformDocs",
+                    "name": "Platform Documentation",
+                    "type": "tree"
+                }
+            ]
+        },
         "menus": {
             "explorer/context": [
                 {
@@ -282,6 +376,57 @@
                 },
                 {
                     "command": "bslAnalyzer.checkTypeCompatibility"
+                },
+                {
+                    "command": "bslAnalyzer.addPlatformDocs"
+                },
+                {
+                    "command": "bslAnalyzer.parsePlatformDocs"
+                },
+                {
+                    "command": "bslAnalyzer.removePlatformDocs"
+                },
+                {
+                    "command": "bslAnalyzer.testProgress"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "bslAnalyzer.refreshOverview",
+                    "when": "view == bslAnalyzer.overview",
+                    "group": "navigation"
+                },
+                {
+                    "command": "bslAnalyzer.refreshDiagnostics",
+                    "when": "view == bslAnalyzer.diagnostics",
+                    "group": "navigation"
+                },
+                {
+                    "command": "bslAnalyzer.refreshTypeIndex",
+                    "when": "view == bslAnalyzer.typeIndex",
+                    "group": "navigation"
+                },
+                {
+                    "command": "bslAnalyzer.addPlatformDocs",
+                    "when": "view == bslAnalyzer.platformDocs",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "bslAnalyzer.refreshPlatformDocs",
+                    "when": "view == bslAnalyzer.platformDocs",
+                    "group": "navigation@2"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "bslAnalyzer.parsePlatformDocs",
+                    "when": "view == bslAnalyzer.platformDocs && viewItem == version",
+                    "group": "platform@1"
+                },
+                {
+                    "command": "bslAnalyzer.removePlatformDocs", 
+                    "when": "view == bslAnalyzer.platformDocs && viewItem == version",
+                    "group": "platform@2"
                 }
             ]
         },

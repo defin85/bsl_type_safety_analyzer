@@ -12,6 +12,7 @@ pub struct UnifiedIndexBuilder {
     platform_cache: PlatformDocsCache,
     project_cache: ProjectIndexCache,
     application_mode: BslApplicationMode,
+    platform_docs_archive: Option<std::path::PathBuf>,
 }
 
 impl UnifiedIndexBuilder {
@@ -20,11 +21,17 @@ impl UnifiedIndexBuilder {
             platform_cache: PlatformDocsCache::new()?,
             project_cache: ProjectIndexCache::new()?,
             application_mode: BslApplicationMode::ManagedApplication, // по умолчанию управляемый режим
+            platform_docs_archive: None,
         })
     }
     
     pub fn with_application_mode(mut self, mode: BslApplicationMode) -> Self {
         self.application_mode = mode;
+        self
+    }
+    
+    pub fn with_platform_docs_archive(mut self, archive_path: Option<std::path::PathBuf>) -> Self {
+        self.platform_docs_archive = archive_path;
         self
     }
     
@@ -124,8 +131,10 @@ impl UnifiedIndexBuilder {
         
         // 1. Загружаем платформенные типы
         let start = std::time::Instant::now();
-        let platform_entities = self.platform_cache.get_or_create(platform_version)
-            .context("Failed to load platform types")?;
+        let platform_entities = self.platform_cache.get_or_create_with_archive(
+            platform_version,
+            self.platform_docs_archive.as_deref()
+        ).context("Failed to load platform types")?;
         info!("Platform types: {} (loaded in {:?})", platform_entities.len(), start.elapsed());
         
         // Добавляем платформенные типы в индекс

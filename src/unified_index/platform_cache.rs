@@ -34,6 +34,21 @@ impl PlatformDocsCache {
         }
     }
     
+    pub fn get_or_create_with_archive(&self, version: &str, archive_path: Option<&Path>) -> Result<Vec<BslEntity>> {
+        let cache_file = self.get_cache_file_path(version);
+        
+        if cache_file.exists() {
+            self.load_from_cache(&cache_file)
+        } else {
+            // Если кеша нет, пытаемся извлечь из указанного архива или fallback
+            if let Some(archive) = archive_path {
+                self.extract_from_custom_archive(archive, version)
+            } else {
+                self.extract_from_hybrid_storage(version)
+            }
+        }
+    }
+    
     pub fn save_to_cache(&self, version: &str, entities: &[BslEntity]) -> Result<()> {
         let cache_file = self.get_cache_file_path(version);
         let file = fs::File::create(&cache_file)
@@ -68,6 +83,34 @@ impl PlatformDocsCache {
                     .context("Failed to deserialize entity")?;
                 entities.push(entity);
             }
+        }
+        
+        Ok(entities)
+    }
+    
+    fn extract_from_custom_archive(&self, archive_path: &Path, version: &str) -> Result<Vec<BslEntity>> {
+        use crate::docs_integration::BslSyntaxExtractor;
+        
+        log::info!("Extracting platform types from custom archive: {}", archive_path.display());
+        
+        if !archive_path.exists() {
+            return Err(anyhow::anyhow!("Archive file does not exist: {}", archive_path.display()));
+        }
+        
+        // Извлекаем типы из архива
+        let mut extractor = BslSyntaxExtractor::new(archive_path);
+        let syntax_db = extractor.extract_syntax_database(None)
+            .context("Failed to extract BSL syntax from custom archive")?;
+        
+        // Конвертируем в BslEntity
+        let entities = self.convert_syntax_db_to_entities(&syntax_db, version)
+            .context("Failed to convert syntax database to entities")?;
+        
+        log::info!("Extracted {} platform types from custom archive", entities.len());
+        
+        // Сохраняем в кеш для будущего использования
+        if !entities.is_empty() {
+            self.save_to_cache(version, &entities)?;
         }
         
         Ok(entities)
@@ -409,6 +452,167 @@ impl PlatformDocsCache {
                 deprecation_info: None,
             };
             entity.interface.methods.insert(method_name.to_string(), method);
+        }
+    }
+    
+    /// Конвертирует BslSyntaxDatabase в BslEntity типы
+    fn convert_syntax_db_to_entities(&self, syntax_db: &crate::docs_integration::BslSyntaxDatabase, version: &str) -> Result<Vec<BslEntity>> {
+        use super::entity::*;
+        use std::collections::HashMap;
+        
+        let mut entities = Vec::new();
+        let mut entity_map: HashMap<String, BslEntity> = HashMap::new();
+        
+        // Создаем сущности для всех объектов
+        for (name, obj) in &syntax_db.objects {
+            let mut entity = BslEntity::new(
+                name.clone(),
+                name.clone(),
+                BslEntityType::Platform,
+                self.determine_entity_kind(name)
+            );
+            
+            entity.source = BslEntitySource::HBK { version: version.to_string() };
+            entity.documentation = obj.description.clone();
+            
+            // Конвертируем availability
+            if let Some(availability_str) = &obj.availability {
+                entity.availability = availability_str
+                    .split(',')
+                    .filter_map(|ctx| self.parse_context(ctx.trim()))
+                    .collect();
+            }
+            
+            entity_map.insert(name.clone(), entity);
+        }
+        
+        // Добавляем методы к объектам
+        for (method_name, method_info) in &syntax_db.methods {
+            if let Some(object_name) = &method_info.object_context {
+                let entity_key = if entity_map.contains_key(object_name) {
+                    Some(object_name.clone())
+                } else {
+                    entity_map.keys()
+                        .find(|key| key.starts_with(object_name))
+                        .cloned()
+                };
+                
+                if let Some(key) = entity_key {
+                    if let Some(entity) = entity_map.get_mut(&key) {
+                        let bsl_method = self.convert_method_info_to_bsl_method(method_info);
+                        entity.interface.methods.insert(method_name.clone(), bsl_method);
+                    }
+                }
+            } else {
+                // Глобальный метод
+                let global_entity = entity_map.entry("Global".to_string()).or_insert_with(|| {
+                    let mut entity = BslEntity::new(
+                        "Global".to_string(),
+                        "Global".to_string(),
+                        BslEntityType::Platform,
+                        BslEntityKind::Global
+                    );
+                    entity.source = BslEntitySource::HBK { version: version.to_string() };
+                    entity
+                });
+                
+                let bsl_method = self.convert_method_info_to_bsl_method(method_info);
+                global_entity.interface.methods.insert(method_name.clone(), bsl_method);
+            }
+        }
+        
+        // Конвертируем функции в методы Global entity
+        for (func_name, func_info) in &syntax_db.functions {
+            let global_entity = entity_map.entry("Global".to_string()).or_insert_with(|| {
+                let mut entity = BslEntity::new(
+                    "Global".to_string(),
+                    "Global".to_string(),
+                    BslEntityType::Platform,
+                    BslEntityKind::Global
+                );
+                entity.source = BslEntitySource::HBK { version: version.to_string() };
+                entity
+            });
+            
+            let bsl_method = self.convert_function_info_to_bsl_method(func_info);
+            global_entity.interface.methods.insert(func_name.clone(), bsl_method);
+        }
+        
+        entities.extend(entity_map.into_values());
+        Ok(entities)
+    }
+    
+    fn convert_method_info_to_bsl_method(&self, method_info: &crate::docs_integration::BslMethodInfo) -> super::entity::BslMethod {
+        use super::entity::*;
+        
+        BslMethod {
+            name: method_info.name.clone(),
+            english_name: method_info.english_name.clone(),
+            parameters: method_info.parameters.iter()
+                .map(|p| BslParameter {
+                    name: p.name.clone(),
+                    type_name: p.param_type.clone(),
+                    is_optional: p.is_optional,
+                    default_value: p.default_value.clone(),
+                    description: p.description.clone(),
+                })
+                .collect(),
+            return_type: method_info.return_type.clone(),
+            documentation: method_info.description.clone(),
+            availability: method_info.availability.iter()
+                .filter_map(|ctx| self.parse_context(ctx))
+                .collect(),
+            is_function: method_info.return_type.is_some(),
+            is_export: false,
+            is_deprecated: false,
+            deprecation_info: None,
+        }
+    }
+    
+    fn convert_function_info_to_bsl_method(&self, func_info: &crate::docs_integration::BslFunctionInfo) -> super::entity::BslMethod {
+        use super::entity::*;
+        
+        BslMethod {
+            name: func_info.name.clone(),
+            english_name: None,
+            parameters: func_info.parameters.iter()
+                .map(|p| BslParameter {
+                    name: p.name.clone(),
+                    type_name: p.param_type.clone(),
+                    is_optional: p.is_optional,
+                    default_value: p.default_value.clone(),
+                    description: p.description.clone(),
+                })
+                .collect(),
+            return_type: func_info.return_type.clone(),
+            documentation: func_info.description.clone(),
+            availability: if let Some(availability_str) = &func_info.availability {
+                availability_str
+                    .split(',')
+                    .filter_map(|ctx| self.parse_context(ctx.trim()))
+                    .collect()
+            } else {
+                vec![]
+            },
+            is_function: true,
+            is_export: false,
+            is_deprecated: false,
+            deprecation_info: None,
+        }
+    }
+    
+    fn determine_entity_kind(&self, name: &str) -> super::entity::BslEntityKind {
+        use super::entity::BslEntityKind;
+        
+        match name {
+            "Массив" | "Array" => BslEntityKind::Array,
+            "Структура" | "Structure" => BslEntityKind::Structure,
+            "Соответствие" | "Map" => BslEntityKind::Map,
+            "СписокЗначений" | "ValueList" => BslEntityKind::ValueList,
+            "ТаблицаЗначений" | "ValueTable" => BslEntityKind::ValueTable,
+            "ДеревоЗначений" | "ValueTree" => BslEntityKind::ValueTree,
+            "Число" | "Number" | "Строка" | "String" | "Булево" | "Boolean" | "Дата" | "Date" => BslEntityKind::Primitive,
+            _ => BslEntityKind::System,
         }
     }
 }

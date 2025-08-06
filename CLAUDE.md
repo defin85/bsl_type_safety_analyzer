@@ -2,6 +2,19 @@
 
 Инструкции для Claude Code при работе с проектом BSL Type Safety Analyzer.
 
+## 🔧 Cargo Build Jobs Configuration
+
+Для правильной работы cargo в Windows GitBash используйте автоопределение CPU:
+
+```bash
+# Автоматическое определение количества процессоров
+CARGO_BUILD_JOBS=$(nproc) cargo build
+
+# Примеры команд с автоопределением CPU
+CARGO_BUILD_JOBS=$(nproc) cargo run --bin extract_platform_docs -- --archive "path/to/archive.zip" --version "8.3.25"
+CARGO_BUILD_JOBS=$(nproc) cargo build --release
+```
+
 ## 🎯 Обзор проекта v1.6.0
 
 **BSL Type Safety Analyzer** - корпоративный статический анализатор для 1С:Предприятие BSL, написанный на Rust.

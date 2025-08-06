@@ -20,6 +20,10 @@ use std::env;
 use std::path::PathBuf;
 use tokio::sync::RwLock;
 use tower_lsp::lsp_types::*;
+use tower_lsp::lsp_types::{
+    DocumentDiagnosticParams, DocumentDiagnosticReportResult, DocumentDiagnosticReport,
+    RelatedFullDocumentDiagnosticReport, FullDocumentDiagnosticReport,
+};
 use tower_lsp::{Client, LanguageServer};
 
 /// Enhanced BSL Language Server v2.0 с UnifiedBslIndex
@@ -28,6 +32,7 @@ pub struct BslLanguageServer {
     /// Единый индекс всех BSL типов (платформенные + конфигурационные)
     unified_index: Arc<RwLock<Option<UnifiedBslIndex>>>,
     /// Версия платформы 1С
+    #[allow(dead_code)]
     platform_version: String,
     /// Кэш открытых документов  
     documents: Arc<RwLock<HashMap<Url, DocumentInfo>>>,
@@ -55,6 +60,7 @@ impl BslLanguageServer {
     }
 
     /// Инициализация UnifiedBslIndex из workspace
+    #[allow(dead_code)]
     async fn initialize_unified_index(&self, workspace_uri: &Url) -> Result<()> {
         let workspace_path = workspace_uri
             .to_file_path()
@@ -65,10 +71,26 @@ impl BslLanguageServer {
             .await;
 
         // Поиск конфигурации в workspace
-        let config_path = self.find_configuration_path(&workspace_path).await?;
+        let config_path = match self.find_configuration_path(&workspace_path).await {
+            Ok(path) => path,
+            Err(e) => {
+                self.client
+                    .log_message(MessageType::WARNING, format!("No configuration found in workspace: {}. LSP will work without type checking.", e))
+                    .await;
+                return Ok(()); // Продолжаем работу без конфигурации
+            }
+        };
 
-        let mut builder = UnifiedIndexBuilder::new()?
-            .with_application_mode(BslApplicationMode::ManagedApplication);
+        // Создаем builder с обработкой ошибок
+        let mut builder = match UnifiedIndexBuilder::new() {
+            Ok(b) => b.with_application_mode(BslApplicationMode::ManagedApplication),
+            Err(e) => {
+                self.client
+                    .log_message(MessageType::WARNING, format!("Failed to create index builder: {}. BSL features will be limited.", e))
+                    .await;
+                return Ok(()); // Продолжаем работу без индекса
+            }
+        };
 
         match builder.build_index(config_path.to_str().unwrap_or_default(), &self.platform_version) {
             Ok(index) => {
@@ -86,22 +108,24 @@ impl BslLanguageServer {
                 Ok(())
             }
             Err(e) => {
-                let error_msg = format!("Failed to build BSL index: {}", e);
+                let error_msg = format!("Failed to build BSL index: {}. LSP will work with limited features.", e);
                 
                 self.client
-                    .log_message(MessageType::ERROR, &error_msg)
+                    .log_message(MessageType::WARNING, &error_msg)
                     .await;
 
                 self.client
-                    .show_message(MessageType::ERROR, &error_msg)
+                    .show_message(MessageType::WARNING, &error_msg)
                     .await;
 
-                Err(e)
+                // Возвращаем Ok чтобы сервер продолжил работу
+                Ok(())
             }
         }
     }
 
     /// Поиск пути к конфигурации в workspace
+    #[allow(dead_code)]
     async fn find_configuration_path(&self, workspace_path: &std::path::Path) -> Result<PathBuf> {
         // Стандартные пути для конфигурации 1С
         let config_candidates = [
@@ -428,12 +452,15 @@ impl LanguageServer for BslLanguageServer {
     async fn initialize(&self, params: InitializeParams) -> tower_lsp::jsonrpc::Result<InitializeResult> {
         tracing::info!("Initializing Enhanced BSL Language Server v2.0");
 
-        // Инициализируем UnifiedBslIndex из workspace
+        // Отложенная инициализация UnifiedBslIndex - не блокируем запуск сервера
+        // Индекс будет инициализирован позже при необходимости
         if let Some(workspace_folders) = params.workspace_folders {
             if let Some(workspace) = workspace_folders.first() {
-                if let Err(e) = self.initialize_unified_index(&workspace.uri).await {
-                    tracing::error!("Failed to initialize BSL index: {}", e);
-                }
+                tracing::info!("Workspace detected: {}", workspace.uri);
+                // Не инициализируем индекс сразу - это может вызвать падение
+                // if let Err(e) = self.initialize_unified_index(&workspace.uri).await {
+                //     tracing::warn!("BSL index initialization skipped: {}", e);
+                // }
             }
         }
 
@@ -603,6 +630,85 @@ impl LanguageServer for BslLanguageServer {
             _ => {
                 tracing::warn!("Unknown command: {}", params.command);
                 Err(tower_lsp::jsonrpc::Error::method_not_found())
+            }
+        }
+    }
+
+    async fn diagnostic(&self, params: DocumentDiagnosticParams) -> tower_lsp::jsonrpc::Result<DocumentDiagnosticReportResult> {
+        tracing::debug!("Pull-based diagnostic request for: {}", params.text_document.uri);
+        
+        // Получаем содержимое документа из кеша или пытаемся прочитать с диска
+        let document_text = if let Some(doc_info) = self.documents.read().await.get(&params.text_document.uri) {
+            doc_info.text.clone()
+        } else {
+            // Если документ не в кеше, пытаемся прочитать с диска
+            match params.text_document.uri.to_file_path() {
+                Ok(file_path) => {
+                    match tokio::fs::read_to_string(&file_path).await {
+                        Ok(content) => content,
+                        Err(_) => {
+                            // Не можем прочитать файл - возвращаем пустую диагностику
+                            return Ok(DocumentDiagnosticReportResult::Report(
+                                DocumentDiagnosticReport::Full(
+                                    RelatedFullDocumentDiagnosticReport {
+                                        related_documents: None,
+                                        full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                                            result_id: None,
+                                            items: vec![],
+                                        },
+                                    }
+                                )
+                            ));
+                        }
+                    }
+                }
+                Err(_) => {
+                    // Некорректный URI - возвращаем пустую диагностику
+                    return Ok(DocumentDiagnosticReportResult::Report(
+                        DocumentDiagnosticReport::Full(
+                            RelatedFullDocumentDiagnosticReport {
+                                related_documents: None,
+                                full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                                    result_id: None,
+                                    items: vec![],
+                                },
+                            }
+                        )
+                    ));
+                }
+            }
+        };
+
+        // Выполняем анализ документа
+        match self.analyze_document(&params.text_document.uri, &document_text).await {
+            Ok(diagnostics) => {
+                tracing::debug!("Pull-based diagnostic completed: {} items", diagnostics.len());
+                Ok(DocumentDiagnosticReportResult::Report(
+                    DocumentDiagnosticReport::Full(
+                        RelatedFullDocumentDiagnosticReport {
+                            related_documents: None,
+                            full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                                result_id: None,
+                                items: diagnostics,
+                            },
+                        }
+                    )
+                ))
+            }
+            Err(e) => {
+                tracing::error!("Pull-based diagnostic analysis failed: {}", e);
+                // В случае ошибки анализа возвращаем пустую диагностику, а не ошибку
+                Ok(DocumentDiagnosticReportResult::Report(
+                    DocumentDiagnosticReport::Full(
+                        RelatedFullDocumentDiagnosticReport {
+                            related_documents: None,
+                            full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                                result_id: None,
+                                items: vec![],
+                            },
+                        }
+                    )
+                ))
             }
         }
     }

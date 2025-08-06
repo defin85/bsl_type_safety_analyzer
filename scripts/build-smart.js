@@ -4,9 +4,14 @@ const { execSync, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const os = require('os');
 
 console.log('🧠 Smart Build System v2.0');
 console.log('='.repeat(50));
+
+// Автоопределение количества CPU
+const CPU_COUNT = os.cpus().length;
+console.log(`🖥️ Обнаружено процессоров: ${CPU_COUNT}`);
 
 // Конфигурация
 const CACHE_DIR = '.build-cache';
@@ -124,10 +129,10 @@ async function smartBuild() {
     const rustCheck = needsRebuild('rust', RUST_SRC_DIRS);
     if (rustCheck.rebuild) {
         const rustCommand = {
-            'dev': 'cargo build',
-            'fast': 'cargo build --profile dev-fast --jobs 4',
-            'release': 'cargo build --profile dev-fast --jobs 4'
-        }[buildMode] || 'cargo build --profile dev-fast --jobs 4';
+            'dev': `cargo build --jobs ${CPU_COUNT}`,
+            'fast': `cargo build --profile dev-fast --jobs ${CPU_COUNT}`,
+            'release': `cargo build --profile dev-fast --jobs ${CPU_COUNT}`
+        }[buildMode] || `cargo build --profile dev-fast --jobs ${CPU_COUNT}`;
         
         if (runCommand('Rust сборка', rustCommand)) {
             saveHash('rust', rustCheck.hash);

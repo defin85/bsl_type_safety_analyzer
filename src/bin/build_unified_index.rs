@@ -42,6 +42,10 @@ struct Args {
     #[arg(short, long)]
     output: Option<PathBuf>,
     
+    /// Path to platform documentation archive (optional)
+    #[arg(long)]
+    platform_docs_archive: Option<PathBuf>,
+    
     /// Enable verbose output
     #[arg(short, long)]
     verbose: bool,
@@ -81,10 +85,11 @@ fn main() -> Result<()> {
     println!("Platform version: {}", args.platform_version);
     println!("Application mode: {:?}", args.mode);
     
-    // Create builder with application mode
+    // Create builder with application mode and optional archive
     let mut builder = UnifiedIndexBuilder::new()
         .context("Failed to create index builder")?
-        .with_application_mode(args.mode.into());
+        .with_application_mode(args.mode.into())
+        .with_platform_docs_archive(args.platform_docs_archive.clone());
     
     // Build index
     let start = std::time::Instant::now();
