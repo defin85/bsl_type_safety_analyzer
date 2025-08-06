@@ -22,6 +22,7 @@
     "watch:install": "npm install --save-dev chokidar",
     "dev": "npm run build:smart:dev",
     "interactive": "node scripts/interactive-dev.js",
+    "interactive:classic": "node scripts/interactive-dev.js --classic",
     "copy:binaries": "node scripts/copy-essential-binaries.js dev-fast",
     "copy:binaries:dev": "node scripts/copy-essential-binaries.js debug",
     "copy:binaries:release": "node scripts/copy-essential-binaries.js release",
