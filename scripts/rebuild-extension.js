@@ -39,13 +39,8 @@ checkVersionSync();
 
 const steps = [
     {
-        name: 'Building Rust binaries',
-        command: 'cargo build --profile dev-fast --jobs 4',
-        icon: '🦀'
-    },
-    {
         name: 'Copying essential binaries to extension',
-        command: 'node scripts/copy-essential-binaries.js dev-fast',
+        command: 'node scripts/copy-essential-binaries.js release',
         icon: '📁'
     },
     {

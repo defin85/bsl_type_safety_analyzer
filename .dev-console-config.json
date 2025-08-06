@@ -1,0 +1,34 @@
+{
+    "enabledCategories": [
+        "build",
+        "version", 
+        "dev",
+        "git",
+        "publish",
+        "utils"
+    ],
+    "confirmDestructiveActions": true,
+    "showProgressBars": true,
+    "autoReturnToMainMenu": false,
+    "logErrors": true,
+    "favoriteActions": [
+        "build/smart-build",
+        "git/smart-commit",
+        "dev/run-tests",
+        "version/version-patch"
+    ],
+    "customCommands": {
+        "quick-dev": {
+            "title": "⚡ Quick Dev Build + Test",
+            "commands": [
+                "npm run build:smart:dev",
+                "cargo test --quiet"
+            ],
+            "category": "build"
+        }
+    },
+    "shortcuts": {
+        "ctrl+c": "exit",
+        "escape": "back"
+    }
+}

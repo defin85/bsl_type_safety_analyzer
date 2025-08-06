@@ -1,6 +1,6 @@
 {
   "name": "bsl-type-safety-analyzer",
-  "version": "1.6.0",
+  "version": "1.7.1",
   "description": "BSL Type Safety Analyzer with automated VSCode extension rebuilding",
   "private": true,
   "scripts": {
@@ -22,7 +22,8 @@
     "watch:install": "npm install --save-dev chokidar",
     "dev": "npm run build:smart:dev",
     "interactive": "node scripts/interactive-dev.js",
-    "interactive:classic": "node scripts/interactive-dev.js --classic",
+    "interactive:v2": "node scripts/interactive-dev.js", 
+    "interactive:classic": "node scripts/interactive-dev.js.backup",
     "copy:binaries": "node scripts/copy-essential-binaries.js dev-fast",
     "copy:binaries:dev": "node scripts/copy-essential-binaries.js debug",
     "copy:binaries:release": "node scripts/copy-essential-binaries.js release",
@@ -62,5 +63,8 @@
     "automation"
   ],
   "author": "BSL Analyzer Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "prompts": "^2.4.2"
+  }
 }

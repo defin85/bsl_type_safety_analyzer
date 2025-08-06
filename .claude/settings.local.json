@@ -215,7 +215,9 @@
       "Bash(unset CARGO_BUILD_JOBS)",
       "Bash(git log:*)",
       "Bash(cargo:*)",
-      "Bash(CARGO_BUILD_JOBS=4 npm run build:smart dev)"
+      "Bash(CARGO_BUILD_JOBS=4 npm run build:smart dev)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:www.npmjs.com)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

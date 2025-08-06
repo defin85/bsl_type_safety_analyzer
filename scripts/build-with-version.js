@@ -39,7 +39,7 @@ async function buildWithVersioning() {
     
     // 2. Собираем Rust проект
     console.log('\n🦀 Step 2: Building Rust project');
-    if (!runCommand('cargo build --release', 'Rust build')) {
+    if (!runCommand('cargo build --release --jobs 4', 'Rust build')) {
         return false;
     }
     

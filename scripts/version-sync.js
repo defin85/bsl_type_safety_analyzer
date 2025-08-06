@@ -148,6 +148,6 @@ if (incrementType && !['major', 'minor', 'patch'].includes(incrementType)) {
 const newVersion = syncVersions(incrementType);
 
 console.log('\n💡 Рекомендуемые следующие шаги:');
-console.log('   1. cargo build --release');
+console.log('   1. cargo build --release --jobs 4');
 console.log('   2. npm run rebuild:extension');
 console.log(`   3. git add . && git commit -m "bump: version ${newVersion}"`);
