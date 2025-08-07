@@ -64,8 +64,8 @@ if (allPresent) {
     missingRequired.forEach(binary => console.log(`   - ${binary}`));
     
     console.log('\n💡 To fix:');
-    console.log('   1. cargo build --release --jobs 4');
-    console.log('   2. npm run copy:binaries');
+    console.log('   1. npm run build:rust:release');
+    console.log('   2. npm run copy:binaries:release');
     
     process.exit(1);
 }

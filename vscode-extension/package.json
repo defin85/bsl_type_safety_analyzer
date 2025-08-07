@@ -2,7 +2,7 @@
     "name": "bsl-type-safety-analyzer",
     "displayName": "BSL Analyzer",
     "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
-    "version": "1.9.0",
+    "version": "1.11.0",
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {
@@ -52,96 +52,138 @@
                 "path": "./syntaxes/bsl.tmGrammar.json"
             }
         ],
-        "configuration": {
-            "type": "object",
-            "title": "BSL Analyzer",
-            "properties": {
-                "bslAnalyzer.enabled": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable BSL Analyzer"
-                },
-                "bslAnalyzer.serverPath": {
-                    "type": "string",
-                    "default": "lsp_server.exe",
-                    "description": "Path to BSL Analyzer LSP server executable"
-                },
-                "bslAnalyzer.serverMode": {
-                    "type": "string",
-                    "enum": [
-                        "stdio",
-                        "tcp"
-                    ],
-                    "default": "stdio",
-                    "description": "LSP server communication mode"
-                },
-                "bslAnalyzer.tcpPort": {
-                    "type": "number",
-                    "default": 8080,
-                    "description": "TCP port for LSP server (when using TCP mode)"
-                },
-                "bslAnalyzer.useBundledBinaries": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Use bundled binaries from extension. If false, uses binaries from indexServerPath or workspace."
-                },
-                "bslAnalyzer.indexServerPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to directory containing BSL Analyzer binaries (build_unified_index.exe, query_type.exe, etc.). Only used if useBundledBinaries is false."
-                },
-                "bslAnalyzer.configurationPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to 1C configuration directory for index building"
-                },
-                "bslAnalyzer.platformVersion": {
-                    "type": "string",
-                    "default": "8.3.25",
-                    "description": "1C platform version for index building"
-                },
-                "bslAnalyzer.platformDocsArchive": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to 1C platform documentation archive. Supports both formats: rebuilt.shcntx_ru.zip (context help with objects/methods) or rebuilt.shlang_ru.zip (language help with primitives/directives). For best results, use shcntx format."
-                },
-                "bslAnalyzer.autoIndexBuild": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Automatically build index when opening BSL files"
-                },
-                "bslAnalyzer.rulesConfig": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to rules configuration file"
-                },
-                "bslAnalyzer.enableMetrics": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable code quality metrics"
-                },
-                "bslAnalyzer.enableRealTimeAnalysis": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Enable real-time analysis as you type"
-                },
-                "bslAnalyzer.maxFileSize": {
-                    "type": "number",
-                    "default": 1048576,
-                    "description": "Maximum file size for analysis (bytes)"
-                },
-                "bslAnalyzer.trace.server": {
-                    "type": "string",
-                    "enum": [
-                        "off",
-                        "messages",
-                        "verbose"
-                    ],
-                    "default": "off",
-                    "description": "Trace communication between VS Code and LSP server"
+        "configuration": [
+            {
+                "title": "Основные",
+                "order": 0,
+                "properties": {
+                    "bslAnalyzer.enabled": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Включить BSL Analyzer",
+                        "scope": "resource",
+                        "order": 0
+                    },
+                    "bslAnalyzer.enableRealTimeAnalysis": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Включить анализ в реальном времени при наборе текста",
+                        "order": 1
+                    },
+                    "bslAnalyzer.maxFileSize": {
+                        "type": "number",
+                        "default": 1048576,
+                        "description": "Максимальный размер файла для анализа (в байтах)",
+                        "minimum": 0,
+                        "order": 2
+                    }
+                }
+            },
+            {
+                "title": "LSP Сервер",
+                "order": 1,
+                "properties": {
+                    "bslAnalyzer.serverMode": {
+                        "type": "string",
+                        "enum": ["stdio", "tcp"],
+                        "enumDescriptions": [
+                            "Стандартный ввод/вывод (рекомендуется)",
+                            "TCP соединение"
+                        ],
+                        "default": "stdio",
+                        "description": "Режим взаимодействия с LSP сервером",
+                        "order": 0
+                    },
+                    "bslAnalyzer.serverTcpPort": {
+                        "type": "number",
+                        "default": 8080,
+                        "description": "TCP порт для LSP сервера (при использовании TCP режима)",
+                        "minimum": 1,
+                        "maximum": 65535,
+                        "order": 1
+                    },
+                    "bslAnalyzer.serverTrace": {
+                        "type": "string",
+                        "enum": ["off", "messages", "verbose"],
+                        "enumDescriptions": [
+                            "Отключено",
+                            "Только сообщения",
+                            "Подробная трассировка"
+                        ],
+                        "default": "off",
+                        "description": "Уровень трассировки взаимодействия между VS Code и LSP сервером",
+                        "order": 2
+                    }
+                }
+            },
+            {
+                "title": "Бинарные файлы",
+                "order": 2,
+                "properties": {
+                    "bslAnalyzer.useBundledBinaries": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Использовать встроенные бинарные файлы из расширения",
+                        "order": 0
+                    },
+                    "bslAnalyzer.binaryPath": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Путь к директории с бинарными файлами BSL Analyzer (используется если useBundledBinaries = false)",
+                        "order": 1
+                    }
+                }
+            },
+            {
+                "title": "Индексация",
+                "order": 3,
+                "properties": {
+                    "bslAnalyzer.configurationPath": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Путь к директории конфигурации 1С для построения индекса",
+                        "order": 0
+                    },
+                    "bslAnalyzer.platformVersion": {
+                        "type": "string",
+                        "default": "8.3.25",
+                        "description": "Версия платформы 1С (например: 8.3.25)",
+                        "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                        "order": 1
+                    },
+                    "bslAnalyzer.platformDocsArchive": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Путь к архиву документации платформы 1С (rebuilt.shcntx_ru.zip или rebuilt.shlang_ru.zip)",
+                        "order": 2
+                    },
+                    "bslAnalyzer.autoIndexBuild": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Автоматически строить индекс при открытии BSL файлов",
+                        "order": 3
+                    }
+                }
+            },
+            {
+                "title": "Анализ кода",
+                "order": 4,
+                "properties": {
+                    "bslAnalyzer.rulesConfig": {
+                        "type": "string",
+                        "default": "",
+                        "description": "Путь к файлу конфигурации правил анализа",
+                        "order": 0
+                    },
+                    "bslAnalyzer.enableMetrics": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Включить вычисление метрик качества кода",
+                        "order": 1
+                    }
                 }
             }
-        },
+        ],
         "commands": [
             {
                 "command": "bslAnalyzer.analyzeFile",
@@ -450,11 +492,19 @@
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./"
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "tsc --noEmit",
+        "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
+        "@types/glob": "^8.0.0",
+        "@types/mocha": "^10.0.1",
         "@types/node": "16.x",
         "@types/vscode": "^1.74.0",
+        "@vscode/test-electron": "^2.2.0",
+        "glob": "^8.0.3",
+        "mocha": "^10.1.0",
         "typescript": "^4.9.5"
     },
     "dependencies": {

@@ -171,6 +171,6 @@ console.log('   └── Clean project structure');
 
 console.log('\n💡 Next steps:');
 console.log('   1. Update Cargo.toml [[bin]] sections if needed');
-console.log('   2. Run: cargo build --release --jobs 4');
+console.log('   2. Run: npm run build:rust:release');
 console.log('   3. Test: npm run rebuild:extension');
 console.log('   4. Commit: git add . && git commit -m "refactor: organize binaries structure"');

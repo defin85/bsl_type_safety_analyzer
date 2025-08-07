@@ -484,13 +484,9 @@ impl LanguageServer for BslLanguageServer {
                         ..Default::default()
                     },
                 )),
-                execute_command_provider: Some(ExecuteCommandOptions {
-                    commands: vec![
-                        "bslAnalyzer.analyzeFile".to_string(),
-                        "bslAnalyzer.analyzeWorkspace".to_string(),
-                    ],
-                    ..Default::default()
-                }),
+                // Убираем регистрацию команд - LSP сервер будет работать через стандартные LSP методы
+                // execute_command_provider убираем совсем, чтобы не было конфликтов
+                execute_command_provider: None,
                 ..Default::default()
             },
             server_info: Some(ServerInfo {
@@ -605,7 +601,7 @@ impl LanguageServer for BslLanguageServer {
         tracing::info!("Executing command: {}", params.command);
 
         match params.command.as_str() {
-            "bslAnalyzer.analyzeFile" => {
+            "bslAnalyzer.lsp.analyzeFile" => {
                 if let Some(uri_value) = params.arguments.get(0) {
                     if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
                         if let Ok(uri) = Url::parse(&uri_str) {
@@ -616,7 +612,7 @@ impl LanguageServer for BslLanguageServer {
                 }
                 Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid file URI"))
             }
-            "bslAnalyzer.analyzeWorkspace" => {
+            "bslAnalyzer.lsp.analyzeWorkspace" => {
                 if let Some(uri_value) = params.arguments.get(0) {
                     if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
                         if let Ok(uri) = Url::parse(&uri_str) {

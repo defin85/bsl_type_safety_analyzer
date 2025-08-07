@@ -4,9 +4,10 @@
   "description": "BSL Type Safety Analyzer with automated VSCode extension rebuilding",
   "private": true,
   "scripts": {
-    "build:rust": "cargo build --profile dev-fast --jobs 4",
-    "build:rust:dev": "cargo build",
-    "build:rust:fast": "cargo build --profile dev-fast",
+    "build:rust": "node scripts/cargo-wrapper.js build --profile dev-fast",
+    "build:rust:dev": "node scripts/cargo-wrapper.js build",
+    "build:rust:fast": "node scripts/cargo-wrapper.js build --profile dev-fast",
+    "build:rust:release": "node scripts/cargo-wrapper.js build --release",
     "build:extension": "cd vscode-extension && npm run compile",
     "package:extension": "cd vscode-extension && npx @vscode/vsce package",
     "rebuild:extension": "node scripts/rebuild-extension.js",

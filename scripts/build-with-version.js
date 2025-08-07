@@ -39,7 +39,9 @@ async function buildWithVersioning() {
     
     // 2. Собираем Rust проект
     console.log('\n🦀 Step 2: Building Rust project');
-    if (!runCommand('cargo build --release --jobs 4', 'Rust build')) {
+    const cpuCount = require('os').cpus().length;
+    process.env.CARGO_BUILD_JOBS = cpuCount;
+    if (!runCommand(`cargo build --release --jobs ${cpuCount}`, 'Rust build')) {
         return false;
     }
     

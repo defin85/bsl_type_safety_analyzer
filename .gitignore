@@ -53,10 +53,15 @@ package-lock.json
 
 # VSCode extension builds
 vscode-extension/dist/
+vscode-extension/*.vsix
 
 # Extension development files  
 vscode-extension/out/
 vscode-extension/node_modules/
+
+# VSCode extension test environment (auto-generated, ~400MB)
+vscode-extension/.vscode-test/
+.vscode-test/
 
 # Binary files (auto-generated from Rust build)
 vscode-extension/bin/

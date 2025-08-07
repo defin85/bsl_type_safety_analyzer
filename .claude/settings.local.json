@@ -248,7 +248,13 @@
       "Bash(CARGO_BUILD_JOBS=4 RUST_LOG=info cargo run --bin extract_platform_docs -- --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force)",
       "Bash(set CARGO_BUILD_JOBS=)",
       "Bash(set CARGO_BUILD_JOBS)",
-      "Bash(RUST_LOG=debug ./vscode-extension/bin/lsp_server.exe)"
+      "Bash(RUST_LOG=debug ./vscode-extension/bin/lsp_server.exe)",
+      "Bash(npx eslint:*)",
+      "Bash(for file in src/*.ts src/**/*.ts)",
+      "Bash(wc:*)",
+      "Bash(./vscode-extension/bin/bsl-analyzer.exe:*)",
+      "Bash(env)",
+      "Bash(git check-ignore:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

@@ -128,6 +128,9 @@ async function smartBuild() {
     // 1. Проверяем Rust код
     const rustCheck = needsRebuild('rust', RUST_SRC_DIRS);
     if (rustCheck.rebuild) {
+        // Устанавливаем CARGO_BUILD_JOBS автоматически
+        process.env.CARGO_BUILD_JOBS = CPU_COUNT;
+        
         const rustCommand = {
             'dev': `cargo build --jobs ${CPU_COUNT}`,
             'fast': `cargo build --profile dev-fast --jobs ${CPU_COUNT}`,
@@ -213,8 +216,10 @@ async function smartComponentBuild(component) {
         case 'rust':
             const rustCheck = needsRebuild('rust', RUST_SRC_DIRS);
             if (rustCheck.rebuild) {
+                // Устанавливаем CARGO_BUILD_JOBS автоматически
+                process.env.CARGO_BUILD_JOBS = CPU_COUNT;
                 const profile = getProfile();
-                const rustCmd = `cargo build --profile ${profile}`;
+                const rustCmd = `cargo build --profile ${profile} --jobs ${CPU_COUNT}`;
                 if (runCommand('Rust сборка', rustCmd)) {
                     saveHash('rust', rustCheck.hash);
                     operations++;

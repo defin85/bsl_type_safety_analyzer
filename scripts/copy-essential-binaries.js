@@ -44,7 +44,9 @@ const targetDir = 'vscode-extension/bin';
 // Проверяем существование исходной директории
 if (!fs.existsSync(sourceDir)) {
     console.error(`❌ Директория сборки не найдена: ${sourceDir}`);
-    console.log('💡 Выполните сборку: cargo build --profile ' + buildProfile);
+    console.log('💡 Выполните сборку: npm run build:rust' + 
+                (buildProfile === 'release' ? ':release' : 
+                 buildProfile === 'dev-fast' ? '' : ':dev'));
     process.exit(1);
 }
 
