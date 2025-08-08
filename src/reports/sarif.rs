@@ -7,7 +7,7 @@
 - GitLab Security Dashboard
 - Другими CI/CD системами
 
-SARIF (Static Analysis Results Interchange Format) - стандартный формат 
+SARIF (Static Analysis Results Interchange Format) - стандартный формат
 для обмена результатами статического анализа.
 
 ## Возможности:
@@ -20,7 +20,7 @@ SARIF (Static Analysis Results Interchange Format) - стандартный фо
 
 ## Использование:
 
-```rust
+```rust,ignore
 use bsl_analyzer::reports::sarif::SarifReporter;
 
 let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
@@ -31,13 +31,13 @@ std::fs::write("bsl-analysis.sarif", sarif_output)?;
 ```
 */
 
-use std::collections::HashMap;
-use std::path::Path;
-use serde::{Deserialize, Serialize};
+use super::{ReportConfig, ReportFormat, ReportGenerator, Severity};
+use crate::core::{AnalysisError, AnalysisResults};
 use anyhow::{Context, Result};
 use chrono::{DateTime, Utc};
-use crate::core::{AnalysisError, AnalysisResults};
-use super::{ReportGenerator, ReportConfig, ReportFormat, Severity};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::path::Path;
 
 /// SARIF 2.1.0 корневая структура
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -297,13 +297,13 @@ impl SarifReporter {
             rules_cache: HashMap::new(),
         }
     }
-    
+
     /// Устанавливает URL инструмента
     pub fn with_tool_uri(mut self, uri: String) -> Self {
         self.tool_uri = Some(uri);
         self
     }
-    
+
     /// Экспортирует результаты анализа в SARIF формат
     pub fn export_results(&self, results: &AnalysisResults) -> Result<String> {
         let sarif_report = self.create_sarif_report(results)?;
@@ -311,25 +311,25 @@ impl SarifReporter {
             .context("Failed to serialize SARIF report to JSON")?;
         Ok(json_output)
     }
-    
+
     /// Создает структуру SARIF отчета
     fn create_sarif_report(&self, results: &AnalysisResults) -> Result<SarifReport> {
         let run = self.create_sarif_run(results)?;
-        
+
         Ok(SarifReport {
             schema: "https://json.schemastore.org/sarif-2.1.0.json".to_string(),
             version: "2.1.0".to_string(),
             runs: vec![run],
         })
     }
-    
+
     /// Создает запуск анализа
     fn create_sarif_run(&self, results: &AnalysisResults) -> Result<SarifRun> {
         let tool = self.create_tool_info();
         let rules = self.create_rules_from_results(results);
         let sarif_results = self.convert_results_to_sarif(results)?;
         let artifacts = self.create_artifacts_from_results(results);
-        
+
         Ok(SarifRun {
             tool,
             results: sarif_results,
@@ -344,7 +344,7 @@ impl SarifReporter {
             }),
         })
     }
-    
+
     /// Создает информацию об инструменте
     fn create_tool_info(&self) -> SarifTool {
         SarifTool {
@@ -354,69 +354,69 @@ impl SarifReporter {
                 semantic_version: Some(self.tool_version.clone()),
                 information_uri: self.tool_uri.clone(),
                 rules: None, // Правила добавляются в run.rules
-            }
+            },
         }
     }
-    
+
     /// Создает правила из результатов анализа
     fn create_rules_from_results(&self, results: &AnalysisResults) -> Vec<SarifRule> {
         let mut rules = HashMap::new();
-        
+
         // Собираем уникальные коды ошибок
         for error in results.get_errors() {
             if let Some(ref code) = error.error_code {
-                rules.entry(code.clone()).or_insert_with(|| {
-                    self.create_rule_from_error_code(code)
-                });
+                rules
+                    .entry(code.clone())
+                    .or_insert_with(|| self.create_rule_from_error_code(code));
             }
         }
-        
+
         for warning in results.get_warnings() {
             if let Some(ref code) = warning.error_code {
-                rules.entry(code.clone()).or_insert_with(|| {
-                    self.create_rule_from_error_code(code)
-                });
+                rules
+                    .entry(code.clone())
+                    .or_insert_with(|| self.create_rule_from_error_code(code));
             }
         }
-        
+
         rules.into_values().collect()
     }
-    
+
     /// Создает правило из кода ошибки
     fn create_rule_from_error_code(&self, error_code: &str) -> SarifRule {
         let (name, description, help) = match error_code {
             "BSL001" => (
                 "Неиспользуемая переменная",
                 "Переменная объявлена, но не используется в коде",
-                "Удалите неиспользуемую переменную или добавьте к ней префикс '_' если она нужна"
+                "Удалите неиспользуемую переменную или добавьте к ней префикс '_' если она нужна",
             ),
             "BSL002" => (
-                "Неопределенная переменная", 
+                "Неопределенная переменная",
                 "Использование переменной, которая не была объявлена",
-                "Объявите переменную перед использованием с помощью 'Перем'"
+                "Объявите переменную перед использованием с помощью 'Перем'",
             ),
             "BSL003" => (
                 "Несоответствие типов",
                 "Присваивание значения несовместимого типа",
-                "Проверьте совместимость типов данных при присваивании"
+                "Проверьте совместимость типов данных при присваивании",
             ),
             "BSL004" => (
                 "Неизвестный метод",
                 "Вызов метода, который не найден в конфигурации или документации",
-                "Проверьте правильность имени метода и его доступность в текущем контексте"
+                "Проверьте правильность имени метода и его доступность в текущем контексте",
             ),
             "BSL005" => (
                 "Циклическая зависимость",
                 "Обнаружена циклическая зависимость между модулями",
-                "Реорганизуйте код для устранения циклических зависимостей"
+                "Реорганизуйте код для устранения циклических зависимостей",
             ),
             _ => (
                 "Проблема BSL кода",
                 "Обнаружена проблема в BSL коде",
-                "См. документацию BSL анализатора для получения дополнительной информации"
-            )
+                "См. документацию BSL анализатора для получения дополнительной информации",
+            ),
         };
-        
+
         SarifRule {
             id: error_code.to_string(),
             name: Some(name.to_string()),
@@ -432,47 +432,57 @@ impl SarifReporter {
                 text: help.to_string(),
                 markdown: None,
             }),
-            help_uri: Some(format!("https://github.com/defin85/bsl-type-safety-analyzer/docs/rules/{}", error_code)),
+            help_uri: Some(format!(
+                "https://github.com/defin85/bsl-type-safety-analyzer/docs/rules/{}",
+                error_code
+            )),
             default_configuration: Some(SarifReportingConfiguration {
                 level: self.error_code_to_sarif_level(error_code),
                 enabled: Some(true),
             }),
         }
     }
-    
+
     /// Конвертирует код ошибки в уровень серьезности SARIF
     fn error_code_to_sarif_level(&self, error_code: &str) -> SarifLevel {
         match error_code {
-            "BSL001" => SarifLevel::Note,      // Неиспользуемая переменная
-            "BSL002" => SarifLevel::Error,     // Неопределенная переменная  
-            "BSL003" => SarifLevel::Warning,   // Несоответствие типов
-            "BSL004" => SarifLevel::Warning,   // Неизвестный метод
-            "BSL005" => SarifLevel::Error,     // Циклическая зависимость
+            "BSL001" => SarifLevel::Note,    // Неиспользуемая переменная
+            "BSL002" => SarifLevel::Error,   // Неопределенная переменная
+            "BSL003" => SarifLevel::Warning, // Несоответствие типов
+            "BSL004" => SarifLevel::Warning, // Неизвестный метод
+            "BSL005" => SarifLevel::Error,   // Циклическая зависимость
             _ => SarifLevel::Warning,
         }
     }
-    
+
     /// Конвертирует результаты анализа в SARIF результаты
     fn convert_results_to_sarif(&self, results: &AnalysisResults) -> Result<Vec<SarifResult>> {
         let mut sarif_results = Vec::new();
-        
+
         // Конвертируем ошибки
         for error in results.get_errors() {
             sarif_results.push(self.convert_analysis_error_to_sarif(error, SarifLevel::Error)?);
         }
-        
+
         // Конвертируем предупреждения
         for warning in results.get_warnings() {
             sarif_results.push(self.convert_analysis_error_to_sarif(warning, SarifLevel::Warning)?);
         }
-        
+
         Ok(sarif_results)
     }
-    
+
     /// Конвертирует ошибку анализа в SARIF результат
-    fn convert_analysis_error_to_sarif(&self, error: &AnalysisError, level: SarifLevel) -> Result<SarifResult> {
-        let rule_id = error.error_code.clone().unwrap_or_else(|| "BSL000".to_string());
-        
+    fn convert_analysis_error_to_sarif(
+        &self,
+        error: &AnalysisError,
+        level: SarifLevel,
+    ) -> Result<SarifResult> {
+        let rule_id = error
+            .error_code
+            .clone()
+            .unwrap_or_else(|| "BSL000".to_string());
+
         let location = SarifLocation {
             physical_location: SarifPhysicalLocation {
                 artifact_location: SarifArtifactLocation {
@@ -491,19 +501,20 @@ impl SarifReporter {
             },
             message: None,
         };
-        
+
         // Создаем отпечаток для дедупликации
         let mut fingerprints = HashMap::new();
         fingerprints.insert(
             "BSLAnalyzer/v1".to_string(),
-            format!("{}:{}:{}:{}", 
+            format!(
+                "{}:{}:{}:{}",
                 error.file_path.display(),
                 error.position.line,
                 error.position.column,
                 rule_id
-            )
+            ),
         );
-        
+
         Ok(SarifResult {
             rule_id,
             message: SarifMessage {
@@ -517,46 +528,40 @@ impl SarifReporter {
             fingerprints: Some(fingerprints),
         })
     }
-    
+
     /// Создает артефакты из результатов анализа
     fn create_artifacts_from_results(&self, results: &AnalysisResults) -> Vec<SarifArtifact> {
         let mut artifacts = HashMap::new();
-        
+
         // Собираем уникальные файлы из ошибок
         for error in results.get_errors() {
             let uri = self.path_to_uri(&error.file_path);
-            artifacts.entry(uri.clone()).or_insert_with(|| {
-                SarifArtifact {
-                    location: SarifArtifactLocation {
-                        uri,
-                        index: None,
-                    },
+            artifacts
+                .entry(uri.clone())
+                .or_insert_with(|| SarifArtifact {
+                    location: SarifArtifactLocation { uri, index: None },
                     mime_type: Some("text/plain".to_string()),
                     length: None,
                     hashes: None,
-                }
-            });
+                });
         }
-        
+
         // Собираем уникальные файлы из предупреждений
         for warning in results.get_warnings() {
             let uri = self.path_to_uri(&warning.file_path);
-            artifacts.entry(uri.clone()).or_insert_with(|| {
-                SarifArtifact {
-                    location: SarifArtifactLocation {
-                        uri,
-                        index: None,
-                    },
+            artifacts
+                .entry(uri.clone())
+                .or_insert_with(|| SarifArtifact {
+                    location: SarifArtifactLocation { uri, index: None },
                     mime_type: Some("text/plain".to_string()),
                     length: None,
                     hashes: None,
-                }
-            });
+                });
         }
-        
+
         artifacts.into_values().collect()
     }
-    
+
     /// Конвертирует путь к файлу в URI
     fn path_to_uri(&self, path: &Path) -> String {
         // Конвертируем путь в URI формат для SARIF
@@ -566,30 +571,31 @@ impl SarifReporter {
             path.display().to_string().replace('\\', "/")
         }
     }
-    
+
     /// Генерирует SARIF специально для GitHub Security
     pub fn export_for_github(&self, results: &AnalysisResults) -> Result<String> {
         // GitHub Security требует определенные поля
         let mut sarif_report = self.create_sarif_report(results)?;
-        
+
         // Добавляем GitHub-специфичные метаданные
         if let Some(run) = sarif_report.runs.first_mut() {
-            run.tool.driver.information_uri = Some("https://github.com/defin85/bsl-type-safety-analyzer".to_string());
-            
+            run.tool.driver.information_uri =
+                Some("https://github.com/defin85/bsl-type-safety-analyzer".to_string());
+
             // GitHub рекомендует указывать semantic_version
             run.tool.driver.semantic_version = Some(self.tool_version.clone());
         }
-        
+
         let json_output = serde_json::to_string_pretty(&sarif_report)
             .context("Failed to serialize GitHub SARIF report")?;
         Ok(json_output)
     }
-    
+
     /// Генерирует SARIF для Azure DevOps
     pub fn export_for_azure_devops(&self, results: &AnalysisResults) -> Result<String> {
         // Azure DevOps имеет свои требования к SARIF
         let sarif_report = self.create_sarif_report(results)?;
-        
+
         let json_output = serde_json::to_string_pretty(&sarif_report)
             .context("Failed to serialize Azure DevOps SARIF report")?;
         Ok(json_output)
@@ -600,7 +606,7 @@ impl ReportGenerator for SarifReporter {
     fn generate_report(&self, results: &AnalysisResults, _config: &ReportConfig) -> Result<String> {
         self.export_results(results)
     }
-    
+
     fn supported_format() -> ReportFormat {
         ReportFormat::Sarif
     }
@@ -619,82 +625,99 @@ impl From<Severity> for SarifLevel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
-    use crate::core::{AnalysisResults, AnalysisError};
+    use crate::core::{AnalysisError, AnalysisResults};
     use crate::parser::Position;
-    
+    use std::path::PathBuf;
+
     fn create_test_analysis_results() -> AnalysisResults {
         let mut results = AnalysisResults::new();
-        
+
         results.add_error(AnalysisError {
             message: "Неиспользуемая переменная 'тестоваяПеременная'".to_string(),
             file_path: PathBuf::from("test.bsl"),
-            position: Position { line: 10, column: 5, offset: 100 },
+            position: Position {
+                line: 10,
+                column: 5,
+                offset: 100,
+            },
             level: crate::core::ErrorLevel::Error,
             error_code: Some("BSL001".to_string()),
             suggestion: None,
             related_positions: Vec::new(),
         });
-        
+
         results.add_warning(AnalysisError {
             message: "Неизвестный метод 'НеизвестныйМетод'".to_string(),
             file_path: PathBuf::from("module.bsl"),
-            position: Position { line: 25, column: 12, offset: 250 },
+            position: Position {
+                line: 25,
+                column: 12,
+                offset: 250,
+            },
             level: crate::core::ErrorLevel::Warning,
             error_code: Some("BSL004".to_string()),
             suggestion: None,
             related_positions: Vec::new(),
         });
-        
+
         results
     }
-    
+
     #[test]
     fn test_sarif_reporter_creation() {
         let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
         assert_eq!(reporter.tool_name, "BSL Analyzer");
         assert_eq!(reporter.tool_version, "1.0.0");
     }
-    
+
     #[test]
     fn test_sarif_export() {
         let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
         let results = create_test_analysis_results();
-        
+
         let sarif_output = reporter.export_results(&results).unwrap();
         assert!(sarif_output.contains("$schema"));
         assert!(sarif_output.contains("version"));
         assert!(sarif_output.contains("BSL001"));
         assert!(sarif_output.contains("BSL004"));
     }
-    
+
     #[test]
     fn test_github_sarif_export() {
         let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
         let results = create_test_analysis_results();
-        
+
         let github_sarif = reporter.export_for_github(&results).unwrap();
         assert!(github_sarif.contains("github.com"));
         assert!(github_sarif.contains("semantic_version"));
     }
-    
+
     #[test]
     fn test_error_code_to_sarif_level() {
         let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
-        
-        assert!(matches!(reporter.error_code_to_sarif_level("BSL001"), SarifLevel::Note));
-        assert!(matches!(reporter.error_code_to_sarif_level("BSL002"), SarifLevel::Error));
-        assert!(matches!(reporter.error_code_to_sarif_level("BSL003"), SarifLevel::Warning));
+
+        assert!(matches!(
+            reporter.error_code_to_sarif_level("BSL001"),
+            SarifLevel::Note
+        ));
+        assert!(matches!(
+            reporter.error_code_to_sarif_level("BSL002"),
+            SarifLevel::Error
+        ));
+        assert!(matches!(
+            reporter.error_code_to_sarif_level("BSL003"),
+            SarifLevel::Warning
+        ));
     }
-    
+
     #[test]
     fn test_path_to_uri_conversion() {
         let reporter = SarifReporter::new("BSL Analyzer", "1.0.0");
-        
+
         let relative_path = Path::new("test.bsl");
         let uri = reporter.path_to_uri(relative_path);
         assert_eq!(uri, "test.bsl");
-        
+
         #[cfg(windows)]
         {
             let absolute_path = Path::new("C:\\project\\test.bsl");
@@ -703,12 +726,21 @@ mod tests {
             assert!(uri.contains("/project/test.bsl"));
         }
     }
-    
+
     #[test]
     fn test_severity_conversion() {
         assert!(matches!(SarifLevel::from(Severity::Info), SarifLevel::Note));
-        assert!(matches!(SarifLevel::from(Severity::Warning), SarifLevel::Warning));
-        assert!(matches!(SarifLevel::from(Severity::Error), SarifLevel::Error));
-        assert!(matches!(SarifLevel::from(Severity::Critical), SarifLevel::Error));
+        assert!(matches!(
+            SarifLevel::from(Severity::Warning),
+            SarifLevel::Warning
+        ));
+        assert!(matches!(
+            SarifLevel::from(Severity::Error),
+            SarifLevel::Error
+        ));
+        assert!(matches!(
+            SarifLevel::from(Severity::Critical),
+            SarifLevel::Error
+        ));
     }
 }

@@ -39,7 +39,7 @@ impl DependencyGraph {
             modules: HashMap::new(),
         })
     }
-    
+
     pub fn find_circular_dependencies(&self) -> Vec<CircularDependency> {
         // TODO: Detect circular dependencies
         Vec::new()

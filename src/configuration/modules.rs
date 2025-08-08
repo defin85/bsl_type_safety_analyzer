@@ -1,8 +1,8 @@
 // BSL модули
+use crate::parser::lexer::read_bsl_file;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
-use crate::parser::lexer::read_bsl_file;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum ModuleType {
@@ -56,7 +56,7 @@ impl BslModule {
         // Read BSL file with proper encoding detection and BOM handling
         let _content = read_bsl_file(path)
             .map_err(|e| anyhow::anyhow!("Failed to read BSL file {}: {}", path.display(), e))?;
-        
+
         // TODO: Parse BSL file content and extract exports/imports
         // For now, just return basic module info
         Ok(Self {

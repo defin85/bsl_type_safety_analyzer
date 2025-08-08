@@ -6,14 +6,14 @@ High-performance parser for BSL (1C:Enterprise) language using nom parser combin
 ## Features
 
 - **Fast lexical analysis** with logos lexer
-- **Robust parsing** with nom combinators  
+- **Robust parsing** with nom combinators
 - **Complete AST** representation
 - **Error recovery** for partial parsing
 - **Position tracking** for diagnostics
 
 ## Usage
 
-```rust
+```rust,ignore
 use bsl_analyzer::parser::{BslParser, AstNode};
 
 let parser = BslParser::new();
@@ -25,19 +25,19 @@ let ast = parser.parse_text(r#"
 ```
 */
 
-pub mod lexer;
-pub mod grammar;
 pub mod ast;
-pub mod syntax_analyzer;
+pub mod grammar;
 pub mod incremental;
+pub mod lexer;
+pub mod syntax_analyzer;
 
 #[cfg(test)]
 mod syntax_analyzer_integration_test;
 
 pub use ast::{AstNode, AstNodeType, Position, Span};
-pub use lexer::{BslLexer, Token, TokenType, read_bsl_file};
-pub use syntax_analyzer::SyntaxAnalyzer;
 pub use incremental::{IncrementalParser, TextEdit};
+pub use lexer::{read_bsl_file, BslLexer, Token, TokenType};
+pub use syntax_analyzer::SyntaxAnalyzer;
 
 use anyhow::{Context, Result};
 use std::path::Path;
@@ -51,15 +51,16 @@ impl BslParser {
     /// Creates a new parser instance
     pub fn new() -> Self {
         Self {
-            tree_sitter_parser: crate::bsl_parser::BslParser::new().expect("Failed to create tree-sitter parser"),
+            tree_sitter_parser: crate::bsl_parser::BslParser::new()
+                .expect("Failed to create tree-sitter parser"),
         }
     }
-    
+
     /// Parses BSL code from string
     pub fn parse_text(&self, input: &str) -> Result<AstNode> {
         // Используем tree-sitter парсер
         let parse_result = self.tree_sitter_parser.parse(input, "<string>");
-        
+
         if let Some(bsl_ast) = parse_result.ast {
             // Конвертируем BSL AST в старый формат
             let ast_node = crate::bsl_parser::AstBridge::convert_bsl_ast_to_ast_node(&bsl_ast);
@@ -68,20 +69,21 @@ impl BslParser {
             Err(anyhow::anyhow!("Failed to parse BSL code"))
         }
     }
-    
+
     /// Parses BSL file with proper encoding detection and BOM handling
     pub fn parse_file<P: AsRef<Path>>(&self, file_path: P) -> Result<AstNode> {
         let content = read_bsl_file(file_path.as_ref())
             .with_context(|| format!("Failed to read file: {}", file_path.as_ref().display()))?;
-            
+
         self.parse_text(&content)
     }
-    
+
     /// Parses only procedure/function declarations (fast)
     pub fn parse_declarations(&self, input: &str) -> Result<Vec<AstNode>> {
         // Парсим весь модуль и извлекаем только объявления
         let ast = self.parse_text(input)?;
-        let declarations = ast.find_children(AstNodeType::Procedure)
+        let declarations = ast
+            .find_children(AstNodeType::Procedure)
             .into_iter()
             .chain(ast.find_children(AstNodeType::Function))
             .cloned()
@@ -112,16 +114,16 @@ impl ParseResult {
             warnings: Vec::new(),
         }
     }
-    
+
     pub fn with_errors(mut self, errors: Vec<ParseError>) -> Self {
         self.errors = errors;
         self
     }
-    
+
     pub fn has_errors(&self) -> bool {
         !self.errors.is_empty()
     }
-    
+
     pub fn is_success(&self) -> bool {
         self.ast.is_some() && self.errors.is_empty()
     }
@@ -137,7 +139,7 @@ pub struct ParseError {
 }
 
 /// Parse warning
-#[derive(Debug, Clone)]  
+#[derive(Debug, Clone)]
 pub struct ParseWarning {
     pub message: String,
     pub position: Position,
@@ -146,7 +148,7 @@ pub struct ParseWarning {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_parse_simple_procedure() {
         let parser = BslParser::new();
@@ -155,13 +157,13 @@ mod tests {
                 Сообщить("Тест");
             КонецПроцедуры
         "#;
-        
+
         let ast = parser.parse_text(code).unwrap();
         assert_eq!(ast.node_type, AstNodeType::Module);
         assert!(!ast.children.is_empty());
     }
-    
-    #[test] 
+
+    #[test]
     fn test_parse_function_with_parameters() {
         let parser = BslParser::new();
         let code = r#"
@@ -169,14 +171,14 @@ mod tests {
                 Возврат Число1 + Число2;
             КонецФункции
         "#;
-        
+
         let ast = parser.parse_text(code).unwrap();
         assert_eq!(ast.node_type, AstNodeType::Module);
-        
+
         let function = &ast.children[0];
         assert_eq!(function.node_type, AstNodeType::Function);
     }
-    
+
     #[test]
     fn test_parse_declarations_only() {
         let parser = BslParser::new();
@@ -189,7 +191,7 @@ mod tests {
                 // Implementation  
             КонецФункции
         "#;
-        
+
         let declarations = parser.parse_declarations(code).unwrap();
         assert_eq!(declarations.len(), 2);
         assert_eq!(declarations[0].node_type, AstNodeType::Procedure);

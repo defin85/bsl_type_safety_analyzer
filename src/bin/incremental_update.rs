@@ -1,11 +1,11 @@
 //! CLI утилита для инкрементального обновления UnifiedBslIndex
 
-use std::path::PathBuf;
-use anyhow::{Result, Context};
+use anyhow::{Context, Result};
+use bsl_analyzer::cli_common::{self, CliCommand, OutputFormat, OutputWriter, ProgressReporter};
+use bsl_analyzer::unified_index::{BslApplicationMode, ChangeImpact, UnifiedIndexBuilder};
 use clap::{Parser as ClapParser, ValueEnum};
-use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslApplicationMode, ChangeImpact};
-use bsl_analyzer::cli_common::{self, OutputWriter, OutputFormat, CliCommand, ProgressReporter};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 #[derive(ValueEnum, Debug, Clone)]
 enum ApplicationMode {
@@ -37,35 +37,35 @@ struct Args {
     /// Путь к директории конфигурации 1С
     #[arg(short, long)]
     config: PathBuf,
-    
+
     /// Версия платформы (например, "8.3.25")
     #[arg(short, long)]
     platform_version: String,
-    
+
     /// Режим приложения
     #[arg(short = 'm', long, value_enum, default_value = "managed")]
     mode: ApplicationMode,
-    
+
     /// Формат вывода (text, json, table)
     #[arg(short, long, default_value = "text")]
     format: String,
-    
+
     /// Подробный вывод об изменениях
     #[arg(short, long)]
     verbose: bool,
-    
+
     /// Только проверка изменений без обновления (dry-run)
     #[arg(short = 'n', long)]
     dry_run: bool,
-    
+
     /// Принудительное инкрементальное обновление
     #[arg(short = 'f', long)]
     force_incremental: bool,
-    
+
     /// Тихий режим
     #[arg(short, long)]
     quiet: bool,
-    
+
     /// Показать детальную статистику
     #[arg(short = 's', long)]
     show_stats: bool,
@@ -107,14 +107,14 @@ struct FileChange {
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    
+
     // Initialize logging
     if !args.quiet {
         cli_common::init_logging(args.verbose)?;
     } else {
         cli_common::init_minimal_logging()?;
     }
-    
+
     // Create command and run
     let command = IncrementalUpdateCommand::new(args);
     cli_common::run_command(command)
@@ -134,11 +134,11 @@ impl CliCommand for IncrementalUpdateCommand {
     fn name(&self) -> &str {
         "incremental_update"
     }
-    
+
     fn description(&self) -> &str {
         "Incremental update of BSL type index"
     }
-    
+
     fn execute(&self) -> Result<()> {
         self.run_update()
     }
@@ -148,70 +148,65 @@ impl IncrementalUpdateCommand {
     fn run_update(&self) -> Result<()> {
         // Validate config path
         cli_common::validate_path(&self.args.config, "Configuration directory")?;
-        
+
         if !self.args.config.is_dir() {
             return Err(anyhow::anyhow!(
                 "Configuration path must be a directory: {}",
                 self.args.config.display()
             ));
         }
-        
+
         if !self.args.quiet {
             cli_common::print_info("🔄 Инкрементальное обновление индекса BSL");
         }
-        
+
         // Create builder
         let mut builder = UnifiedIndexBuilder::new()
             .context("Failed to create index builder")?
             .with_application_mode(self.args.mode.clone().into());
-        
+
         let start = std::time::Instant::now();
-        
+
         // Set up progress reporting
         let progress = if !self.args.quiet && !self.args.dry_run {
             Some(ProgressReporter::new(100, "Анализ изменений"))
         } else {
             None
         };
-        
+
         // Check feasibility
-        let result = match builder.check_incremental_update_feasibility(
-            &self.args.config, 
-            &self.args.platform_version
-        ) {
+        let result = match builder
+            .check_incremental_update_feasibility(&self.args.config, &self.args.platform_version)
+        {
             Ok((change_impact, changed_files)) => {
                 if let Some(p) = &progress {
                     p.update(50);
                 }
-                
-                self.handle_changes(
-                    &mut builder, 
-                    change_impact, 
-                    changed_files, 
-                    start
-                )?
+
+                self.handle_changes(&mut builder, change_impact, changed_files, start)?
             }
             Err(e) => {
                 if !self.args.quiet {
                     cli_common::print_warning(&format!(
-                        "Невозможно выполнить инкрементальное обновление: {}", e
+                        "Невозможно выполнить инкрементальное обновление: {}",
+                        e
                     ));
                 }
-                
+
                 self.perform_full_rebuild(&mut builder, start)?
             }
         };
-        
+
         if let Some(p) = progress {
             p.finish();
         }
-        
+
         // Display results
         self.display_results(&result)?;
-        
+
         Ok(())
     }
-    
+
     fn handle_changes(
         &self,
         builder: &mut UnifiedIndexBuilder,
@@ -239,32 +234,32 @@ impl IncrementalUpdateCommand {
                 total_changes: 0,
             },
         };
-        
+
         if changed_files.is_empty() {
             result.update_type = "None".to_string();
             result.success = true;
             result.statistics.elapsed_ms = start.elapsed().as_millis();
-            
+
             if !self.args.quiet {
                 cli_common::print_success("Индекс актуален, изменений не обнаружено");
             }
             return Ok(result);
         }
-        
+
         if self.args.dry_run {
             result.update_type = "DryRun".to_string();
             result.success = true;
             result.statistics.elapsed_ms = start.elapsed().as_millis();
-            
+
             let recommendation = self.get_recommendation(&change_impact);
             if !self.args.quiet {
-                cli_common::print_info(&format!("🔍 Режим проверки - изменения не применены"));
+                cli_common::print_info("🔍 Режим проверки - изменения не применены");
                 cli_common::print_info(&format!("Рекомендация: {}", recommendation));
             }
-            
+
             return Ok(result);
         }
-        
+
         // Perform actual update
         match change_impact {
             ChangeImpact::None => {
@@ -274,7 +269,7 @@ impl IncrementalUpdateCommand {
             ChangeImpact::FullRebuild if !self.args.force_incremental => {
                 if !self.args.quiet {
                     cli_common::print_warning(
-                        "Требуется полная перестройка из-за изменений в Configuration.xml"
+                        "Требуется полная перестройка из-за изменений в Configuration.xml",
                     );
                 }
                 return self.perform_full_rebuild(builder, start);
@@ -284,13 +279,15 @@ impl IncrementalUpdateCommand {
                 if !self.args.quiet {
                     cli_common::print_info("🚀 Выполняется инкрементальное обновление...");
                 }
-                
-                let update_result = builder.perform_incremental_update(
-                    &self.args.config,
-                    &self.args.platform_version,
-                    changed_files
-                ).context("Failed to perform incremental update")?;
-                
+
+                let update_result = builder
+                    .perform_incremental_update(
+                        &self.args.config,
+                        &self.args.platform_version,
+                        changed_files,
+                    )
+                    .context("Failed to perform incremental update")?;
+
                 result.update_type = "Incremental".to_string();
                 result.success = update_result.success;
                 result.changes = ChangesSummary {
@@ -301,18 +298,18 @@ impl IncrementalUpdateCommand {
                 };
             }
         }
-        
+
         result.statistics.elapsed_ms = start.elapsed().as_millis();
         result.statistics.cache_hit = true;
         result.statistics.performance_ratio = if result.statistics.elapsed_ms > 0 {
-            500.0 / result.statistics.elapsed_ms as f64  // Compare to 500ms baseline
+            500.0 / result.statistics.elapsed_ms as f64 // Compare to 500ms baseline
         } else {
             1.0
         };
-        
+
         Ok(result)
     }
-    
+
     fn perform_full_rebuild(
         &self,
         builder: &mut UnifiedIndexBuilder,
@@ -321,12 +318,13 @@ impl IncrementalUpdateCommand {
         if !self.args.quiet {
             cli_common::print_info("Выполняется полная перестройка индекса...");
         }
-        
-        let index = builder.build_index(&self.args.config, &self.args.platform_version)
+
+        let index = builder
+            .build_index(&self.args.config, &self.args.platform_version)
             .context("Failed to build index")?;
-        
+
         let elapsed = start.elapsed();
-        
+
         Ok(UpdateResult {
             config_path: self.args.config.display().to_string(),
             platform_version: self.args.platform_version.clone(),
@@ -348,7 +346,7 @@ impl IncrementalUpdateCommand {
             },
         })
     }
-    
+
     fn get_recommendation(&self, impact: &ChangeImpact) -> &'static str {
         match impact {
             ChangeImpact::None => "Обновление не требуется",
@@ -358,56 +356,82 @@ impl IncrementalUpdateCommand {
             ChangeImpact::FullRebuild => "Рекомендуется полная перестройка (~500мс)",
         }
     }
-    
+
     fn display_results(&self, result: &UpdateResult) -> Result<()> {
-        let format = OutputFormat::from_str(&self.args.format)?;
+        let format = OutputFormat::parse_output_format(&self.args.format)?;
         let mut writer = OutputWriter::stdout(format);
-        
+
         if !self.args.quiet {
             writer.write_header("Результаты обновления индекса")?;
-            
+
             // Basic info
             let info_rows = vec![
                 vec!["Конфигурация".to_string(), result.config_path.clone()],
-                vec!["Версия платформы".to_string(), result.platform_version.clone()],
+                vec![
+                    "Версия платформы".to_string(),
+                    result.platform_version.clone(),
+                ],
                 vec!["Тип обновления".to_string(), result.update_type.clone()],
-                vec!["Статус".to_string(), if result.success { "✅ Успешно" } else { "❌ Ошибка" }.to_string()],
-                vec!["Время выполнения".to_string(), format!("{:.2?}мс", result.statistics.elapsed_ms)],
+                vec![
+                    "Статус".to_string(),
+                    if result.success {
+                        "✅ Успешно"
+                    } else {
+                        "❌ Ошибка"
+                    }
+                    .to_string(),
+                ],
+                vec![
+                    "Время выполнения".to_string(),
+                    format!("{:.2?}мс", result.statistics.elapsed_ms),
+                ],
             ];
-            
+
             writer.write_table(&["Параметр", "Значение"], info_rows)?;
-            
+
             // Changes summary
             if result.changes.total_changes > 0 {
                 writer.write_header("Сводка изменений")?;
-                
+
                 let changes_rows = vec![
-                    vec!["Добавлено".to_string(), result.changes.added_entities.len().to_string()],
-                    vec!["Обновлено".to_string(), result.changes.updated_entities.len().to_string()],
-                    vec!["Удалено".to_string(), result.changes.removed_entities.len().to_string()],
-                    vec!["Всего изменений".to_string(), result.changes.total_changes.to_string()],
+                    vec![
+                        "Добавлено".to_string(),
+                        result.changes.added_entities.len().to_string(),
+                    ],
+                    vec![
+                        "Обновлено".to_string(),
+                        result.changes.updated_entities.len().to_string(),
+                    ],
+                    vec![
+                        "Удалено".to_string(),
+                        result.changes.removed_entities.len().to_string(),
+                    ],
+                    vec![
+                        "Всего изменений".to_string(),
+                        result.changes.total_changes.to_string(),
+                    ],
                 ];
-                
+
                 writer.write_table(&["Тип изменения", "Количество"], changes_rows)?;
-                
+
                 // Detailed changes if verbose
                 if self.args.verbose && result.changes.total_changes > 0 {
                     writer.write_header("Детали изменений")?;
-                    
+
                     if !result.changes.added_entities.is_empty() {
                         writer.write_line("➕ Добавлено:")?;
                         for entity in &result.changes.added_entities {
                             writer.write_line(&format!("   • {}", entity))?;
                         }
                     }
-                    
+
                     if !result.changes.updated_entities.is_empty() {
                         writer.write_line("🔄 Обновлено:")?;
                         for entity in &result.changes.updated_entities {
                             writer.write_line(&format!("   • {}", entity))?;
                         }
                     }
-                    
+
                     if !result.changes.removed_entities.is_empty() {
                         writer.write_line("➖ Удалено:")?;
                         for entity in &result.changes.removed_entities {
@@ -416,31 +440,47 @@ impl IncrementalUpdateCommand {
                     }
                 }
             }
-            
+
             // Performance statistics
             if self.args.show_stats {
                 writer.write_header("Статистика производительности")?;
-                
+
                 let stats_rows = vec![
-                    vec!["Всего сущностей".to_string(), result.statistics.total_entities.to_string()],
-                    vec!["Использован кеш".to_string(), if result.statistics.cache_hit { "Да" } else { "Нет" }.to_string()],
-                    vec!["Коэффициент производительности".to_string(), 
-                         format!("{:.2}x", result.statistics.performance_ratio)],
-                    vec!["Измененных файлов".to_string(), result.changed_files_count.to_string()],
+                    vec![
+                        "Всего сущностей".to_string(),
+                        result.statistics.total_entities.to_string(),
+                    ],
+                    vec![
+                        "Использован кеш".to_string(),
+                        if result.statistics.cache_hit {
+                            "Да"
+                        } else {
+                            "Нет"
+                        }
+                        .to_string(),
+                    ],
+                    vec![
+                        "Коэффициент производительности".to_string(),
+                        format!("{:.2}x", result.statistics.performance_ratio),
+                    ],
+                    vec![
+                        "Измененных файлов".to_string(),
+                        result.changed_files_count.to_string(),
+                    ],
                 ];
-                
+
                 writer.write_table(&["Метрика", "Значение"], stats_rows)?;
             }
-            
+
             // Success message
             if result.success {
                 cli_common::print_success(&format!(
-                    "Обновление завершено за {:.2?}мс", 
+                    "Обновление завершено за {:.2?}мс",
                     result.statistics.elapsed_ms
                 ));
             }
         }
-        
+
         writer.flush()?;
         Ok(())
     }

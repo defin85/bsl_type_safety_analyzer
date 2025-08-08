@@ -2,11 +2,10 @@
 ///   <name>tools</name>
 ///   <purpose>Реализация MCP инструментов для работы с BSL типами</purpose>
 /// </module>
-
 use crate::mcp_server::analyzer::BslTypeAnalyzer;
 use crate::mcp_server::types::BslLanguagePreference;
-use crate::unified_index::{BslEntity, BslMethod, BslContext};
 use crate::unified_index::index::BslLanguagePreference as IndexLanguagePreference;
+use crate::unified_index::{BslContext, BslEntity, BslMethod};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -111,15 +110,23 @@ impl From<&BslMethod> for MethodInfo {
             name: method.name.clone(),
             english_name: method.english_name.clone(),
             is_function: method.is_function,
-            parameters: method.parameters.iter().map(|p| ParameterInfo {
-                name: p.name.clone(),
-                type_name: p.type_name.clone(),
-                is_optional: p.is_optional,
-                default_value: p.default_value.clone(),
-                description: p.description.clone(),
-            }).collect(),
+            parameters: method
+                .parameters
+                .iter()
+                .map(|p| ParameterInfo {
+                    name: p.name.clone(),
+                    type_name: p.type_name.clone(),
+                    is_optional: p.is_optional,
+                    default_value: p.default_value.clone(),
+                    description: p.description.clone(),
+                })
+                .collect(),
             return_type: method.return_type.clone(),
-            availability: method.availability.iter().map(|c| format!("{:?}", c)).collect(),
+            availability: method
+                .availability
+                .iter()
+                .map(|c| format!("{:?}", c))
+                .collect(),
             inherited_from: None,
             is_deprecated: method.is_deprecated,
             documentation: method.documentation.clone(),
@@ -132,10 +139,10 @@ impl From<&BslMethod> for MethodInfo {
 pub async fn find_type_impl(
     analyzer: &BslTypeAnalyzer,
     type_name: String,
-    language_preference: Option<String>
+    language_preference: Option<String>,
 ) -> String {
     let _ = analyzer.ensure_index().await;
-    
+
     let guard = analyzer.get_index().read().await;
     let index = match &*guard {
         Some(idx) => idx,
@@ -143,64 +150,65 @@ pub async fn find_type_impl(
             found: false,
             entity: None,
             suggestions: vec!["Индекс не загружен. Используйте load_configuration.".to_string()],
-        }).unwrap_or_default(),
+        })
+        .unwrap_or_default(),
     };
-    
+
     let preference = BslLanguagePreference::from(language_preference);
     let index_preference = match preference {
         BslLanguagePreference::Russian => IndexLanguagePreference::Russian,
         BslLanguagePreference::English => IndexLanguagePreference::English,
         BslLanguagePreference::Auto => IndexLanguagePreference::Auto,
     };
-    
-    let result = if let Some(entity) = index.find_entity_with_preference(&type_name, index_preference) {
-        FindTypeResult {
-            found: true,
-            entity: Some(EntityInfo::from(entity)),
-            suggestions: vec![],
-        }
-    } else {
-        // Получаем похожие имена
-        let suggestions = index.suggest_similar_names(&type_name);
-        FindTypeResult {
-            found: false,
-            entity: None,
-            suggestions: suggestions.into_iter().take(5).collect(),
-        }
-    };
-    
-    serde_json::to_string(&result).unwrap_or_else(|e| {
-        format!("{{\"error\": \"Serialization failed: {}\"}}", e)
-    })
+
+    let result =
+        if let Some(entity) = index.find_entity_with_preference(&type_name, index_preference) {
+            FindTypeResult {
+                found: true,
+                entity: Some(EntityInfo::from(entity)),
+                suggestions: vec![],
+            }
+        } else {
+            // Получаем похожие имена
+            let suggestions = index.suggest_similar_names(&type_name);
+            FindTypeResult {
+                found: false,
+                entity: None,
+                suggestions: suggestions.into_iter().take(5).collect(),
+            }
+        };
+
+    serde_json::to_string(&result)
+        .unwrap_or_else(|e| format!("{{\"error\": \"Serialization failed: {}\"}}", e))
 }
 
 pub async fn get_type_methods_impl(
     analyzer: &BslTypeAnalyzer,
     type_name: String,
     include_inherited: Option<bool>,
-    filter_context: Option<String>
+    filter_context: Option<String>,
 ) -> String {
     let _ = analyzer.ensure_index().await;
-    
+
     let guard = analyzer.get_index().read().await;
     let index = match &*guard {
         Some(idx) => idx,
         None => return "{\"error\": \"Index not loaded\"}".to_string(),
     };
-    
+
     let entity = match index.find_entity(&type_name) {
         Some(e) => e,
         None => return format!("{{\"error\": \"Type '{}' not found\"}}", type_name),
     };
-    
+
     let include_inherited = include_inherited.unwrap_or(true);
-    
+
     let methods: HashMap<String, BslMethod> = if include_inherited {
         index.get_all_methods(&type_name)
     } else {
         entity.interface.methods.clone()
     };
-    
+
     // Фильтруем по контексту если указан
     let filtered_methods: Vec<MethodInfo> = methods
         .values()
@@ -217,37 +225,36 @@ pub async fn get_type_methods_impl(
         })
         .map(MethodInfo::from)
         .collect();
-    
+
     let result = serde_json::json!({
         "type_name": type_name,
         "total_methods": filtered_methods.len(),
         "own_methods": entity.interface.methods.len(),
-        "inherited_methods": if include_inherited { 
-            filtered_methods.len() - entity.interface.methods.len() 
+        "inherited_methods": if include_inherited {
+            filtered_methods.len() - entity.interface.methods.len()
         } else { 0 },
         "methods": filtered_methods
     });
-    
-    serde_json::to_string(&result).unwrap_or_else(|e| {
-        format!("{{\"error\": \"Serialization failed: {}\"}}", e)
-    })
+
+    serde_json::to_string(&result)
+        .unwrap_or_else(|e| format!("{{\"error\": \"Serialization failed: {}\"}}", e))
 }
 
 pub async fn check_type_compatibility_impl(
     analyzer: &BslTypeAnalyzer,
     from_type: String,
-    to_type: String
+    to_type: String,
 ) -> String {
     let _ = analyzer.ensure_index().await;
-    
+
     let guard = analyzer.get_index().read().await;
     let index = match &*guard {
         Some(idx) => idx,
         None => return "{\"error\": \"Index not loaded\"}".to_string(),
     };
-    
+
     let compatible = index.is_assignable(&from_type, &to_type);
-    
+
     let result = if compatible {
         // Пытаемся определить путь совместимости
         let from_entity = index.find_entity(&from_type);
@@ -264,7 +271,7 @@ pub async fn check_type_compatibility_impl(
         } else {
             "unknown".to_string()
         };
-        
+
         TypeCompatibilityResult {
             compatible: true,
             reason,
@@ -277,26 +284,25 @@ pub async fn check_type_compatibility_impl(
             path: vec![],
         }
     };
-    
-    serde_json::to_string(&result).unwrap_or_else(|e| {
-        format!("{{\"error\": \"Serialization failed: {}\"}}", e)
-    })
+
+    serde_json::to_string(&result)
+        .unwrap_or_else(|e| format!("{{\"error\": \"Serialization failed: {}\"}}", e))
 }
 
 pub async fn validate_method_call_impl(
     analyzer: &BslTypeAnalyzer,
     object_type: String,
     method_name: String,
-    context: Option<String>
+    context: Option<String>,
 ) -> String {
     let _ = analyzer.ensure_index().await;
-    
+
     let guard = analyzer.get_index().read().await;
     let index = match &*guard {
         Some(idx) => idx,
         None => return "{\"error\": \"Index not loaded\"}".to_string(),
     };
-    
+
     let _entity = match index.find_entity(&object_type) {
         Some(e) => e,
         None => {
@@ -309,20 +315,21 @@ pub async fn validate_method_call_impl(
             return serde_json::to_string(&result).unwrap_or_default();
         }
     };
-    
+
     let all_methods = index.get_all_methods(&object_type);
     let method = all_methods.get(&method_name);
-    
+
     let context_enum = match context.as_deref() {
         Some("Client") => BslContext::Client,
-        Some("Server") | _ => BslContext::Server,
+        Some("Server") => BslContext::Server,
+        _ => BslContext::Server,
     };
-    
+
     let result = match method {
         Some(m) => {
             let mut errors = Vec::new();
             let mut warnings = Vec::new();
-            
+
             // Проверяем доступность в контексте
             if !m.availability.is_empty() && !m.availability.contains(&context_enum) {
                 errors.push(format!(
@@ -331,16 +338,19 @@ pub async fn validate_method_call_impl(
                     context.as_deref().unwrap_or("Server")
                 ));
             }
-            
+
             // Проверяем deprecation
             if m.is_deprecated {
                 warnings.push(format!(
                     "Method '{}' is deprecated{}",
                     method_name,
-                    m.deprecation_info.as_ref().map(|info| format!(": {}", info)).unwrap_or_default()
+                    m.deprecation_info
+                        .as_ref()
+                        .map(|info| format!(": {}", info))
+                        .unwrap_or_default()
                 ));
             }
-            
+
             ValidationResult {
                 valid: errors.is_empty(),
                 method: Some(MethodInfo::from(m)),
@@ -352,12 +362,15 @@ pub async fn validate_method_call_impl(
             // Пытаемся найти похожие методы
             let all_method_names: Vec<&str> = all_methods.keys().map(|s| s.as_str()).collect();
             let similar = find_similar_strings(&method_name, &all_method_names, 3);
-            
-            let mut errors = vec![format!("Method '{}' not found for type '{}'", method_name, object_type)];
+
+            let mut errors = vec![format!(
+                "Method '{}' not found for type '{}'",
+                method_name, object_type
+            )];
             if !similar.is_empty() {
                 errors.push(format!("Did you mean: {}?", similar.join(", ")));
             }
-            
+
             ValidationResult {
                 valid: false,
                 method: None,
@@ -366,10 +379,9 @@ pub async fn validate_method_call_impl(
             }
         }
     };
-    
-    serde_json::to_string(&result).unwrap_or_else(|e| {
-        format!("{{\"error\": \"Serialization failed: {}\"}}", e)
-    })
+
+    serde_json::to_string(&result)
+        .unwrap_or_else(|e| format!("{{\"error\": \"Serialization failed: {}\"}}", e))
 }
 
 /// <function>
@@ -386,9 +398,10 @@ fn find_similar_strings(target: &str, candidates: &[&str], max_results: usize) -
         })
         .filter(|(_, dist)| *dist <= 3) // Максимальное расстояние 3
         .collect();
-    
+
     similarities.sort_by_key(|(_, dist)| *dist);
-    similarities.into_iter()
+    similarities
+        .into_iter()
         .take(max_results)
         .map(|(s, _)| s)
         .collect()
@@ -402,26 +415,23 @@ fn levenshtein_distance(s1: &str, s2: &str) -> usize {
     let len1 = s1.chars().count();
     let len2 = s2.chars().count();
     let mut matrix = vec![vec![0; len2 + 1]; len1 + 1];
-    
-    for i in 0..=len1 {
-        matrix[i][0] = i;
+
+    for (i, row) in matrix.iter_mut().enumerate().take(len1 + 1) {
+        row[0] = i;
     }
-    for j in 0..=len2 {
-        matrix[0][j] = j;
+    for (j, cell) in matrix[0].iter_mut().enumerate().take(len2 + 1) {
+        *cell = j;
     }
-    
+
     for (i, c1) in s1.chars().enumerate() {
         for (j, c2) in s2.chars().enumerate() {
             let cost = if c1 == c2 { 0 } else { 1 };
             matrix[i + 1][j + 1] = std::cmp::min(
                 matrix[i][j + 1] + 1,
-                std::cmp::min(
-                    matrix[i + 1][j] + 1,
-                    matrix[i][j] + cost
-                )
+                std::cmp::min(matrix[i + 1][j] + 1, matrix[i][j] + cost),
             );
         }
     }
-    
+
     matrix[len1][len2]
 }

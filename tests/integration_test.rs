@@ -13,7 +13,7 @@ use tempfile::TempDir;
 fn test_configuration_loading() {
     let temp_dir = TempDir::new().unwrap();
     let config_path = temp_dir.path();
-    
+
     // Create minimal Configuration.xml
     let metadata_xml = r#"<?xml version="1.0" encoding="UTF-8"?>
     <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" version="2.19">
@@ -24,12 +24,12 @@ fn test_configuration_loading() {
         <ScriptVariant>Russian</ScriptVariant>
       </Configuration>
     </MetaDataObject>"#;
-    
+
     fs::write(config_path.join("Configuration.xml"), metadata_xml).unwrap();
-    
+
     // Test modern configuration loading
     let config = Configuration::load_from_directory(config_path).unwrap();
-    
+
     assert_eq!(config.metadata.name, "TestConfiguration");
     assert_eq!(config.metadata.version, "1.0.0");
     assert!(config.modules.is_empty()); // No BSL modules in this test

@@ -1,10 +1,10 @@
 //! Объединенный BSL анализатор на базе tree-sitter
 
-use anyhow::Result;
+use super::{BslParser, DataFlowAnalyzer, Diagnostic, SemanticAnalysisConfig, SemanticAnalyzer};
 use crate::core::errors::{AnalysisError, ErrorCollector};
 use crate::parser::ast::AstNode;
 use crate::unified_index::UnifiedBslIndex;
-use super::{BslParser, SemanticAnalyzer, SemanticAnalysisConfig, DataFlowAnalyzer, Diagnostic};
+use anyhow::Result;
 
 /// Уровни анализа BSL кода
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -24,12 +24,15 @@ impl AnalysisLevel {
     pub fn includes_syntax(&self) -> bool {
         true // Все уровни включают синтаксис
     }
-    
+
     /// Проверяет, включает ли уровень семантический анализ
     pub fn includes_semantic(&self) -> bool {
-        matches!(self, AnalysisLevel::Semantic | AnalysisLevel::DataFlow | AnalysisLevel::Full)
+        matches!(
+            self,
+            AnalysisLevel::Semantic | AnalysisLevel::DataFlow | AnalysisLevel::Full
+        )
     }
-    
+
     /// Проверяет, включает ли уровень анализ потока данных
     pub fn includes_data_flow(&self) -> bool {
         matches!(self, AnalysisLevel::DataFlow | AnalysisLevel::Full)
@@ -65,7 +68,7 @@ impl AnalysisConfig {
             max_errors: 0,
         }
     }
-    
+
     /// Создает конфигурацию для семантического анализа
     pub fn semantic() -> Self {
         Self {
@@ -77,7 +80,7 @@ impl AnalysisConfig {
             max_errors: 0,
         }
     }
-    
+
     /// Создает конфигурацию для анализа потока данных
     pub fn data_flow() -> Self {
         Self {
@@ -89,7 +92,7 @@ impl AnalysisConfig {
             max_errors: 0,
         }
     }
-    
+
     /// Создает конфигурацию для полного анализа
     pub fn full() -> Self {
         Self {
@@ -131,7 +134,7 @@ impl BslAnalyzer {
             config: AnalysisConfig::default(),
         })
     }
-    
+
     /// Создает новый анализатор с конфигурацией
     pub fn with_config(config: AnalysisConfig) -> Result<Self> {
         Ok(Self {
@@ -143,12 +146,14 @@ impl BslAnalyzer {
             config,
         })
     }
-    
+
     /// Создает новый анализатор с UnifiedBslIndex
     pub fn with_index(index: UnifiedBslIndex) -> Result<Self> {
-        let mut sem_config = SemanticAnalysisConfig::default();
-        sem_config.check_method_calls = true; // Включаем проверку методов
-        
+        let sem_config = SemanticAnalysisConfig {
+            check_method_calls: true,
+            ..Default::default()
+        }; // Включаем проверку методов
+
         Ok(Self {
             parser: BslParser::new()?,
             semantic_analyzer: SemanticAnalyzer::with_index(sem_config, index.clone()),
@@ -158,12 +163,14 @@ impl BslAnalyzer {
             config: AnalysisConfig::default(),
         })
     }
-    
+
     /// Создает новый анализатор с UnifiedBslIndex и конфигурацией
     pub fn with_index_and_config(index: UnifiedBslIndex, config: AnalysisConfig) -> Result<Self> {
-        let mut sem_config = SemanticAnalysisConfig::default();
-        sem_config.check_method_calls = config.check_method_calls;
-        
+        let sem_config = SemanticAnalysisConfig {
+            check_method_calls: config.check_method_calls,
+            ..Default::default()
+        };
+
         Ok(Self {
             parser: BslParser::new()?,
             semantic_analyzer: SemanticAnalyzer::with_index(sem_config, index.clone()),
@@ -173,12 +180,14 @@ impl BslAnalyzer {
             config,
         })
     }
-    
+
     /// Устанавливает UnifiedBslIndex для валидации типов и методов
     pub fn set_index(&mut self, index: UnifiedBslIndex) {
-        let mut config = SemanticAnalysisConfig::default();
-        config.check_method_calls = true;
-        
+        let config = SemanticAnalysisConfig {
+            check_method_calls: true,
+            ..Default::default()
+        };
+
         self.semantic_analyzer = SemanticAnalyzer::with_index(config, index.clone());
         self.index = Some(index);
     }
@@ -188,63 +197,75 @@ impl BslAnalyzer {
         let source = std::fs::read_to_string(path)?;
         self.analyze_text(&source, config)
     }
-    
+
     /// Выполняет анализ BSL текста с конфигурацией
     pub fn analyze_text(&mut self, text: &str, config: &AnalysisConfig) -> Result<()> {
         self.config = config.clone();
         self.analyze_code(text, "<text>")
     }
-    
+
     /// Выполняет анализ BSL модуля с конфигурацией
-    pub fn analyze_module(&mut self, module_path: &std::path::Path, config: &AnalysisConfig) -> Result<()> {
+    pub fn analyze_module(
+        &mut self,
+        module_path: &std::path::Path,
+        config: &AnalysisConfig,
+    ) -> Result<()> {
         self.config = config.clone();
         self.analyze_file(module_path, config)
     }
-    
+
     /// Выполняет полный анализ BSL кода
     pub fn analyze_code(&mut self, source: &str, file_path: &str) -> Result<()> {
         // Проверяем лимит ошибок
-        if self.config.max_errors > 0 && self.error_collector.get_errors().len() >= self.config.max_errors {
+        if self.config.max_errors > 0
+            && self.error_collector.get_errors().len() >= self.config.max_errors
+        {
             return Ok(());
         }
-        
+
         // 1. Парсинг (всегда выполняется)
         let parse_result = self.parser.parse(source, file_path);
-        
+
         // Собираем диагностики парсера
         for diagnostic in parse_result.diagnostics {
             self.add_diagnostic_as_error(&diagnostic);
-            if self.config.max_errors > 0 && self.error_collector.get_errors().len() >= self.config.max_errors {
+            if self.config.max_errors > 0
+                && self.error_collector.get_errors().len() >= self.config.max_errors
+            {
                 return Ok(());
             }
         }
-        
+
         // 2. Семантический анализ (если включен)
         if self.config.level.includes_semantic() {
             if let Some(ast) = parse_result.ast {
                 self.semantic_analyzer.analyze(&ast)?;
-                let diagnostics: Vec<_> = self.semantic_analyzer.get_diagnostics().iter().cloned().collect();
+                let diagnostics = self.semantic_analyzer.get_diagnostics().to_vec();
                 for diagnostic in diagnostics {
                     self.add_diagnostic_as_error(&diagnostic);
-                    if self.config.max_errors > 0 && self.error_collector.get_errors().len() >= self.config.max_errors {
+                    if self.config.max_errors > 0
+                        && self.error_collector.get_errors().len() >= self.config.max_errors
+                    {
                         return Ok(());
                     }
                 }
-                
+
                 // 3. Анализ потоков данных (если включен)
                 if self.config.level.includes_data_flow() {
                     self.data_flow_analyzer.analyze(&ast)?;
-                    let diagnostics: Vec<_> = self.data_flow_analyzer.get_diagnostics().iter().cloned().collect();
+                    let diagnostics = self.data_flow_analyzer.get_diagnostics().to_vec();
                     for diagnostic in diagnostics {
                         self.add_diagnostic_as_error(&diagnostic);
-                        if self.config.max_errors > 0 && self.error_collector.get_errors().len() >= self.config.max_errors {
+                        if self.config.max_errors > 0
+                            && self.error_collector.get_errors().len() >= self.config.max_errors
+                        {
                             return Ok(());
                         }
                     }
                 }
             }
         }
-        
+
         Ok(())
     }
 
@@ -265,12 +286,12 @@ impl BslAnalyzer {
         let (semantic_errors, semantic_warnings) = self.semantic_analyzer.get_results();
         let mut all_errors = semantic_errors;
         let all_warnings = semantic_warnings;
-        
+
         // Добавляем ошибки из error_collector
         for error in self.error_collector.get_errors() {
             all_errors.push(error.clone());
         }
-        
+
         (all_errors, all_warnings)
     }
 
@@ -290,7 +311,10 @@ impl BslAnalyzer {
     }
 
     /// Анализирует конфигурацию (заглушка для совместимости)
-    pub fn analyze_configuration(&mut self, _config: &crate::configuration::Configuration) -> Result<Vec<crate::core::results::AnalysisResults>> {
+    pub fn analyze_configuration(
+        &mut self,
+        _config: &crate::configuration::Configuration,
+    ) -> Result<Vec<crate::core::results::AnalysisResults>> {
         // TODO: реализовать анализ конфигурации
         Ok(vec![])
     }
@@ -302,21 +326,24 @@ impl BslAnalyzer {
             column: diagnostic.location.column,
             offset: diagnostic.location.offset,
         };
-        
+
         let level = match diagnostic.severity {
             super::DiagnosticSeverity::Error => crate::core::errors::ErrorLevel::Error,
             super::DiagnosticSeverity::Warning => crate::core::errors::ErrorLevel::Warning,
-            super::DiagnosticSeverity::Info | super::DiagnosticSeverity::Information => crate::core::errors::ErrorLevel::Info,
+            super::DiagnosticSeverity::Info | super::DiagnosticSeverity::Information => {
+                crate::core::errors::ErrorLevel::Info
+            }
             super::DiagnosticSeverity::Hint => crate::core::errors::ErrorLevel::Hint,
         };
-        
+
         let error = AnalysisError::new(
             diagnostic.message.clone(),
             diagnostic.location.file.clone().into(),
             position,
             level,
-        ).with_code(diagnostic.code.clone());
-        
+        )
+        .with_code(diagnostic.code.clone());
+
         self.error_collector.add_error(error);
     }
 }
@@ -352,7 +379,7 @@ mod tests {
                 Сообщить("Привет мир");
             КонецПроцедуры
         "#;
-        
+
         let result = analyzer.analyze_code(code, "test.bsl");
         assert!(result.is_ok());
     }

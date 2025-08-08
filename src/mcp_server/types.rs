@@ -2,7 +2,6 @@
 ///   <name>types</name>
 ///   <purpose>Типы данных для MCP сервера</purpose>
 /// </module>
-
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -20,16 +19,16 @@ pub type McpResult<T> = Result<T, McpError>;
 pub enum McpError {
     #[error("Type not found: {0}")]
     TypeNotFound(String),
-    
+
     #[error("Method not found: {method} for type {type_name}")]
     MethodNotFound { type_name: String, method: String },
-    
+
     #[error("Invalid parameter: {0}")]
     InvalidParameter(String),
-    
+
     #[error("Index not loaded")]
     IndexNotLoaded,
-    
+
     #[error("Internal error: {0}")]
     Internal(String),
 }

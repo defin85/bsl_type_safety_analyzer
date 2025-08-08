@@ -13,7 +13,7 @@
 
 ## Использование:
 
-```rust
+```rust,ignore
 use bsl_analyzer::reports::html::HtmlReporter;
 
 let reporter = HtmlReporter::new();
@@ -24,9 +24,9 @@ std::fs::write("analysis-report.html", html_output)?;
 ```
 */
 
-use anyhow::Result;
+use super::{ReportConfig, ReportFormat, ReportGenerator};
 use crate::core::AnalysisResults;
-use super::{ReportGenerator, ReportConfig, ReportFormat};
+use anyhow::Result;
 
 /// HTML репортер для создания веб-отчетов
 pub struct HtmlReporter {
@@ -44,7 +44,7 @@ impl HtmlReporter {
             include_javascript: true,
         }
     }
-    
+
     /// Создает HTML репортер с конфигурацией
     pub fn with_config(include_css: bool, include_js: bool) -> Self {
         Self {
@@ -52,50 +52,54 @@ impl HtmlReporter {
             include_javascript: include_js,
         }
     }
-    
+
     /// Генерирует HTML отчет
-    fn generate_html_report(&self, results: &AnalysisResults, config: &ReportConfig) -> Result<String> {
+    fn generate_html_report(
+        &self,
+        results: &AnalysisResults,
+        config: &ReportConfig,
+    ) -> Result<String> {
         let mut html = String::new();
-        
+
         // HTML заголовок
         html.push_str(&self.generate_html_header());
-        
+
         // CSS стили
         if self.include_inline_css {
             html.push_str(&self.generate_css_styles());
         }
-        
+
         // JavaScript
         if self.include_javascript {
             html.push_str(&self.generate_javascript());
         }
-        
+
         html.push_str("</head>\n<body>\n");
-        
+
         // Заголовок отчета
         html.push_str(&self.generate_report_header(results));
-        
+
         // Сводная статистика
         html.push_str(&self.generate_summary_section(results));
-        
+
         // Результаты анализа
         html.push_str(&self.generate_results_section(results, config));
-        
+
         // Граф зависимостей (если включен)
         if config.include_dependencies {
             html.push_str(&self.generate_dependencies_section(results));
         }
-        
+
         // Метрики производительности (если включены)
         if config.include_performance {
             html.push_str(&self.generate_performance_section(results));
         }
-        
+
         html.push_str("</body>\n</html>");
-        
+
         Ok(html)
     }
-    
+
     /// Генерирует HTML заголовок
     fn generate_html_header(&self) -> String {
         r#"<!DOCTYPE html>
@@ -104,9 +108,10 @@ impl HtmlReporter {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BSL Analysis Report</title>
-"#.to_string()
+"#
+        .to_string()
     }
-    
+
     /// Генерирует CSS стили
     fn generate_css_styles(&self) -> String {
         r#"<style>
@@ -321,9 +326,10 @@ body {
     font-size: 0.9em;
 }
 </style>
-"#.to_string()
+"#
+        .to_string()
     }
-    
+
     /// Генерирует JavaScript для интерактивности
     fn generate_javascript(&self) -> String {
         r#"<script>
@@ -427,25 +433,29 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 "#.to_string()
     }
-    
+
     /// Генерирует заголовок отчета
     fn generate_report_header(&self, _results: &AnalysisResults) -> String {
-        format!(r#"<div class="container">
+        format!(
+            r#"<div class="container">
     <div class="header">
         <h1>🔍 BSL Analysis Report</h1>
         <div class="subtitle">Отчет о статическом анализе BSL кода</div>
         <div class="subtitle">Сгенерирован: {}</div>
     </div>
-"#, chrono::Utc::now().format("%Y-%m-%d %H:%M:%S UTC"))
+"#,
+            chrono::Utc::now().format("%Y-%m-%d %H:%M:%S UTC")
+        )
     }
-    
+
     /// Генерирует секцию сводной статистики
     fn generate_summary_section(&self, results: &AnalysisResults) -> String {
         let errors_count = results.get_errors().len();
         let warnings_count = results.get_warnings().len();
         let total_files = self.get_unique_files_count(results);
-        
-        format!(r#"    <div class="section">
+
+        format!(
+            r#"    <div class="section">
         <h2>📊 Сводная статистика</h2>
         <div class="summary">
             <div class="summary-card errors">
@@ -466,14 +476,24 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </div>
-"#, errors_count, warnings_count, total_files, errors_count + warnings_count)
+"#,
+            errors_count,
+            warnings_count,
+            total_files,
+            errors_count + warnings_count
+        )
     }
-    
+
     /// Генерирует секцию результатов
-    fn generate_results_section(&self, results: &AnalysisResults, _config: &ReportConfig) -> String {
+    fn generate_results_section(
+        &self,
+        results: &AnalysisResults,
+        _config: &ReportConfig,
+    ) -> String {
         let mut html = String::new();
-        
-        html.push_str(r#"    <div class="section">
+
+        html.push_str(
+            r#"    <div class="section">
         <h2>🚨 Результаты анализа</h2>
         
         <div class="filter-controls">
@@ -502,43 +522,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tr>
             </thead>
             <tbody>
-"#);
-        
+"#,
+        );
+
         // Добавляем ошибки
         for error in results.get_errors() {
             html.push_str(&self.generate_result_row(error, "error"));
         }
-        
+
         // Добавляем предупреждения
         for warning in results.get_warnings() {
             html.push_str(&self.generate_result_row(warning, "warning"));
         }
-        
-        html.push_str(r#"            </tbody>
+
+        html.push_str(
+            r#"            </tbody>
         </table>
     </div>
-"#);
-        
+"#,
+        );
+
         html
     }
-    
+
     /// Генерирует строку результата
     fn generate_result_row(&self, error: &crate::core::AnalysisError, severity: &str) -> String {
         let error_code = error.error_code.as_deref().unwrap_or("N/A");
-        let file_name = error.file_path.file_name()
+        let file_name = error
+            .file_path
+            .file_name()
             .and_then(|n| n.to_str())
             .unwrap_or("unknown");
-        
-        format!(r#"                <tr>
+
+        format!(
+            r#"                <tr>
                     <td><span class="severity {}">{}</span></td>
                     <td><span class="file-path">{}</span></td>
                     <td><span class="position">{}:{}</span></td>
                     <td>{}</td>
                     <td class="message">{}</td>
                 </tr>
-"#, severity, severity.to_uppercase(), file_name, error.position.line, error.position.column, error_code, html_escape(&error.message))
+"#,
+            severity,
+            severity.to_uppercase(),
+            file_name,
+            error.position.line,
+            error.position.column,
+            error_code,
+            html_escape(&error.message)
+        )
     }
-    
+
     /// Генерирует секцию зависимостей
     fn generate_dependencies_section(&self, _results: &AnalysisResults) -> String {
         r#"    <div class="section">
@@ -550,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 "#.to_string()
     }
-    
+
     /// Генерирует секцию производительности
     fn generate_performance_section(&self, _results: &AnalysisResults) -> String {
         r#"    <div class="section">
@@ -570,21 +604,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </div>
-"#.to_string()
+"#
+        .to_string()
     }
-    
+
     /// Получает количество уникальных файлов
     fn get_unique_files_count(&self, results: &AnalysisResults) -> usize {
         let mut files = std::collections::HashSet::new();
-        
+
         for error in results.get_errors() {
             files.insert(&error.file_path);
         }
-        
+
         for warning in results.get_warnings() {
             files.insert(&warning.file_path);
         }
-        
+
         files.len()
     }
 }
@@ -593,7 +628,7 @@ impl ReportGenerator for HtmlReporter {
     fn generate_report(&self, results: &AnalysisResults, config: &ReportConfig) -> Result<String> {
         self.generate_html_report(results, config)
     }
-    
+
     fn supported_format() -> ReportFormat {
         ReportFormat::Html
     }
@@ -617,58 +652,62 @@ fn html_escape(text: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
-    use crate::core::{AnalysisResults, AnalysisError};
+    use crate::core::{AnalysisError, AnalysisResults};
     use crate::parser::Position;
-    
+    use std::path::PathBuf;
+
     fn create_test_results() -> AnalysisResults {
         let mut results = AnalysisResults::new();
-        
+
         results.add_error(AnalysisError {
             message: "Тестовая ошибка".to_string(),
             file_path: PathBuf::from("test.bsl"),
-            position: Position { line: 10, column: 5, offset: 100 },
+            position: Position {
+                line: 10,
+                column: 5,
+                offset: 100,
+            },
             level: crate::core::ErrorLevel::Error,
             error_code: Some("BSL001".to_string()),
             suggestion: None,
             related_positions: Vec::new(),
         });
-        
+
         results
     }
-    
+
     #[test]
     fn test_html_reporter_creation() {
         let reporter = HtmlReporter::new();
         assert!(reporter.include_inline_css);
         assert!(reporter.include_javascript);
     }
-    
+
     #[test]
     fn test_html_report_generation() {
         let reporter = HtmlReporter::new();
         let results = create_test_results();
         let config = ReportConfig::default();
-        
+
         let html_output = reporter.generate_report(&results, &config).unwrap();
-        
+
         assert!(html_output.contains("<!DOCTYPE html>"));
         assert!(html_output.contains("BSL Analysis Report"));
         assert!(html_output.contains("Тестовая ошибка"));
         assert!(html_output.contains("test.bsl"));
     }
-    
+
     #[test]
     fn test_html_escape() {
         assert_eq!(html_escape("test & <script>"), "test &amp; &lt;script&gt;");
         assert_eq!(html_escape("normal text"), "normal text");
     }
-    
+
     #[test]
     fn test_unique_files_count() {
         let reporter = HtmlReporter::new();
         let results = create_test_results();
-        
+
         assert_eq!(reporter.get_unique_files_count(&results), 1);
     }
 }

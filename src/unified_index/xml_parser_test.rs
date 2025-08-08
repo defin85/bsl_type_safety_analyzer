@@ -1,9 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::unified_index::{
-        ConfigurationXmlParser,
-        BslEntityType, BslEntityKind, BslContext,
-    };
+    use crate::unified_index::{BslContext, BslEntityKind, BslEntityType, ConfigurationXmlParser};
     use std::fs;
     use tempfile::TempDir;
 
@@ -91,29 +88,42 @@ mod tests {
     fn create_test_config(dir: &TempDir) -> std::path::PathBuf {
         // Создаем структуру конфигурации
         let config_path = dir.path().join("test_config");
-        
+
         // Configuration.xml
         fs::create_dir_all(&config_path).unwrap();
-        fs::write(config_path.join("Configuration.xml"), r#"<?xml version="1.0" encoding="UTF-8"?>
-<Configuration><Properties><Name>ТестоваяКонфигурация</Name></Properties></Configuration>"#).unwrap();
-        
+        fs::write(
+            config_path.join("Configuration.xml"),
+            r#"<?xml version="1.0" encoding="UTF-8"?>
+<Configuration><Properties><Name>ТестоваяКонфигурация</Name></Properties></Configuration>"#,
+        )
+        .unwrap();
+
         // Справочник с формой
         let catalog_path = config_path.join("Catalogs").join("Номенклатура");
         fs::create_dir_all(&catalog_path).unwrap();
-        fs::write(catalog_path.join("Номенклатура.xml"), r#"<?xml version="1.0" encoding="UTF-8"?>
+        fs::write(
+            catalog_path.join("Номенклатура.xml"),
+            r#"<?xml version="1.0" encoding="UTF-8"?>
 <MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" name="Номенклатура">
     <Properties><Name>Номенклатура</Name></Properties>
-</MetaDataObject>"#).unwrap();
-        
+</MetaDataObject>"#,
+        )
+        .unwrap();
+
         // Форма элемента
         let form_path = catalog_path.join("Forms").join("ФормаЭлемента").join("Ext");
         fs::create_dir_all(&form_path).unwrap();
         fs::write(form_path.join("Form.xml"), create_test_form_xml()).unwrap();
-        
+
         // Общая форма
-        let common_form_path = config_path.join("CommonForms").join("ВыборПериода").join("Ext");
+        let common_form_path = config_path
+            .join("CommonForms")
+            .join("ВыборПериода")
+            .join("Ext");
         fs::create_dir_all(&common_form_path).unwrap();
-        fs::write(common_form_path.join("Form.xml"), r#"<?xml version="1.0" encoding="UTF-8"?>
+        fs::write(
+            common_form_path.join("Form.xml"),
+            r#"<?xml version="1.0" encoding="UTF-8"?>
 <Form xmlns="http://v8.1c.ru/8.3/xcf/logform" version="2.15">
     <Commands>
         <Command name="Выбрать" id="1">
@@ -139,8 +149,10 @@ mod tests {
             <CommandName>Выбрать</CommandName>
         </Button>
     </Items>
-</Form>"#).unwrap();
-        
+</Form>"#,
+        )
+        .unwrap();
+
         config_path
     }
 
@@ -148,84 +160,103 @@ mod tests {
     fn test_parse_forms_integration() {
         let temp_dir = TempDir::new().unwrap();
         let config_path = create_test_config(&temp_dir);
-        
+
         let parser = ConfigurationXmlParser::new(&config_path);
         let entities = parser.parse_configuration().unwrap();
-        
+
         // Проверяем, что формы были найдены
-        let form_entities: Vec<_> = entities.iter()
+        let form_entities: Vec<_> = entities
+            .iter()
             .filter(|e| e.entity_type == BslEntityType::Form)
             .collect();
-        
+
         assert_eq!(form_entities.len(), 2, "Должны быть найдены 2 формы");
-        
+
         // Проверяем форму справочника
-        let catalog_form = form_entities.iter()
+        let catalog_form = form_entities
+            .iter()
             .find(|e| e.qualified_name.contains("Номенклатура.Form.ФормаЭлемента"))
             .expect("Форма справочника должна быть найдена");
-        
+
         assert_eq!(catalog_form.display_name, "ФормаЭлемента");
         assert_eq!(catalog_form.entity_kind, BslEntityKind::ManagedForm);
-        
+
         // Проверяем команды формы
         assert!(catalog_form.interface.methods.contains_key("Записать"));
-        assert!(catalog_form.interface.methods.contains_key("ЗаписатьИЗакрыть"));
-        
+        assert!(catalog_form
+            .interface
+            .methods
+            .contains_key("ЗаписатьИЗакрыть"));
+
         // Проверяем элементы формы в extended_data
-        let form_items = catalog_form.extended_data.get("form_items")
+        let form_items = catalog_form
+            .extended_data
+            .get("form_items")
             .expect("Должны быть сохранены элементы формы");
-        
+
         if let serde_json::Value::Array(items) = form_items {
             assert!(items.len() > 0, "Должны быть элементы формы");
-            
+
             // Проверяем наличие конкретных элементов
-            let items_str: Vec<String> = items.iter()
+            let items_str: Vec<String> = items
+                .iter()
                 .filter_map(|v| v.as_str().map(|s| s.to_string()))
                 .collect();
-            
+
             assert!(items_str.iter().any(|s| s.contains("Код")));
             assert!(items_str.iter().any(|s| s.contains("Наименование")));
-            assert!(items_str.iter().any(|s| s.contains("ТаблицаХарактеристики")));
+            assert!(items_str
+                .iter()
+                .any(|s| s.contains("ТаблицаХарактеристики")));
         }
-        
+
         // Проверяем общую форму
-        let common_form = form_entities.iter()
+        let common_form = form_entities
+            .iter()
             .find(|e| e.qualified_name.contains("ОбщиеФормы.Form.ВыборПериода"))
             .expect("Общая форма должна быть найдена");
-        
+
         assert!(common_form.interface.methods.contains_key("Выбрать"));
         assert!(common_form.interface.methods.contains_key("Отмена"));
     }
-    
+
     #[test]
     fn test_form_xml_parsing_details() {
         let temp_dir = TempDir::new().unwrap();
         let form_xml_path = temp_dir.path().join("Form.xml");
         fs::write(&form_xml_path, create_test_form_xml()).unwrap();
-        
+
         let parser = ConfigurationXmlParser::new(temp_dir.path());
-        let form_entity = parser.parse_form_xml(&form_xml_path, "Справочники.Номенклатура", "ФормаЭлемента").unwrap();
-        
+        let form_entity = parser
+            .parse_form_xml(&form_xml_path, "Справочники.Номенклатура", "ФормаЭлемента")
+            .unwrap();
+
         // Проверяем базовые свойства
         assert_eq!(form_entity.display_name, "ФормаЭлемента");
-        assert_eq!(form_entity.qualified_name, "Справочники.Номенклатура.Form.ФормаЭлемента");
+        assert_eq!(
+            form_entity.qualified_name,
+            "Справочники.Номенклатура.Form.ФормаЭлемента"
+        );
         assert_eq!(form_entity.entity_type, BslEntityType::Form);
-        
+
         // Проверяем owner relationship
-        assert_eq!(form_entity.relationships.owner, Some("Справочники.Номенклатура".to_string()));
-        
+        assert_eq!(
+            form_entity.relationships.owner,
+            Some("Справочники.Номенклатура".to_string())
+        );
+
         // Проверяем команды
         let commands: Vec<_> = form_entity.interface.methods.keys().collect();
         assert_eq!(commands.len(), 2);
         assert!(commands.contains(&&"Записать".to_string()));
         assert!(commands.contains(&&"ЗаписатьИЗакрыть".to_string()));
-        
+
         // Проверяем методы-команды
         let save_method = &form_entity.interface.methods["Записать"];
         assert_eq!(save_method.name, "Записать");
         assert_eq!(save_method.availability, vec![BslContext::Client]);
         assert!(!save_method.is_function);
-        
+
         // Проверяем элементы формы
         let form_items = form_entity.extended_data.get("form_items").unwrap();
         if let serde_json::Value::Array(items) = form_items {

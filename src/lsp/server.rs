@@ -4,26 +4,26 @@
 Модернизированный LSP сервер с UnifiedBslIndex интеграцией.
 
 ## Возможности v2.0
-- UnifiedBslIndex для поиска типов и методов 
+- UnifiedBslIndex для поиска типов и методов
 - Real-time диагностика через BslAnalyzer
 - Enhanced автодополнение с документацией
 - Hover подсказки из единого индекса BSL типов
 - Go-to-definition для объектов конфигурации
 */
 
-use crate::unified_index::{UnifiedBslIndex, UnifiedIndexBuilder, BslApplicationMode};
-use crate::bsl_parser::{BslAnalyzer, AnalysisConfig};
+use crate::bsl_parser::{AnalysisConfig, BslAnalyzer};
 use crate::lsp::diagnostics::{convert_analysis_results, create_analysis_error_diagnostic};
+use crate::unified_index::{BslApplicationMode, UnifiedBslIndex, UnifiedIndexBuilder};
 use anyhow::Result;
 use std::collections::HashMap;
-use std::sync::Arc;
 use std::env;
 use std::path::PathBuf;
+use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_lsp::lsp_types::*;
 use tower_lsp::lsp_types::{
-    DocumentDiagnosticParams, DocumentDiagnosticReportResult, DocumentDiagnosticReport,
-    RelatedFullDocumentDiagnosticReport, FullDocumentDiagnosticReport,
+    DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportResult,
+    FullDocumentDiagnosticReport, RelatedFullDocumentDiagnosticReport,
 };
 use tower_lsp::{Client, LanguageServer};
 
@@ -55,9 +55,9 @@ struct DocumentInfo {
 impl BslLanguageServer {
     pub fn new(client: Client) -> Self {
         // Определяем уровень анализа из переменной окружения или используем по умолчанию
-        let analysis_level = env::var("BSL_ANALYSIS_LEVEL")
-            .unwrap_or_else(|_| "semantic".to_string());
-        
+        let analysis_level =
+            env::var("BSL_ANALYSIS_LEVEL").unwrap_or_else(|_| "semantic".to_string());
+
         let config = match analysis_level.to_lowercase().as_str() {
             "syntax" => AnalysisConfig::syntax_only(),
             "semantic" => AnalysisConfig::semantic(),
@@ -65,11 +65,12 @@ impl BslLanguageServer {
             "full" => AnalysisConfig::full(),
             _ => AnalysisConfig::semantic(), // По умолчанию семантический анализ
         };
-        
+
         Self {
             client,
             unified_index: Arc::new(RwLock::new(None)),
-            platform_version: env::var("BSL_PLATFORM_VERSION").unwrap_or_else(|_| "8.3.25".to_string()),
+            platform_version: env::var("BSL_PLATFORM_VERSION")
+                .unwrap_or_else(|_| "8.3.25".to_string()),
             documents: Arc::new(RwLock::new(HashMap::new())),
             analysis_config: Arc::new(RwLock::new(config)),
         }
@@ -83,7 +84,10 @@ impl BslLanguageServer {
             .map_err(|_| anyhow::anyhow!("Invalid workspace URI"))?;
 
         self.client
-            .log_message(MessageType::INFO, format!("Loading BSL index from: {}", workspace_path.display()))
+            .log_message(
+                MessageType::INFO,
+                format!("Loading BSL index from: {}", workspace_path.display()),
+            )
             .await;
 
         // Поиск конфигурации в workspace
@@ -102,30 +106,48 @@ impl BslLanguageServer {
             Ok(b) => b.with_application_mode(BslApplicationMode::ManagedApplication),
             Err(e) => {
                 self.client
-                    .log_message(MessageType::WARNING, format!("Failed to create index builder: {}. BSL features will be limited.", e))
+                    .log_message(
+                        MessageType::WARNING,
+                        format!(
+                            "Failed to create index builder: {}. BSL features will be limited.",
+                            e
+                        ),
+                    )
                     .await;
                 return Ok(()); // Продолжаем работу без индекса
             }
         };
 
-        match builder.build_index(config_path.to_str().unwrap_or_default(), &self.platform_version) {
+        match builder.build_index(
+            config_path.to_str().unwrap_or_default(),
+            &self.platform_version,
+        ) {
             Ok(index) => {
                 let entity_count = index.get_entity_count();
-                
+
                 self.client
-                    .log_message(MessageType::INFO, format!("BSL index loaded: {} types", entity_count))
+                    .log_message(
+                        MessageType::INFO,
+                        format!("BSL index loaded: {} types", entity_count),
+                    )
                     .await;
 
                 self.client
-                    .show_message(MessageType::INFO, format!("BSL index ready: {} types loaded", entity_count))
+                    .show_message(
+                        MessageType::INFO,
+                        format!("BSL index ready: {} types loaded", entity_count),
+                    )
                     .await;
 
                 *self.unified_index.write().await = Some(index);
                 Ok(())
             }
             Err(e) => {
-                let error_msg = format!("Failed to build BSL index: {}. LSP will work with limited features.", e);
-                
+                let error_msg = format!(
+                    "Failed to build BSL index: {}. LSP will work with limited features.",
+                    e
+                );
+
                 self.client
                     .log_message(MessageType::WARNING, &error_msg)
                     .await;
@@ -146,25 +168,34 @@ impl BslLanguageServer {
         // Стандартные пути для конфигурации 1С
         let config_candidates = [
             workspace_path.join("Configuration.xml"),
-            workspace_path.join("src").join("Configuration.xml"),  
+            workspace_path.join("src").join("Configuration.xml"),
             workspace_path.join("metadata").join("Configuration.xml"),
             workspace_path.join("conf").join("Configuration.xml"),
-            workspace_path.join("examples").join("ConfTest").join("Configuration.xml"), // Для тестов
+            workspace_path
+                .join("examples")
+                .join("ConfTest")
+                .join("Configuration.xml"), // Для тестов
         ];
 
         for candidate in &config_candidates {
             if candidate.exists() {
                 self.client
-                    .log_message(MessageType::INFO, format!("Found configuration: {}", candidate.display()))
+                    .log_message(
+                        MessageType::INFO,
+                        format!("Found configuration: {}", candidate.display()),
+                    )
                     .await;
-                
+
                 return Ok(candidate.parent().unwrap_or(workspace_path).to_path_buf());
             }
         }
 
         // Если не найдена конфигурация, используем workspace как есть
         self.client
-            .log_message(MessageType::WARNING, "No Configuration.xml found, using workspace root")
+            .log_message(
+                MessageType::WARNING,
+                "No Configuration.xml found, using workspace root",
+            )
             .await;
 
         Ok(workspace_path.to_path_buf())
@@ -176,10 +207,10 @@ impl BslLanguageServer {
 
         // Получаем конфигурацию анализа
         let config = self.analysis_config.read().await.clone();
-        
+
         // Проверяем что UnifiedBslIndex загружен
         let index_guard = self.unified_index.read().await;
-        
+
         // Создаем анализатор с или без индекса
         let mut analyzer = match &*index_guard {
             Some(idx) => {
@@ -189,8 +220,14 @@ impl BslLanguageServer {
                     Err(e) => {
                         let diagnostic = Diagnostic {
                             range: Range {
-                                start: Position { line: 0, character: 0 },
-                                end: Position { line: 0, character: 0 },
+                                start: Position {
+                                    line: 0,
+                                    character: 0,
+                                },
+                                end: Position {
+                                    line: 0,
+                                    character: 0,
+                                },
                             },
                             severity: Some(DiagnosticSeverity::ERROR),
                             code: Some(NumberOrString::String("BSL001".to_string())),
@@ -213,8 +250,14 @@ impl BslLanguageServer {
                     Err(e) => {
                         let diagnostic = Diagnostic {
                             range: Range {
-                                start: Position { line: 0, character: 0 },
-                                end: Position { line: 0, character: 0 },
+                                start: Position {
+                                    line: 0,
+                                    character: 0,
+                                },
+                                end: Position {
+                                    line: 0,
+                                    character: 0,
+                                },
                             },
                             severity: Some(DiagnosticSeverity::ERROR),
                             code: Some(NumberOrString::String("BSL001".to_string())),
@@ -233,8 +276,8 @@ impl BslLanguageServer {
         };
 
         // Выполняем анализ с конфигурацией
-        let file_name = uri.path().split('/').last().unwrap_or("unknown.bsl");
-        
+        let file_name = uri.path().split('/').next_back().unwrap_or("unknown.bsl");
+
         match analyzer.analyze_code(text, file_name) {
             Ok(()) => {
                 let (errors, warnings) = analyzer.get_errors_and_warnings();
@@ -253,7 +296,10 @@ impl BslLanguageServer {
                             },
                         },
                         severity: Some(DiagnosticSeverity::ERROR),
-                        code: error.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
+                        code: error
+                            .error_code
+                            .as_ref()
+                            .map(|c| NumberOrString::String(c.clone())),
                         code_description: None,
                         source: Some("bsl-analyzer".to_string()),
                         message: error.message,
@@ -278,7 +324,10 @@ impl BslLanguageServer {
                             },
                         },
                         severity: Some(DiagnosticSeverity::WARNING),
-                        code: warning.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
+                        code: warning
+                            .error_code
+                            .as_ref()
+                            .map(|c| NumberOrString::String(c.clone())),
                         code_description: None,
                         source: Some("bsl-analyzer".to_string()),
                         message: warning.message,
@@ -292,8 +341,14 @@ impl BslLanguageServer {
             Err(e) => {
                 let diagnostic = Diagnostic {
                     range: Range {
-                        start: Position { line: 0, character: 0 },
-                        end: Position { line: 0, character: 0 },
+                        start: Position {
+                            line: 0,
+                            character: 0,
+                        },
+                        end: Position {
+                            line: 0,
+                            character: 0,
+                        },
                     },
                     severity: Some(DiagnosticSeverity::ERROR),
                     code: Some(NumberOrString::String("BSL000".to_string())),
@@ -312,7 +367,11 @@ impl BslLanguageServer {
     }
 
     /// Enhanced completion с UnifiedBslIndex
-    async fn provide_enhanced_completion(&self, position: Position, text: &str) -> Result<Vec<CompletionItem>> {
+    async fn provide_enhanced_completion(
+        &self,
+        position: Position,
+        text: &str,
+    ) -> Result<Vec<CompletionItem>> {
         let mut completions = Vec::new();
 
         // Получаем контекст для анализа
@@ -323,10 +382,14 @@ impl BslLanguageServer {
         let index_guard = self.unified_index.read().await;
         if let Some(index) = &*index_guard {
             // Автодополнение типов из UnifiedBslIndex
-            if line_prefix.ends_with('.') || line_prefix.contains("Справочники.") || line_prefix.contains("Документы.") {
+            if line_prefix.ends_with('.')
+                || line_prefix.contains("Справочники.")
+                || line_prefix.contains("Документы.")
+            {
                 // Предлагаем объекты конфигурации
                 let entities = index.get_all_entities();
-                for entity in entities.iter().take(50) { // Ограничиваем количество для производительности
+                for entity in entities.iter().take(50) {
+                    // Ограничиваем количество для производительности
                     if format!("{:?}", entity.entity_type).contains("Configuration") {
                         let completion = CompletionItem {
                             label: entity.display_name.clone(),
@@ -350,13 +413,19 @@ impl BslLanguageServer {
             // Автодополнение глобальных функций
             if let Some(global_entity) = index.find_entity("Global") {
                 for (method_name, method) in &global_entity.interface.methods {
-                    if method_name.to_lowercase().contains(&line_prefix.to_lowercase()) 
-                        || line_prefix.is_empty() {
+                    if method_name
+                        .to_lowercase()
+                        .contains(&line_prefix.to_lowercase())
+                        || line_prefix.is_empty()
+                    {
                         let completion = CompletionItem {
                             label: method_name.clone(),
                             kind: Some(CompletionItemKind::FUNCTION),
                             detail: method.return_type.as_ref().map(|t| format!("-> {}", t)),
-                            documentation: method.documentation.as_ref().map(|d| Documentation::String(d.clone())),
+                            documentation: method
+                                .documentation
+                                .as_ref()
+                                .map(|d| Documentation::String(d.clone())),
                             insert_text: Some(format!("{}()", method_name)),
                             ..Default::default()
                         };
@@ -368,16 +437,39 @@ impl BslLanguageServer {
 
         // Базовые ключевые слова BSL
         let bsl_keywords = [
-            "Процедура", "Функция", "КонецПроцедуры", "КонецФункции",
-            "Если", "Тогда", "Иначе", "КонецЕсли", 
-            "Для", "Каждого", "Из", "По", "Цикл", "КонецЦикла",
-            "Пока", "КонецЦикла", "Прервать", "Продолжить",
-            "Попытка", "Исключение", "КонецПопытки", "ВызватьИсключение",
-            "Истина", "Ложь", "Неопределено", "NULL",
+            "Процедура",
+            "Функция",
+            "КонецПроцедуры",
+            "КонецФункции",
+            "Если",
+            "Тогда",
+            "Иначе",
+            "КонецЕсли",
+            "Для",
+            "Каждого",
+            "Из",
+            "По",
+            "Цикл",
+            "КонецЦикла",
+            "Пока",
+            "КонецЦикла",
+            "Прервать",
+            "Продолжить",
+            "Попытка",
+            "Исключение",
+            "КонецПопытки",
+            "ВызватьИсключение",
+            "Истина",
+            "Ложь",
+            "Неопределено",
+            "NULL",
         ];
 
         for keyword in &bsl_keywords {
-            if keyword.to_lowercase().starts_with(&line_prefix.to_lowercase()) {
+            if keyword
+                .to_lowercase()
+                .starts_with(&line_prefix.to_lowercase())
+            {
                 let completion = CompletionItem {
                     label: keyword.to_string(),
                     kind: Some(CompletionItemKind::KEYWORD),
@@ -395,7 +487,7 @@ impl BslLanguageServer {
     async fn provide_enhanced_hover(&self, position: Position, text: &str) -> Option<Hover> {
         let lines: Vec<&str> = text.lines().collect();
         let line = lines.get(position.line as usize)?;
-        
+
         // Извлекаем слово под курсором
         let char_pos = position.character as usize;
         let word = self.extract_word_at_position(line, char_pos);
@@ -432,7 +524,10 @@ impl BslLanguageServer {
                     let hover_content = format!(
                         "**{}** (функция)\n\n{}\n\n**Возвращает:** {}",
                         word,
-                        method.documentation.as_deref().unwrap_or("Глобальная функция 1С"),
+                        method
+                            .documentation
+                            .as_deref()
+                            .unwrap_or("Глобальная функция 1С"),
                         method.return_type.as_deref().unwrap_or("Произвольный")
                     );
 
@@ -477,7 +572,10 @@ impl BslLanguageServer {
 
 #[tower_lsp::async_trait]
 impl LanguageServer for BslLanguageServer {
-    async fn initialize(&self, params: InitializeParams) -> tower_lsp::jsonrpc::Result<InitializeResult> {
+    async fn initialize(
+        &self,
+        params: InitializeParams,
+    ) -> tower_lsp::jsonrpc::Result<InitializeResult> {
         tracing::info!("Initializing Enhanced BSL Language Server v2.0");
 
         // Отложенная инициализация UnifiedBslIndex - не блокируем запуск сервера
@@ -528,7 +626,10 @@ impl LanguageServer for BslLanguageServer {
         tracing::info!("Enhanced BSL LSP Server v2.0 initialized successfully");
 
         self.client
-            .log_message(MessageType::INFO, "Enhanced BSL Language Server v2.0 ready with UnifiedBslIndex")
+            .log_message(
+                MessageType::INFO,
+                "Enhanced BSL Language Server v2.0 ready with UnifiedBslIndex",
+            )
             .await;
     }
 
@@ -536,7 +637,10 @@ impl LanguageServer for BslLanguageServer {
         tracing::debug!("Document opened: {}", params.text_document.uri);
 
         // Real-time анализ документа
-        match self.analyze_document(&params.text_document.uri, &params.text_document.text).await {
+        match self
+            .analyze_document(&params.text_document.uri, &params.text_document.text)
+            .await
+        {
             Ok(diagnostics) => {
                 // Сохраняем состояние документа
                 let doc_info = DocumentInfo {
@@ -546,11 +650,18 @@ impl LanguageServer for BslLanguageServer {
                     diagnostics: diagnostics.clone(),
                 };
 
-                self.documents.write().await.insert(params.text_document.uri.clone(), doc_info);
+                self.documents
+                    .write()
+                    .await
+                    .insert(params.text_document.uri.clone(), doc_info);
 
                 // Отправляем диагностику клиенту
                 self.client
-                    .publish_diagnostics(params.text_document.uri, diagnostics, Some(params.text_document.version))
+                    .publish_diagnostics(
+                        params.text_document.uri,
+                        diagnostics,
+                        Some(params.text_document.version),
+                    )
                     .await;
             }
             Err(e) => {
@@ -564,10 +675,18 @@ impl LanguageServer for BslLanguageServer {
             tracing::debug!("Document changed: {}", params.text_document.uri);
 
             // Real-time анализ изменений
-            match self.analyze_document(&params.text_document.uri, &change.text).await {
+            match self
+                .analyze_document(&params.text_document.uri, &change.text)
+                .await
+            {
                 Ok(diagnostics) => {
                     // Обновляем состояние документа
-                    if let Some(doc_info) = self.documents.write().await.get_mut(&params.text_document.uri) {
+                    if let Some(doc_info) = self
+                        .documents
+                        .write()
+                        .await
+                        .get_mut(&params.text_document.uri)
+                    {
                         doc_info.version = params.text_document.version;
                         doc_info.text = change.text.clone();
                         doc_info.diagnostics = diagnostics.clone();
@@ -575,7 +694,11 @@ impl LanguageServer for BslLanguageServer {
 
                     // Отправляем обновленную диагностику
                     self.client
-                        .publish_diagnostics(params.text_document.uri, diagnostics, Some(params.text_document.version))
+                        .publish_diagnostics(
+                            params.text_document.uri,
+                            diagnostics,
+                            Some(params.text_document.version),
+                        )
                         .await;
                 }
                 Err(e) => {
@@ -589,7 +712,10 @@ impl LanguageServer for BslLanguageServer {
         tracing::debug!("Document closed: {}", params.text_document.uri);
 
         // Удаляем документ из кеша
-        self.documents.write().await.remove(&params.text_document.uri);
+        self.documents
+            .write()
+            .await
+            .remove(&params.text_document.uri);
 
         // Очищаем диагностику
         self.client
@@ -600,7 +726,7 @@ impl LanguageServer for BslLanguageServer {
     async fn did_change_configuration(&self, _params: DidChangeConfigurationParams) {
         // Обрабатываем изменение конфигурации
         tracing::debug!("Configuration changed, handling update...");
-        
+
         // TODO: В будущем здесь можно перезагрузить настройки анализатора
         // Пока просто логируем для устранения предупреждения
         self.client
@@ -608,12 +734,18 @@ impl LanguageServer for BslLanguageServer {
             .await;
     }
 
-    async fn completion(&self, params: CompletionParams) -> tower_lsp::jsonrpc::Result<Option<CompletionResponse>> {
+    async fn completion(
+        &self,
+        params: CompletionParams,
+    ) -> tower_lsp::jsonrpc::Result<Option<CompletionResponse>> {
         let uri = &params.text_document_position.text_document.uri;
         let position = params.text_document_position.position;
 
         if let Some(doc_info) = self.documents.read().await.get(uri) {
-            match self.provide_enhanced_completion(position, &doc_info.text).await {
+            match self
+                .provide_enhanced_completion(position, &doc_info.text)
+                .await
+            {
                 Ok(completions) => Ok(Some(CompletionResponse::Array(completions))),
                 Err(e) => {
                     tracing::error!("Failed to provide completion: {}", e);
@@ -636,12 +768,15 @@ impl LanguageServer for BslLanguageServer {
         }
     }
 
-    async fn execute_command(&self, params: ExecuteCommandParams) -> tower_lsp::jsonrpc::Result<Option<serde_json::Value>> {
+    async fn execute_command(
+        &self,
+        params: ExecuteCommandParams,
+    ) -> tower_lsp::jsonrpc::Result<Option<serde_json::Value>> {
         tracing::info!("Executing command: {}", params.command);
 
         match params.command.as_str() {
             "bslAnalyzer.lsp.analyzeFile" => {
-                if let Some(uri_value) = params.arguments.get(0) {
+                if let Some(uri_value) = params.arguments.first() {
                     if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
                         if let Ok(uri) = Url::parse(&uri_str) {
                             self.analyze_file_command(uri).await?;
@@ -649,10 +784,12 @@ impl LanguageServer for BslLanguageServer {
                         }
                     }
                 }
-                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid file URI"))
+                Err(tower_lsp::jsonrpc::Error::invalid_params(
+                    "Invalid file URI",
+                ))
             }
             "bslAnalyzer.lsp.analyzeWorkspace" => {
-                if let Some(uri_value) = params.arguments.get(0) {
+                if let Some(uri_value) = params.arguments.first() {
                     if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {
                         if let Ok(uri) = Url::parse(&uri_str) {
                             self.analyze_workspace_command(uri).await?;
@@ -660,7 +797,9 @@ impl LanguageServer for BslLanguageServer {
                         }
                     }
                 }
-                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid workspace URI"))
+                Err(tower_lsp::jsonrpc::Error::invalid_params(
+                    "Invalid workspace URI",
+                ))
             }
             _ => {
                 tracing::warn!("Unknown command: {}", params.command);
@@ -669,80 +808,88 @@ impl LanguageServer for BslLanguageServer {
         }
     }
 
-    async fn diagnostic(&self, params: DocumentDiagnosticParams) -> tower_lsp::jsonrpc::Result<DocumentDiagnosticReportResult> {
-        tracing::debug!("Pull-based diagnostic request for: {}", params.text_document.uri);
-        
+    async fn diagnostic(
+        &self,
+        params: DocumentDiagnosticParams,
+    ) -> tower_lsp::jsonrpc::Result<DocumentDiagnosticReportResult> {
+        tracing::debug!(
+            "Pull-based diagnostic request for: {}",
+            params.text_document.uri
+        );
+
         // Получаем содержимое документа из кеша или пытаемся прочитать с диска
-        let document_text = if let Some(doc_info) = self.documents.read().await.get(&params.text_document.uri) {
-            doc_info.text.clone()
-        } else {
-            // Если документ не в кеше, пытаемся прочитать с диска
-            match params.text_document.uri.to_file_path() {
-                Ok(file_path) => {
-                    match tokio::fs::read_to_string(&file_path).await {
-                        Ok(content) => content,
-                        Err(_) => {
-                            // Не можем прочитать файл - возвращаем пустую диагностику
-                            return Ok(DocumentDiagnosticReportResult::Report(
-                                DocumentDiagnosticReport::Full(
-                                    RelatedFullDocumentDiagnosticReport {
-                                        related_documents: None,
-                                        full_document_diagnostic_report: FullDocumentDiagnosticReport {
-                                            result_id: None,
-                                            items: vec![],
+        let document_text =
+            if let Some(doc_info) = self.documents.read().await.get(&params.text_document.uri) {
+                doc_info.text.clone()
+            } else {
+                // Если документ не в кеше, пытаемся прочитать с диска
+                match params.text_document.uri.to_file_path() {
+                    Ok(file_path) => {
+                        match tokio::fs::read_to_string(&file_path).await {
+                            Ok(content) => content,
+                            Err(_) => {
+                                // Не можем прочитать файл - возвращаем пустую диагностику
+                                return Ok(DocumentDiagnosticReportResult::Report(
+                                    DocumentDiagnosticReport::Full(
+                                        RelatedFullDocumentDiagnosticReport {
+                                            related_documents: None,
+                                            full_document_diagnostic_report:
+                                                FullDocumentDiagnosticReport {
+                                                    result_id: None,
+                                                    items: vec![],
+                                                },
                                         },
-                                    }
-                                )
-                            ));
+                                    ),
+                                ));
+                            }
                         }
                     }
-                }
-                Err(_) => {
-                    // Некорректный URI - возвращаем пустую диагностику
-                    return Ok(DocumentDiagnosticReportResult::Report(
-                        DocumentDiagnosticReport::Full(
-                            RelatedFullDocumentDiagnosticReport {
+                    Err(_) => {
+                        // Некорректный URI - возвращаем пустую диагностику
+                        return Ok(DocumentDiagnosticReportResult::Report(
+                            DocumentDiagnosticReport::Full(RelatedFullDocumentDiagnosticReport {
                                 related_documents: None,
                                 full_document_diagnostic_report: FullDocumentDiagnosticReport {
                                     result_id: None,
                                     items: vec![],
                                 },
-                            }
-                        )
-                    ));
+                            }),
+                        ));
+                    }
                 }
-            }
-        };
+            };
 
         // Выполняем анализ документа
-        match self.analyze_document(&params.text_document.uri, &document_text).await {
+        match self
+            .analyze_document(&params.text_document.uri, &document_text)
+            .await
+        {
             Ok(diagnostics) => {
-                tracing::debug!("Pull-based diagnostic completed: {} items", diagnostics.len());
+                tracing::debug!(
+                    "Pull-based diagnostic completed: {} items",
+                    diagnostics.len()
+                );
                 Ok(DocumentDiagnosticReportResult::Report(
-                    DocumentDiagnosticReport::Full(
-                        RelatedFullDocumentDiagnosticReport {
-                            related_documents: None,
-                            full_document_diagnostic_report: FullDocumentDiagnosticReport {
-                                result_id: None,
-                                items: diagnostics,
-                            },
-                        }
-                    )
+                    DocumentDiagnosticReport::Full(RelatedFullDocumentDiagnosticReport {
+                        related_documents: None,
+                        full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                            result_id: None,
+                            items: diagnostics,
+                        },
+                    }),
                 ))
             }
             Err(e) => {
                 tracing::error!("Pull-based diagnostic analysis failed: {}", e);
                 // В случае ошибки анализа возвращаем пустую диагностику, а не ошибку
                 Ok(DocumentDiagnosticReportResult::Report(
-                    DocumentDiagnosticReport::Full(
-                        RelatedFullDocumentDiagnosticReport {
-                            related_documents: None,
-                            full_document_diagnostic_report: FullDocumentDiagnosticReport {
-                                result_id: None,
-                                items: vec![],
-                            },
-                        }
-                    )
+                    DocumentDiagnosticReport::Full(RelatedFullDocumentDiagnosticReport {
+                        related_documents: None,
+                        full_document_diagnostic_report: FullDocumentDiagnosticReport {
+                            result_id: None,
+                            items: vec![],
+                        },
+                    }),
                 ))
             }
         }
@@ -766,8 +913,10 @@ impl BslLanguageServer {
             match self.analyze_bsl_content(&doc_info.text).await {
                 Ok(diagnostics) => {
                     // Отправляем диагностики клиенту
-                    self.client.publish_diagnostics(uri.clone(), diagnostics, Some(doc_info.version)).await;
-                    
+                    self.client
+                        .publish_diagnostics(uri.clone(), diagnostics, Some(doc_info.version))
+                        .await;
+
                     self.client
                         .show_message(MessageType::INFO, "File analysis completed successfully")
                         .await;
@@ -775,7 +924,7 @@ impl BslLanguageServer {
                 Err(e) => {
                     let error_msg = format!("Analysis failed: {}", e);
                     tracing::error!("{}", error_msg);
-                    
+
                     self.client
                         .show_message(MessageType::ERROR, &error_msg)
                         .await;
@@ -785,29 +934,32 @@ impl BslLanguageServer {
             // Файл не открыт в редакторе - попробуем прочитать с диска
             if let Ok(file_path) = uri.to_file_path() {
                 match tokio::fs::read_to_string(&file_path).await {
-                    Ok(content) => {
-                        match self.analyze_bsl_content(&content).await {
-                            Ok(diagnostics) => {
-                                self.client.publish_diagnostics(uri.clone(), diagnostics, None).await;
-                                
-                                self.client
-                                    .show_message(MessageType::INFO, "File analysis completed successfully")
-                                    .await;
-                            }
-                            Err(e) => {
-                                let error_msg = format!("Analysis failed: {}", e);
-                                tracing::error!("{}", error_msg);
-                                
-                                self.client
-                                    .show_message(MessageType::ERROR, &error_msg)
-                                    .await;
-                            }
+                    Ok(content) => match self.analyze_bsl_content(&content).await {
+                        Ok(diagnostics) => {
+                            self.client
+                                .publish_diagnostics(uri.clone(), diagnostics, None)
+                                .await;
+
+                            self.client
+                                .show_message(
+                                    MessageType::INFO,
+                                    "File analysis completed successfully",
+                                )
+                                .await;
                         }
-                    }
+                        Err(e) => {
+                            let error_msg = format!("Analysis failed: {}", e);
+                            tracing::error!("{}", error_msg);
+
+                            self.client
+                                .show_message(MessageType::ERROR, &error_msg)
+                                .await;
+                        }
+                    },
                     Err(e) => {
                         let error_msg = format!("Failed to read file: {}", e);
                         tracing::error!("{}", error_msg);
-                        
+
                         self.client
                             .show_message(MessageType::ERROR, &error_msg)
                             .await;
@@ -820,7 +972,10 @@ impl BslLanguageServer {
     }
 
     /// Обработка команды анализа workspace
-    async fn analyze_workspace_command(&self, workspace_uri: Url) -> tower_lsp::jsonrpc::Result<()> {
+    async fn analyze_workspace_command(
+        &self,
+        workspace_uri: Url,
+    ) -> tower_lsp::jsonrpc::Result<()> {
         tracing::info!("Analyzing workspace: {}", workspace_uri);
 
         self.client
@@ -829,7 +984,7 @@ impl BslLanguageServer {
 
         // TODO: Реализовать полный анализ workspace
         // Найти все .bsl файлы в workspace и проанализировать их
-        
+
         self.client
             .show_message(MessageType::INFO, "Workspace analysis completed")
             .await;
@@ -842,26 +997,26 @@ impl BslLanguageServer {
         // Получаем конфигурацию и индекс
         let config = self.analysis_config.read().await.clone();
         let index_guard = self.unified_index.read().await;
-        
+
         // Создаем анализатор
         let mut analyzer = match &*index_guard {
             Some(idx) => BslAnalyzer::with_index_and_config(idx.clone(), config)?,
             None => BslAnalyzer::with_config(config)?,
         };
-        
+
         // Анализируем код
         if let Err(e) = analyzer.analyze_code(content, "lsp_temp.bsl") {
             // Если анализ не удался, возвращаем ошибку как диагностику
             return Ok(vec![create_analysis_error_diagnostic(
                 format!("Analysis error: {}", e),
-                "BSL000"
+                "BSL000",
             )]);
         }
 
         // Получаем результаты анализа и конвертируем в LSP диагностику
         let (errors, warnings) = analyzer.get_errors_and_warnings();
         let diagnostics = convert_analysis_results(errors, warnings);
-        
+
         Ok(diagnostics)
     }
 }

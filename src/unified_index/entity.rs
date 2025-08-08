@@ -1,13 +1,18 @@
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// <entity-type>
 ///   <name>BslEntityId</name>
 ///   <purpose>Уникальный идентификатор BSL сущности</purpose>
 ///   <usage>
-///     <example>
-///       let id = BslEntityId("Справочники.Номенклатура".to_string());
-///     </example>
+/// ```text
+/// &lt;example>
+/// ```rust,ignore
+/// let id = BslEntityId("Справочники.Номенклатура".to_string());
+/// ```
+///
+/// ```
+/// ```
 ///   </usage>
 /// </entity-type>
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -56,7 +61,7 @@ pub enum BslEntityType {
 pub enum BslEntityKind {
     // Примитивные типы
     Primitive,
-    
+
     // Коллекции
     Array,
     Structure,
@@ -64,7 +69,7 @@ pub enum BslEntityKind {
     ValueList,
     ValueTable,
     ValueTree,
-    
+
     // Объекты конфигурации
     Catalog,
     Document,
@@ -83,12 +88,12 @@ pub enum BslEntityKind {
     Report,
     DataProcessor,
     DocumentJournal,
-    
+
     // Формы
     Form,
     ManagedForm,
     OrdinaryForm,
-    
+
     // Прочие
     CommonModule,
     SessionModule,
@@ -102,11 +107,11 @@ pub enum BslEntityKind {
     RecordSetModule,
     ValueManagerModule,
     TabularSectionManagerModule,
-    
+
     // Системные
     System,
     Global,
-    
+
     // Другие
     Other(String),
 }
@@ -236,18 +241,20 @@ pub struct BslLifecycle {
 ///     платформенные типы, объекты конфигурации, формы и модули.
 ///   </description>
 ///   <usage>
-///     <example>
-///       // Поиск типа в индексе
-///       let entity = index.find_entity("Справочники.Номенклатура")?;
-///       
-///       // Проверка наличия метода
-///       if entity.has_method("Записать") {
-///           let method = &entity.interface.methods["Записать"];
-///       }
-///       
-///       // Получение всех свойств
-///       let properties = entity.get_all_property_names();
-///     </example>
+/// &lt;example>
+/// ```rust,ignore
+/// // Поиск типа в индексе
+/// let entity = index.find_entity("Справочники.Номенклатура")?;
+///
+/// // Проверка наличия метода
+/// if entity.has_method("Записать") {
+///     let method = &entity.interface.methods["Записать"];
+/// }
+///
+/// // Получение всех свойств
+/// let properties = entity.get_all_property_names();
+/// ```
+/// ```
 ///   </usage>
 ///   <fields>
 ///     <field name="id">Уникальный идентификатор</field>
@@ -263,36 +270,47 @@ pub struct BslEntity {
     pub qualified_name: String,
     pub display_name: String,
     pub english_name: Option<String>,
-    
+
     // Классификация
     pub entity_type: BslEntityType,
     pub entity_kind: BslEntityKind,
     pub source: BslEntitySource,
-    
+
     // Поведение
     pub interface: BslInterface,
     pub constraints: BslConstraints,
     pub relationships: BslRelationships,
-    
+
     // Метаданные
     pub documentation: Option<String>,
     pub availability: Vec<BslContext>,
     pub lifecycle: BslLifecycle,
-    
+
     // Расширенные данные для специфичной информации
     pub extended_data: serde_json::Map<String, serde_json::Value>,
 }
 
 impl BslEntity {
-    pub fn new(id: String, qualified_name: String, entity_type: BslEntityType, entity_kind: BslEntityKind) -> Self {
+    pub fn new(
+        id: String,
+        qualified_name: String,
+        entity_type: BslEntityType,
+        entity_kind: BslEntityKind,
+    ) -> Self {
         Self {
             id: BslEntityId(id),
             qualified_name: qualified_name.clone(),
-            display_name: qualified_name.split('.').last().unwrap_or(&qualified_name).to_string(),
+            display_name: qualified_name
+                .split('.')
+                .next_back()
+                .unwrap_or(&qualified_name)
+                .to_string(),
             english_name: None,
             entity_type,
             entity_kind,
-            source: BslEntitySource::ConfigurationXml { path: String::new() },
+            source: BslEntitySource::ConfigurationXml {
+                path: String::new(),
+            },
             interface: BslInterface::default(),
             constraints: BslConstraints::default(),
             relationships: BslRelationships::default(),
@@ -307,19 +325,23 @@ impl BslEntity {
             extended_data: serde_json::Map::new(),
         }
     }
-    
+
     pub fn get_all_method_names(&self) -> Vec<&str> {
         self.interface.methods.keys().map(|s| s.as_str()).collect()
     }
-    
+
     pub fn get_all_property_names(&self) -> Vec<&str> {
-        self.interface.properties.keys().map(|s| s.as_str()).collect()
+        self.interface
+            .properties
+            .keys()
+            .map(|s| s.as_str())
+            .collect()
     }
-    
+
     pub fn has_method(&self, method_name: &str) -> bool {
         self.interface.methods.contains_key(method_name)
     }
-    
+
     pub fn has_property(&self, property_name: &str) -> bool {
         self.interface.properties.contains_key(property_name)
     }

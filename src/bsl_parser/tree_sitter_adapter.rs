@@ -11,7 +11,14 @@ impl TreeSitterAdapter {
     pub fn new() -> Self {
         Self
     }
+}
 
+impl Default for TreeSitterAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+impl TreeSitterAdapter {
     /// Конвертирует tree-sitter дерево в наш AST
     pub fn convert_tree_to_ast(
         &self,
@@ -78,7 +85,7 @@ impl TreeSitterAdapter {
         node: Node,
         source: &str,
         file_path: &str,
-        _diagnostics: &mut Vec<Diagnostic>,
+        _diagnostics: &mut [Diagnostic],
     ) -> Option<BslAst> {
         let mut module = Module {
             directives: vec![],

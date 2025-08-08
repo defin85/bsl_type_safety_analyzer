@@ -7,8 +7,8 @@ Ported from Python implementation with all tokens, keywords, and error handling.
 
 use logos::Logos;
 use serde::{Deserialize, Serialize};
-use std::fmt;
 use std::collections::HashSet;
+use std::fmt;
 
 use super::ast::Position;
 
@@ -16,7 +16,7 @@ use super::ast::Position;
 /// Returns the content as UTF-8 string with BOM removed
 pub fn read_bsl_file<P: AsRef<std::path::Path>>(path: P) -> Result<String, std::io::Error> {
     let bytes = std::fs::read(path)?;
-    
+
     // Try to detect encoding and convert to UTF-8
     let content = if bytes.len() >= 2 {
         match (bytes[0], bytes[1]) {
@@ -54,11 +54,10 @@ pub fn read_bsl_file<P: AsRef<std::path::Path>>(path: P) -> Result<String, std::
             }
         }
     } else {
-        String::from_utf8(bytes).map_err(|e| {
-            std::io::Error::new(std::io::ErrorKind::InvalidData, e)
-        })?
+        String::from_utf8(bytes)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?
     };
-    
+
     // Remove BOM if present after encoding conversion
     Ok(strip_bom(&content).to_string())
 }
@@ -80,13 +79,13 @@ fn strip_bom(input: &str) -> &str {
             }
         }
     }
-    
+
     // Check for UTF-8 BOM bytes (EF BB BF)
     let bytes = input.as_bytes();
     if bytes.len() >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF {
         return &input[3..];
     }
-    
+
     // For UTF-16 BOMs, they should be handled at the encoding level
     // before the text reaches this function, but we can detect them
     if bytes.len() >= 2 {
@@ -94,12 +93,12 @@ fn strip_bom(input: &str) -> &str {
         if bytes[0] == 0xFF && bytes[1] == 0xFE {
             tracing::warn!("UTF-16LE BOM detected - file should be converted to UTF-8 first");
         }
-        // UTF-16BE BOM: FE FF  
+        // UTF-16BE BOM: FE FF
         else if bytes[0] == 0xFE && bytes[1] == 0xFF {
             tracing::warn!("UTF-16BE BOM detected - file should be converted to UTF-8 first");
         }
     }
-    
+
     input
 }
 
@@ -117,7 +116,7 @@ pub enum TokenType {
     Else,
     #[token("КонецЕсли", ignore(case))]
     EndIf,
-    
+
     // Keywords - Loops
     #[token("Для", ignore(case))]
     For,
@@ -137,7 +136,7 @@ pub enum TokenType {
     Break,
     #[token("Продолжить", ignore(case))]
     Continue,
-    
+
     // Keywords - Procedures and Functions
     #[token("Процедура", ignore(case))]
     Процедура,
@@ -151,13 +150,13 @@ pub enum TokenType {
     Return,
     #[token("Экспорт", ignore(case))]
     Export,
-    
+
     // Keywords - Variables and Types
     #[token("Перем", ignore(case))]
     Перем,
     #[token("Знач", ignore(case))]
     Val,
-    
+
     // Keywords - Exception Handling
     #[token("Попытка", ignore(case))]
     Попытка,
@@ -167,7 +166,7 @@ pub enum TokenType {
     КонецПопытки,
     #[token("ВызватьИсключение", ignore(case))]
     Raise,
-    
+
     // Keywords - Values
     #[token("Истина", ignore(case))]
     True,
@@ -177,8 +176,8 @@ pub enum TokenType {
     Undefined,
     #[token("Null", ignore(case))]
     Null,
-    
-    // Keywords - Operators  
+
+    // Keywords - Operators
     #[token("И", ignore(case))]
     And,
     #[token("Или", ignore(case))]
@@ -187,7 +186,7 @@ pub enum TokenType {
     Not,
     #[token("Новый", ignore(case))]
     New,
-    
+
     // Arithmetic operators
     #[token("+")]
     Plus,
@@ -199,7 +198,7 @@ pub enum TokenType {
     Divide,
     #[token("%")]
     Modulo,
-    
+
     // Comparison operators
     #[token("=")]
     Equal,
@@ -213,11 +212,11 @@ pub enum TokenType {
     LessEqual,
     #[token(">=")]
     GreaterEqual,
-    
+
     // Assignment
     #[token(":=")]
     Assign,
-    
+
     // Delimiters
     #[token("(")]
     LeftParen,
@@ -231,7 +230,7 @@ pub enum TokenType {
     LeftBrace,
     #[token("}")]
     RightBrace,
-    
+
     // Punctuation
     #[token(".")]
     Dot,
@@ -243,7 +242,7 @@ pub enum TokenType {
     Colon,
     #[token("?")]
     Question,
-    
+
     // Preprocessor directives
     #[token("&НаКлиенте", ignore(case))]
     AtClient,
@@ -261,7 +260,7 @@ pub enum TokenType {
     IfDef,
     #[token("&КонецЕсли", ignore(case))]
     EndIfDef,
-    
+
     // Literals
     #[regex(r#""([^"\\]|\\.)*""#)]
     StringLiteral,
@@ -271,21 +270,21 @@ pub enum TokenType {
     DateLiteral,
     #[regex(r"\d+(\.\d+)?")]
     NumberLiteral,
-    
+
     // Identifiers (lower priority to avoid conflicts with keywords)
     #[regex(r"[А-Яа-яA-Za-z_][А-Яа-яA-Za-z0-9_]*", priority = 1)]
     Identifier,
-    
+
     // Comments
     #[regex(r"//[^\r\n]*")]
     LineComment,
-    
+
     // Whitespace and newlines
     #[regex(r"[ \t\f]+", logos::skip)]
     Whitespace,
     #[regex(r"[\r\n]+")]
     Newline,
-    
+
     // End of file
     Eof,
 }
@@ -401,72 +400,99 @@ pub struct BslLexer {
 impl BslLexer {
     pub fn new() -> Self {
         let mut keywords = HashSet::new();
-        
+
         // All BSL keywords from Python implementation
         let keyword_list = vec![
             // Control flow
-            "Если", "Тогда", "ИначеЕсли", "Иначе", "КонецЕсли",
-            "Для", "Каждого", "Из", "По", "Цикл", "КонецЦикла",
-            "Пока", "Прервать", "Продолжить",
-            
+            "Если",
+            "Тогда",
+            "ИначеЕсли",
+            "Иначе",
+            "КонецЕсли",
+            "Для",
+            "Каждого",
+            "Из",
+            "По",
+            "Цикл",
+            "КонецЦикла",
+            "Пока",
+            "Прервать",
+            "Продолжить",
             // Procedures and functions
-            "Процедура", "КонецПроцедуры", "Функция", "КонецФункции",
-            "Возврат", "Экспорт",
-            
+            "Процедура",
+            "КонецПроцедуры",
+            "Функция",
+            "КонецФункции",
+            "Возврат",
+            "Экспорт",
             // Variables
-            "Перем", "Знач",
-            
+            "Перем",
+            "Знач",
             // Exception handling
-            "Попытка", "Исключение", "КонецПопытки", "ВызватьИсключение",
-            
+            "Попытка",
+            "Исключение",
+            "КонецПопытки",
+            "ВызватьИсключение",
             // Values
-            "Истина", "Ложь", "Неопределено", "Null",
-            
+            "Истина",
+            "Ложь",
+            "Неопределено",
+            "Null",
             // Operators
-            "И", "Или", "Не", "Новый",
-            
+            "И",
+            "Или",
+            "Не",
+            "Новый",
             // Preprocessor
-            "&НаКлиенте", "&НаСервере", "&НаСервереБезКонтекста", 
-            "&НаКлиентеНаСервере", "&Область", "&КонецОбласти",
-            "&УсловнаяКомпиляция", "&КонецЕсли",
+            "&НаКлиенте",
+            "&НаСервере",
+            "&НаСервереБезКонтекста",
+            "&НаКлиентеНаСервере",
+            "&Область",
+            "&КонецОбласти",
+            "&УсловнаяКомпиляция",
+            "&КонецЕсли",
         ];
-        
+
         for keyword in keyword_list {
             keywords.insert(keyword.to_string());
         }
-        
+
         let mut operators = HashSet::new();
         let operator_list = vec![
-            "+", "-", "*", "/", "=", "<", ">", "<=", ">=", "<>", ":=",
-            "(", ")", "[", "]", "{", "}", ".", ",", ";", ":", "?", "%"
+            "+", "-", "*", "/", "=", "<", ">", "<=", ">=", "<>", ":=", "(", ")", "[", "]", "{",
+            "}", ".", ",", ";", ":", "?", "%",
         ];
-        
+
         for op in operator_list {
             operators.insert(op.to_string());
         }
-        
-        Self { keywords, operators }
+
+        Self {
+            keywords,
+            operators,
+        }
     }
-    
+
     /// Tokenize BSL source code with full error handling
     pub fn tokenize(&self, input: &str) -> Result<Vec<Token>, String> {
         // Remove BOM if present
         let cleaned_input = strip_bom(input);
-        
+
         if cleaned_input.trim().is_empty() {
             return Ok(Vec::new());
         }
-        
+
         let mut tokens = Vec::new();
         let mut lexer = TokenType::lexer(cleaned_input);
         let mut line = 1;
         let mut column = 1;
         let mut offset = 0;
-        
+
         while let Some(result) = lexer.next() {
             let token_text = lexer.slice();
             let token_len = token_text.len();
-            
+
             match result {
                 Ok(token_type) => {
                     // Skip whitespace but track position
@@ -475,10 +501,10 @@ impl BslLexer {
                         offset += token_len;
                         continue;
                     }
-                    
+
                     let position = Position::new(line, column, offset);
                     let token = Token::new(token_type, token_text.to_string(), position);
-                    
+
                     // Handle newlines for position tracking
                     if matches!(token_type, TokenType::Newline) {
                         line += token_text.matches('\n').count();
@@ -487,9 +513,9 @@ impl BslLexer {
                         column += token_len;
                     }
                     offset += token_len;
-                    
+
                     tokens.push(token);
-                },
+                }
                 Err(_) => {
                     return Err(format!(
                         "Lexical error at line {}, column {}: unexpected character '{}'",
@@ -498,30 +524,30 @@ impl BslLexer {
                 }
             }
         }
-        
+
         // Add EOF token
         let position = Position::new(line, column, offset);
         tokens.push(Token::new(TokenType::Eof, String::new(), position));
-        
+
         Ok(tokens)
     }
-    
+
     /// Check if a string is a BSL keyword
     pub fn is_keyword(&self, text: &str) -> bool {
-        self.keywords.contains(&text.to_string()) ||
-        self.keywords.contains(&text.to_lowercase()) ||
-        self.keywords.contains(&text.to_uppercase())
+        self.keywords.contains(text)
+            || self.keywords.contains(&text.to_lowercase())
+            || self.keywords.contains(&text.to_uppercase())
     }
-    
+
     /// Check if a string is a BSL operator
     pub fn is_operator(&self, text: &str) -> bool {
         self.operators.contains(text)
     }
-    
+
     /// Get token statistics for analysis
     pub fn get_token_stats(&self, tokens: &[Token]) -> TokenStats {
         let mut stats = TokenStats::default();
-        
+
         for token in tokens {
             match token.token_type {
                 TokenType::LineComment => stats.comments += 1,
@@ -533,7 +559,7 @@ impl BslLexer {
                 _ => stats.other += 1,
             }
         }
-        
+
         stats.total = tokens.len();
         stats
     }
@@ -581,13 +607,13 @@ mod tests {
     fn test_basic_tokenization() {
         let lexer = BslLexer::new();
         let input = "Процедура Тест() Сообщить(\"Привет\"); КонецПроцедуры";
-        
+
         let tokens = lexer.tokenize(input).unwrap();
         assert!(tokens.len() > 5);
         assert_eq!(tokens[0].token_type, TokenType::Процедура);
         assert_eq!(tokens[1].token_type, TokenType::Identifier);
     }
-    
+
     #[test]
     fn test_keywords() {
         let lexer = BslLexer::new();
@@ -595,7 +621,7 @@ mod tests {
         assert!(lexer.is_keyword("Процедура"));
         assert!(!lexer.is_keyword("МояПеременная"));
     }
-    
+
     #[test]
     fn test_empty_input() {
         let lexer = BslLexer::new();
@@ -609,12 +635,12 @@ mod tests {
         let input_with_bom = "\u{FEFF}Процедура Тест()";
         let cleaned = strip_bom(input_with_bom);
         assert_eq!(cleaned, "Процедура Тест()");
-        
+
         // Test input without BOM
         let input_without_bom = "Процедура Тест()";
         let cleaned = strip_bom(input_without_bom);
         assert_eq!(cleaned, "Процедура Тест()");
-        
+
         // Test empty string
         let empty = strip_bom("");
         assert_eq!(empty, "");
@@ -623,20 +649,20 @@ mod tests {
     #[test]
     fn test_tokenize_with_bom() {
         let lexer = BslLexer::new();
-        
+
         // Test with UTF-8 BOM
         let input_with_bom = "\u{FEFF}Процедура Тест() КонецПроцедуры";
         let tokens = lexer.tokenize(input_with_bom).unwrap();
-        
+
         assert!(!tokens.is_empty());
         assert_eq!(tokens[0].token_type, TokenType::Процедура);
         assert_eq!(tokens[1].token_type, TokenType::Identifier);
         assert_eq!(tokens[1].value, "Тест");
-        
+
         // Ensure BOM doesn't create extra tokens
         let input_without_bom = "Процедура Тест() КонецПроцедуры";
         let tokens_without_bom = lexer.tokenize(input_without_bom).unwrap();
-        
+
         assert_eq!(tokens.len(), tokens_without_bom.len());
     }
 }

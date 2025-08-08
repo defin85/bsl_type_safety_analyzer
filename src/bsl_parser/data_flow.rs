@@ -1,12 +1,12 @@
 //! Data Flow Analyzer для tree-sitter парсера
-//! 
-//! Анализатор потоков данных для отслеживания переменных, их инициализации 
+//!
+//! Анализатор потоков данных для отслеживания переменных, их инициализации
 //! и использования в BSL коде.
 
-use std::collections::HashMap;
+use crate::bsl_parser::{ast::*, diagnostics::*};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use crate::bsl_parser::{ast::*, diagnostics::*};
+use std::collections::HashMap;
 
 /// Состояние переменной в потоке данных
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -87,10 +87,10 @@ impl DataFlowAnalyzer {
     pub fn analyze(&mut self, ast: &BslAst) -> Result<()> {
         self.variables.clear();
         self.diagnostics.clear();
-        
+
         self.analyze_module(&ast.module)?;
         self.check_variable_usage();
-        
+
         Ok(())
     }
 
@@ -111,7 +111,7 @@ impl DataFlowAnalyzer {
                     let state = VariableState::new(param.location.line, true);
                     self.variables.insert(param.name.clone(), state);
                 }
-                
+
                 // Анализируем тело процедуры
                 for stmt in &proc.body {
                     self.analyze_statement(stmt)?;
@@ -123,7 +123,7 @@ impl DataFlowAnalyzer {
                     let state = VariableState::new(param.location.line, true);
                     self.variables.insert(param.name.clone(), state);
                 }
-                
+
                 // Анализируем тело функции
                 for stmt in &func.body {
                     self.analyze_statement(stmt)?;
@@ -137,7 +137,7 @@ impl DataFlowAnalyzer {
                 }
             }
         }
-        
+
         Ok(())
     }
 
@@ -159,7 +159,7 @@ impl DataFlowAnalyzer {
                         self.variables.insert(name.clone(), state);
                     }
                 }
-                
+
                 // Анализируем правую часть
                 self.analyze_expression(&assignment.value)?;
             }
@@ -178,10 +178,10 @@ impl DataFlowAnalyzer {
                 // Переменная цикла
                 let state = VariableState::new(for_stmt.location.line, false);
                 self.variables.insert(for_stmt.variable.clone(), state);
-                
+
                 self.analyze_expression(&for_stmt.from)?;
                 self.analyze_expression(&for_stmt.to)?;
-                
+
                 for stmt in &for_stmt.body {
                     self.analyze_statement(stmt)?;
                 }
@@ -207,7 +207,7 @@ impl DataFlowAnalyzer {
                 // TODO: реализовать анализ Try
             }
         }
-        
+
         Ok(())
     }
 
@@ -218,17 +218,15 @@ impl DataFlowAnalyzer {
                 // Отмечаем переменную как использованную
                 if let Some(state) = self.variables.get_mut(name) {
                     state.mark_used(0); // TODO: получить правильную строку
-                    
+
                     // Проверяем использование до инициализации
                     if state.is_used_before_initialized() {
-                        self.diagnostics.push(
-                            Diagnostic::new(
-                                DiagnosticSeverity::Warning,
-                                Location::new("".to_string(), 0, 0, 0, 0), // TODO: правильная локация
-                                codes::UNINITIALIZED_VARIABLE,
-                                format!("Переменная '{}' используется до инициализации", name),
-                            )
-                        );
+                        self.diagnostics.push(Diagnostic::new(
+                            DiagnosticSeverity::Warning,
+                            Location::new("".to_string(), 0, 0, 0, 0), // TODO: правильная локация
+                            codes::UNINITIALIZED_VARIABLE,
+                            format!("Переменная '{}' используется до инициализации", name),
+                        ));
                     }
                 }
             }
@@ -264,7 +262,7 @@ impl DataFlowAnalyzer {
                 // TODO: реализовать анализ
             }
         }
-        
+
         Ok(())
     }
 
@@ -272,14 +270,12 @@ impl DataFlowAnalyzer {
     fn check_variable_usage(&mut self) {
         for (name, state) in &self.variables {
             if state.is_unused() {
-                self.diagnostics.push(
-                    Diagnostic::new(
-                        DiagnosticSeverity::Warning,
-                        Location::new("".to_string(), state.declaration_line, 0, 0, 0),
-                        codes::UNUSED_VARIABLE,
-                        format!("Переменная '{}' объявлена, но не используется", name),
-                    )
-                );
+                self.diagnostics.push(Diagnostic::new(
+                    DiagnosticSeverity::Warning,
+                    Location::new("".to_string(), state.declaration_line, 0, 0, 0),
+                    codes::UNUSED_VARIABLE,
+                    format!("Переменная '{}' объявлена, но не используется", name),
+                ));
             }
         }
     }
@@ -333,7 +329,7 @@ mod tests {
     fn test_mark_used() {
         let mut state = VariableState::new(1, false);
         state.mark_used(5);
-        
+
         assert!(state.used);
         assert_eq!(state.first_use_line, Some(5));
         assert_eq!(state.last_use_line, Some(5));

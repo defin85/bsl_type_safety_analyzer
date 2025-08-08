@@ -1,10 +1,9 @@
+use crate::mcp_server::types::{McpError, McpResult};
 /// <module>
 ///   <name>analyzer</name>
 ///   <purpose>Основная реализация MCP сервера для BSL</purpose>
 /// </module>
-
-use crate::unified_index::{UnifiedBslIndex, UnifiedIndexBuilder, BslApplicationMode};
-use crate::mcp_server::types::{McpError, McpResult};
+use crate::unified_index::{BslApplicationMode, UnifiedBslIndex, UnifiedIndexBuilder};
 // Временно отключено до миграции на новую версию MCP SDK
 /*
 use rmcp::{
@@ -41,41 +40,45 @@ impl BslTypeAnalyzer {
     pub async fn new() -> McpResult<Self> {
         // Читаем параметры из окружения
         let _config_path = env::var("BSL_CONFIG_PATH").ok().map(PathBuf::from);
-        let platform_version = env::var("BSL_PLATFORM_VERSION").unwrap_or_else(|_| "8.3.25".to_string());
-        
+        let platform_version =
+            env::var("BSL_PLATFORM_VERSION").unwrap_or_else(|_| "8.3.25".to_string());
+
         let analyzer = Self {
             index: Arc::new(RwLock::new(None)),
             _config_path: _config_path.clone(),
             platform_version: platform_version.clone(),
         };
-        
+
         // Пытаемся загрузить индекс если есть конфигурация
         if let Some(ref path) = _config_path {
             eprintln!("Loading BSL index from: {:?}", path);
-            analyzer.load_index(path.to_str().unwrap_or_default()).await?;
+            analyzer
+                .load_index(path.to_str().unwrap_or_default())
+                .await?;
         } else {
             eprintln!("No BSL_CONFIG_PATH set, index will be loaded on demand");
         }
-        
+
         Ok(analyzer)
     }
-    
+
     async fn load_index(&self, config_path: &str) -> McpResult<()> {
         let mut builder = UnifiedIndexBuilder::new()
             .map_err(|e| McpError::Internal(e.to_string()))?
             .with_application_mode(BslApplicationMode::ManagedApplication);
-        
-        let index = builder.build_index(config_path, &self.platform_version)
+
+        let index = builder
+            .build_index(config_path, &self.platform_version)
             .map_err(|e| McpError::Internal(e.to_string()))?;
-        
+
         info!("Loaded BSL index with {} types", index.get_entity_count());
-        
+
         let mut guard = self.index.write().await;
         *guard = Some(index);
-        
+
         Ok(())
     }
-    
+
     pub async fn ensure_index(&self) -> McpResult<()> {
         let guard = self.index.read().await;
         if guard.is_none() {
@@ -83,7 +86,7 @@ impl BslTypeAnalyzer {
         }
         Ok(())
     }
-    
+
     pub fn get_index(&self) -> &Arc<RwLock<Option<UnifiedBslIndex>>> {
         &self.index
     }
@@ -101,16 +104,16 @@ impl BslTypeAnalyzer {
     /// </tool>
     // #[tool(description = "Загружает индекс BSL типов из конфигурации 1С")]
     pub async fn load_configuration(
-        &self, 
-        // #[tool(param)] 
+        &self,
+        // #[tool(param)]
         config_path: String,
-        // #[tool(param)] 
-        platform_version: Option<String>
+        // #[tool(param)]
+        platform_version: Option<String>,
     ) -> String {
         let version = platform_version.unwrap_or_else(|| self.platform_version.clone());
-        
+
         // Версия обновится при загрузке индекса
-        
+
         match self.load_index(&config_path).await {
             Ok(_) => {
                 let guard = self.index.read().await;
@@ -127,7 +130,7 @@ impl BslTypeAnalyzer {
             Err(e) => format!("Ошибка загрузки конфигурации: {}", e),
         }
     }
-    
+
     /// <tool>
     ///   <name>find_type</name>
     ///   <description>Поиск типа в индексе BSL</description>
@@ -139,14 +142,14 @@ impl BslTypeAnalyzer {
     // #[tool(description = "Поиск типа в индексе BSL. Поддерживает русские и английские названия.")]
     pub async fn find_type(
         &self,
-        // #[tool(param)] 
+        // #[tool(param)]
         type_name: String,
-        // #[tool(param)] 
-        language_preference: Option<String>
+        // #[tool(param)]
+        language_preference: Option<String>,
     ) -> String {
         crate::mcp_server::tools::find_type_impl(self, type_name, language_preference).await
     }
-    
+
     /// <tool>
     ///   <name>get_type_methods</name>
     ///   <description>Получить все методы типа включая унаследованные</description>
@@ -159,16 +162,22 @@ impl BslTypeAnalyzer {
     // #[tool(description = "Получить все методы типа включая унаследованные")]
     pub async fn get_type_methods(
         &self,
-        // #[tool(param)] 
+        // #[tool(param)]
         type_name: String,
-        // #[tool(param)] 
+        // #[tool(param)]
         include_inherited: Option<bool>,
-        // #[tool(param)] 
-        filter_context: Option<String>
+        // #[tool(param)]
+        filter_context: Option<String>,
     ) -> String {
-        crate::mcp_server::tools::get_type_methods_impl(self, type_name, include_inherited, filter_context).await
+        crate::mcp_server::tools::get_type_methods_impl(
+            self,
+            type_name,
+            include_inherited,
+            filter_context,
+        )
+        .await
     }
-    
+
     /// <tool>
     ///   <name>check_type_compatibility</name>
     ///   <description>Проверить совместимость типов для присваивания</description>
@@ -180,14 +189,14 @@ impl BslTypeAnalyzer {
     // #[tool(description = "Проверить совместимость типов для присваивания")]
     pub async fn check_type_compatibility(
         &self,
-        // #[tool(param)] 
+        // #[tool(param)]
         from_type: String,
-        // #[tool(param)] 
-        to_type: String
+        // #[tool(param)]
+        to_type: String,
     ) -> String {
         crate::mcp_server::tools::check_type_compatibility_impl(self, from_type, to_type).await
     }
-    
+
     /// <tool>
     ///   <name>validate_method_call</name>
     ///   <description>Проверить корректность вызова метода</description>
@@ -200,14 +209,15 @@ impl BslTypeAnalyzer {
     // #[tool(description = "Проверить корректность вызова метода")]
     pub async fn validate_method_call(
         &self,
-        // #[tool(param)] 
+        // #[tool(param)]
         object_type: String,
-        // #[tool(param)] 
+        // #[tool(param)]
         method_name: String,
-        // #[tool(param)] 
-        context: Option<String>
+        // #[tool(param)]
+        context: Option<String>,
     ) -> String {
-        crate::mcp_server::tools::validate_method_call_impl(self, object_type, method_name, context).await
+        crate::mcp_server::tools::validate_method_call_impl(self, object_type, method_name, context)
+            .await
     }
 }
 

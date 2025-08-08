@@ -4,15 +4,15 @@
 Identifies and categorizes technical debt in BSL code.
 */
 
-use std::collections::HashMap;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// Type of technical debt
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum DebtType {
     Design,
-    CodeQuality,  
+    CodeQuality,
     Performance,
     Security,
     Documentation,
@@ -56,26 +56,26 @@ impl TechnicalDebtAnalyzer {
     pub fn new() -> Self {
         Self {}
     }
-    
+
     /// Analyze technical debt in BSL content
     pub fn analyze_content(&mut self, content: &str) -> Result<TechnicalDebtAnalysis> {
         let mut debt_items = Vec::new();
         let mut debt_by_type = HashMap::new();
         let mut debt_by_severity = HashMap::new();
-        
+
         // Simple pattern-based debt detection
         self.detect_code_smells(content, &mut debt_items);
         self.detect_performance_issues(content, &mut debt_items);
         self.detect_documentation_issues(content, &mut debt_items);
-        
+
         // Calculate totals
         let total_debt_minutes = debt_items.iter().map(|item| item.estimated_minutes).sum();
-        
+
         for item in &debt_items {
             *debt_by_type.entry(item.debt_type).or_insert(0) += item.estimated_minutes;
             *debt_by_severity.entry(item.severity).or_insert(0) += item.estimated_minutes;
         }
-        
+
         Ok(TechnicalDebtAnalysis {
             total_debt_minutes,
             debt_items,
@@ -83,12 +83,16 @@ impl TechnicalDebtAnalyzer {
             debt_by_severity,
         })
     }
-    
+
     fn detect_code_smells(&self, content: &str, debt_items: &mut Vec<DebtItem>) {
         // Long functions
         for (line_num, line) in content.lines().enumerate() {
             if line.contains("Функция") || line.contains("Процедура") {
-                let function_lines = content.lines().skip(line_num).take_while(|l| !l.contains("КонецФункции") && !l.contains("КонецПроцедуры")).count();
+                let function_lines = content
+                    .lines()
+                    .skip(line_num)
+                    .take_while(|l| !l.contains("КонецФункции") && !l.contains("КонецПроцедуры"))
+                    .count();
                 if function_lines > 50 {
                     debt_items.push(DebtItem {
                         debt_type: DebtType::CodeQuality,
@@ -100,7 +104,7 @@ impl TechnicalDebtAnalyzer {
                 }
             }
         }
-        
+
         // Magic numbers
         if content.matches(char::is_numeric).count() > 5 {
             debt_items.push(DebtItem {
@@ -112,7 +116,7 @@ impl TechnicalDebtAnalyzer {
             });
         }
     }
-    
+
     fn detect_performance_issues(&self, content: &str, debt_items: &mut Vec<DebtItem>) {
         // Nested loops
         let loop_count = content.matches("Цикл").count() + content.matches("Для").count();
@@ -125,7 +129,7 @@ impl TechnicalDebtAnalyzer {
                 line_number: None,
             });
         }
-        
+
         // String concatenation in loops
         if content.contains("Цикл") && content.contains("+ \"") {
             debt_items.push(DebtItem {
@@ -137,11 +141,12 @@ impl TechnicalDebtAnalyzer {
             });
         }
     }
-    
+
     fn detect_documentation_issues(&self, content: &str, debt_items: &mut Vec<DebtItem>) {
-        let function_count = content.matches("Функция").count() + content.matches("Процедура").count();
+        let function_count =
+            content.matches("Функция").count() + content.matches("Процедура").count();
         let comment_count = content.matches("//").count();
-        
+
         if function_count > 0 && comment_count == 0 {
             debt_items.push(DebtItem {
                 debt_type: DebtType::Documentation,

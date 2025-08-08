@@ -8,5 +8,5 @@ configuration management, and base analyzer traits.
 pub mod errors;
 pub mod results;
 
-pub use errors::{AnalysisError, ErrorLevel, ErrorCollector};
+pub use errors::{AnalysisError, ErrorCollector, ErrorLevel};
 pub use results::AnalysisResults;

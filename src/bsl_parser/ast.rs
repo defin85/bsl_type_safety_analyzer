@@ -1,7 +1,7 @@
 //! AST структуры для BSL
 
-use serde::{Deserialize, Serialize};
 use super::Location;
+use serde::{Deserialize, Serialize};
 
 /// Корневой узел AST
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -365,23 +365,19 @@ mod tests {
         let ast = BslAst {
             module: Module {
                 directives: vec![],
-                declarations: vec![
-                    Declaration::Function(FunctionDecl {
-                        name: "Test".to_string(),
-                        export: false,
-                        params: vec![],
-                        directives: vec![],
-                        body: vec![
-                            Statement::Expression(Expression::MethodCall(MethodCall {
-                                object: Box::new(Expression::Identifier("Array".to_string())),
-                                method: "Add".to_string(),
-                                args: vec![Expression::Literal(Literal::Number(1.0))],
-                                location: Location::new("test.bsl".to_string(), 1, 1, 0, 10),
-                            })),
-                        ],
-                        location: Location::new("test.bsl".to_string(), 1, 1, 0, 100),
-                    }),
-                ],
+                declarations: vec![Declaration::Function(FunctionDecl {
+                    name: "Test".to_string(),
+                    export: false,
+                    params: vec![],
+                    directives: vec![],
+                    body: vec![Statement::Expression(Expression::MethodCall(MethodCall {
+                        object: Box::new(Expression::Identifier("Array".to_string())),
+                        method: "Add".to_string(),
+                        args: vec![Expression::Literal(Literal::Number(1.0))],
+                        location: Location::new("test.bsl".to_string(), 1, 1, 0, 10),
+                    }))],
+                    location: Location::new("test.bsl".to_string(), 1, 1, 0, 100),
+                })],
                 location: Location::new("test.bsl".to_string(), 1, 1, 0, 100),
             },
         };

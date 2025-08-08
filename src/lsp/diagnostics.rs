@@ -1,7 +1,7 @@
 //! Модуль для конвертации диагностик между форматами
 
-use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, Range, Position, NumberOrString};
 use crate::core::errors::{AnalysisError, ErrorLevel};
+use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, NumberOrString, Position, Range};
 
 /// Конвертирует AnalysisError в LSP Diagnostic
 pub fn convert_to_lsp_diagnostic(error: &AnalysisError) -> Diagnostic {
@@ -17,7 +17,10 @@ pub fn convert_to_lsp_diagnostic(error: &AnalysisError) -> Diagnostic {
             },
         },
         severity: Some(convert_severity(&error.level)),
-        code: error.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
+        code: error
+            .error_code
+            .as_ref()
+            .map(|c| NumberOrString::String(c.clone())),
         code_description: None,
         source: Some("bsl-analyzer".to_string()),
         message: error.message.clone(),
@@ -43,17 +46,17 @@ pub fn convert_analysis_results(
     warnings: Vec<AnalysisError>,
 ) -> Vec<Diagnostic> {
     let mut diagnostics = Vec::new();
-    
+
     // Конвертируем ошибки
     for error in errors {
         diagnostics.push(convert_to_lsp_diagnostic(&error));
     }
-    
+
     // Конвертируем предупреждения
     for warning in warnings {
         diagnostics.push(convert_to_lsp_diagnostic(&warning));
     }
-    
+
     diagnostics
 }
 
@@ -61,8 +64,14 @@ pub fn convert_analysis_results(
 pub fn create_analysis_error_diagnostic(message: String, code: &str) -> Diagnostic {
     Diagnostic {
         range: Range {
-            start: Position { line: 0, character: 0 },
-            end: Position { line: 0, character: 0 },
+            start: Position {
+                line: 0,
+                character: 0,
+            },
+            end: Position {
+                line: 0,
+                character: 0,
+            },
         },
         severity: Some(DiagnosticSeverity::ERROR),
         code: Some(NumberOrString::String(code.to_string())),
@@ -76,11 +85,18 @@ pub fn create_analysis_error_diagnostic(message: String, code: &str) -> Diagnost
 }
 
 /// Создает информационную диагностику
+#[allow(dead_code)]
 pub fn create_info_diagnostic(message: &str) -> Diagnostic {
     Diagnostic {
         range: Range {
-            start: Position { line: 0, character: 0 },
-            end: Position { line: 0, character: 0 },
+            start: Position {
+                line: 0,
+                character: 0,
+            },
+            end: Position {
+                line: 0,
+                character: 0,
+            },
         },
         severity: Some(DiagnosticSeverity::INFORMATION),
         code: None,

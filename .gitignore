@@ -82,3 +82,5 @@ Thumbs.db
 
 # Git hooks are managed by Husky
 .husky/_
+
+.build-cache/

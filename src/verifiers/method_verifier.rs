@@ -5,9 +5,9 @@
 предоставляет предложения по исправлению ошибок и валидирует совместимость типов.
 */
 
-use std::collections::HashMap;
-use crate::unified_index::UnifiedBslIndex;
 use crate::diagnostics::Diagnostic;
+use crate::unified_index::UnifiedBslIndex;
+use std::collections::HashMap;
 
 /// Результат проверки вызова метода
 #[derive(Debug, Clone)]
@@ -34,17 +34,24 @@ impl MethodCallResult {
             arguments_valid: true,
         }
     }
-    
-    pub fn method_not_found(object_type: &str, method_name: &str, suggestions: Vec<String>) -> Self {
+
+    pub fn method_not_found(
+        object_type: &str,
+        method_name: &str,
+        suggestions: Vec<String>,
+    ) -> Self {
         Self {
             is_valid: false,
-            error_message: Some(format!("Метод '{}' не найден у типа '{}'", method_name, object_type)),
+            error_message: Some(format!(
+                "Метод '{}' не найден у типа '{}'",
+                method_name, object_type
+            )),
             suggestions,
             method_found: false,
             arguments_valid: true,
         }
     }
-    
+
     pub fn invalid_arguments(message: String, suggestions: Vec<String>) -> Self {
         Self {
             is_valid: false,
@@ -83,18 +90,18 @@ impl MethodVerifier {
             verification_cache: HashMap::new(),
         }
     }
-    
+
     /// Проверяет вызов метода и возвращает результат проверки
     pub fn verify_call(
         &mut self,
         object_type: &str,
         method_name: &str,
         arguments: &[ArgumentInfo],
-        _line: usize
+        _line: usize,
     ) -> MethodCallResult {
         // Создаем ключ для кэширования
         let cache_key = format!("{}::{}", object_type, method_name);
-        
+
         // Проверяем кэш для базовой информации о методе
         if let Some(cached_result) = self.verification_cache.get(&cache_key) {
             if cached_result.method_found {
@@ -104,18 +111,18 @@ impl MethodVerifier {
                 return cached_result.clone();
             }
         }
-        
+
         // Проверяем существование типа объекта
         if !self.verify_object_type(object_type) {
             let result = MethodCallResult::method_not_found(
                 object_type,
                 method_name,
-                vec![format!("Тип '{}' не найден в системе типов", object_type)]
+                vec![format!("Тип '{}' не найден в системе типов", object_type)],
             );
             self.verification_cache.insert(cache_key, result.clone());
             return result;
         }
-        
+
         // Проверяем существование метода
         if !self.verify_method_exists(object_type, method_name) {
             let suggestions = self.get_suggestions_for_method(object_type, method_name);
@@ -123,19 +130,19 @@ impl MethodVerifier {
             self.verification_cache.insert(cache_key, result.clone());
             return result;
         }
-        
+
         // Проверяем аргументы
         let arguments_result = self.verify_method_arguments(object_type, method_name, arguments);
         if !arguments_result.is_valid {
             return arguments_result;
         }
-        
+
         // Кэшируем успешный результат
         let result = MethodCallResult::success();
         self.verification_cache.insert(cache_key, result.clone());
         result
     }
-    
+
     /// Проверяет существование метода у типа
     pub fn verify_method_exists(&self, object_type: &str, method_name: &str) -> bool {
         if let Some(entity) = self.unified_index.find_entity(object_type) {
@@ -143,7 +150,7 @@ impl MethodVerifier {
             if entity.interface.methods.contains_key(method_name) {
                 return true;
             }
-            
+
             // Проверяем все методы (включая унаследованные)
             let all_methods = self.unified_index.get_all_methods(object_type);
             all_methods.contains_key(method_name)
@@ -151,33 +158,37 @@ impl MethodVerifier {
             false
         }
     }
-    
+
     /// Получает сигнатуру метода
     pub fn get_method_signature(&self, object_type: &str, method_name: &str) -> Option<String> {
         let all_methods = self.unified_index.get_all_methods(object_type);
-        
+
         if let Some(method) = all_methods.get(method_name) {
             // Формируем полную сигнатуру метода
             let mut signature = format!("{}(", method_name);
-            
-            let param_strings: Vec<String> = method.parameters.iter().map(|param| {
-                let type_name = param.type_name.as_deref().unwrap_or("Произвольный");
-                format!("{}: {}", param.name, type_name)
-            }).collect();
-            
+
+            let param_strings: Vec<String> = method
+                .parameters
+                .iter()
+                .map(|param| {
+                    let type_name = param.type_name.as_deref().unwrap_or("Произвольный");
+                    format!("{}: {}", param.name, type_name)
+                })
+                .collect();
+
             signature.push_str(&param_strings.join(", "));
             signature.push(')');
-            
+
             if let Some(return_type) = &method.return_type {
                 signature.push_str(&format!(" -> {}", return_type));
             }
-            
+
             Some(signature)
         } else {
             None
         }
     }
-    
+
     /// Возвращает список доступных методов для типа
     pub fn get_available_methods(&self, object_type: &str) -> Vec<String> {
         let all_methods = self.unified_index.get_all_methods(object_type);
@@ -185,62 +196,71 @@ impl MethodVerifier {
         methods.sort();
         methods
     }
-    
+
     /// Проверяет существование типа объекта
     pub fn verify_object_type(&self, object_type: &str) -> bool {
         self.unified_index.find_entity(object_type).is_some()
     }
-    
+
     /// Получает предложения для исправления ошибочного вызова метода
     pub fn get_suggestions_for_method(&self, object_type: &str, method_name: &str) -> Vec<String> {
         let mut suggestions = Vec::new();
-        
+
         // Проверяем существование типа
         if !self.verify_object_type(object_type) {
             suggestions.push(format!("Тип '{}' не найден в документации", object_type));
             return suggestions;
         }
-        
+
         // Получаем доступные методы
         let available_methods = self.get_available_methods(object_type);
-        
+
         if available_methods.is_empty() {
             suggestions.push(format!("У типа '{}' нет доступных методов", object_type));
             return suggestions;
         }
-        
+
         // Ищем похожие методы
         let similar_methods = self.find_similar_methods(method_name, &available_methods);
-        
+
         if !similar_methods.is_empty() {
-            suggestions.push(format!("Возможно, вы имели в виду: {}", similar_methods.join(", ")));
+            suggestions.push(format!(
+                "Возможно, вы имели в виду: {}",
+                similar_methods.join(", ")
+            ));
         } else if available_methods.len() <= 10 {
             // Показываем все методы, если их немного
-            suggestions.push(format!("Доступные методы: {}", available_methods.join(", ")));
+            suggestions.push(format!(
+                "Доступные методы: {}",
+                available_methods.join(", ")
+            ));
         } else {
             // Показываем только первые 10 методов
             let methods_count = available_methods.len();
             let first_methods: Vec<String> = available_methods.into_iter().take(10).collect();
-            suggestions.push(format!("Некоторые доступные методы: {} (и еще {})", 
-                first_methods.join(", "), methods_count - 10));
+            suggestions.push(format!(
+                "Некоторые доступные методы: {} (и еще {})",
+                first_methods.join(", "),
+                methods_count - 10
+            ));
         }
-        
+
         suggestions
     }
-    
+
     /// Анализирует тип выражения
     pub fn analyze_expression_type(&self, expression: &str) -> String {
         // Простая эвристика для определения типа по строковому представлению
         let trimmed = expression.trim();
-        
+
         if trimmed.starts_with('"') && trimmed.ends_with('"') {
             return "Строка".to_string();
         }
-        
+
         if trimmed.parse::<i64>().is_ok() || trimmed.parse::<f64>().is_ok() {
             return "Число".to_string();
         }
-        
+
         match trimmed {
             "Истина" | "Ложь" => "Булево".to_string(),
             "Неопределено" => "Неопределено".to_string(),
@@ -255,84 +275,101 @@ impl MethodVerifier {
                         }
                     }
                 }
-                
+
                 "Неопределено".to_string()
             }
         }
     }
-    
+
     /// Проверяет совместимость типов
     pub fn verify_type_compatibility(&self, source_type: &str, target_type: &str) -> bool {
         self.unified_index.is_assignable(source_type, target_type)
     }
-    
+
     /// Получает информацию об иерархии типов
     pub fn get_type_hierarchy_info(&self, type_name: &str) -> Option<HashMap<String, String>> {
         if let Some(entity) = self.unified_index.find_entity(type_name) {
             let mut hierarchy = HashMap::new();
-            
+
             // Родительские типы
             for parent in &entity.constraints.parent_types {
                 hierarchy.insert("parent".to_string(), parent.clone());
             }
-            
+
             // Реализуемые интерфейсы
             for interface in &entity.constraints.implements {
                 hierarchy.insert("implements".to_string(), interface.clone());
             }
-            
+
             // Тип сущности
-            hierarchy.insert("entity_type".to_string(), format!("{:?}", entity.entity_type));
-            hierarchy.insert("entity_kind".to_string(), format!("{:?}", entity.entity_kind));
-            
+            hierarchy.insert(
+                "entity_type".to_string(),
+                format!("{:?}", entity.entity_type),
+            );
+            hierarchy.insert(
+                "entity_kind".to_string(),
+                format!("{:?}", entity.entity_kind),
+            );
+
             Some(hierarchy)
         } else {
             None
         }
     }
-    
+
     /// Создает диагностическое сообщение из результата проверки
-    pub fn create_diagnostic(&self, result: &MethodCallResult, line: usize, column: usize) -> Option<Diagnostic> {
+    pub fn create_diagnostic(
+        &self,
+        result: &MethodCallResult,
+        line: usize,
+        column: usize,
+    ) -> Option<Diagnostic> {
         if result.is_valid {
             return None;
         }
-        
+
         let message = result.error_message.as_ref()?;
         let mut full_message = message.clone();
-        
+
         if !result.suggestions.is_empty() {
             full_message.push_str("\n\nПредложения:\n");
             for suggestion in &result.suggestions {
                 full_message.push_str(&format!("• {}\n", suggestion));
             }
         }
-        
-        Some(Diagnostic::error(
-            full_message,
-            line,
-            column
-        ))
+
+        Some(Diagnostic::error(full_message, line, column))
     }
-    
+
     /// Очищает кэш проверок
     pub fn clear_cache(&mut self) {
         self.verification_cache.clear();
     }
-    
+
     // PRIVATE METHODS
-    
+
     /// Проверяет только аргументы метода (для кэшированных результатов)
-    fn verify_arguments_only(&self, object_type: &str, method_name: &str, arguments: &[ArgumentInfo]) -> MethodCallResult {
+    fn verify_arguments_only(
+        &self,
+        object_type: &str,
+        method_name: &str,
+        arguments: &[ArgumentInfo],
+    ) -> MethodCallResult {
         self.verify_method_arguments(object_type, method_name, arguments)
     }
-    
+
     /// Проверяет аргументы метода
-    fn verify_method_arguments(&self, object_type: &str, method_name: &str, arguments: &[ArgumentInfo]) -> MethodCallResult {
+    fn verify_method_arguments(
+        &self,
+        object_type: &str,
+        method_name: &str,
+        arguments: &[ArgumentInfo],
+    ) -> MethodCallResult {
         // Получаем сигнатуру метода
         if let Some(signature) = self.get_method_signature(object_type, method_name) {
             // Простая проверка - в реальной реализации здесь будет полный парсинг сигнатуры
             let expected_args = self.parse_method_signature(&signature);
-            
+
             if arguments.len() != expected_args.len() {
                 return MethodCallResult::invalid_arguments(
                     format!(
@@ -342,9 +379,11 @@ impl MethodVerifier {
                     vec![format!("Сигнатура метода: {}", signature)]
                 );
             }
-            
+
             // Проверяем типы аргументов
-            for (i, (expected_type, actual_arg)) in expected_args.iter().zip(arguments.iter()).enumerate() {
+            for (i, (expected_type, actual_arg)) in
+                expected_args.iter().zip(arguments.iter()).enumerate()
+            {
                 if !self.verify_type_compatibility(&actual_arg.arg_type, expected_type) {
                     return MethodCallResult::invalid_arguments(
                         format!(
@@ -356,18 +395,22 @@ impl MethodVerifier {
                 }
             }
         }
-        
+
         MethodCallResult::success()
     }
-    
+
     /// Находит методы, похожие на целевой (простейшая реализация)
-    fn find_similar_methods(&self, target_method: &str, available_methods: &[String]) -> Vec<String> {
+    fn find_similar_methods(
+        &self,
+        target_method: &str,
+        available_methods: &[String],
+    ) -> Vec<String> {
         let mut similar = Vec::new();
         let target_lower = target_method.to_lowercase();
-        
+
         for method in available_methods {
             let method_lower = method.to_lowercase();
-            
+
             // Простая эвристика: проверяем подстроки
             if target_lower.contains(&method_lower) || method_lower.contains(&target_lower) {
                 similar.push(method.clone());
@@ -376,55 +419,66 @@ impl MethodVerifier {
                 similar.push(method.clone());
             }
         }
-        
+
         // Ограничиваем количество предложений
         similar.truncate(3);
         similar
     }
-    
+
     /// Простая реализация расстояния Левенштейна
     fn levenshtein_distance(&self, s1: &str, s2: &str) -> usize {
         let len1 = s1.chars().count();
         let len2 = s2.chars().count();
-        
-        if len1 == 0 { return len2; }
-        if len2 == 0 { return len1; }
-        
+
+        if len1 == 0 {
+            return len2;
+        }
+        if len2 == 0 {
+            return len1;
+        }
+
         let mut matrix = vec![vec![0; len2 + 1]; len1 + 1];
-        
+
         // Инициализация первой строки и столбца
-        for (i, row) in matrix.iter_mut().enumerate().take(len1 + 1) { row[0] = i; }
-        for j in 0..=len2 { matrix[0][j] = j; }
-        
+        for (i, row) in matrix.iter_mut().enumerate().take(len1 + 1) {
+            row[0] = i;
+        }
+        for j in 0..=len2 {
+            matrix[0][j] = j;
+        }
+
         let chars1: Vec<char> = s1.chars().collect();
         let chars2: Vec<char> = s2.chars().collect();
-        
+
         for i in 1..=len1 {
             for j in 1..=len2 {
-                let cost = if chars1[i-1] == chars2[j-1] { 0 } else { 1 };
+                let cost = if chars1[i - 1] == chars2[j - 1] { 0 } else { 1 };
                 matrix[i][j] = *[
-                    matrix[i-1][j] + 1,      // удаление
-                    matrix[i][j-1] + 1,      // вставка
-                    matrix[i-1][j-1] + cost  // замена
-                ].iter().min().unwrap();
+                    matrix[i - 1][j] + 1,        // удаление
+                    matrix[i][j - 1] + 1,        // вставка
+                    matrix[i - 1][j - 1] + cost, // замена
+                ]
+                .iter()
+                .min()
+                .unwrap();
             }
         }
-        
+
         matrix[len1][len2]
     }
-    
+
     /// Парсит сигнатуру метода для извлечения типов аргументов
     fn parse_method_signature(&self, signature: &str) -> Vec<String> {
         // Простейшая реализация - в реальности будет более сложный парсер
         // Формат: "method_name(arg1: Type1, arg2: Type2) -> ReturnType"
-        
+
         if let Some(start) = signature.find('(') {
             if let Some(end) = signature.find(')') {
                 let args_str = &signature[start + 1..end];
                 if args_str.trim().is_empty() {
                     return Vec::new();
                 }
-                
+
                 return args_str
                     .split(',')
                     .map(|arg| {
@@ -437,7 +491,7 @@ impl MethodVerifier {
                     .collect();
             }
         }
-        
+
         Vec::new()
     }
 }
@@ -446,58 +500,61 @@ impl MethodVerifier {
 mod tests {
     use super::*;
     use crate::unified_index::UnifiedBslIndex;
-    
+
     fn create_test_verifier() -> MethodVerifier {
         let index = UnifiedBslIndex::new();
         MethodVerifier::new(index)
     }
-    
+
     #[test]
     fn test_method_verifier_creation() {
         let verifier = create_test_verifier();
         assert!(verifier.verification_cache.is_empty());
     }
-    
+
     #[test]
     fn test_expression_type_analysis() {
         let verifier = create_test_verifier();
-        
+
         assert_eq!(verifier.analyze_expression_type("\"строка\""), "Строка");
         assert_eq!(verifier.analyze_expression_type("42"), "Число");
         assert_eq!(verifier.analyze_expression_type("3.14"), "Число");
         assert_eq!(verifier.analyze_expression_type("Истина"), "Булево");
         assert_eq!(verifier.analyze_expression_type("Ложь"), "Булево");
-        assert_eq!(verifier.analyze_expression_type("Неопределено"), "Неопределено");
+        assert_eq!(
+            verifier.analyze_expression_type("Неопределено"),
+            "Неопределено"
+        );
     }
-    
+
     #[test]
     fn test_levenshtein_distance() {
         let verifier = create_test_verifier();
-        
+
         assert_eq!(verifier.levenshtein_distance("test", "test"), 0);
         assert_eq!(verifier.levenshtein_distance("test", "tost"), 1);
         assert_eq!(verifier.levenshtein_distance("test", ""), 4);
         assert_eq!(verifier.levenshtein_distance("", "test"), 4);
     }
-    
+
     #[test]
     fn test_method_call_result_creation() {
         let success = MethodCallResult::success();
         assert!(success.is_valid);
         assert!(success.method_found);
         assert!(success.arguments_valid);
-        
+
         let not_found = MethodCallResult::method_not_found(
-            "ТаблицаЗначений", 
-            "НесуществующийМетод", 
-            vec!["Предложение".to_string()]
+            "ТаблицаЗначений",
+            "НесуществующийМетод",
+            vec!["Предложение".to_string()],
         );
         assert!(!not_found.is_valid);
         assert!(!not_found.method_found);
         assert!(not_found.arguments_valid);
         assert_eq!(not_found.suggestions.len(), 1);
     }
-    
+
     #[test]
     fn test_argument_info_creation() {
         let arg = ArgumentInfo {
@@ -505,19 +562,19 @@ mod tests {
             value: Some("\"тест\"".to_string()),
             position: 0,
         };
-        
+
         assert_eq!(arg.arg_type, "Строка");
         assert_eq!(arg.value, Some("\"тест\"".to_string()));
         assert_eq!(arg.position, 0);
     }
-    
+
     #[test]
     fn test_cache_functionality() {
         let mut verifier = create_test_verifier();
-        
+
         // Кэш должен быть пустым
         assert!(verifier.verification_cache.is_empty());
-        
+
         // После очистки кэш должен остаться пустым
         verifier.clear_cache();
         assert!(verifier.verification_cache.is_empty());

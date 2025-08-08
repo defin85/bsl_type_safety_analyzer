@@ -1,11 +1,11 @@
 //! Иерархическая организация типов для UI
-//! 
+//!
 //! Модуль предоставляет структуры для организации BSL типов в древовидную иерархию,
 //! оптимизированную для отображения в пользовательском интерфейсе (VSCode TreeDataProvider и др.)
 
-use std::collections::HashMap;
-use serde::{Serialize, Deserialize};
 use super::{BslEntity, BslEntityKind};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 /// Категория типов в иерархии
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
@@ -84,7 +84,7 @@ impl TypeCategory {
             TypeCategory::Other => "Прочие",
         }
     }
-    
+
     /// Возвращает иконку для категории (для VSCode)
     pub fn icon(&self) -> &str {
         match self {
@@ -112,12 +112,14 @@ impl TypeCategory {
             TypeCategory::Other => "symbol-misc",
         }
     }
-    
+
     /// Определяет категорию на основе BslEntityKind
     pub fn from_entity_kind(kind: &BslEntityKind) -> Self {
         match kind {
             BslEntityKind::Primitive => TypeCategory::PrimitiveTypes,
-            BslEntityKind::Array | BslEntityKind::Structure | BslEntityKind::Map => TypeCategory::Collections,
+            BslEntityKind::Array | BslEntityKind::Structure | BslEntityKind::Map => {
+                TypeCategory::Collections
+            }
             BslEntityKind::ValueList => TypeCategory::Collections,
             BslEntityKind::ValueTable | BslEntityKind::ValueTree => TypeCategory::TabularData,
             BslEntityKind::Catalog => TypeCategory::Catalogs,
@@ -182,6 +184,7 @@ pub struct TypeHierarchy {
     pub root: TypeNode,
     /// Индекс узлов по ID для быстрого доступа
     #[serde(skip)]
+    #[allow(dead_code)]
     node_index: HashMap<String, TypeNode>,
     /// Статистика по категориям
     pub statistics: HashMap<TypeCategory, CategoryStatistics>,
@@ -217,41 +220,44 @@ impl TypeHierarchy {
             node_index: HashMap::new(),
             statistics: HashMap::new(),
         };
-        
+
         // Группируем сущности по категориям
         let mut categories: HashMap<TypeCategory, Vec<&BslEntity>> = HashMap::new();
-        
+
         for entity in entities {
             let category = TypeCategory::from_entity_kind(&entity.entity_kind);
-            categories.entry(category).or_insert_with(Vec::new).push(entity);
+            categories.entry(category).or_default().push(entity);
         }
-        
+
         // Создаем узлы категорий
         for (category, category_entities) in categories {
             if category_entities.is_empty() {
                 continue;
             }
-            
+
             let category_node = hierarchy.create_category_node(&category, &category_entities);
             hierarchy.root.children.push(category_node);
-            
+
             // Собираем статистику
             let stats = CategoryStatistics {
                 total_types: category_entities.len(),
-                total_methods: category_entities.iter()
+                total_methods: category_entities
+                    .iter()
                     .map(|e| e.interface.methods.len())
                     .sum(),
-                total_properties: category_entities.iter()
+                total_properties: category_entities
+                    .iter()
                     .map(|e| e.interface.properties.len())
                     .sum(),
-                top_types: category_entities.iter()
+                top_types: category_entities
+                    .iter()
                     .take(5)
                     .map(|e| e.qualified_name.clone())
                     .collect(),
             };
             hierarchy.statistics.insert(category, stats);
         }
-        
+
         // Сортируем категории по приоритету отображения
         let priority_map = hierarchy.create_priority_map();
         hierarchy.root.children.sort_by_key(|node| {
@@ -261,10 +267,10 @@ impl TypeHierarchy {
                 999
             }
         });
-        
+
         hierarchy
     }
-    
+
     /// Создает узел категории
     fn create_category_node(&self, category: &TypeCategory, entities: &[&BslEntity]) -> TypeNode {
         let mut node = TypeNode {
@@ -277,29 +283,29 @@ impl TypeHierarchy {
             expanded: false,
             metadata: HashMap::new(),
         };
-        
+
         // Добавляем узлы типов
         for entity in entities {
             let type_node = self.create_type_node(entity);
             node.children.push(type_node);
         }
-        
+
         // Сортируем типы по имени
         node.children.sort_by(|a, b| a.label.cmp(&b.label));
-        
+
         node
     }
-    
+
     /// Создает узел типа
     fn create_type_node(&self, entity: &BslEntity) -> TypeNode {
         let mut metadata = HashMap::new();
         metadata.insert("type".to_string(), format!("{:?}", entity.entity_type));
         metadata.insert("kind".to_string(), format!("{:?}", entity.entity_kind));
-        
+
         if let Some(doc) = &entity.documentation {
             metadata.insert("documentation".to_string(), doc.clone());
         }
-        
+
         TypeNode {
             id: entity.id.0.clone(),
             label: entity.display_name.clone(),
@@ -311,7 +317,7 @@ impl TypeHierarchy {
             metadata,
         }
     }
-    
+
     /// Определяет иконку для типа
     fn get_type_icon(&self, entity: &BslEntity) -> String {
         match entity.entity_kind {
@@ -325,9 +331,10 @@ impl TypeHierarchy {
             BslEntityKind::Report => "graph-line",
             BslEntityKind::CommonModule => "symbol-module",
             _ => "symbol-misc",
-        }.to_string()
+        }
+        .to_string()
     }
-    
+
     /// Создает карту приоритетов категорий
     fn create_priority_map(&self) -> HashMap<TypeCategory, usize> {
         let mut map = HashMap::new();
@@ -348,70 +355,51 @@ impl TypeHierarchy {
         map.insert(TypeCategory::Other, 99);
         map
     }
-    
-    /// Приоритет категории для сортировки
-    fn category_priority(&self, category: &TypeCategory) -> usize {
-        match category {
-            TypeCategory::PrimitiveTypes => 1,
-            TypeCategory::Collections => 2,
-            TypeCategory::TabularData => 3,
-            TypeCategory::GlobalContext => 4,
-            TypeCategory::Catalogs => 10,
-            TypeCategory::Documents => 11,
-            TypeCategory::InformationRegisters => 12,
-            TypeCategory::AccumulationRegisters => 13,
-            TypeCategory::Enums => 20,
-            TypeCategory::CommonModules => 30,
-            TypeCategory::Reports => 40,
-            TypeCategory::DataProcessors => 41,
-            TypeCategory::Forms => 50,
-            TypeCategory::SystemTypes => 90,
-            TypeCategory::Other => 99,
-            _ => 60,
-        }
-    }
-    
+
+    // Удалено: дублирует create_priority_map()
+
     /// Поиск узла по ID
     pub fn find_node(&self, id: &str) -> Option<&TypeNode> {
         self.find_node_recursive(&self.root, id)
     }
-    
+
+    #[allow(clippy::only_used_in_recursion)]
     fn find_node_recursive<'a>(&self, node: &'a TypeNode, id: &str) -> Option<&'a TypeNode> {
         if node.id == id {
             return Some(node);
         }
-        
+
         for child in &node.children {
             if let Some(found) = self.find_node_recursive(child, id) {
                 return Some(found);
             }
         }
-        
+
         None
     }
-    
+
     /// Фильтрация иерархии по запросу
     pub fn filter(&self, query: &str) -> TypeHierarchy {
         let mut filtered_root = self.root.clone();
         filtered_root.children.clear();
-        
+
         let query_lower = query.to_lowercase();
-        
+
         for category_node in &self.root.children {
             let mut filtered_category = category_node.clone();
             filtered_category.children.clear();
-            
+
             // Фильтруем типы в категории
             for type_node in &category_node.children {
                 if type_node.label.to_lowercase().contains(&query_lower) {
                     filtered_category.children.push(type_node.clone());
                 }
             }
-            
+
             // Добавляем категорию только если есть совпадения
             if !filtered_category.children.is_empty() {
                 filtered_category.label = format!(
-                    "{} ({})", 
+                    "{} ({})",
                     self.get_category_name(&filtered_category),
                     filtered_category.children.len()
                 );
@@ -419,14 +407,14 @@ impl TypeHierarchy {
                 filtered_root.children.push(filtered_category);
             }
         }
-        
+
         TypeHierarchy {
             root: filtered_root,
             node_index: HashMap::new(),
             statistics: self.statistics.clone(),
         }
     }
-    
+
     /// Получает имя категории из узла
     fn get_category_name(&self, node: &TypeNode) -> String {
         if let TypeNodeType::Category(cat) = &node.node_type {
@@ -435,17 +423,17 @@ impl TypeHierarchy {
             node.label.clone()
         }
     }
-    
+
     /// Экспортирует иерархию в формат для VSCode TreeDataProvider
     pub fn to_vscode_tree_items(&self) -> Vec<serde_json::Value> {
         self.node_to_vscode_items(&self.root)
     }
-    
+
     fn node_to_vscode_items(&self, node: &TypeNode) -> Vec<serde_json::Value> {
         use serde_json::json;
-        
+
         let mut items = Vec::new();
-        
+
         for child in &node.children {
             let collapsible_state = if child.children.is_empty() {
                 "none"
@@ -454,7 +442,7 @@ impl TypeHierarchy {
             } else {
                 "collapsed"
             };
-            
+
             items.push(json!({
                 "id": child.id,
                 "label": child.label,
@@ -473,7 +461,7 @@ impl TypeHierarchy {
                 }
             }));
         }
-        
+
         items
     }
 }
@@ -481,17 +469,29 @@ impl TypeHierarchy {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_category_from_kind() {
-        assert_eq!(TypeCategory::from_entity_kind(&BslEntityKind::Primitive), TypeCategory::PrimitiveTypes);
-        assert_eq!(TypeCategory::from_entity_kind(&BslEntityKind::Array), TypeCategory::Collections);
-        assert_eq!(TypeCategory::from_entity_kind(&BslEntityKind::Catalog), TypeCategory::Catalogs);
+        assert_eq!(
+            TypeCategory::from_entity_kind(&BslEntityKind::Primitive),
+            TypeCategory::PrimitiveTypes
+        );
+        assert_eq!(
+            TypeCategory::from_entity_kind(&BslEntityKind::Array),
+            TypeCategory::Collections
+        );
+        assert_eq!(
+            TypeCategory::from_entity_kind(&BslEntityKind::Catalog),
+            TypeCategory::Catalogs
+        );
     }
-    
+
     #[test]
     fn test_category_display_name() {
-        assert_eq!(TypeCategory::PrimitiveTypes.display_name(), "Примитивные типы");
+        assert_eq!(
+            TypeCategory::PrimitiveTypes.display_name(),
+            "Примитивные типы"
+        );
         assert_eq!(TypeCategory::Catalogs.display_name(), "Справочники");
     }
 }

@@ -9,11 +9,11 @@ pub struct CommonArgs {
     /// Enable verbose output
     #[arg(short, long)]
     pub verbose: bool,
-    
+
     /// Output format (json, text, table)
     #[arg(long, default_value = "text")]
     pub format: String,
-    
+
     /// Suppress all output except errors
     #[arg(short, long)]
     pub quiet: bool,
@@ -25,11 +25,11 @@ pub struct PlatformArgs {
     /// Platform version (e.g., "8.3.25")
     #[arg(short = 'p', long = "platform-version", default_value = "8.3.25")]
     pub platform_version: String,
-    
+
     /// Path to platform documentation archive (optional)
     #[arg(long = "platform-docs-archive")]
     pub platform_docs_archive: Option<PathBuf>,
-    
+
     /// Application mode (ordinary, managed, mixed)
     #[arg(long, default_value = "managed")]
     pub mode: String,
@@ -41,11 +41,11 @@ pub struct ConfigArgs {
     /// Path to 1C configuration directory
     #[arg(short, long)]
     pub config: PathBuf,
-    
+
     /// Force rebuild index even if cache exists
     #[arg(short, long)]
     pub force: bool,
-    
+
     /// Skip cache and always rebuild
     #[arg(long)]
     pub no_cache: bool,
@@ -57,11 +57,11 @@ pub struct OutputArgs {
     /// Output file path (stdout if not specified)
     #[arg(short, long)]
     pub output: Option<PathBuf>,
-    
+
     /// Pretty print JSON output
     #[arg(long)]
     pub pretty: bool,
-    
+
     /// Include additional details in output
     #[arg(long)]
     pub detailed: bool,
@@ -72,10 +72,10 @@ pub struct OutputArgs {
 pub struct IndexArgs {
     #[clap(flatten)]
     pub common: CommonArgs,
-    
+
     #[clap(flatten)]
     pub platform: PlatformArgs,
-    
+
     #[clap(flatten)]
     pub config: ConfigArgs,
 }
@@ -85,7 +85,7 @@ pub struct IndexArgs {
 pub struct ExportArgs {
     #[clap(flatten)]
     pub common: CommonArgs,
-    
+
     #[clap(flatten)]
     pub output: OutputArgs,
 }
@@ -101,7 +101,7 @@ impl CommonArgs {
             tracing::Level::INFO
         }
     }
-    
+
     /// Проверяет, нужно ли выводить информацию
     pub fn should_print(&self) -> bool {
         !self.quiet
@@ -116,12 +116,15 @@ impl PlatformArgs {
             .unwrap_or(&self.platform_version)
             .to_string()
     }
-    
+
     /// Валидирует режим приложения
     pub fn validate_mode(&self) -> Result<(), String> {
         match self.mode.as_str() {
             "ordinary" | "managed" | "mixed" => Ok(()),
-            _ => Err(format!("Invalid application mode: {}. Must be one of: ordinary, managed, mixed", self.mode))
+            _ => Err(format!(
+                "Invalid application mode: {}. Must be one of: ordinary, managed, mixed",
+                self.mode
+            )),
         }
     }
 }
@@ -130,16 +133,22 @@ impl ConfigArgs {
     /// Проверяет существование конфигурации
     pub fn validate(&self) -> Result<(), String> {
         if !self.config.exists() {
-            return Err(format!("Configuration directory does not exist: {}", self.config.display()));
+            return Err(format!(
+                "Configuration directory does not exist: {}",
+                self.config.display()
+            ));
         }
-        
+
         if !self.config.is_dir() {
-            return Err(format!("Configuration path is not a directory: {}", self.config.display()));
+            return Err(format!(
+                "Configuration path is not a directory: {}",
+                self.config.display()
+            ));
         }
-        
+
         Ok(())
     }
-    
+
     /// Определяет, нужно ли использовать кеш
     pub fn use_cache(&self) -> bool {
         !self.no_cache && !self.force

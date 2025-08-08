@@ -1,11 +1,12 @@
 //! Модуль для форматирования и вывода результатов
 
 use anyhow::Result;
+use colored::Colorize;
+use serde::Serialize;
+use std::fs::File;
 use std::io::{self, Write};
 use std::path::Path;
-use std::fs::File;
-use serde::Serialize;
-use colored::Colorize;
+use std::str::FromStr;
 
 /// Формат вывода результатов
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -16,16 +17,24 @@ pub enum OutputFormat {
     Csv,
 }
 
-impl OutputFormat {
-    /// Парсит формат из строки
-    pub fn from_str(s: &str) -> Result<Self> {
+impl FromStr for OutputFormat {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "text" | "txt" => Ok(OutputFormat::Text),
             "json" => Ok(OutputFormat::Json),
             "table" => Ok(OutputFormat::Table),
             "csv" => Ok(OutputFormat::Csv),
-            _ => Err(anyhow::anyhow!("Unknown output format: {}", s))
+            _ => Err(anyhow::anyhow!("Unknown output format: {}", s)),
         }
+    }
+}
+
+impl OutputFormat {
+    /// Совместимая обёртка
+    pub fn parse_output_format(s: &str) -> Result<Self> {
+        <Self as FromStr>::from_str(s)
     }
 }
 
@@ -45,7 +54,7 @@ impl OutputWriter {
             pretty: false,
         }
     }
-    
+
     /// Создает writer для файла
     pub fn file(path: &Path, format: OutputFormat) -> Result<Self> {
         let file = File::create(path)?;
@@ -55,13 +64,13 @@ impl OutputWriter {
             pretty: false,
         })
     }
-    
+
     /// Включает pretty-печать для JSON
     pub fn with_pretty(mut self, pretty: bool) -> Self {
         self.pretty = pretty;
         self
     }
-    
+
     /// Записывает сериализуемый объект
     pub fn write_object<T: Serialize>(&mut self, obj: &T) -> Result<()> {
         match self.format {
@@ -79,18 +88,21 @@ impl OutputWriter {
                 writeln!(self.writer, "{}", json)?;
             }
             _ => {
-                return Err(anyhow::anyhow!("Format {:?} not supported for objects", self.format));
+                return Err(anyhow::anyhow!(
+                    "Format {:?} not supported for objects",
+                    self.format
+                ));
             }
         }
         Ok(())
     }
-    
+
     /// Записывает строку
     pub fn write_line(&mut self, line: &str) -> Result<()> {
         writeln!(self.writer, "{}", line)?;
         Ok(())
     }
-    
+
     /// Записывает заголовок
     pub fn write_header(&mut self, header: &str) -> Result<()> {
         match self.format {
@@ -104,7 +116,7 @@ impl OutputWriter {
         }
         Ok(())
     }
-    
+
     /// Записывает элемент списка
     pub fn write_list_item(&mut self, item: &str) -> Result<()> {
         match self.format {
@@ -117,7 +129,7 @@ impl OutputWriter {
         }
         Ok(())
     }
-    
+
     /// Записывает таблицу
     pub fn write_table(&mut self, headers: &[&str], rows: Vec<Vec<String>>) -> Result<()> {
         match self.format {
@@ -131,7 +143,7 @@ impl OutputWriter {
                         }
                     }
                 }
-                
+
                 // Печатаем заголовки
                 for (i, header) in headers.iter().enumerate() {
                     if i > 0 {
@@ -140,7 +152,7 @@ impl OutputWriter {
                     write!(self.writer, "{:width$}", header.bold(), width = widths[i])?;
                 }
                 writeln!(self.writer)?;
-                
+
                 // Печатаем разделитель
                 for (i, width) in widths.iter().enumerate() {
                     if i > 0 {
@@ -149,7 +161,7 @@ impl OutputWriter {
                     write!(self.writer, "{}", "─".repeat(*width))?;
                 }
                 writeln!(self.writer)?;
-                
+
                 // Печатаем строки
                 for row in rows {
                     for (i, cell) in row.iter().enumerate() {
@@ -180,7 +192,10 @@ impl OutputWriter {
                     let mut obj = serde_json::Map::new();
                     for (i, header) in headers.iter().enumerate() {
                         if i < row.len() {
-                            obj.insert(header.to_string(), serde_json::Value::String(row[i].clone()));
+                            obj.insert(
+                                header.to_string(),
+                                serde_json::Value::String(row[i].clone()),
+                            );
                         }
                     }
                     objects.push(serde_json::Value::Object(obj));
@@ -195,7 +210,7 @@ impl OutputWriter {
         }
         Ok(())
     }
-    
+
     /// Завершает запись и сбрасывает буфер
     pub fn flush(&mut self) -> Result<()> {
         self.writer.flush()?;
@@ -221,14 +236,14 @@ impl Statistics {
             OutputFormat::Text | OutputFormat::Table => {
                 writer.write_header("Statistics")?;
                 writer.write_line(&format!("Total items: {}", self.total))?;
-                
+
                 if !self.categories.is_empty() {
                     writer.write_line("\nBy category:")?;
                     for (category, count) in &self.categories {
                         writer.write_line(&format!("  {}: {}", category, count))?;
                     }
                 }
-                
+
                 if let Some(duration) = &self.duration {
                     writer.write_line(&format!("\nDuration: {}", duration))?;
                 }

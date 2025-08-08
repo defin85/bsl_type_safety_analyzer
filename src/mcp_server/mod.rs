@@ -6,7 +6,6 @@
 ///     validate code, and get method information.
 ///   </description>
 /// </module>
-
 mod analyzer;
 mod tools;
 mod types;

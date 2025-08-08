@@ -1,5 +1,5 @@
 // Заглушка для грамматики BSL
-use crate::parser::{Token, ast::AstNode};
+use crate::parser::{ast::AstNode, Token};
 use anyhow::Result;
 
 pub fn parse_module(_tokens: &[Token]) -> Result<AstNode> {

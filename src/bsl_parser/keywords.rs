@@ -1,11 +1,11 @@
 //! BSL Keywords and Language Constructs
-//! 
+//!
 //! Этот модуль поддерживает две стратегии работы с ключевыми словами BSL:
 //! 1. Ручные списки (для базовых случаев и fallback)
 //! 2. Автоматическая генерация из базы данных платформы (рекомендуется)
 
-use std::collections::HashSet;
 use once_cell::sync::Lazy;
+use std::collections::HashSet;
 
 // Импортируем автоматический генератор ключевых слов
 pub mod keyword_generator;
@@ -15,39 +15,66 @@ pub use keyword_generator::{GeneratedBslKeywords, GENERATED_BSL_KEYWORDS};
 pub static BSL_STRICT_KEYWORDS_RU: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
         // Объявления
-        "Процедура", "КонецПроцедуры", "Функция", "КонецФункции", "Перем", "Экспорт",
-        
-        // Управление потоком  
-        "Если", "Тогда", "ИначеЕсли", "Иначе", "КонецЕсли",
-        "Пока", "Цикл", "КонецЦикла", "Для", "По", "До", "Каждого", "Из",
-        "Попытка", "Исключение", "ВызватьИсключение", "КонецПопытки",
-        "Прервать", "Продолжить", "Возврат",
-        
+        "Процедура",
+        "КонецПроцедуры",
+        "Функция",
+        "КонецФункции",
+        "Перем",
+        "Экспорт",
+        // Управление потоком
+        "Если",
+        "Тогда",
+        "ИначеЕсли",
+        "Иначе",
+        "КонецЕсли",
+        "Пока",
+        "Цикл",
+        "КонецЦикла",
+        "Для",
+        "По",
+        "До",
+        "Каждого",
+        "Из",
+        "Попытка",
+        "Исключение",
+        "ВызватьИсключение",
+        "КонецПопытки",
+        "Прервать",
+        "Продолжить",
+        "Возврат",
         // Операторы
-        "И", "ИЛИ", "НЕ", "Новый",
-        
+        "И",
+        "ИЛИ",
+        "НЕ",
+        "Новый",
         // Области
-        "Область", "КонецОбласти",
-        
+        "Область",
+        "КонецОбласти",
         // Директивы препроцессора
-        "НаКлиенте", "НаСервере", "НаКлиентеНаСервере", "НаСервереБезКонтекста",
-        
+        "НаКлиенте",
+        "НаСервере",
+        "НаКлиентеНаСервере",
+        "НаСервереБезКонтекста",
         // Модификаторы
-        "Знач", "ПерефВыз", "ИмяПодсистемы",
-        
+        "Знач",
+        "ПерефВыз",
+        "ИмяПодсистемы",
         // Условная компиляция
-        "ВебКлиент", "ТонкийКлиент", "ТолстыйКлиентОбычноеПриложение", 
-        "ТолстыйКлиентУправляемоеПриложение", "Сервер", "ВнешнееСоединение",
-        "МобильноеПриложениеКлиент", "МобильноеПриложениеСервер", "МобильныйКлиент",
+        "ВебКлиент",
+        "ТонкийКлиент",
+        "ТолстыйКлиентОбычноеПриложение",
+        "ТолстыйКлиентУправляемоеПриложение",
+        "Сервер",
+        "ВнешнееСоединение",
+        "МобильноеПриложениеКлиент",
+        "МобильноеПриложениеСервер",
+        "МобильныйКлиент",
     ])
 });
 
 /// Литералы BSL (могут появляться как значения)
-pub static BSL_LITERALS_RU: Lazy<HashSet<&'static str>> = Lazy::new(|| {
-    HashSet::from([
-        "Истина", "Ложь", "Неопределено", "NULL",
-    ])
-});
+pub static BSL_LITERALS_RU: Lazy<HashSet<&'static str>> =
+    Lazy::new(|| HashSet::from(["Истина", "Ложь", "Неопределено", "NULL"]));
 
 /// Русские ключевые слова BSL (объединение строгих и литералов)
 pub static BSL_KEYWORDS_RU: Lazy<HashSet<&'static str>> = Lazy::new(|| {
@@ -60,33 +87,63 @@ pub static BSL_KEYWORDS_RU: Lazy<HashSet<&'static str>> = Lazy::new(|| {
 pub static BSL_KEYWORDS_EN: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
         // Declarations
-        "Procedure", "EndProcedure", "Function", "EndFunction", "Var", "Export",
-        
+        "Procedure",
+        "EndProcedure",
+        "Function",
+        "EndFunction",
+        "Var",
+        "Export",
         // Control flow
-        "If", "Then", "ElsIf", "Else", "EndIf",
-        "While", "Do", "EndDo", "For", "To", "Each", "In",
-        "Try", "Except", "Raise", "EndTry",
-        "Break", "Continue", "Return",
-        
+        "If",
+        "Then",
+        "ElsIf",
+        "Else",
+        "EndIf",
+        "While",
+        "Do",
+        "EndDo",
+        "For",
+        "To",
+        "Each",
+        "In",
+        "Try",
+        "Except",
+        "Raise",
+        "EndTry",
+        "Break",
+        "Continue",
+        "Return",
         // Data types
-        "True", "False", "Undefined", "NULL",
-        
+        "True",
+        "False",
+        "Undefined",
+        "NULL",
         // Operators
-        "And", "Or", "Not", "New",
-        
+        "And",
+        "Or",
+        "Not",
+        "New",
         // Regions
-        "Region", "EndRegion",
-        
+        "Region",
+        "EndRegion",
         // Preprocessor directives
-        "AtClient", "AtServer", "AtClientAtServer", "AtServerNoContext",
-        
+        "AtClient",
+        "AtServer",
+        "AtClientAtServer",
+        "AtServerNoContext",
         // Modifiers
-        "Val", "Var",
-        
+        "Val",
+        "Var",
         // Conditional compilation
-        "WebClient", "ThinClient", "ThickClientOrdinaryApplication",
-        "ThickClientManagedApplication", "Server", "ExternalConnection",
-        "MobileAppClient", "MobileAppServer", "MobileClient",
+        "WebClient",
+        "ThinClient",
+        "ThickClientOrdinaryApplication",
+        "ThickClientManagedApplication",
+        "Server",
+        "ExternalConnection",
+        "MobileAppClient",
+        "MobileAppServer",
+        "MobileClient",
     ])
 });
 
@@ -94,20 +151,39 @@ pub static BSL_KEYWORDS_EN: Lazy<HashSet<&'static str>> = Lazy::new(|| {
 pub static BSL_BUILTIN_TYPES: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
         // Основные типы
-        "Строка", "String", "Число", "Number", "Булево", "Boolean", 
-        "Дата", "Date",
-        
+        "Строка",
+        "String",
+        "Число",
+        "Number",
+        "Булево",
+        "Boolean",
+        "Дата",
+        "Date",
         // Коллекции
-        "Массив", "Array", "Структура", "Structure", "Соответствие", "Map",
-        "СписокЗначений", "ValueList", "ТаблицаЗначений", "ValueTable",
-        "ДеревоЗначений", "ValueTree",
-        
+        "Массив",
+        "Array",
+        "Структура",
+        "Structure",
+        "Соответствие",
+        "Map",
+        "СписокЗначений",
+        "ValueList",
+        "ТаблицаЗначений",
+        "ValueTable",
+        "ДеревоЗначений",
+        "ValueTree",
         // Файловая система
-        "Файл", "File", "ТекстовыйДокумент", "TextDocument",
-        
+        "Файл",
+        "File",
+        "ТекстовыйДокумент",
+        "TextDocument",
         // Системные
-        "СистемнаяИнформация", "SystemInfo", "ПользователиИнформационнойБазы", "InfoBaseUsers",
-        "Метаданные", "Metadata",
+        "СистемнаяИнформация",
+        "SystemInfo",
+        "ПользователиИнформационнойБазы",
+        "InfoBaseUsers",
+        "Метаданные",
+        "Metadata",
     ])
 });
 
@@ -115,22 +191,37 @@ pub static BSL_BUILTIN_TYPES: Lazy<HashSet<&'static str>> = Lazy::new(|| {
 pub static BSL_PLATFORM_OBJECTS: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
         // Справочники и документы (общие префиксы)
-        "Справочники", "Catalogs", "Документы", "Documents", 
-        "Регистры", "Registers", "ОтчетыИОбработки", "ReportsAndDataProcessors",
-        "Отчеты", "Reports", "Обработки", "DataProcessors",
-        "РегистрыСведений", "InformationRegisters", "РегистрыНакопления", "AccumulationRegisters",
-        
+        "Справочники",
+        "Catalogs",
+        "Документы",
+        "Documents",
+        "Регистры",
+        "Registers",
+        "ОтчетыИОбработки",
+        "ReportsAndDataProcessors",
+        "Отчеты",
+        "Reports",
+        "Обработки",
+        "DataProcessors",
+        "РегистрыСведений",
+        "InformationRegisters",
+        "РегистрыНакопления",
+        "AccumulationRegisters",
         // Глобальные объекты
-        "ПользователиИнформационнойБазы", "InfoBaseUsers",
-        "Метаданные", "Metadata", "КонстантыМенеджер", "ConstantsManager",
+        "ПользователиИнформационнойБазы",
+        "InfoBaseUsers",
+        "Метаданные",
+        "Metadata",
+        "КонстантыМенеджер",
+        "ConstantsManager",
     ])
 });
 
 /// Операторы BSL
 pub static BSL_OPERATORS: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
-        "+", "-", "*", "/", "%", "=", "<>", "!=", "<", ">", "<=", ">=",
-        "И", "ИЛИ", "НЕ", "And", "Or", "Not",
+        "+", "-", "*", "/", "%", "=", "<>", "!=", "<", ">", "<=", ">=", "И", "ИЛИ", "НЕ", "And",
+        "Or", "Not",
     ])
 });
 
@@ -166,7 +257,7 @@ pub fn is_bsl_builtin_type(word: &str) -> bool {
     if BSL_BUILTIN_TYPES.contains(word) {
         return true;
     }
-    
+
     // Затем проверяем автоматически сгенерированные типы
     GENERATED_BSL_KEYWORDS.is_builtin_type(word)
 }
@@ -178,7 +269,7 @@ pub fn is_bsl_platform_object(word: &str) -> bool {
     if BSL_PLATFORM_OBJECTS.contains(word) {
         return true;
     }
-    
+
     // Затем проверяем автоматически сгенерированные системные объекты
     GENERATED_BSL_KEYWORDS.is_system_object(word)
 }
@@ -250,37 +341,111 @@ pub fn is_bsl_reserved_word(word: &str) -> bool {
 pub static BSL_GLOBAL_FUNCTIONS: Lazy<HashSet<&'static str>> = Lazy::new(|| {
     HashSet::from([
         // Системные функции
-        "Сообщить", "Message", "ПредупреждениеОБезопасности", "SecurityWarning",
-        "ВопросДаНет", "QuestionYesNo", "Вопрос", "Question",
-        "ТекущаяДата", "CurrentDate", "ТекущаяДатаСеанса", "CurrentSessionDate",
-        "Формат", "Format", "СтрДлина", "StrLen", "СтрСравнить", "StrCompare",
-        "ВРег", "Upper", "НРег", "Lower", "СокрЛП", "TrimAll", "СокрП", "TrimR", "СокрЛ", "TrimL",
-        "Лев", "Left", "Прав", "Right", "Сред", "Mid", "Найти", "Find", "СтрЗаменить", "StrReplace",
-        "СтрСоединить", "StrConcat", "СтрРазделить", "StrSplit",
-        
+        "Сообщить",
+        "Message",
+        "ПредупреждениеОБезопасности",
+        "SecurityWarning",
+        "ВопросДаНет",
+        "QuestionYesNo",
+        "Вопрос",
+        "Question",
+        "ТекущаяДата",
+        "CurrentDate",
+        "ТекущаяДатаСеанса",
+        "CurrentSessionDate",
+        "Формат",
+        "Format",
+        "СтрДлина",
+        "StrLen",
+        "СтрСравнить",
+        "StrCompare",
+        "ВРег",
+        "Upper",
+        "НРег",
+        "Lower",
+        "СокрЛП",
+        "TrimAll",
+        "СокрП",
+        "TrimR",
+        "СокрЛ",
+        "TrimL",
+        "Лев",
+        "Left",
+        "Прав",
+        "Right",
+        "Сред",
+        "Mid",
+        "Найти",
+        "Find",
+        "СтрЗаменить",
+        "StrReplace",
+        "СтрСоединить",
+        "StrConcat",
+        "СтрРазделить",
+        "StrSplit",
         // Функции преобразования типов
-        "Строка", "String", "Число", "Number", "Булево", "Boolean", "Дата", "Date",
-        "ТипЗнч", "TypeOf", "XMLСтрока", "XMLString", "XMLЗначение", "XMLValue",
-        
+        "Строка",
+        "String",
+        "Число",
+        "Number",
+        "Булево",
+        "Boolean",
+        "Дата",
+        "Date",
+        "ТипЗнч",
+        "TypeOf",
+        "XMLСтрока",
+        "XMLString",
+        "XMLЗначение",
+        "XMLValue",
         // Функции для работы с файлами
-        "УдалитьФайлы", "DeleteFiles", "КопироватьФайл", "FileCopy", "ПереместитьФайл", "MoveFile",
-        "КаталогВременныхФайлов", "TempFilesDir", "КаталогПрограммы", "BinDir",
-        "ПолучитьИмяВременногоФайла", "GetTempFileName",
-        
+        "УдалитьФайлы",
+        "DeleteFiles",
+        "КопироватьФайл",
+        "FileCopy",
+        "ПереместитьФайл",
+        "MoveFile",
+        "КаталогВременныхФайлов",
+        "TempFilesDir",
+        "КаталогПрограммы",
+        "BinDir",
+        "ПолучитьИмяВременногоФайла",
+        "GetTempFileName",
         // Математические функции
-        "Цел", "Int", "Окр", "Round", "Мин", "Min", "Макс", "Max", "Абс", "Abs",
-        "Cos", "Sin", "Tan", "Exp", "Log", "Log10", "Pow", "Sqrt",
-        
+        "Цел",
+        "Int",
+        "Окр",
+        "Round",
+        "Мин",
+        "Min",
+        "Макс",
+        "Max",
+        "Абс",
+        "Abs",
+        "Cos",
+        "Sin",
+        "Tan",
+        "Exp",
+        "Log",
+        "Log10",
+        "Pow",
+        "Sqrt",
         // JSON функции (НЕ СУЩЕСТВУЮЩИЕ - для тестов)
         // "ПрочитатьJSONИзСтроки", // НЕ СУЩЕСТВУЕТ
-        // "ПрочитатьJSONВЗначение", // НЕ СУЩЕСТВУЕТ 
-        
+        // "ПрочитатьJSONВЗначение", // НЕ СУЩЕСТВУЕТ
+
         // Правильные JSON функции (если есть)
-        "ПрочитатьJSON", "ReadJSON", "ЗаписатьJSON", "WriteJSON",
-        
+        "ПрочитатьJSON",
+        "ReadJSON",
+        "ЗаписатьJSON",
+        "WriteJSON",
         // Функции инициализации
-        "ОписаниеОшибки", "ErrorDescription", "КодВозврата", "ExitCode",
-        "ПолучитьОбщийМодуль", "GetCommonModule",
+        "ОписаниеОшибки",
+        "ErrorDescription",
+        "КодВозврата",
+        "ExitCode",
+        "ПолучитьОбщийМодуль",
+        "GetCommonModule",
     ])
 });
 
@@ -291,7 +456,7 @@ pub fn is_bsl_global_function(word: &str) -> bool {
     if BSL_GLOBAL_FUNCTIONS.contains(word) {
         return true;
     }
-    
+
     // Затем проверяем автоматически сгенерированные функции
     GENERATED_BSL_KEYWORDS.is_global_function(word)
 }
@@ -330,15 +495,18 @@ mod tests {
     fn test_context_dependent_variables() {
         // В выражении ТаблицаЗначений может быть переменной
         assert!(can_be_variable("ТаблицаЗначений", BslContext::Expression));
-        
+
         // В начале строки Попытка не может быть переменной
         assert!(!can_be_variable("Попытка", BslContext::StatementStart));
-        
+
         // После "Новый" не может быть переменной
         assert!(!can_be_variable("ТаблицаЗначений", BslContext::AfterNew));
-        
+
         // В объявлении типа может быть типом
-        assert!(can_be_variable("ТаблицаЗначений", BslContext::TypeDeclaration));
+        assert!(can_be_variable(
+            "ТаблицаЗначений",
+            BslContext::TypeDeclaration
+        ));
     }
 
     #[test]
@@ -352,12 +520,21 @@ mod tests {
     #[test]
     fn test_context_reserved_words() {
         // В начале строки Попытка зарезервировано
-        assert!(is_bsl_reserved_word_in_context("Попытка", BslContext::StatementStart));
-        
+        assert!(is_bsl_reserved_word_in_context(
+            "Попытка",
+            BslContext::StatementStart
+        ));
+
         // В выражении ТаблицаЗначений не зарезервировано (может быть переменной)
-        assert!(!is_bsl_reserved_word_in_context("ТаблицаЗначений", BslContext::Expression));
-        
+        assert!(!is_bsl_reserved_word_in_context(
+            "ТаблицаЗначений",
+            BslContext::Expression
+        ));
+
         // После "Новый" ТаблицаЗначений зарезервировано как тип
-        assert!(is_bsl_reserved_word_in_context("ТаблицаЗначений", BslContext::AfterNew));
+        assert!(is_bsl_reserved_word_in_context(
+            "ТаблицаЗначений",
+            BslContext::AfterNew
+        ));
     }
 }

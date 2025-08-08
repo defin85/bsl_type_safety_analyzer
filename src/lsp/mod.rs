@@ -7,25 +7,23 @@ Provides real-time BSL analysis through LSP for IDE integration.
 use anyhow::Result;
 use tower_lsp::{LspService, Server};
 
-mod server;
 mod diagnostics;
+mod server;
 
+pub use diagnostics::{convert_analysis_results, convert_to_lsp_diagnostic};
 pub use server::BslLanguageServer;
-pub use diagnostics::{convert_to_lsp_diagnostic, convert_analysis_results};
 
 /// Starts LSP server in stdio mode
 pub async fn start_stdio_server() -> Result<()> {
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
-    
-    let (service, socket) = LspService::new(|client| BslLanguageServer::new(client));
-    
+
+    let (service, socket) = LspService::new(BslLanguageServer::new);
+
     tracing::info!("BSL LSP Server starting...");
-    
-    Server::new(stdin, stdout, socket)
-        .serve(service)
-        .await;
-    
+
+    Server::new(stdin, stdout, socket).serve(service).await;
+
     Ok(())
 }
 

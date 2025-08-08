@@ -1,9 +1,9 @@
 //! Модуль для отображения прогресса выполнения
 
-use std::sync::Arc;
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::time::{Duration, Instant};
 use colored::Colorize;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Arc;
+use std::time::{Duration, Instant};
 
 /// Стиль отображения прогресса
 #[derive(Debug, Clone, Copy)]
@@ -42,60 +42,61 @@ impl ProgressReporter {
             message: message.into(),
         }
     }
-    
+
     /// Устанавливает стиль отображения
     pub fn with_style(mut self, style: ProgressStyle) -> Self {
         self.style = style;
         self
     }
-    
+
     /// Устанавливает интервал обновления
     pub fn with_update_interval(mut self, interval: Duration) -> Self {
         self.update_interval = interval;
         self
     }
-    
+
     /// Увеличивает счетчик на 1
     pub fn inc(&self) {
         self.add(1);
     }
-    
+
     /// Увеличивает счетчик на указанное значение
     pub fn add(&self, delta: usize) {
         let new_value = self.current.fetch_add(delta, Ordering::Relaxed) + delta;
-        
+
         // Проверяем, нужно ли обновить отображение
         if self.should_update() {
             self.display(new_value);
         }
     }
-    
+
     /// Устанавливает текущее значение
     pub fn set(&self, value: usize) {
         self.current.store(value, Ordering::Relaxed);
-        
+
         if self.should_update() {
             self.display(value);
         }
     }
-    
+
     /// Обновляет прогресс (алиас для set)
     pub fn update(&self, value: usize) {
         self.set(value);
     }
-    
+
     /// Завершает прогресс
     pub fn finish(&self) {
         let current = self.current.load(Ordering::Relaxed);
         self.display_final(current);
     }
-    
+
     /// Завершает с сообщением
     pub fn finish_with_message(&self, message: &str) {
         let current = self.current.load(Ordering::Relaxed);
         let elapsed = self.start_time.elapsed();
-        
-        println!("\r{} {} ({}/{}) in {:.2?}", 
+
+        println!(
+            "\r{} {} ({}/{}) in {:.2?}",
             "✅".green(),
             message.green(),
             current,
@@ -103,12 +104,12 @@ impl ProgressReporter {
             elapsed
         );
     }
-    
+
     /// Проверяет, нужно ли обновить отображение
     fn should_update(&self) -> bool {
         self.last_update.elapsed() >= self.update_interval
     }
-    
+
     /// Отображает текущий прогресс
     fn display(&self, current: usize) {
         match self.style {
@@ -121,11 +122,9 @@ impl ProgressReporter {
                 } else {
                     0
                 };
-                print!("\r{}: {}% ({}/{})", 
-                    self.message, 
-                    percentage, 
-                    current, 
-                    self.total
+                print!(
+                    "\r{}: {}% ({}/{})",
+                    self.message, percentage, current, self.total
                 );
             }
             ProgressStyle::Bar => {
@@ -135,26 +134,27 @@ impl ProgressReporter {
                 self.display_spinner(current);
             }
         }
-        
+
         // Сбрасываем буфер для немедленного отображения
         use std::io::{self, Write};
         let _ = io::stdout().flush();
     }
-    
+
     /// Отображает прогресс-бар
     fn display_bar(&self, current: usize) {
         const BAR_WIDTH: usize = 40;
-        
+
         let progress = if self.total > 0 {
             current as f64 / self.total as f64
         } else {
             0.0
         };
-        
+
         let filled = (progress * BAR_WIDTH as f64) as usize;
         let empty = BAR_WIDTH - filled;
-        
-        print!("\r{}: [{}{}] {}/{}", 
+
+        print!(
+            "\r{}: [{}{}] {}/{}",
             self.message,
             "█".repeat(filled).green(),
             "░".repeat(empty).dimmed(),
@@ -162,21 +162,22 @@ impl ProgressReporter {
             self.total
         );
     }
-    
+
     /// Отображает спиннер
     fn display_spinner(&self, current: usize) {
         const SPINNER_FRAMES: &[&str] = &["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-        
+
         let frame_index = (current / 10) % SPINNER_FRAMES.len();
         let frame = SPINNER_FRAMES[frame_index];
-        
-        print!("\r{} {}: {} items processed", 
+
+        print!(
+            "\r{} {}: {} items processed",
             frame.cyan(),
             self.message,
             current
         );
     }
-    
+
     /// Финальное отображение
     fn display_final(&self, current: usize) {
         let elapsed = self.start_time.elapsed();
@@ -185,8 +186,9 @@ impl ProgressReporter {
         } else {
             0.0
         };
-        
-        println!("\r{}: {} items in {:.2?} ({:.1} items/sec)", 
+
+        println!(
+            "\r{}: {} items in {:.2?} ({:.1} items/sec)",
             self.message.green(),
             current,
             elapsed,
@@ -206,15 +208,15 @@ impl SilentCounter {
             count: AtomicUsize::new(0),
         }
     }
-    
+
     pub fn inc(&self) {
         self.count.fetch_add(1, Ordering::Relaxed);
     }
-    
+
     pub fn add(&self, delta: usize) {
         self.count.fetch_add(delta, Ordering::Relaxed);
     }
-    
+
     pub fn get(&self) -> usize {
         self.count.load(Ordering::Relaxed)
     }

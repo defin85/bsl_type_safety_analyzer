@@ -1,7 +1,9 @@
 //! Мост между новым tree-sitter AST и старой системой анализа
 
+use crate::bsl_parser::ast::{
+    BslAst, CompilerDirective, Declaration, Expression, Literal, Statement,
+};
 use crate::parser::ast::{AstNode, AstNodeType, Position, Span};
-use crate::bsl_parser::ast::{BslAst, Declaration, Statement, Expression, Literal, CompilerDirective};
 
 /// Преобразует новый BSL AST в старый формат для совместимости
 pub struct AstBridge;
@@ -11,7 +13,7 @@ impl AstBridge {
     pub fn convert_bsl_ast_to_ast_node(bsl_ast: &BslAst) -> AstNode {
         let mut module_node = AstNode::new(
             AstNodeType::Module,
-            Self::location_to_span(&bsl_ast.module.location)
+            Self::location_to_span(&bsl_ast.module.location),
         );
 
         // Добавляем директивы компиляции как комментарии
@@ -39,11 +41,7 @@ impl AstBridge {
             CompilerDirective::AtClientAtServer => "&НаКлиентеНаСервере",
         };
 
-        AstNode::with_value(
-            AstNodeType::Comment,
-            Span::zero(),
-            text.to_string()
-        )
+        AstNode::with_value(AstNodeType::Comment, Span::zero(), text.to_string())
     }
 
     /// Конвертирует объявление
@@ -53,7 +51,7 @@ impl AstBridge {
                 let mut proc_node = AstNode::with_value(
                     AstNodeType::Procedure,
                     Self::location_to_span(&proc.location),
-                    proc.name.clone()
+                    proc.name.clone(),
                 );
 
                 if proc.export {
@@ -62,16 +60,13 @@ impl AstBridge {
 
                 // Добавляем параметры
                 if !proc.params.is_empty() {
-                    let mut param_list = AstNode::new(
-                        AstNodeType::ParameterList,
-                        Span::zero()
-                    );
+                    let mut param_list = AstNode::new(AstNodeType::ParameterList, Span::zero());
 
                     for param in &proc.params {
                         let mut param_node = AstNode::with_value(
                             AstNodeType::Parameter,
                             Self::location_to_span(&param.location),
-                            param.name.clone()
+                            param.name.clone(),
                         );
 
                         if param.by_val {
@@ -98,7 +93,7 @@ impl AstBridge {
                 let mut func_node = AstNode::with_value(
                     AstNodeType::Function,
                     Self::location_to_span(&func.location),
-                    func.name.clone()
+                    func.name.clone(),
                 );
 
                 if func.export {
@@ -107,16 +102,13 @@ impl AstBridge {
 
                 // Добавляем параметры
                 if !func.params.is_empty() {
-                    let mut param_list = AstNode::new(
-                        AstNodeType::ParameterList,
-                        Span::zero()
-                    );
+                    let mut param_list = AstNode::new(AstNodeType::ParameterList, Span::zero());
 
                     for param in &func.params {
                         let mut param_node = AstNode::with_value(
                             AstNodeType::Parameter,
                             Self::location_to_span(&param.location),
-                            param.name.clone()
+                            param.name.clone(),
                         );
 
                         if param.by_val {
@@ -142,7 +134,7 @@ impl AstBridge {
             Declaration::Variable(var) => {
                 let mut var_node = AstNode::new(
                     AstNodeType::VariableDeclaration,
-                    Self::location_to_span(&var.location)
+                    Self::location_to_span(&var.location),
                 );
 
                 if var.export {
@@ -151,11 +143,8 @@ impl AstBridge {
 
                 // Добавляем имена переменных
                 for name in &var.names {
-                    let name_node = AstNode::with_value(
-                        AstNodeType::Variable,
-                        Span::zero(),
-                        name.clone()
-                    );
+                    let name_node =
+                        AstNode::with_value(AstNodeType::Variable, Span::zero(), name.clone());
                     var_node.add_child(name_node);
                 }
 
@@ -167,13 +156,11 @@ impl AstBridge {
     /// Конвертирует оператор
     fn convert_statement(statement: &Statement) -> AstNode {
         match statement {
-            Statement::Expression(expr) => {
-                Self::convert_expression(expr)
-            }
+            Statement::Expression(expr) => Self::convert_expression(expr),
             Statement::Assignment(assign) => {
                 let mut assign_node = AstNode::new(
                     AstNodeType::Assignment,
-                    Self::location_to_span(&assign.location)
+                    Self::location_to_span(&assign.location),
                 );
 
                 assign_node.add_child(Self::convert_expression(&assign.target));
@@ -184,7 +171,7 @@ impl AstBridge {
             Statement::If(if_stmt) => {
                 let mut if_node = AstNode::new(
                     AstNodeType::IfStatement,
-                    Self::location_to_span(&if_stmt.location)
+                    Self::location_to_span(&if_stmt.location),
                 );
 
                 if_node.add_child(Self::convert_expression(&if_stmt.condition));
@@ -210,7 +197,7 @@ impl AstBridge {
             Statement::Return(ret) => {
                 let mut return_node = AstNode::new(
                     AstNodeType::ReturnStatement,
-                    Self::location_to_span(&ret.location)
+                    Self::location_to_span(&ret.location),
                 );
 
                 if let Some(value) = &ret.value {
@@ -219,12 +206,8 @@ impl AstBridge {
 
                 return_node
             }
-            Statement::Break => {
-                AstNode::new(AstNodeType::BreakStatement, Span::zero())
-            }
-            Statement::Continue => {
-                AstNode::new(AstNodeType::ContinueStatement, Span::zero())
-            }
+            Statement::Break => AstNode::new(AstNodeType::BreakStatement, Span::zero()),
+            Statement::Continue => AstNode::new(AstNodeType::ContinueStatement, Span::zero()),
             _ => {
                 // Для других типов операторов создаем общий узел
                 AstNode::new(AstNodeType::Expression, Span::zero())
@@ -235,29 +218,20 @@ impl AstBridge {
     /// Конвертирует выражение
     fn convert_expression(expression: &Expression) -> AstNode {
         match expression {
-            Expression::Literal(literal) => {
-                Self::convert_literal(literal)
-            }
+            Expression::Literal(literal) => Self::convert_literal(literal),
             Expression::Identifier(name) => {
-                AstNode::with_value(
-                    AstNodeType::Identifier,
-                    Span::zero(),
-                    name.clone()
-                )
+                AstNode::with_value(AstNodeType::Identifier, Span::zero(), name.clone())
             }
             Expression::MethodCall(call) => {
                 let mut call_node = AstNode::new(
                     AstNodeType::CallExpression,
-                    Self::location_to_span(&call.location)
+                    Self::location_to_span(&call.location),
                 );
 
                 call_node.add_child(Self::convert_expression(&call.object));
-                
-                let method_node = AstNode::with_value(
-                    AstNodeType::Identifier,
-                    Span::zero(),
-                    call.method.clone()
-                );
+
+                let method_node =
+                    AstNode::with_value(AstNodeType::Identifier, Span::zero(), call.method.clone());
                 call_node.add_child(method_node);
 
                 // Добавляем аргументы
@@ -270,15 +244,15 @@ impl AstBridge {
             Expression::PropertyAccess(access) => {
                 let mut access_node = AstNode::new(
                     AstNodeType::MemberExpression,
-                    Self::location_to_span(&access.location)
+                    Self::location_to_span(&access.location),
                 );
 
                 access_node.add_child(Self::convert_expression(&access.object));
-                
+
                 let prop_node = AstNode::with_value(
                     AstNodeType::Identifier,
                     Span::zero(),
-                    access.property.clone()
+                    access.property.clone(),
                 );
                 access_node.add_child(prop_node);
 
@@ -287,13 +261,13 @@ impl AstBridge {
             Expression::New(new_expr) => {
                 let mut new_node = AstNode::new(
                     AstNodeType::NewExpression,
-                    Self::location_to_span(&new_expr.location)
+                    Self::location_to_span(&new_expr.location),
                 );
 
                 let type_node = AstNode::with_value(
                     AstNodeType::Identifier,
                     Span::zero(),
-                    new_expr.type_name.clone()
+                    new_expr.type_name.clone(),
                 );
                 new_node.add_child(type_node);
 
@@ -315,46 +289,30 @@ impl AstBridge {
     fn convert_literal(literal: &Literal) -> AstNode {
         match literal {
             Literal::Number(n) => {
-                AstNode::with_value(
-                    AstNodeType::NumberLiteral,
-                    Span::zero(),
-                    n.to_string()
-                )
+                AstNode::with_value(AstNodeType::NumberLiteral, Span::zero(), n.to_string())
             }
             Literal::String(s) => {
-                AstNode::with_value(
-                    AstNodeType::StringLiteral,
-                    Span::zero(),
-                    s.clone()
-                )
+                AstNode::with_value(AstNodeType::StringLiteral, Span::zero(), s.clone())
             }
             Literal::Boolean(b) => {
-                AstNode::with_value(
-                    AstNodeType::BooleanLiteral,
-                    Span::zero(),
-                    b.to_string()
-                )
+                AstNode::with_value(AstNodeType::BooleanLiteral, Span::zero(), b.to_string())
             }
             Literal::Date(d) => {
-                AstNode::with_value(
-                    AstNodeType::DateLiteral,
-                    Span::zero(),
-                    d.clone()
-                )
+                AstNode::with_value(AstNodeType::DateLiteral, Span::zero(), d.clone())
             }
-            Literal::Undefined => {
-                AstNode::new(AstNodeType::UndefinedLiteral, Span::zero())
-            }
-            Literal::Null => {
-                AstNode::new(AstNodeType::NullLiteral, Span::zero())
-            }
+            Literal::Undefined => AstNode::new(AstNodeType::UndefinedLiteral, Span::zero()),
+            Literal::Null => AstNode::new(AstNodeType::NullLiteral, Span::zero()),
         }
     }
 
     /// Конвертирует Location в Span
     fn location_to_span(location: &crate::bsl_parser::Location) -> Span {
         let start = Position::new(location.line, location.column, location.offset);
-        let end = Position::new(location.line, location.column + location.length, location.offset + location.length);
+        let end = Position::new(
+            location.line,
+            location.column + location.length,
+            location.offset + location.length,
+        );
         Span::new(start, end)
     }
 }
@@ -369,25 +327,23 @@ mod tests {
         let bsl_ast = BslAst {
             module: Module {
                 directives: vec![CompilerDirective::AtServer],
-                declarations: vec![
-                    Declaration::Procedure(ProcedureDecl {
-                        name: "TestProc".to_string(),
-                        export: true,
-                        params: vec![],
-                        directives: vec![],
-                        body: vec![],
-                        location: crate::bsl_parser::Location::new("test.bsl".to_string(), 1, 1, 0, 10),
-                    })
-                ],
+                declarations: vec![Declaration::Procedure(ProcedureDecl {
+                    name: "TestProc".to_string(),
+                    export: true,
+                    params: vec![],
+                    directives: vec![],
+                    body: vec![],
+                    location: crate::bsl_parser::Location::new("test.bsl".to_string(), 1, 1, 0, 10),
+                })],
                 location: crate::bsl_parser::Location::new("test.bsl".to_string(), 1, 1, 0, 100),
             },
         };
 
         let ast_node = AstBridge::convert_bsl_ast_to_ast_node(&bsl_ast);
-        
+
         assert_eq!(ast_node.node_type, AstNodeType::Module);
         assert_eq!(ast_node.children.len(), 2); // директива + процедура
-        
+
         let proc_node = &ast_node.children[1];
         assert_eq!(proc_node.node_type, AstNodeType::Procedure);
         assert_eq!(proc_node.text(), "TestProc");

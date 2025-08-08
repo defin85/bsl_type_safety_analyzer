@@ -5,16 +5,16 @@ Comprehensive error handling and reporting system.
 Ported from Python implementation with enhanced type safety.
 */
 
+use crate::parser::ast::Position;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::PathBuf;
-use crate::parser::ast::Position;
 
 /// Error severity levels
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ErrorLevel {
     Error,
-    Warning,  
+    Warning,
     Info,
     Hint,
 }
@@ -54,17 +54,17 @@ impl AnalysisError {
             related_positions: Vec::new(),
         }
     }
-    
+
     pub fn with_code(mut self, code: String) -> Self {
         self.error_code = Some(code);
         self
     }
-    
+
     pub fn with_suggestion(mut self, suggestion: String) -> Self {
         self.suggestion = Some(suggestion);
         self
     }
-    
+
     pub fn with_related_position(mut self, position: Position) -> Self {
         self.related_positions.push(position);
         self
@@ -73,19 +73,16 @@ impl AnalysisError {
 
 impl fmt::Display for AnalysisError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[{}] {}: {}", 
-               self.level, 
-               self.position, 
-               self.message)?;
-               
+        write!(f, "[{}] {}: {}", self.level, self.position, self.message)?;
+
         if let Some(code) = &self.error_code {
             write!(f, " ({})", code)?;
         }
-        
+
         if let Some(suggestion) = &self.suggestion {
             write!(f, "\n  Suggestion: {}", suggestion)?;
         }
-        
+
         Ok(())
     }
 }
@@ -98,47 +95,63 @@ pub struct ErrorCollector {
 
 impl ErrorCollector {
     pub fn new() -> Self {
-        Self {
-            errors: Vec::new(),
-        }
+        Self { errors: Vec::new() }
     }
-    
+
     pub fn add_error(&mut self, error: AnalysisError) {
         self.errors.push(error);
     }
-    
-    pub fn add_simple_error(&mut self, message: String, file_path: PathBuf, position: Position, level: ErrorLevel) {
+
+    pub fn add_simple_error(
+        &mut self,
+        message: String,
+        file_path: PathBuf,
+        position: Position,
+        level: ErrorLevel,
+    ) {
         self.add_error(AnalysisError::new(message, file_path, position, level));
     }
-    
+
     pub fn has_errors(&self) -> bool {
         self.errors.iter().any(|e| e.level == ErrorLevel::Error)
     }
-    
+
     pub fn has_warnings(&self) -> bool {
         self.errors.iter().any(|e| e.level == ErrorLevel::Warning)
     }
-    
+
     pub fn error_count(&self) -> usize {
-        self.errors.iter().filter(|e| e.level == ErrorLevel::Error).count()
+        self.errors
+            .iter()
+            .filter(|e| e.level == ErrorLevel::Error)
+            .count()
     }
-    
+
     pub fn warning_count(&self) -> usize {
-        self.errors.iter().filter(|e| e.level == ErrorLevel::Warning).count()
+        self.errors
+            .iter()
+            .filter(|e| e.level == ErrorLevel::Warning)
+            .count()
     }
-    
+
     pub fn get_errors(&self) -> Vec<&AnalysisError> {
-        self.errors.iter().filter(|e| e.level == ErrorLevel::Error).collect()
+        self.errors
+            .iter()
+            .filter(|e| e.level == ErrorLevel::Error)
+            .collect()
     }
-    
+
     pub fn get_warnings(&self) -> Vec<&AnalysisError> {
-        self.errors.iter().filter(|e| e.level == ErrorLevel::Warning).collect()
+        self.errors
+            .iter()
+            .filter(|e| e.level == ErrorLevel::Warning)
+            .collect()
     }
-    
+
     pub fn clear(&mut self) {
         self.errors.clear();
     }
-    
+
     pub fn merge(&mut self, other: ErrorCollector) {
         self.errors.extend(other.errors);
     }

@@ -1,13 +1,13 @@
 //! CLI утилита для анализа реального формата отчета конфигурации
 
-use std::path::PathBuf;
-use std::fs;
-use clap::Parser as ClapParser;
 use anyhow::Result;
+use bsl_analyzer::cli_common::{self, CliCommand, OutputFormat, OutputWriter, ProgressReporter};
+use clap::Parser as ClapParser;
 use encoding_rs::{UTF_16LE, UTF_8, WINDOWS_1251};
-use bsl_analyzer::cli_common::{self, OutputWriter, OutputFormat, CliCommand, ProgressReporter};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::fs;
+use std::path::PathBuf;
 
 #[derive(ClapParser, Debug)]
 #[command(
@@ -19,27 +19,27 @@ struct Args {
     /// Путь к файлу отчета
     #[arg(short, long, help = "Путь к текстовому отчету конфигурации")]
     report: PathBuf,
-    
+
     /// Формат вывода (text, json, table)
     #[arg(short, long, default_value = "text")]
     format: String,
-    
+
     /// Максимальное количество объектов для анализа
     #[arg(short, long)]
     limit: Option<usize>,
-    
+
     /// Показать только статистику
     #[arg(short, long)]
     stats_only: bool,
-    
+
     /// Вывести список объектов в файл
     #[arg(short, long)]
     output: Option<PathBuf>,
-    
+
     /// Подробный вывод
     #[arg(short, long)]
     verbose: bool,
-    
+
     /// Тихий режим
     #[arg(short, long)]
     quiet: bool,
@@ -80,14 +80,14 @@ struct ReportStatistics {
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    
+
     // Initialize logging
     if !args.quiet {
         cli_common::init_logging(args.verbose)?;
     } else {
         cli_common::init_minimal_logging()?;
     }
-    
+
     // Create command and run
     let command = AnalyzeReportCommand::new(args);
     cli_common::run_command(command)
@@ -107,11 +107,11 @@ impl CliCommand for AnalyzeReportCommand {
     fn name(&self) -> &str {
         "analyze_real_report"
     }
-    
+
     fn description(&self) -> &str {
         "Analyze 1C configuration text report structure"
     }
-    
+
     fn execute(&self) -> Result<()> {
         self.run_analysis()
     }
@@ -121,40 +121,40 @@ impl AnalyzeReportCommand {
     fn run_analysis(&self) -> Result<()> {
         // Validate input path
         cli_common::validate_path(&self.args.report, "Report file")?;
-        
+
         if !self.args.quiet {
             cli_common::print_info(&format!("Анализ отчета: {}", self.args.report.display()));
         }
-        
+
         // Read file with encoding detection
         let file_bytes = fs::read(&self.args.report)?;
         let (content, encoding) = self.detect_and_decode(&file_bytes);
-        
+
         if !self.args.quiet {
             cli_common::print_info(&format!("Обнаружена кодировка: {}", encoding));
         }
-        
+
         // Parse report
         let analysis = self.parse_report(&content, &encoding)?;
-        
+
         // Save to file if requested
         if let Some(output_path) = &self.args.output {
             let json = serde_json::to_string_pretty(&analysis)?;
             fs::write(output_path, json)?;
             if !self.args.quiet {
                 cli_common::print_success(&format!(
-                    "Результат сохранен в {}", 
+                    "Результат сохранен в {}",
                     output_path.display()
                 ));
             }
         }
-        
+
         // Display results
         self.display_results(&analysis)?;
-        
+
         Ok(())
     }
-    
+
     fn detect_and_decode(&self, file_bytes: &[u8]) -> (String, String) {
         // Try different encodings
         if let (decoded, _, false) = UTF_16LE.decode(file_bytes) {
@@ -169,52 +169,51 @@ impl AnalyzeReportCommand {
             (decoded.into_owned(), "UTF-8 (с заменами)".to_string())
         }
     }
-    
+
     fn parse_report(&self, content: &str, encoding: &str) -> Result<ReportAnalysis> {
         let lines: Vec<&str> = content.lines().collect();
         let total_lines = lines.len();
-        
+
         let mut objects = Vec::new();
         let mut in_object = false;
         let mut current_object: Option<ConfigurationObject> = None;
-        
+
         // Progress reporting
         let progress = if !self.args.quiet && !self.args.stats_only {
             Some(ProgressReporter::new(total_lines, "Анализ строк"))
         } else {
             None
         };
-        
+
         for (i, line) in lines.iter().enumerate() {
             if let Some(p) = &progress {
                 if i % 1000 == 0 {
                     p.update(i);
                 }
             }
-            
+
             // Check limit
             if let Some(limit) = self.args.limit {
                 if objects.len() >= limit {
                     break;
                 }
             }
-            
+
             let trimmed = line.trim();
-            
+
             // Look for configuration objects (start with "-")
             if trimmed.starts_with('-') && trimmed.contains('.') {
                 let object_line = trimmed.trim_start_matches('-').trim();
-                
+
                 // Check if it's a main object, not nested
-                if !object_line.contains(".Реквизиты.") && 
-                   !object_line.contains(".ТабличныеЧасти.") {
-                    
+                if !object_line.contains(".Реквизиты.") && !object_line.contains(".ТабличныеЧасти.")
+                {
                     if let Some(object_type) = self.determine_object_type(object_line) {
                         // Save previous object
                         if let Some(obj) = current_object.take() {
                             objects.push(obj);
                         }
-                        
+
                         // Start new object
                         current_object = Some(ConfigurationObject {
                             name: object_line.to_string(),
@@ -253,19 +252,19 @@ impl AnalyzeReportCommand {
                 }
             }
         }
-        
+
         // Save last object
         if let Some(obj) = current_object {
             objects.push(obj);
         }
-        
+
         if let Some(p) = progress {
             p.finish();
         }
-        
+
         // Calculate statistics
         let statistics = self.calculate_statistics(&objects, encoding);
-        
+
         Ok(ReportAnalysis {
             encoding: encoding.to_string(),
             total_lines,
@@ -273,7 +272,7 @@ impl AnalyzeReportCommand {
             statistics,
         })
     }
-    
+
     fn determine_object_type(&self, object_line: &str) -> Option<String> {
         if object_line.contains("Справочники.") {
             Some("Справочник".to_string())
@@ -297,7 +296,7 @@ impl AnalyzeReportCommand {
             None
         }
     }
-    
+
     fn extract_attribute_name(&self, object_line: &str) -> Option<String> {
         let parts: Vec<&str> = object_line.split('.').collect();
         if parts.len() >= 4 {
@@ -306,12 +305,20 @@ impl AnalyzeReportCommand {
             None
         }
     }
-    
+
     fn find_attribute_type(&self, lines: &[&str], start_index: usize) -> String {
-        for j in (start_index + 1)..lines.len().min(start_index + 10) {
-            let next_line = lines[j].trim();
+        for next_line in lines
+            .iter()
+            .skip(start_index + 1)
+            .take(lines.len().saturating_sub(start_index + 1).min(9))
+            .map(|s| s.trim())
+        {
             if next_line.starts_with("Тип:") {
-                return next_line.strip_prefix("Тип:").unwrap_or("").trim().to_string();
+                return next_line
+                    .strip_prefix("Тип:")
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
             }
             if next_line.starts_with('-') {
                 break;
@@ -319,21 +326,25 @@ impl AnalyzeReportCommand {
         }
         "Неизвестный".to_string()
     }
-    
-    fn calculate_statistics(&self, objects: &[ConfigurationObject], encoding: &str) -> ReportStatistics {
+
+    fn calculate_statistics(
+        &self,
+        objects: &[ConfigurationObject],
+        encoding: &str,
+    ) -> ReportStatistics {
         let mut objects_by_type = HashMap::new();
         let total_attributes: usize = objects.iter().map(|o| o.attributes.len()).sum();
-        
+
         for obj in objects {
             *objects_by_type.entry(obj.object_type.clone()).or_insert(0) += 1;
         }
-        
+
         let avg_attributes_per_object = if objects.is_empty() {
             0.0
         } else {
             total_attributes as f64 / objects.len() as f64
         };
-        
+
         ReportStatistics {
             total_objects: objects.len(),
             total_attributes,
@@ -342,86 +353,113 @@ impl AnalyzeReportCommand {
             encoding_used: encoding.to_string(),
         }
     }
-    
+
     fn display_results(&self, analysis: &ReportAnalysis) -> Result<()> {
-        let format = OutputFormat::from_str(&self.args.format)?;
+        let format = OutputFormat::parse_output_format(&self.args.format)?;
         let mut writer = OutputWriter::stdout(format);
-        
+
         if self.args.stats_only {
             // Show only statistics
             writer.write_header("Статистика отчета конфигурации")?;
-            
+
             let stats_rows = vec![
-                vec!["Кодировка".to_string(), analysis.statistics.encoding_used.clone()],
+                vec![
+                    "Кодировка".to_string(),
+                    analysis.statistics.encoding_used.clone(),
+                ],
                 vec!["Всего строк".to_string(), analysis.total_lines.to_string()],
-                vec!["Найдено объектов".to_string(), analysis.statistics.total_objects.to_string()],
-                vec!["Найдено реквизитов".to_string(), analysis.statistics.total_attributes.to_string()],
-                vec!["Среднее реквизитов на объект".to_string(), 
-                     format!("{:.2}", analysis.statistics.avg_attributes_per_object)],
+                vec![
+                    "Найдено объектов".to_string(),
+                    analysis.statistics.total_objects.to_string(),
+                ],
+                vec![
+                    "Найдено реквизитов".to_string(),
+                    analysis.statistics.total_attributes.to_string(),
+                ],
+                vec![
+                    "Среднее реквизитов на объект".to_string(),
+                    format!("{:.2}", analysis.statistics.avg_attributes_per_object),
+                ],
             ];
-            
+
             writer.write_table(&["Параметр", "Значение"], stats_rows)?;
-            
+
             // Objects by type
             if !analysis.statistics.objects_by_type.is_empty() {
                 writer.write_header("Распределение по типам")?;
-                
-                let mut type_rows: Vec<Vec<String>> = analysis.statistics.objects_by_type
+
+                let mut type_rows: Vec<Vec<String>> = analysis
+                    .statistics
+                    .objects_by_type
                     .iter()
                     .map(|(t, count)| vec![t.clone(), count.to_string()])
                     .collect();
-                type_rows.sort_by(|a, b| b[1].parse::<usize>().unwrap_or(0)
-                    .cmp(&a[1].parse::<usize>().unwrap_or(0)));
-                
+                type_rows.sort_by(|a, b| {
+                    b[1].parse::<usize>()
+                        .unwrap_or(0)
+                        .cmp(&a[1].parse::<usize>().unwrap_or(0))
+                });
+
                 writer.write_table(&["Тип объекта", "Количество"], type_rows)?;
             }
         } else {
             // Show full results
             writer.write_header("Анализ отчета конфигурации")?;
-            
+
             // Statistics first
             writer.write_line(&format!("📊 Кодировка: {}", analysis.encoding))?;
             writer.write_line(&format!("📊 Всего строк: {}", analysis.total_lines))?;
-            writer.write_line(&format!("📊 Найдено объектов: {}", analysis.statistics.total_objects))?;
-            writer.write_line(&format!("📊 Найдено реквизитов: {}", analysis.statistics.total_attributes))?;
+            writer.write_line(&format!(
+                "📊 Найдено объектов: {}",
+                analysis.statistics.total_objects
+            ))?;
+            writer.write_line(&format!(
+                "📊 Найдено реквизитов: {}",
+                analysis.statistics.total_attributes
+            ))?;
             writer.write_line("")?;
-            
+
             // Objects details
             if !analysis.objects.is_empty() && self.args.verbose {
                 writer.write_header("Найденные объекты")?;
-                
+
                 for (i, obj) in analysis.objects.iter().enumerate() {
                     if i >= 10 && !self.args.verbose {
-                        writer.write_line(&format!("... и еще {} объектов", analysis.objects.len() - 10))?;
+                        writer.write_line(&format!(
+                            "... и еще {} объектов",
+                            analysis.objects.len() - 10
+                        ))?;
                         break;
                     }
-                    
+
                     writer.write_line(&format!(
                         "🔷 #{} {} [{}] (строка {})",
-                        i + 1, obj.name, obj.object_type, obj.line_number
+                        i + 1,
+                        obj.name,
+                        obj.object_type,
+                        obj.line_number
                     ))?;
-                    
+
                     // Show properties
                     for (key, value) in &obj.properties {
                         writer.write_line(&format!("  🔸 {}: {}", key, value))?;
                     }
-                    
+
                     // Show attributes
                     if !obj.attributes.is_empty() {
-                        writer.write_line(&format!("  📌 Реквизиты ({}):", obj.attributes.len()))?;
+                        writer
+                            .write_line(&format!("  📌 Реквизиты ({}):", obj.attributes.len()))?;
                         for attr in &obj.attributes {
-                            writer.write_line(&format!(
-                                "    - {} : {}",
-                                attr.name, attr.attr_type
-                            ))?;
+                            writer
+                                .write_line(&format!("    - {} : {}", attr.name, attr.attr_type))?;
                         }
                     }
-                    
+
                     writer.write_line("")?;
                 }
             }
         }
-        
+
         writer.flush()?;
         Ok(())
     }

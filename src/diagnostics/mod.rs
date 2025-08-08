@@ -40,7 +40,7 @@ impl Diagnostic {
             source: None,
         }
     }
-    
+
     pub fn warning(message: String, line: usize, column: usize) -> Self {
         Self {
             level: DiagnosticLevel::Warning,
@@ -51,7 +51,7 @@ impl Diagnostic {
             source: None,
         }
     }
-    
+
     pub fn info(message: String, line: usize, column: usize) -> Self {
         Self {
             level: DiagnosticLevel::Info,
