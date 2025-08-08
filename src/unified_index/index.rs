@@ -720,6 +720,18 @@ impl UnifiedBslIndex {
             .unwrap_or_default()
     }
     
+    /// Создает иерархическое представление типов для UI
+    pub fn create_type_hierarchy(&self) -> super::hierarchy::TypeHierarchy {
+        let entities: Vec<BslEntity> = self.entities.values().cloned().collect();
+        super::hierarchy::TypeHierarchy::from_entities(&entities)
+    }
+    
+    /// Создает отфильтрованную иерархию типов
+    pub fn create_filtered_hierarchy(&self, query: &str) -> super::hierarchy::TypeHierarchy {
+        let hierarchy = self.create_type_hierarchy();
+        hierarchy.filter(query)
+    }
+    
     // Методы для ProjectIndexCache
     pub fn get_all_entities(&self) -> Vec<&BslEntity> {
         self.entities.values().collect()

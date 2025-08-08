@@ -103,9 +103,11 @@ export async function addPlatformDocumentation(provider: BslPlatformDocsProvider
         const stepsCount = (shcntxPath && shlangPath) ? 5 : 3; // Больше шагов если есть оба архива
         startIndexing(stepsCount);
         
+        outputChannel.appendLine('ℹ️ Using force mode to replace existing documentation if present');
+        
         await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: `Adding platform documentation for version ${version}...`,
+            title: `Adding/updating platform documentation for version ${version}...`,
             cancellable: false
         }, async (progress) => {
             try {
@@ -118,14 +120,23 @@ export async function addPlatformDocumentation(provider: BslPlatformDocsProvider
                     
                     const shcntxResult = await executeBslCommand('extract_platform_docs', [
                         '--archive', shcntxPath,
-                        '--platform-version', version
+                        '--platform-version', version,
+                        '--force' // Всегда форсируем при ручном добавлении документации
                     ]);
                     
+                    // Ищем количество типов в выводе
+                    let shcntxTypes = 0;
                     const shcntxTypesMatch = shcntxResult.match(/(\d+)\s+types/i) || shcntxResult.match(/(\d+)\s+entities/i);
-                    if (shcntxTypesMatch && shcntxTypesMatch[1]) {
-                        totalTypesCount += parseInt(shcntxTypesMatch[1]);
+                    const shcntxSavedMatch = shcntxResult.match(/Saved\s+(\d+)\s+platform\s+types/i);
+                    
+                    if (shcntxSavedMatch && shcntxSavedMatch[1]) {
+                        shcntxTypes = parseInt(shcntxSavedMatch[1]);
+                    } else if (shcntxTypesMatch && shcntxTypesMatch[1]) {
+                        shcntxTypes = parseInt(shcntxTypesMatch[1]);
                     }
-                    outputChannel.appendLine(`✅ shcntx processed: ${shcntxTypesMatch ? shcntxTypesMatch[1] : '?'} types`);
+                    
+                    totalTypesCount += shcntxTypes;
+                    outputChannel.appendLine(`✅ shcntx processed: ${shcntxTypes} types`);
                 }
                 
                 // Обрабатываем shlang архив (примитивные типы)
@@ -136,14 +147,29 @@ export async function addPlatformDocumentation(provider: BslPlatformDocsProvider
                     const shlangResult = await executeBslCommand('extract_platform_docs', [
                         '--archive', shlangPath,
                         '--platform-version', version,
-                        '--force' // Форсируем обновление для добавления примитивных типов
+                        '--force' // Всегда форсируем при ручном добавлении документации
                     ]);
                     
+                    // Ищем количество типов в выводе
+                    let shlangTypes = 0;
                     const shlangTypesMatch = shlangResult.match(/(\d+)\s+types/i) || shlangResult.match(/(\d+)\s+entities/i);
-                    if (shlangTypesMatch && shlangTypesMatch[1]) {
-                        totalTypesCount += parseInt(shlangTypesMatch[1]);
+                    const shlangSavedMatch = shlangResult.match(/Saved\s+(\d+)\s+platform\s+types/i);
+                    
+                    if (shlangSavedMatch && shlangSavedMatch[1]) {
+                        shlangTypes = parseInt(shlangSavedMatch[1]);
+                    } else if (shlangTypesMatch && shlangTypesMatch[1]) {
+                        shlangTypes = parseInt(shlangTypesMatch[1]);
                     }
-                    outputChannel.appendLine(`✅ shlang processed: ${shlangTypesMatch ? shlangTypesMatch[1] : '?'} types`);
+                    
+                    // Для shlang обычно возвращается общее количество после добавления
+                    if (shlangTypes > 0 && shlangTypes > totalTypesCount) {
+                        // Это общее количество, а не дополнительное
+                        totalTypesCount = shlangTypes;
+                    } else {
+                        totalTypesCount += shlangTypes;
+                    }
+                    
+                    outputChannel.appendLine(`✅ shlang processed: total types now ${totalTypesCount}`);
                 }
                 
                 // Финализация

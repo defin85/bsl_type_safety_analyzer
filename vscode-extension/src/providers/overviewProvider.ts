@@ -75,11 +75,13 @@ export class BslOverviewProvider implements vscode.TreeDataProvider<BslOverviewI
     private getServerItems(): Thenable<BslOverviewItem[]> {
         // Проверка статуса LSP сервера
         const serverStatus = isClientRunning() ? 'Running' : 'Stopped';
+        const statusIcon = isClientRunning() ? '$(check)' : '$(error)';
+        const statusColor = isClientRunning() ? '✅' : '⚠️';
         
-        this.outputChannel.appendLine(`LSP Status Check: ${serverStatus}`);
+        this.outputChannel.appendLine(`${statusColor} LSP Status Check: ${serverStatus} (isClientRunning=${isClientRunning()})`);
         
         return Promise.resolve([
-            new BslOverviewItem(`Status: ${serverStatus}`, vscode.TreeItemCollapsibleState.None, 'status'),
+            new BslOverviewItem(`${statusIcon} Status: ${serverStatus}`, vscode.TreeItemCollapsibleState.None, 'status'),
             new BslOverviewItem('UnifiedBslIndex: Loading...', vscode.TreeItemCollapsibleState.None, 'index-count'),
             new BslOverviewItem('Platform: 8.3.25', vscode.TreeItemCollapsibleState.None, 'platform')
         ]);

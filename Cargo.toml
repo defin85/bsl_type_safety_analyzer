@@ -43,7 +43,8 @@ serde_yaml = "0.9"                    # Для YAML конфигураций
 # CLI
 clap = { version = "4.4", features = ["derive", "color"] }
 console = "0.15"                      
-indicatif = "0.17"                    
+indicatif = "0.17"
+colored = "2.1"                    
 
 # LSP сервер
 tower-lsp = "0.20"
@@ -175,6 +176,11 @@ path = "src/lsp_main.rs"
 [[bin]]
 name = "syntaxcheck"
 path = "src/bin/syntaxcheck.rs"
+
+# Main BSL Analyzer CLI
+[[bin]]
+name = "bsl-analyzer-cli"
+path = "src/bin/bsl-analyzer.rs"
 
 # BSL Semantic Analysis Testing
 [[bin]]

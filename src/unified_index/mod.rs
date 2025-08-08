@@ -5,6 +5,8 @@ pub mod project_cache;
 pub mod xml_parser;
 pub mod builder;
 pub mod configuration_watcher;
+pub mod converters;
+pub mod hierarchy;
 
 pub use entity::{
     BslEntity, BslEntityId, BslEntityType, BslEntityKind, BslEntitySource,
@@ -18,3 +20,4 @@ pub use project_cache::ProjectIndexCache;
 pub use xml_parser::ConfigurationXmlParser;
 pub use builder::UnifiedIndexBuilder;
 pub use configuration_watcher::{ConfigurationWatcher, ChangeImpact};
+pub use hierarchy::{TypeHierarchy, TypeNode, TypeNodeType, TypeCategory, CategoryStatistics};

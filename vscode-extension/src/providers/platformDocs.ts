@@ -56,25 +56,34 @@ export class BslPlatformDocsProvider implements vscode.TreeDataProvider<Platform
             const details: PlatformDocItem[] = [];
             
             // Показываем количество типов
-            details.push(new PlatformDocItem(`ℹ️ Types: ${element.typesCount || 'Unknown'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+            details.push(new PlatformDocItem(`📊 Types: ${element.typesCount || 'Unknown'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
             
             // Показываем информацию об архивах
             if (element.archiveName === 'Both archives') {
+                details.push(new PlatformDocItem(`✅ Status: Complete (shcntx + shlang)`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
                 details.push(new PlatformDocItem(`📂 Archive: shcntx_ru.zip`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
                 details.push(new PlatformDocItem(`📂 Archive: shlang_ru.zip`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
-                details.push(new PlatformDocItem(`✅ Status: Complete`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
-            } else if (element.archiveName === 'shcntx_ru.zip') {
+            } else if (element.archiveName && element.archiveName.includes('shcntx')) {
                 details.push(new PlatformDocItem(`📂 Archive: ${element.archiveName}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
-                details.push(new PlatformDocItem(`⚠️ Missing: shlang_ru.zip`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
-            } else if (element.archiveName === 'shlang_ru.zip') {
+                details.push(new PlatformDocItem(`⚠️ Missing: shlang_ru.zip (primitive types)`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+            } else if (element.archiveName && element.archiveName.includes('shlang')) {
                 details.push(new PlatformDocItem(`📂 Archive: ${element.archiveName}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
-                details.push(new PlatformDocItem(`⚠️ Missing: shcntx_ru.zip`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+                details.push(new PlatformDocItem(`⚠️ Missing: shcntx_ru.zip (object types)`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
             } else {
-                details.push(new PlatformDocItem(`📦 Archive: ${element.archiveName || 'N/A'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+                details.push(new PlatformDocItem(`📦 Archive: ${element.archiveName || 'Unknown'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
             }
             
-            // Показываем дату парсинга
-            details.push(new PlatformDocItem(`🕒 Parsed: ${element.lastParsed || 'Never'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+            // Показываем дату добавления
+            details.push(new PlatformDocItem(`🕒 Added: ${element.lastParsed || 'Unknown'}`, vscode.TreeItemCollapsibleState.None, element.version, 'info'));
+            
+            // Добавляем кнопку удаления
+            const removeItem = new PlatformDocItem(`🗑️ Remove this version`, vscode.TreeItemCollapsibleState.None, element.version, 'remove-version');
+            removeItem.command = {
+                command: 'bslAnalyzer.removePlatformDocs',
+                title: 'Remove Platform Documentation',
+                arguments: [element]
+            };
+            details.push(removeItem);
             
             return Promise.resolve(details);
         }
@@ -90,10 +99,11 @@ export class BslPlatformDocsProvider implements vscode.TreeDataProvider<Platform
         if (fs.existsSync(cacheDir)) {
             // Читаем список версий из кеша
             const files = fs.readdirSync(cacheDir);
-            const versionFiles = files.filter(f => f.match(/^v[\d.]+\.jsonl$/));
+            // Поддерживаем оба формата: с префиксом "v" и без него
+            const versionFiles = files.filter(f => f.match(/^v?[\d.]+\.jsonl$/));
             
             for (const versionFile of versionFiles) {
-                const version = versionFile.replace('v', '').replace('.jsonl', '');
+                const version = versionFile.replace(/^v/, '').replace('.jsonl', '');
                 
                 // Пытаемся прочитать количество типов из файла
                 let typesCount = '?';
@@ -143,9 +153,12 @@ export class BslPlatformDocsProvider implements vscode.TreeDataProvider<Platform
                 
                 const lastModified = fs.statSync(path.join(cacheDir, versionFile)).mtime.toLocaleDateString();
                 
+                // Логируем найденную версию
+                this.outputChannel?.appendLine(`Found platform docs: v${version} - ${typesCount} types, archive: ${archiveInfo}`);
+                
                 items.push(
                     new PlatformDocItem(
-                        `📋 Platform ${version}`,
+                        `📋 Platform ${version} (${typesCount} types)`,
                         vscode.TreeItemCollapsibleState.Expanded,
                         version,
                         'version',
@@ -158,9 +171,13 @@ export class BslPlatformDocsProvider implements vscode.TreeDataProvider<Platform
         }
         
         // Всегда добавляем кнопку для добавления документации
-        items.push(
-            new PlatformDocItem('➕ Add Platform Documentation...', vscode.TreeItemCollapsibleState.None, '', 'add-docs')
-        );
+        const addDocsItem = new PlatformDocItem('➕ Add Platform Documentation...', vscode.TreeItemCollapsibleState.None, '', 'add-docs');
+        addDocsItem.command = {
+            command: 'bslAnalyzer.addPlatformDocs',
+            title: 'Add Platform Documentation',
+            arguments: []
+        };
+        items.push(addDocsItem);
         
         return items;
     }

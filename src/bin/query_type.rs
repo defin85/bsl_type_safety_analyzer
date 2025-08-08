@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use anyhow::{Result, Context};
 use clap::{Parser, ValueEnum};
 use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslLanguagePreference};
+use bsl_analyzer::cli_common::{self, OutputWriter, OutputFormat, CliCommand};
 
 #[derive(ValueEnum, Debug, Clone)]
 enum LanguagePreference {
@@ -26,6 +27,13 @@ impl From<LanguagePreference> for BslLanguagePreference {
 #[derive(Parser, Debug)]
 #[command(author, version, about = "Query unified BSL type index", long_about = None)]
 struct Args {
+    /// Enable verbose output
+    #[arg(short = 'v', long)]
+    verbose: bool,
+    
+    /// Output format (text, json)
+    #[arg(long, default_value = "text")]
+    format: String,
     /// Type name to query (e.g., "Массив", "Справочники.Номенклатура")
     #[arg(short, long)]
     name: String,
@@ -58,135 +66,170 @@ struct Args {
 fn main() -> Result<()> {
     let args = Args::parse();
     
-    // For now, we need to rebuild the index each time
-    // TODO: Implement persistent index storage
-    let config_path = args.config
-        .or_else(|| std::env::current_dir().ok())
-        .ok_or_else(|| anyhow::anyhow!("Please specify configuration path with --config"))?;
+    // Инициализируем логирование через общий модуль
+    cli_common::init_logging(args.verbose)?;
     
-    // Suppress logging for query tool
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::WARN)
-        .init();
-    
-    let mut builder = UnifiedIndexBuilder::new()
-        .context("Failed to create index builder")?;
-    
-    let index = builder.build_index(&config_path, &args.platform_version)
-        .context("Failed to build unified index")?;
-    
-    // Show application mode if verbose
-    if args.show_all_methods || args.show_methods || args.show_properties {
-        println!("Application mode: {:?}", index.get_application_mode());
+    // Создаем команду и запускаем
+    let command = QueryTypeCommand::new(args);
+    cli_common::run_command(command)
+}
+
+struct QueryTypeCommand {
+    args: Args,
+}
+
+impl QueryTypeCommand {
+    fn new(args: Args) -> Self {
+        Self { args }
+    }
+}
+
+impl CliCommand for QueryTypeCommand {
+    fn name(&self) -> &str {
+        "query-type"
     }
     
-    // Query the type with language preference
-    let language_pref: BslLanguagePreference = args.language.into();
-    if let Some(entity) = index.find_entity_with_preference(&args.name, language_pref) {
-        println!("\n✅ Found type: {}", entity.qualified_name);
-        println!("Display name: {}", entity.display_name);
-        if let Some(eng_name) = &entity.english_name {
-            println!("English name: {}", eng_name);
-        }
-        println!("Type: {:?}", entity.entity_type);
-        println!("Kind: {:?}", entity.entity_kind);
+    fn description(&self) -> &str {
+        "Query BSL type information from unified index"
+    }
+    
+    fn execute(&self) -> Result<()> {
+        self.run_query()
+    }
+}
+
+impl QueryTypeCommand {
+    fn run_query(&self) -> Result<()> {
+        // For now, we need to rebuild the index each time
+        // TODO: Implement persistent index storage
+        let config_path = self.args.config.clone()
+            .or_else(|| std::env::current_dir().ok())
+            .ok_or_else(|| anyhow::anyhow!("Please specify configuration path with --config"))?;
+    
+        let mut builder = UnifiedIndexBuilder::new()
+            .context("Failed to create index builder")?;
         
-        if let Some(doc) = &entity.documentation {
-            println!("\nDocumentation:");
-            println!("{}", doc);
+        let index = builder.build_index(&config_path, &self.args.platform_version)
+            .context("Failed to build unified index")?;
+        
+        // Create output writer
+        let format = OutputFormat::from_str(&self.args.format)?;
+        let mut writer = OutputWriter::stdout(format);
+        
+        // Show application mode if verbose
+        if self.args.verbose {
+            writer.write_line(&format!("Application mode: {:?}", index.get_application_mode()))?;
+        }
+    
+        // Query the type with language preference
+        let language_pref: BslLanguagePreference = self.args.language.clone().into();
+        if let Some(entity) = index.find_entity_with_preference(&self.args.name, language_pref) {
+            writer.write_header(&format!("Found type: {}", entity.qualified_name))?;
+            writer.write_line(&format!("Display name: {}", entity.display_name))?;
+            if let Some(eng_name) = &entity.english_name {
+                writer.write_line(&format!("English name: {}", eng_name))?;
+            }
+            writer.write_line(&format!("Type: {:?}", entity.entity_type))?;
+            writer.write_line(&format!("Kind: {:?}", entity.entity_kind))?;
+            
+            if let Some(doc) = &entity.documentation {
+                writer.write_header("Documentation")?;
+                writer.write_line(doc)?;
+            }
+        
+            // Show methods
+            if self.args.show_methods || (!self.args.show_properties && !self.args.show_methods) {
+                if self.args.show_all_methods {
+                    let all_methods = index.get_all_methods(&self.args.name);
+                    writer.write_header(&format!("All methods ({} including inherited)", all_methods.len()))?;
+                    for (name, method) in all_methods.iter().take(20) {
+                        writer.write_list_item(&format_method(name, method))?;
+                    }
+                    if all_methods.len() > 20 {
+                        writer.write_line(&format!("... and {} more methods", all_methods.len() - 20))?;
+                    }
+                } else {
+                    writer.write_header(&format!("Direct methods ({})", entity.interface.methods.len()))?;
+                    for (name, method) in entity.interface.methods.iter().take(10) {
+                        writer.write_list_item(&format_method(name, method))?;
+                    }
+                    if entity.interface.methods.len() > 10 {
+                        writer.write_line(&format!("... and {} more methods", entity.interface.methods.len() - 10))?;
+                    }
+                }
         }
         
-        // Show methods
-        if args.show_methods || (!args.show_properties && !args.show_methods) {
-            if args.show_all_methods {
-                let all_methods = index.get_all_methods(&args.name);
-                println!("\nAll methods ({} including inherited):", all_methods.len());
-                for (name, method) in all_methods.iter().take(20) {
-                    print_method(name, method);
+            // Show properties
+            if self.args.show_properties || (!self.args.show_properties && !self.args.show_methods) {
+                if self.args.show_all_methods {
+                    let all_properties = index.get_all_properties(&self.args.name);
+                    writer.write_header(&format!("All properties ({} including inherited)", all_properties.len()))?;
+                    for (name, property) in all_properties.iter().take(20) {
+                        writer.write_list_item(&format_property(name, property))?;
+                    }
+                    if all_properties.len() > 20 {
+                        writer.write_line(&format!("... and {} more properties", all_properties.len() - 20))?;
+                    }
+                } else {
+                    writer.write_header(&format!("Direct properties ({})", entity.interface.properties.len()))?;
+                    for (name, property) in entity.interface.properties.iter().take(10) {
+                        writer.write_list_item(&format_property(name, property))?;
+                    }
+                    if entity.interface.properties.len() > 10 {
+                        writer.write_line(&format!("... and {} more properties", entity.interface.properties.len() - 10))?;
+                    }
                 }
-                if all_methods.len() > 20 {
-                    println!("... and {} more methods", all_methods.len() - 20);
-                }
-            } else {
-                println!("\nDirect methods ({}):", entity.interface.methods.len());
-                for (name, method) in entity.interface.methods.iter().take(10) {
-                    print_method(name, method);
-                }
-                if entity.interface.methods.len() > 10 {
-                    println!("... and {} more methods", entity.interface.methods.len() - 10);
+        }
+        
+            // Show inheritance
+            if !entity.constraints.parent_types.is_empty() {
+                writer.write_header("Inherits from")?;
+                for parent in &entity.constraints.parent_types {
+                    writer.write_list_item(parent)?;
                 }
             }
-        }
         
-        // Show properties
-        if args.show_properties || (!args.show_properties && !args.show_methods) {
-            if args.show_all_methods {
-                let all_properties = index.get_all_properties(&args.name);
-                println!("\nAll properties ({} including inherited):", all_properties.len());
-                for (name, property) in all_properties.iter().take(20) {
-                    print_property(name, property);
-                }
-                if all_properties.len() > 20 {
-                    println!("... and {} more properties", all_properties.len() - 20);
-                }
-            } else {
-                println!("\nDirect properties ({}):", entity.interface.properties.len());
-                for (name, property) in entity.interface.properties.iter().take(10) {
-                    print_property(name, property);
-                }
-                if entity.interface.properties.len() > 10 {
-                    println!("... and {} more properties", entity.interface.properties.len() - 10);
+            // Show relationships
+            if !entity.relationships.forms.is_empty() {
+                writer.write_header("Forms")?;
+                for form in &entity.relationships.forms {
+                    writer.write_list_item(form)?;
                 }
             }
-        }
-        
-        // Show inheritance
-        if !entity.constraints.parent_types.is_empty() {
-            println!("\nInherits from:");
-            for parent in &entity.constraints.parent_types {
-                println!("  - {}", parent);
-            }
-        }
-        
-        // Show relationships
-        if !entity.relationships.forms.is_empty() {
-            println!("\nForms:");
-            for form in &entity.relationships.forms {
-                println!("  - {}", form);
-            }
-        }
-        
-        if !entity.relationships.tabular_sections.is_empty() {
-            println!("\nTabular sections:");
-            for ts in &entity.relationships.tabular_sections {
-                println!("  - {} ({})", ts.name, ts.display_name);
-                if args.show_all_methods {
-                    for attr in &ts.attributes {
-                        println!("      {}: {}", attr.name, attr.type_name);
+            
+            if !entity.relationships.tabular_sections.is_empty() {
+                writer.write_header("Tabular sections")?;
+                for ts in &entity.relationships.tabular_sections {
+                    writer.write_list_item(&format!("{} ({})", ts.name, ts.display_name))?;
+                    if self.args.show_all_methods {
+                        for attr in &ts.attributes {
+                            writer.write_line(&format!("      {}: {}", attr.name, attr.type_name))?;
+                        }
                     }
                 }
             }
-        }
         
-    } else {
-        println!("❌ Type '{}' not found in index", args.name);
-        
-        // Suggest similar types using the improved suggestion engine
-        let suggestions = index.suggest_similar_names(&args.name);
-        if !suggestions.is_empty() {
-            println!("\nDid you mean one of these?");
-            for (i, suggestion) in suggestions.iter().enumerate() {
-                println!("  {}. {}", i + 1, suggestion);
-            }
         } else {
-            println!("\nNo similar types found. Try a different search term.");
+            cli_common::print_error(&format!("Type '{}' not found in index", self.args.name));
+            
+            // Suggest similar types using the improved suggestion engine
+            let suggestions = index.suggest_similar_names(&self.args.name);
+            if !suggestions.is_empty() {
+                writer.write_header("Did you mean one of these?")?;
+                for (i, suggestion) in suggestions.iter().enumerate() {
+                    writer.write_line(&format!("  {}. {}", i + 1, suggestion))?;
+                }
+            } else {
+                writer.write_line("No similar types found. Try a different search term.")?;
+            }
         }
+        
+        writer.flush()?;
+        Ok(())
     }
-    
-    Ok(())
 }
 
-fn print_method(name: &str, method: &bsl_analyzer::unified_index::BslMethod) {
+fn format_method(name: &str, method: &bsl_analyzer::unified_index::BslMethod) -> String {
     let params = method.parameters.iter()
         .map(|p| {
             let mut param_str = p.name.clone();
@@ -211,10 +254,10 @@ fn print_method(name: &str, method: &bsl_analyzer::unified_index::BslMethod) {
     
     let deprecated = if method.is_deprecated { " [DEPRECATED]" } else { "" };
     
-    println!("  - {}({}){}{}", name, params, return_info, deprecated);
+    format!("{}({}){}{}", name, params, return_info, deprecated)
 }
 
-fn print_property(name: &str, property: &bsl_analyzer::unified_index::BslProperty) {
+fn format_property(name: &str, property: &bsl_analyzer::unified_index::BslProperty) -> String {
     let readonly = if property.is_readonly { " [readonly]" } else { "" };
-    println!("  - {}: {}{}", name, property.type_name, readonly);
+    format!("{}: {}{}", name, property.type_name, readonly)
 }

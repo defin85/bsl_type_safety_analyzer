@@ -9,8 +9,9 @@
 /// ```
 use anyhow::Result;
 use bsl_analyzer::unified_index::UnifiedIndexBuilder;
+use bsl_analyzer::cli_common::{self, OutputWriter, OutputFormat, CliCommand};
 use clap::Parser;
-use std::path::Path;
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(name = "check_type_compatibility")]
@@ -30,164 +31,224 @@ struct Args {
 
     /// Путь к конфигурации 1С
     #[arg(long, help = "Путь к конфигурации 1С")]
-    config: String,
+    config: PathBuf,
 
     /// Версия платформы 1С
     #[arg(long, default_value = "8.3.25", help = "Версия платформы 1С")]
     platform_version: String,
 
     /// Подробный вывод с объяснением совместимости
-    #[arg(long, help = "Подробный анализ совместимости")]
+    #[arg(short, long, help = "Подробный анализ совместимости")]
     verbose: bool,
 
     /// Показать путь наследования
     #[arg(long, help = "Показать путь наследования между типами")]
     show_inheritance_path: bool,
+    
+    /// Output format (text, json, table)
+    #[arg(long, default_value = "text")]
+    format: String,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
+    
+    // Initialize logging
+    cli_common::init_logging(args.verbose)?;
+    
+    // Create command and run
+    let command = CheckCompatibilityCommand::new(args);
+    cli_common::run_command(command)
+}
 
-    // Инициализация логирования
-    tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
-        .init();
+struct CheckCompatibilityCommand {
+    args: Args,
+}
 
-    // Проверка существования конфигурации
-    if !Path::new(&args.config).exists() {
-        anyhow::bail!("Configuration path does not exist: {}", args.config);
+impl CheckCompatibilityCommand {
+    fn new(args: Args) -> Self {
+        Self { args }
     }
+}
 
-    tracing::info!("Проверка совместимости типов: {} -> {}", args.from, args.to);
+impl CliCommand for CheckCompatibilityCommand {
+    fn name(&self) -> &str {
+        "check-type-compatibility"
+    }
+    
+    fn description(&self) -> &str {
+        "Check BSL type compatibility and inheritance"
+    }
+    
+    fn execute(&self) -> Result<()> {
+        self.check_compatibility()
+    }
+}
 
-    // Загрузка индекса
-    let mut builder = UnifiedIndexBuilder::new()?;
-    let index = builder.build_index(&args.config, &args.platform_version)?;
-
-    // Проверка совместимости
-    let is_compatible = index.is_assignable(&args.from, &args.to);
-
-    // Проверка существования типов
-    let from_entity = index.find_entity(&args.from);
-    let to_entity = index.find_entity(&args.to);
-
-    // Вывод результатов
-    if args.verbose {
-        println!("🔍 Анализ совместимости типов");
-        println!("================================");
-        println!("Исходный тип: {}", args.from);
-
+impl CheckCompatibilityCommand {
+    fn check_compatibility(&self) -> Result<()> {
+        // Validate configuration path
+        cli_common::validate_path(&self.args.config, "Configuration directory")?;
+        
+        // Create output writer
+        let format = OutputFormat::from_str(&self.args.format)?;
+        let mut writer = OutputWriter::stdout(format);
+        
+        writer.write_header("Type Compatibility Check")?;
+        writer.write_line(&format!("From: {}", self.args.from))?;
+        writer.write_line(&format!("To: {}", self.args.to))?;
+        writer.write_line("")?;
+        
+        // Build index
+        let mut builder = UnifiedIndexBuilder::new()?;
+        let index = builder.build_index(&self.args.config, &self.args.platform_version)?;
+        
+        // Check compatibility
+        let is_compatible = index.is_assignable(&self.args.from, &self.args.to);
+        
+        // Find entities
+        let from_entity = index.find_entity(&self.args.from).cloned();
+        let to_entity = index.find_entity(&self.args.to).cloned();
+        
+        // Write results
+        if self.args.verbose {
+            self.write_detailed_analysis(&mut writer, is_compatible, &from_entity, &to_entity)?;
+        } else {
+            self.write_brief_result(&mut writer, is_compatible)?;
+        }
+        
+        writer.flush()?;
+        
+        // Set exit code for scripts
+        if !is_compatible {
+            std::process::exit(1);
+        }
+        
+        Ok(())
+    }
+    
+    fn write_detailed_analysis(
+        &self,
+        writer: &mut OutputWriter,
+        is_compatible: bool,
+        from_entity: &Option<bsl_analyzer::unified_index::BslEntity>,
+        to_entity: &Option<bsl_analyzer::unified_index::BslEntity>,
+    ) -> Result<()> {
+        writer.write_header("Analysis Results")?;
+        
+        // Source type info
+        writer.write_line(&format!("Source type: {}", self.args.from))?;
         match from_entity {
             Some(entity) => {
-                println!(
-                    "  ✓ Найден: {} ({:?})",
+                writer.write_list_item(&format!(
+                    "Found: {} ({:?})",
                     entity.display_name, entity.entity_type
-                );
+                ))?;
             }
             None => {
-                println!("  ❌ Не найден в индексе");
+                writer.write_list_item("Not found in index")?;
             }
         }
-
-        println!("Целевой тип: {}", args.to);
+        
+        // Target type info
+        writer.write_line(&format!("\nTarget type: {}", self.args.to))?;
         match to_entity {
             Some(entity) => {
-                println!(
-                    "  ✓ Найден: {} ({:?})",
+                writer.write_list_item(&format!(
+                    "Found: {} ({:?})",
                     entity.display_name, entity.entity_type
-                );
+                ))?;
             }
             None => {
-                println!("  ❌ Не найден в индексе");
+                writer.write_list_item("Not found in index")?;
             }
         }
-
-        println!();
-        println!("Результат совместимости:");
+        
+        // Compatibility result
+        writer.write_header("Compatibility Result")?;
         if is_compatible {
-            println!("  ✅ СОВМЕСТИМЫ");
-            println!(
-                "  Тип '{}' может быть присвоен переменной типа '{}'",
-                args.from, args.to
-            );
+            cli_common::print_success(&format!("COMPATIBLE: '{}' can be assigned to '{}'", self.args.from, self.args.to));
+            writer.write_line(&format!("✅ Type '{}' can be assigned to variable of type '{}'", self.args.from, self.args.to))?;
         } else {
-            println!("  ❌ НЕ СОВМЕСТИМЫ");
-            println!(
-                "  Тип '{}' НЕ может быть присвоен переменной типа '{}'",
-                args.from, args.to
-            );
+            cli_common::print_error(&format!("NOT COMPATIBLE: '{}' cannot be assigned to '{}'", self.args.from, self.args.to));
+            writer.write_line(&format!("❌ Type '{}' CANNOT be assigned to variable of type '{}'", self.args.from, self.args.to))?;
         }
-
-        // Показать путь наследования если запрошено
-        if args.show_inheritance_path && is_compatible && args.from != args.to {
-            println!();
-            println!("Путь совместимости:");
-            if let (Some(from_entity), Some(_to_entity)) = (from_entity, to_entity) {
-                // Простая проверка через родительские типы
-                if from_entity.constraints.parent_types.contains(&args.to) {
-                    println!("  {} → наследует → {}", args.from, args.to);
-                } else if from_entity.constraints.implements.contains(&args.to) {
-                    println!("  {} → реализует → {}", args.from, args.to);
-                } else if args.from == args.to {
-                    println!("  {} ≡ {} (идентичные типы)", args.from, args.to);
-                } else {
-                    println!("  Совместимость через систему типов BSL");
+        
+        // Show inheritance path if requested
+        if self.args.show_inheritance_path && is_compatible && self.args.from != self.args.to {
+            self.write_inheritance_path(writer, from_entity)?;
+        }
+        
+        // Additional type information
+        if from_entity.is_some() || to_entity.is_some() {
+            writer.write_header("Type Information")?;
+            
+            if let Some(entity) = from_entity {
+                if !entity.constraints.parent_types.is_empty() {
+                    writer.write_line(&format!(
+                        "{} inherits from: {}",
+                        self.args.from,
+                        entity.constraints.parent_types.join(", ")
+                    ))?;
+                }
+                if !entity.constraints.implements.is_empty() {
+                    writer.write_line(&format!(
+                        "{} implements: {}",
+                        self.args.from,
+                        entity.constraints.implements.join(", ")
+                    ))?;
+                }
+            }
+            
+            if let Some(entity) = to_entity {
+                if !entity.constraints.parent_types.is_empty() {
+                    writer.write_line(&format!(
+                        "{} inherits from: {}",
+                        self.args.to,
+                        entity.constraints.parent_types.join(", ")
+                    ))?;
+                }
+                if !entity.constraints.implements.is_empty() {
+                    writer.write_line(&format!(
+                        "{} implements: {}",
+                        self.args.to,
+                        entity.constraints.implements.join(", ")
+                    ))?;
                 }
             }
         }
-
-        // Дополнительная информация о типах
-        if from_entity.is_some() || to_entity.is_some() {
-            println!();
-            println!("Дополнительная информация:");
-        }
-
-        if let Some(entity) = from_entity {
-            if !entity.constraints.parent_types.is_empty() {
-                println!(
-                    "  {} наследует от: {}",
-                    args.from,
-                    entity.constraints.parent_types.join(", ")
-                );
-            }
-            if !entity.constraints.implements.is_empty() {
-                println!(
-                    "  {} реализует: {}",
-                    args.from,
-                    entity.constraints.implements.join(", ")
-                );
-            }
-        }
-
-        if let Some(entity) = to_entity {
-            if !entity.constraints.parent_types.is_empty() {
-                println!(
-                    "  {} наследует от: {}",
-                    args.to,
-                    entity.constraints.parent_types.join(", ")
-                );
-            }
-            if !entity.constraints.implements.is_empty() {
-                println!(
-                    "  {} реализует: {}",
-                    args.to,
-                    entity.constraints.implements.join(", ")
-                );
-            }
-        }
-    } else {
-        // Краткий вывод
+        
+        Ok(())
+    }
+    
+    fn write_brief_result(&self, _writer: &mut OutputWriter, is_compatible: bool) -> Result<()> {
         if is_compatible {
-            println!("✅ СОВМЕСТИМЫ: {} -> {}", args.from, args.to);
+            cli_common::print_success(&format!("COMPATIBLE: {} -> {}", self.args.from, self.args.to));
         } else {
-            println!("❌ НЕ СОВМЕСТИМЫ: {} -> {}", args.from, args.to);
+            cli_common::print_error(&format!("NOT COMPATIBLE: {} -> {}", self.args.from, self.args.to));
         }
+        Ok(())
     }
-
-    // Установка кода возврата для скриптов
-    if !is_compatible {
-        std::process::exit(1);
+    
+    fn write_inheritance_path(
+        &self,
+        writer: &mut OutputWriter,
+        from_entity: &Option<bsl_analyzer::unified_index::BslEntity>,
+    ) -> Result<()> {
+        writer.write_header("Compatibility Path")?;
+        
+        if let Some(entity) = from_entity {
+            if entity.constraints.parent_types.contains(&self.args.to) {
+                writer.write_line(&format!("{} → inherits → {}", self.args.from, self.args.to))?;
+            } else if entity.constraints.implements.contains(&self.args.to) {
+                writer.write_line(&format!("{} → implements → {}", self.args.from, self.args.to))?;
+            } else if self.args.from == self.args.to {
+                writer.write_line(&format!("{} ≡ {} (identical types)", self.args.from, self.args.to))?;
+            } else {
+                writer.write_line("Compatibility through BSL type system")?;
+            }
+        }
+        
+        Ok(())
     }
-
-    Ok(())
 }

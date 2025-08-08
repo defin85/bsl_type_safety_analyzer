@@ -254,7 +254,20 @@
       "Bash(wc:*)",
       "Bash(./vscode-extension/bin/bsl-analyzer.exe:*)",
       "Bash(env)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(RUST_LOG=debug ./vscode-extension/bin/extract_platform_docs.exe:*)",
+      "Bash(./vscode-extension/bin/extract_platform_docs.exe --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(./vscode-extension/bin/extract_platform_docs.exe --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force --verbose)",
+      "Bash(./target/dev-fast/extract_platform_docs.exe --archive \"examples/rebuilt.shcntx_ru.zip\" --platform-version \"8.3.25\" --force)",
+      "Bash(nslookup:*)",
+      "Bash(./target/debug/extract_platform_docs.exe:*)",
+      "Bash(./target/debug/query_type.exe:*)",
+      "Bash(./target/debug/build_unified_index.exe:*)",
+      "Bash(./target/debug/check_type_compatibility.exe:*)",
+      "Bash(./target/debug/syntaxcheck.exe --help)",
+      "Bash(./target/debug/syntaxcheck.exe test_analysis.bsl:*)",
+      "Bash(./target/debug/bsl-analyzer-cli.exe:*)",
+      "Bash(./target/debug/bsl-analyzer.exe --help)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

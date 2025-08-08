@@ -15,10 +15,12 @@ import {
 } from 'vscode-languageclient/node';
 import { getBinaryPath } from '../utils/binaryPath';
 import { BslAnalyzerConfig } from '../config/configHelper';
+import { updateStatusBar } from './progress';
 import * as fs from 'fs';
 
 let client: LanguageClient | null = null;
 let outputChannel: vscode.OutputChannel;
+let healthCheckInterval: NodeJS.Timeout | null = null;
 
 /**
  * Инициализирует модуль LSP клиента
@@ -172,9 +174,42 @@ export async function startLanguageClient(context: vscode.ExtensionContext): Pro
             handleIndexingProgress(params);
         });
         
+        // Регистрируем обработчик изменения состояния клиента
+        client.onDidChangeState((event) => {
+            outputChannel.appendLine(`📊 LSP Client state changed: ${event.oldState} -> ${event.newState}`);
+            
+            // Обновляем UI при изменении состояния
+            vscode.commands.executeCommand('bslAnalyzer.refreshOverview');
+            
+            // Если сервер отключился неожиданно
+            if (event.newState === 1) { // Stopped state
+                outputChannel.appendLine('⚠️ LSP server disconnected unexpectedly');
+                vscode.window.showWarningMessage(
+                    'BSL Analyzer: Language server disconnected',
+                    'Restart Server'
+                ).then(selection => {
+                    if (selection === 'Restart Server') {
+                        vscode.commands.executeCommand('bslAnalyzer.restartServer');
+                    }
+                });
+                
+                // Обновляем статус бар
+                updateStatusBar('$(error) BSL Analyzer: Disconnected');
+            } else if (event.newState === 2) { // Running state
+                updateStatusBar('$(database) BSL Analyzer: Ready');
+            }
+        });
+        
+        // Уведомляем провайдеры об изменении статуса
+        vscode.commands.executeCommand('bslAnalyzer.refreshOverview');
+        
+        // Запускаем периодическую проверку состояния (каждые 30 секунд)
+        startHealthCheck();
+        
     } catch (error) {
         outputChannel.appendLine(`❌ Failed to start LSP client: ${error}`);
         vscode.window.showErrorMessage(`Failed to start BSL Analyzer: ${error}`);
+        updateStatusBar('$(error) BSL Analyzer: Failed to start');
     }
 }
 
@@ -182,6 +217,9 @@ export async function startLanguageClient(context: vscode.ExtensionContext): Pro
  * Останавливает LSP сервер
  */
 export async function stopLanguageClient(): Promise<void> {
+    // Останавливаем health check
+    stopHealthCheck();
+    
     if (client) {
         outputChannel.appendLine('🛑 Stopping LSP client...');
         try {
@@ -200,6 +238,8 @@ export async function stopLanguageClient(): Promise<void> {
 export async function restartLanguageClient(context: vscode.ExtensionContext): Promise<void> {
     outputChannel.appendLine('🔄 Restarting LSP server...');
     await stopLanguageClient();
+    // Уведомляем об остановке
+    vscode.commands.executeCommand('bslAnalyzer.refreshOverview');
     // Небольшая задержка перед перезапуском
     await new Promise(resolve => setTimeout(resolve, 500));
     await startLanguageClient(context);
@@ -277,4 +317,46 @@ export function sendCustomNotification(method: string, params?: unknown): void {
     }
     
     client.sendNotification(method, params);
+}
+
+/**
+ * Запускает периодическую проверку состояния LSP сервера
+ */
+function startHealthCheck(): void {
+    // Останавливаем предыдущий интервал, если он есть
+    stopHealthCheck();
+    
+    // Проверяем состояние каждые 30 секунд
+    healthCheckInterval = setInterval(() => {
+        if (client) {
+            const isRunning = client.isRunning();
+            if (!isRunning) {
+                outputChannel.appendLine('⚠️ Health check: LSP client is not running');
+                updateStatusBar('$(error) BSL Analyzer: Disconnected');
+                vscode.commands.executeCommand('bslAnalyzer.refreshOverview');
+                
+                // Показываем уведомление только один раз
+                stopHealthCheck();
+                vscode.window.showWarningMessage(
+                    'BSL Analyzer: Language server stopped unexpectedly',
+                    'Restart Server',
+                    'Dismiss'
+                ).then(selection => {
+                    if (selection === 'Restart Server') {
+                        vscode.commands.executeCommand('bslAnalyzer.restartServer');
+                    }
+                });
+            }
+        }
+    }, 30000); // 30 секунд
+}
+
+/**
+ * Останавливает периодическую проверку состояния
+ */
+function stopHealthCheck(): void {
+    if (healthCheckInterval) {
+        clearInterval(healthCheckInterval);
+        healthCheckInterval = null;
+    }
 }

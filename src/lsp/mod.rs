@@ -8,8 +8,10 @@ use anyhow::Result;
 use tower_lsp::{LspService, Server};
 
 mod server;
+mod diagnostics;
 
 pub use server::BslLanguageServer;
+pub use diagnostics::{convert_to_lsp_diagnostic, convert_analysis_results};
 
 /// Starts LSP server in stdio mode
 pub async fn start_stdio_server() -> Result<()> {

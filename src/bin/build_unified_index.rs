@@ -1,7 +1,8 @@
 use std::path::PathBuf;
 use anyhow::{Result, Context};
 use clap::{Parser, ValueEnum};
-use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslApplicationMode};
+use bsl_analyzer::unified_index::{UnifiedIndexBuilder, BslApplicationMode, BslEntityType, BslEntityKind};
+use bsl_analyzer::cli_common::{self, OutputWriter, OutputFormat, CliCommand, ProgressReporter};
 
 #[derive(ValueEnum, Debug, Clone)]
 enum ApplicationMode {
@@ -49,140 +50,231 @@ struct Args {
     /// Enable verbose output
     #[arg(short, long)]
     verbose: bool,
+    
+    /// Output format (text, json, table)
+    #[arg(long, default_value = "text")]
+    format: String,
+    
+    /// Show detailed statistics
+    #[arg(long)]
+    detailed: bool,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
     
     // Initialize logging
-    if args.verbose {
-        tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::DEBUG)
-            .init();
-    } else {
-        tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::WARN)
-            .init();
+    cli_common::init_logging(args.verbose)?;
+    
+    // Create command and run
+    let command = BuildIndexCommand::new(args);
+    cli_common::run_command(command)
+}
+
+struct BuildIndexCommand {
+    args: Args,
+}
+
+impl BuildIndexCommand {
+    fn new(args: Args) -> Self {
+        Self { args }
+    }
+}
+
+impl CliCommand for BuildIndexCommand {
+    fn name(&self) -> &str {
+        "build-unified-index"
     }
     
-    // Validate config path
-    if !args.config.exists() {
-        return Err(anyhow::anyhow!(
-            "Configuration path does not exist: {}",
-            args.config.display()
-        ));
+    fn description(&self) -> &str {
+        "Build unified BSL type index from 1C configuration"
     }
     
-    if !args.config.is_dir() {
-        return Err(anyhow::anyhow!(
-            "Configuration path must be a directory: {}",
-            args.config.display()
-        ));
+    fn execute(&self) -> Result<()> {
+        self.build_index()
     }
-    
-    println!("Building unified BSL index...");
-    println!("Configuration: {}", args.config.display());
-    println!("Platform version: {}", args.platform_version);
-    println!("Application mode: {:?}", args.mode);
-    
-    // Create builder with application mode and optional archive
-    let mut builder = UnifiedIndexBuilder::new()
-        .context("Failed to create index builder")?
-        .with_application_mode(args.mode.into())
-        .with_platform_docs_archive(args.platform_docs_archive.clone());
-    
-    // Build index
-    let start = std::time::Instant::now();
-    let index = builder.build_index(&args.config, &args.platform_version)
-        .context("Failed to build unified index")?;
-    let elapsed = start.elapsed();
-    
-    println!("\n✅ Index built successfully!");
-    println!("Total entities: {}", index.get_entity_count());
-    println!("Build time: {:.2?}", elapsed);
-    
-    // Show statistics by type
-    println!("\nEntity statistics:");
-    use bsl_analyzer::unified_index::{BslEntityType, BslEntityKind};
-    
-    let platform_count = index.get_entities_by_type(&BslEntityType::Platform).len();
-    let config_count = index.get_entities_by_type(&BslEntityType::Configuration).len();
-    let form_count = index.get_entities_by_type(&BslEntityType::Form).len();
-    let module_count = index.get_entities_by_type(&BslEntityType::Module).len();
-    
-    println!("  Platform types: {}", platform_count);
-    println!("  Configuration objects: {}", config_count);
-    println!("  Forms: {}", form_count);
-    println!("  Modules: {}", module_count);
-    
-    // Show statistics by kind
-    println!("\nConfiguration objects by type:");
-    let kinds = [
-        (BslEntityKind::Catalog, "Catalogs"),
-        (BslEntityKind::Document, "Documents"),
-        (BslEntityKind::InformationRegister, "Information registers"),
-        (BslEntityKind::AccumulationRegister, "Accumulation registers"),
-        (BslEntityKind::ChartOfAccounts, "Charts of accounts"),
-        (BslEntityKind::ChartOfCharacteristicTypes, "Charts of characteristic types"),
-        (BslEntityKind::ChartOfCalculationTypes, "Charts of calculation types"),
-        (BslEntityKind::BusinessProcess, "Business processes"),
-        (BslEntityKind::Task, "Tasks"),
-        (BslEntityKind::ExchangePlan, "Exchange plans"),
-        (BslEntityKind::Constant, "Constants"),
-        (BslEntityKind::Enum, "Enums"),
-        (BslEntityKind::Report, "Reports"),
-        (BslEntityKind::DataProcessor, "Data processors"),
-        (BslEntityKind::DocumentJournal, "Document journals"),
-        (BslEntityKind::CommonModule, "Common modules"),
-    ];
-    
-    for (kind, name) in &kinds {
-        let count = index.get_entities_by_kind(kind).len();
-        if count > 0 {
-            println!("  {}: {}", name, count);
-        }
-    }
-    
-    // Save index if output specified
-    if let Some(output_dir) = args.output {
-        println!("\nSaving index to: {}", output_dir.display());
+}
+
+impl BuildIndexCommand {
+    fn build_index(&self) -> Result<()> {
+        // Validate config path
+        cli_common::validate_path(&self.args.config, "Configuration directory")?;
         
-        std::fs::create_dir_all(&output_dir)
+        if !self.args.config.is_dir() {
+            return Err(anyhow::anyhow!(
+                "Configuration path must be a directory: {}",
+                self.args.config.display()
+            ));
+        }
+        
+        // Create output writer
+        let format = OutputFormat::from_str(&self.args.format)?;
+        let mut writer = if let Some(output_path) = &self.args.output {
+            cli_common::ensure_dir_exists(output_path)?;
+            let output_file = output_path.join("index_stats.txt");
+            OutputWriter::file(&output_file, format)?
+        } else {
+            OutputWriter::stdout(format)
+        };
+        
+        writer.write_header("Building Unified BSL Index")?;
+        writer.write_line(&format!("Configuration: {}", self.args.config.display()))?;
+        writer.write_line(&format!("Platform version: {}", self.args.platform_version))?;
+        writer.write_line(&format!("Application mode: {:?}", self.args.mode))?;
+        
+        // Create builder with application mode and optional archive
+        let mut builder = UnifiedIndexBuilder::new()
+            .context("Failed to create index builder")?
+            .with_application_mode(self.args.mode.clone().into())
+            .with_platform_docs_archive(self.args.platform_docs_archive.clone());
+        
+        // Build index with progress reporting
+        let start = std::time::Instant::now();
+        
+        let progress = if self.args.verbose {
+            Some(ProgressReporter::new(100, "Building index"))
+        } else {
+            None
+        };
+        
+        let index = builder.build_index(&self.args.config, &self.args.platform_version)
+            .context("Failed to build unified index")?;
+        
+        if let Some(p) = progress {
+            p.finish();
+        }
+        
+        let elapsed = start.elapsed();
+        
+        // Write success message
+        writer.write_line("")?;
+        cli_common::print_success(&format!(
+            "Index built successfully! {} entities in {}", 
+            index.get_entity_count(),
+            cli_common::format_duration(elapsed)
+        ));
+        
+        // Show statistics
+        self.write_statistics(&mut writer, &index)?;
+        
+        // Save index if output specified
+        if let Some(output_dir) = &self.args.output {
+            self.save_index(output_dir, &index)?;
+        }
+        
+        // Show example queries in verbose mode
+        if self.args.verbose {
+            self.show_example_queries(&mut writer, &index)?;
+        }
+        
+        writer.flush()?;
+        Ok(())
+    }
+    
+    fn write_statistics(&self, writer: &mut OutputWriter, index: &bsl_analyzer::unified_index::UnifiedBslIndex) -> Result<()> {
+        writer.write_header("Entity Statistics")?;
+        
+        // Statistics by type
+        let platform_count = index.get_entities_by_type(&BslEntityType::Platform).len();
+        let config_count = index.get_entities_by_type(&BslEntityType::Configuration).len();
+        let form_count = index.get_entities_by_type(&BslEntityType::Form).len();
+        let module_count = index.get_entities_by_type(&BslEntityType::Module).len();
+        
+        // Create table for statistics
+        let headers = vec!["Entity Type", "Count"];
+        let rows = vec![
+            vec!["Platform types".to_string(), platform_count.to_string()],
+            vec!["Configuration objects".to_string(), config_count.to_string()],
+            vec!["Forms".to_string(), form_count.to_string()],
+            vec!["Modules".to_string(), module_count.to_string()],
+        ];
+        
+        writer.write_table(&headers, rows)?;
+        
+        // Detailed statistics by kind
+        if self.args.detailed {
+            writer.write_header("Configuration Objects by Type")?;
+            
+            let kinds = [
+                (BslEntityKind::Catalog, "Catalogs"),
+                (BslEntityKind::Document, "Documents"),
+                (BslEntityKind::InformationRegister, "Information registers"),
+                (BslEntityKind::AccumulationRegister, "Accumulation registers"),
+                (BslEntityKind::ChartOfAccounts, "Charts of accounts"),
+                (BslEntityKind::ChartOfCharacteristicTypes, "Charts of characteristic types"),
+                (BslEntityKind::ChartOfCalculationTypes, "Charts of calculation types"),
+                (BslEntityKind::BusinessProcess, "Business processes"),
+                (BslEntityKind::Task, "Tasks"),
+                (BslEntityKind::ExchangePlan, "Exchange plans"),
+                (BslEntityKind::Constant, "Constants"),
+                (BslEntityKind::Enum, "Enums"),
+                (BslEntityKind::Report, "Reports"),
+                (BslEntityKind::DataProcessor, "Data processors"),
+                (BslEntityKind::DocumentJournal, "Document journals"),
+                (BslEntityKind::CommonModule, "Common modules"),
+            ];
+            
+            let mut detail_rows = Vec::new();
+            for (kind, name) in &kinds {
+                let count = index.get_entities_by_kind(kind).len();
+                if count > 0 {
+                    detail_rows.push(vec![name.to_string(), count.to_string()]);
+                }
+            }
+            
+            if !detail_rows.is_empty() {
+                writer.write_table(&["Object Type", "Count"], detail_rows)?;
+            }
+        }
+        
+        Ok(())
+    }
+    
+    fn save_index(&self, output_dir: &PathBuf, index: &bsl_analyzer::unified_index::UnifiedBslIndex) -> Result<()> {
+        cli_common::print_warning(&format!("Saving index to: {}", output_dir.display()));
+        
+        std::fs::create_dir_all(output_dir)
             .context("Failed to create output directory")?;
             
         let index_file = output_dir.join("unified_index.json");
-        let index_json = serde_json::to_string_pretty(&index)
+        let index_json = serde_json::to_string_pretty(index)
             .context("Failed to serialize index")?;
-            
+        
+        let json_size = index_json.len() as u64;
         std::fs::write(&index_file, index_json)
             .context("Failed to write index file")?;
             
-        println!("✅ Index saved to: {}", index_file.display());
+        cli_common::print_success(&format!(
+            "Index saved to: {} ({})", 
+            index_file.display(),
+            cli_common::format_file_size(json_size)
+        ));
+        
+        Ok(())
     }
     
-    // Example queries
-    if args.verbose {
-        println!("\n=== Example queries ===");
+    fn show_example_queries(&self, writer: &mut OutputWriter, index: &bsl_analyzer::unified_index::UnifiedBslIndex) -> Result<()> {
+        writer.write_header("Example Queries")?;
         
         // Find a specific type
         if let Some(array_type) = index.find_entity("Массив") {
-            println!("\nFound type 'Массив':");
-            println!("  Methods: {}", array_type.interface.methods.len());
-            println!("  Properties: {}", array_type.interface.properties.len());
+            writer.write_line(&format!("\nFound type 'Массив':"))?;
+            writer.write_list_item(&format!("Methods: {}", array_type.interface.methods.len()))?;
+            writer.write_list_item(&format!("Properties: {}", array_type.interface.properties.len()))?;
         }
         
         // Find types with specific method
         let types_with_insert = index.find_types_with_method("Вставить");
         if !types_with_insert.is_empty() {
-            println!("\nTypes with method 'Вставить':");
+            writer.write_line(&format!("\nTypes with method 'Вставить':"))?;
             for entity in types_with_insert.iter().take(5) {
-                println!("  - {}", entity.qualified_name);
+                writer.write_list_item(&entity.qualified_name)?;
             }
             if types_with_insert.len() > 5 {
-                println!("  ... and {} more", types_with_insert.len() - 5);
+                writer.write_line(&format!("... and {} more", types_with_insert.len() - 5))?;
             }
         }
+        
+        Ok(())
     }
-    
-    Ok(())
 }

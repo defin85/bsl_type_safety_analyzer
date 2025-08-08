@@ -105,6 +105,7 @@ pub mod verifiers;
 pub mod unified_index;  // NEW: Unified BSL Type System
 pub mod mcp_server;  // NEW: Model Context Protocol server
 pub mod bsl_parser;  // NEW: Tree-sitter based BSL parser
+pub mod cli_common;  // NEW: Common functionality for CLI utilities
 
 // Re-export main types for convenience
 // Новый объединенный анализатор на базе tree-sitter

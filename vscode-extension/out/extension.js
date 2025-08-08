@@ -75,6 +75,8 @@ async function activate(context) {
         setTimeout(async () => {
             outputChannel.appendLine('🚀 Starting LSP server with delay...');
             await (0, lsp_1.startLanguageClient)(context);
+            // Обновляем статус бар после успешного запуска
+            (0, progress_1.updateStatusBar)('$(database) BSL Analyzer: Ready');
         }, 1000);
         // Register sidebar providers
         registerSidebarProviders(context);
@@ -204,7 +206,7 @@ function registerSidebarProviders(context) {
         outputChannel.appendLine('✅ Diagnostics provider registered');
         // Type Index provider
         outputChannel.appendLine('📋 Creating Type Index provider...');
-        const typeIndexProvider = new providers_1.BslTypeIndexProvider();
+        const typeIndexProvider = new providers_1.BslTypeIndexProvider(outputChannel);
         const typeIndexTreeView = vscode.window.createTreeView('bslAnalyzer.typeIndex', {
             treeDataProvider: typeIndexProvider,
             showCollapseAll: true
@@ -243,10 +245,19 @@ function registerSidebarProviders(context) {
             outputChannel.appendLine('🔄 Refreshing Platform Docs panel');
             platformDocsProvider.refresh();
         }));
-        context.subscriptions.push(vscode.commands.registerCommand('bslAnalyzer.addPlatformDocs', async () => {
-            outputChannel.appendLine('📁 Adding platform documentation...');
-            await (0, platformDocs_1.addPlatformDocumentation)(platformDocsProvider);
-        }));
+        // Регистрируем команду добавления документации
+        outputChannel.appendLine('Registering bslAnalyzer.addPlatformDocs command...');
+        try {
+            const addDocsDisposable = vscode.commands.registerCommand('bslAnalyzer.addPlatformDocs', async () => {
+                outputChannel.appendLine('📁 Command executed: Adding platform documentation...');
+                await (0, platformDocs_1.addPlatformDocumentation)(platformDocsProvider);
+            });
+            context.subscriptions.push(addDocsDisposable);
+            outputChannel.appendLine('✅ Successfully registered bslAnalyzer.addPlatformDocs');
+        }
+        catch (error) {
+            outputChannel.appendLine(`❌ Failed to register bslAnalyzer.addPlatformDocs: ${error}`);
+        }
         context.subscriptions.push(vscode.commands.registerCommand('bslAnalyzer.removePlatformDocs', async (item) => {
             if (item && item.version) {
                 outputChannel.appendLine(`🗑️ Removing platform docs for version: ${item.version}`);

@@ -12,7 +12,8 @@
 */
 
 use crate::unified_index::{UnifiedBslIndex, UnifiedIndexBuilder, BslApplicationMode};
-use crate::BslAnalyzer;
+use crate::bsl_parser::{BslAnalyzer, AnalysisConfig};
+use crate::lsp::diagnostics::{convert_analysis_results, create_analysis_error_diagnostic};
 use anyhow::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -36,6 +37,8 @@ pub struct BslLanguageServer {
     platform_version: String,
     /// Кэш открытых документов  
     documents: Arc<RwLock<HashMap<Url, DocumentInfo>>>,
+    /// Конфигурация анализа
+    analysis_config: Arc<RwLock<AnalysisConfig>>,
 }
 
 /// Информация об открытом документе
@@ -51,11 +54,24 @@ struct DocumentInfo {
 
 impl BslLanguageServer {
     pub fn new(client: Client) -> Self {
+        // Определяем уровень анализа из переменной окружения или используем по умолчанию
+        let analysis_level = env::var("BSL_ANALYSIS_LEVEL")
+            .unwrap_or_else(|_| "semantic".to_string());
+        
+        let config = match analysis_level.to_lowercase().as_str() {
+            "syntax" => AnalysisConfig::syntax_only(),
+            "semantic" => AnalysisConfig::semantic(),
+            "dataflow" => AnalysisConfig::data_flow(),
+            "full" => AnalysisConfig::full(),
+            _ => AnalysisConfig::semantic(), // По умолчанию семантический анализ
+        };
+        
         Self {
             client,
             unified_index: Arc::new(RwLock::new(None)),
             platform_version: env::var("BSL_PLATFORM_VERSION").unwrap_or_else(|_| "8.3.25".to_string()),
             documents: Arc::new(RwLock::new(HashMap::new())),
+            analysis_config: Arc::new(RwLock::new(config)),
         }
     }
 
@@ -158,90 +174,18 @@ impl BslLanguageServer {
     async fn analyze_document(&self, uri: &Url, text: &str) -> Result<Vec<Diagnostic>> {
         let mut diagnostics = Vec::new();
 
+        // Получаем конфигурацию анализа
+        let config = self.analysis_config.read().await.clone();
+        
         // Проверяем что UnifiedBslIndex загружен
         let index_guard = self.unified_index.read().await;
-        let index = match &*index_guard {
-            Some(idx) => idx,
-            None => {
-                // Индекс не загружен - только базовая проверка синтаксиса
-                let diagnostic = Diagnostic {
-                    range: Range {
-                        start: Position { line: 0, character: 0 },
-                        end: Position { line: 0, character: 0 },
-                    },
-                    severity: Some(DiagnosticSeverity::INFORMATION),
-                    code: None,
-                    code_description: None,
-                    source: Some("bsl-lsp".to_string()),
-                    message: "BSL index not loaded - limited analysis available".to_string(),
-                    related_information: None,
-                    tags: None,
-                    data: None,
-                };
-                diagnostics.push(diagnostic);
-                return Ok(diagnostics);
-            }
-        };
-
-        // Создаем анализатор с UnifiedBslIndex
-        match BslAnalyzer::with_index(index.clone()) {
-            Ok(mut analyzer) => {
-                let file_name = uri.path().split('/').last().unwrap_or("unknown.bsl");
-                
-                match analyzer.analyze_code(text, file_name) {
-                    Ok(()) => {
-                        let (errors, warnings) = analyzer.get_errors_and_warnings();
-
-                        // Конвертируем ошибки в LSP диагностику
-                        for error in errors {
-                            let diagnostic = Diagnostic {
-                                range: Range {
-                                    start: Position {
-                                        line: error.position.line.saturating_sub(1) as u32,
-                                        character: error.position.column.saturating_sub(1) as u32,
-                                    },
-                                    end: Position {
-                                        line: error.position.line.saturating_sub(1) as u32,
-                                        character: (error.position.column + 20).saturating_sub(1) as u32,
-                                    },
-                                },
-                                severity: Some(DiagnosticSeverity::ERROR),
-                                code: error.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
-                                code_description: None,
-                                source: Some("bsl-analyzer".to_string()),
-                                message: error.message,
-                                related_information: None,
-                                tags: None,
-                                data: None,
-                            };
-                            diagnostics.push(diagnostic);
-                        }
-
-                        // Конвертируем предупреждения
-                        for warning in warnings {
-                            let diagnostic = Diagnostic {
-                                range: Range {
-                                    start: Position {
-                                        line: warning.position.line.saturating_sub(1) as u32,
-                                        character: warning.position.column.saturating_sub(1) as u32,
-                                    },
-                                    end: Position {
-                                        line: warning.position.line.saturating_sub(1) as u32,
-                                        character: (warning.position.column + 20).saturating_sub(1) as u32,
-                                    },
-                                },
-                                severity: Some(DiagnosticSeverity::WARNING),
-                                code: warning.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
-                                code_description: None,
-                                source: Some("bsl-analyzer".to_string()),
-                                message: warning.message,
-                                related_information: None,
-                                tags: None,
-                                data: None,
-                            };
-                            diagnostics.push(diagnostic);
-                        }
-                    }
+        
+        // Создаем анализатор с или без индекса
+        let mut analyzer = match &*index_guard {
+            Some(idx) => {
+                // С индексом для семантического анализа
+                match BslAnalyzer::with_index_and_config(idx.clone(), config.clone()) {
+                    Ok(a) => a,
                     Err(e) => {
                         let diagnostic = Diagnostic {
                             range: Range {
@@ -249,16 +193,100 @@ impl BslLanguageServer {
                                 end: Position { line: 0, character: 0 },
                             },
                             severity: Some(DiagnosticSeverity::ERROR),
-                            code: Some(NumberOrString::String("BSL000".to_string())),
+                            code: Some(NumberOrString::String("BSL001".to_string())),
                             code_description: None,
-                            source: Some("bsl-analyzer".to_string()),
-                            message: format!("Analysis error: {}", e),
+                            source: Some("bsl-lsp".to_string()),
+                            message: format!("Failed to create analyzer: {}", e),
                             related_information: None,
                             tags: None,
                             data: None,
                         };
                         diagnostics.push(diagnostic);
+                        return Ok(diagnostics);
                     }
+                }
+            }
+            None => {
+                // Без индекса - только синтаксический анализ
+                match BslAnalyzer::with_config(AnalysisConfig::syntax_only()) {
+                    Ok(a) => a,
+                    Err(e) => {
+                        let diagnostic = Diagnostic {
+                            range: Range {
+                                start: Position { line: 0, character: 0 },
+                                end: Position { line: 0, character: 0 },
+                            },
+                            severity: Some(DiagnosticSeverity::ERROR),
+                            code: Some(NumberOrString::String("BSL001".to_string())),
+                            code_description: None,
+                            source: Some("bsl-lsp".to_string()),
+                            message: format!("Failed to create analyzer: {}", e),
+                            related_information: None,
+                            tags: None,
+                            data: None,
+                        };
+                        diagnostics.push(diagnostic);
+                        return Ok(diagnostics);
+                    }
+                }
+            }
+        };
+
+        // Выполняем анализ с конфигурацией
+        let file_name = uri.path().split('/').last().unwrap_or("unknown.bsl");
+        
+        match analyzer.analyze_code(text, file_name) {
+            Ok(()) => {
+                let (errors, warnings) = analyzer.get_errors_and_warnings();
+
+                // Конвертируем ошибки в LSP диагностику
+                for error in errors {
+                    let diagnostic = Diagnostic {
+                        range: Range {
+                            start: Position {
+                                line: error.position.line.saturating_sub(1) as u32,
+                                character: error.position.column.saturating_sub(1) as u32,
+                            },
+                            end: Position {
+                                line: error.position.line.saturating_sub(1) as u32,
+                                character: (error.position.column + 20).saturating_sub(1) as u32,
+                            },
+                        },
+                        severity: Some(DiagnosticSeverity::ERROR),
+                        code: error.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
+                        code_description: None,
+                        source: Some("bsl-analyzer".to_string()),
+                        message: error.message,
+                        related_information: None,
+                        tags: None,
+                        data: None,
+                    };
+                    diagnostics.push(diagnostic);
+                }
+
+                // Конвертируем предупреждения
+                for warning in warnings {
+                    let diagnostic = Diagnostic {
+                        range: Range {
+                            start: Position {
+                                line: warning.position.line.saturating_sub(1) as u32,
+                                character: warning.position.column.saturating_sub(1) as u32,
+                            },
+                            end: Position {
+                                line: warning.position.line.saturating_sub(1) as u32,
+                                character: (warning.position.column + 20).saturating_sub(1) as u32,
+                            },
+                        },
+                        severity: Some(DiagnosticSeverity::WARNING),
+                        code: warning.error_code.as_ref().map(|c| NumberOrString::String(c.clone())),
+                        code_description: None,
+                        source: Some("bsl-analyzer".to_string()),
+                        message: warning.message,
+                        related_information: None,
+                        tags: None,
+                        data: None,
+                    };
+                    diagnostics.push(diagnostic);
                 }
             }
             Err(e) => {
@@ -268,10 +296,10 @@ impl BslLanguageServer {
                         end: Position { line: 0, character: 0 },
                     },
                     severity: Some(DiagnosticSeverity::ERROR),
-                    code: Some(NumberOrString::String("BSL001".to_string())),
+                    code: Some(NumberOrString::String("BSL000".to_string())),
                     code_description: None,
-                    source: Some("bsl-lsp".to_string()),
-                    message: format!("Failed to create analyzer: {}", e),
+                    source: Some("bsl-analyzer".to_string()),
+                    message: format!("Analysis error: {}", e),
                     related_information: None,
                     tags: None,
                     data: None,
@@ -569,6 +597,17 @@ impl LanguageServer for BslLanguageServer {
             .await;
     }
 
+    async fn did_change_configuration(&self, _params: DidChangeConfigurationParams) {
+        // Обрабатываем изменение конфигурации
+        tracing::debug!("Configuration changed, handling update...");
+        
+        // TODO: В будущем здесь можно перезагрузить настройки анализатора
+        // Пока просто логируем для устранения предупреждения
+        self.client
+            .log_message(MessageType::INFO, "Configuration updated")
+            .await;
+    }
+
     async fn completion(&self, params: CompletionParams) -> tower_lsp::jsonrpc::Result<Option<CompletionResponse>> {
         let uri = &params.text_document_position.text_document.uri;
         let position = params.text_document_position.position;
@@ -800,33 +839,28 @@ impl BslLanguageServer {
 
     /// Анализ BSL содержимого через BslAnalyzer
     async fn analyze_bsl_content(&self, content: &str) -> Result<Vec<Diagnostic>> {
-        let mut analyzer = BslAnalyzer::new()?;
+        // Получаем конфигурацию и индекс
+        let config = self.analysis_config.read().await.clone();
+        let index_guard = self.unified_index.read().await;
+        
+        // Создаем анализатор
+        let mut analyzer = match &*index_guard {
+            Some(idx) => BslAnalyzer::with_index_and_config(idx.clone(), config)?,
+            None => BslAnalyzer::with_config(config)?,
+        };
         
         // Анализируем код
         if let Err(e) = analyzer.analyze_code(content, "lsp_temp.bsl") {
             // Если анализ не удался, возвращаем ошибку как диагностику
-            let diagnostic = Diagnostic {
-                range: Range {
-                    start: Position { line: 0, character: 0 },
-                    end: Position { line: 0, character: 0 },
-                },
-                severity: Some(DiagnosticSeverity::ERROR),
-                code: Some(NumberOrString::String("BSL000".to_string())),
-                code_description: None,
-                source: Some("bsl-analyzer".to_string()),
-                message: format!("Analysis error: {}", e),
-                related_information: None,
-                tags: None,
-                data: None,
-            };
-            return Ok(vec![diagnostic]);
+            return Ok(vec![create_analysis_error_diagnostic(
+                format!("Analysis error: {}", e),
+                "BSL000"
+            )]);
         }
 
-        // Получаем результаты анализа
-        let diagnostics = Vec::new();
-        
-        // Пока просто создаем успешный результат анализа
-        // TODO: Интегрировать с реальными results от BslAnalyzer
+        // Получаем результаты анализа и конвертируем в LSP диагностику
+        let (errors, warnings) = analyzer.get_errors_and_warnings();
+        let diagnostics = convert_analysis_results(errors, warnings);
         
         Ok(diagnostics)
     }
