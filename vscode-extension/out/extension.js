@@ -41,8 +41,10 @@ const platformDocs_1 = require("./platformDocs");
 let indexServerPath;
 let outputChannel;
 let statusBarItem;
+let extensionContext;
 // Функции прогресса теперь импортируются из модуля lsp/progress
 async function activate(context) {
+    extensionContext = context;
     try {
         // Get the current version from package.json
         const currentVersion = context.extension.packageJSON.version;
@@ -72,6 +74,8 @@ async function activate(context) {
         await (0, config_1.migrateLegacySettings)();
         // Initialize configuration
         initializeConfiguration();
+        // Auto-detect configuration if not set
+        await autoDetectConfigurationIfNeeded();
         // Start LSP client FIRST (it may register some commands)
         // Запускаем с задержкой для стабильности
         setTimeout(async () => {
@@ -99,8 +103,9 @@ exports.activate = activate;
 function initializeConfiguration() {
     indexServerPath = config_1.BslAnalyzerConfig.binaryPath;
     if (!indexServerPath) {
-        // First, try bundled binaries from extension
-        const extensionPath = vscode.extensions.getExtension('bsl-analyzer-team.bsl-analyzer')?.extensionPath;
+        // First, try bundled binaries from extension context
+        // Use extensionContext which is available globally in this scope
+        const extensionPath = extensionContext?.extensionPath;
         if (extensionPath) {
             const bundledBinPath = path.join(extensionPath, 'bin');
             if (fs.existsSync(bundledBinPath)) {
@@ -113,6 +118,21 @@ function initializeConfiguration() {
             outputChannel.appendLine(`❌ BSL Analyzer binaries not found in extension.`);
             outputChannel.appendLine(`💡 Please run 'npm run copy:binaries' to update extension binaries.`);
         }
+    }
+}
+async function autoDetectConfigurationIfNeeded() {
+    const configPath = config_1.BslAnalyzerConfig.configurationPath;
+    if (!configPath) {
+        outputChannel.appendLine('📍 Configuration path not set, attempting auto-detection...');
+        const detectedPath = await (0, utils_1.autoDetectConfiguration)(outputChannel);
+        if (detectedPath) {
+            outputChannel.appendLine(`✅ Configuration auto-detected: ${detectedPath}`);
+            // Refresh providers to use new configuration
+            vscode.commands.executeCommand('bslAnalyzer.refreshTypeIndex');
+        }
+    }
+    else {
+        outputChannel.appendLine(`📍 Using configured path: ${configPath}`);
     }
 }
 async function initializeIndexIfNeeded() {

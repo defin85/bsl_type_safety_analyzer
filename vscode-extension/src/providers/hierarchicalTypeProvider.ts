@@ -68,7 +68,12 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
 
     getChildren(element?: HierarchicalTypeItem): Thenable<HierarchicalTypeItem[]> {
         if (!element) {
+            this.outputChannel?.appendLine('HierarchicalTypeIndexProvider: Getting root categories');
             return this.getRootCategories();
+        } else if (element.contextValue === 'platform-group') {
+            return this.getPlatformCategories();
+        } else if (element.contextValue === 'config-group') {
+            return this.getConfigCategories();
         } else if (element.contextValue === 'category') {
             return this.getCategoryTypes(element);
         } else if (element.contextValue === 'type') {
@@ -127,21 +132,51 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
     private async loadConfigurationTypes(): Promise<void> {
         try {
             const configPath = BslAnalyzerConfig.configurationPath;
-            if (!configPath) return;
+            this.outputChannel?.appendLine(`Loading config types from: ${configPath || 'not set'}`);
+            if (!configPath) {
+                this.outputChannel?.appendLine('Configuration path not set, skipping config types');
+                return;
+            }
             
             const homedir = require('os').homedir();
             const platformVersion = BslAnalyzerConfig.platformVersion;
-            const projectHash = require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8);
+            
+            // Extract UUID from Configuration.xml to match Rust's approach
+            let projectId: string;
+            try {
+                const configXmlPath = path.join(configPath, 'Configuration.xml');
+                const configXmlContent = fs.readFileSync(configXmlPath, 'utf-8');
+                const uuidMatch = configXmlContent.match(/<Configuration[^>]*uuid="([^"]+)"/);
+                if (uuidMatch && uuidMatch[1]) {
+                    const uuid = uuidMatch[1].replace(/-/g, '');
+                    projectId = `${path.basename(configPath)}_${uuid}`;
+                    this.outputChannel?.appendLine(`Using UUID-based project ID: ${projectId}`);
+                } else {
+                    // Fallback to hash-based ID
+                    const projectHash = require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8);
+                    projectId = `${path.basename(configPath)}_${projectHash}`;
+                    this.outputChannel?.appendLine(`Using hash-based project ID: ${projectId}`);
+                }
+            } catch (error) {
+                // Fallback to hash-based ID
+                const projectHash = require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8);
+                projectId = `${path.basename(configPath)}_${projectHash}`;
+                this.outputChannel?.appendLine(`Using hash-based project ID (error reading UUID): ${projectId}`);
+            }
+            
             const projectCachePath = path.join(
                 homedir, 
                 '.bsl_analyzer', 
                 'project_indices',
-                `${path.basename(configPath)}_${projectHash}`,
+                projectId,
                 platformVersion,
                 'config_entities.jsonl'
             );
             
+            this.outputChannel?.appendLine(`Looking for config cache at: ${projectCachePath}`);
+            
             if (fs.existsSync(projectCachePath)) {
+                this.outputChannel?.appendLine('Config cache found, loading...');
                 const content = fs.readFileSync(projectCachePath, 'utf-8');
                 const lines = content.trim().split('\n');
                 
@@ -157,6 +192,8 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
                 }
                 
                 this.outputChannel?.appendLine(`Loaded ${this.configTypes.size} configuration types`);
+            } else {
+                this.outputChannel?.appendLine('Config cache not found');
             }
         } catch (error) {
             this.outputChannel?.appendLine(`Error loading configuration types: ${error}`);
@@ -300,31 +337,50 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
         return iconMap[categoryName] || '📂';
     }
 
-    private async getRootCategories(): Promise<HierarchicalTypeItem[]> {
-        const items: HierarchicalTypeItem[] = [];
-
-        // Группируем категории: платформенные и конфигурационные
-        const platformCategories: HierarchicalTypeItem[] = [];
-        const configCategories: HierarchicalTypeItem[] = [];
-
+    private async getPlatformCategories(): Promise<HierarchicalTypeItem[]> {
+        const categories: HierarchicalTypeItem[] = [];
+        
         for (const [key, category] of this.typeCategories) {
-            const categoryItem = new HierarchicalTypeItem(
-                `${category.icon} ${category.name} (${category.types.length})`,
-                vscode.TreeItemCollapsibleState.Collapsed,
-                category.name,
-                'category',
-                key
-            );
-            
             if (key.startsWith('platform:')) {
-                platformCategories.push(categoryItem);
-            } else {
-                configCategories.push(categoryItem);
+                const categoryItem = new HierarchicalTypeItem(
+                    `${category.icon} ${category.name} (${category.types.length})`,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    category.name,
+                    'category',
+                    key
+                );
+                categories.push(categoryItem);
             }
         }
+        
+        return categories;
+    }
+
+    private async getConfigCategories(): Promise<HierarchicalTypeItem[]> {
+        const categories: HierarchicalTypeItem[] = [];
+        
+        for (const [key, category] of this.typeCategories) {
+            if (key.startsWith('config:')) {
+                const categoryItem = new HierarchicalTypeItem(
+                    `${category.icon} ${category.name} (${category.types.length})`,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    category.name,
+                    'category',
+                    key
+                );
+                categories.push(categoryItem);
+            }
+        }
+        
+        return categories;
+    }
+
+    private async getRootCategories(): Promise<HierarchicalTypeItem[]> {
+        this.outputChannel?.appendLine(`HierarchicalTypeIndexProvider: Building categories, found ${this.typeCategories.size} categories`);
+        const items: HierarchicalTypeItem[] = [];
 
         // Добавляем группы верхнего уровня
-        if (platformCategories.length > 0) {
+        if (this.platformTypes.size > 0) {
             const platformGroup = new HierarchicalTypeItem(
                 `🏢 Платформа 1С (${this.platformTypes.size} типов)`,
                 vscode.TreeItemCollapsibleState.Collapsed,
@@ -334,7 +390,7 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
             items.push(platformGroup);
         }
 
-        if (configCategories.length > 0) {
+        if (this.configTypes.size > 0) {
             const configGroup = new HierarchicalTypeItem(
                 `🏗️ Конфигурация (${this.configTypes.size} типов)`,
                 vscode.TreeItemCollapsibleState.Collapsed,
@@ -344,8 +400,7 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
             items.push(configGroup);
         }
 
-        // Для упрощения пока возвращаем категории напрямую
-        return [...platformCategories, ...configCategories];
+        return items;
     }
 
     private async getCategoryTypes(element: HierarchicalTypeItem): Promise<HierarchicalTypeItem[]> {

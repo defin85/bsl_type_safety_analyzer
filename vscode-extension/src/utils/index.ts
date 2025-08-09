@@ -21,3 +21,12 @@ export function initializeUtils(outputChannel: vscode.OutputChannel) {
     require('./executor').setOutputChannel(outputChannel);
     require('./config').setOutputChannel(outputChannel);
 }
+
+// Export configuration finder utilities
+export { 
+    findConfigurations, 
+    findMainConfiguration, 
+    selectConfiguration, 
+    autoDetectConfiguration,
+    ConfigurationInfo 
+} from './configurationFinder';

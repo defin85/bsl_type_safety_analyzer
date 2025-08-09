@@ -20,7 +20,8 @@ import {
 import {
     executeBslCommand,
     getPlatformDocsArchive,
-    initializeUtils
+    initializeUtils,
+    autoDetectConfiguration
 } from './utils';
 import {
     BslOverviewProvider,
@@ -43,10 +44,12 @@ import {
 let indexServerPath: string;
 let outputChannel: vscode.OutputChannel;
 let statusBarItem: vscode.StatusBarItem;
+let extensionContext: vscode.ExtensionContext;
     
 // Функции прогресса теперь импортируются из модуля lsp/progress
 
 export async function activate(context: vscode.ExtensionContext) {
+    extensionContext = context;
 
     try {
         // Get the current version from package.json
@@ -85,6 +88,9 @@ export async function activate(context: vscode.ExtensionContext) {
         
         // Initialize configuration
         initializeConfiguration();
+        
+        // Auto-detect configuration if not set
+        await autoDetectConfigurationIfNeeded();
 
         // Start LSP client FIRST (it may register some commands)
         // Запускаем с задержкой для стабильности
@@ -120,8 +126,9 @@ function initializeConfiguration() {
     indexServerPath = BslAnalyzerConfig.binaryPath;
     
     if (!indexServerPath) {
-        // First, try bundled binaries from extension
-        const extensionPath = vscode.extensions.getExtension('bsl-analyzer-team.bsl-analyzer')?.extensionPath;
+        // First, try bundled binaries from extension context
+        // Use extensionContext which is available globally in this scope
+        const extensionPath = extensionContext?.extensionPath;
         if (extensionPath) {
             const bundledBinPath = path.join(extensionPath, 'bin');
             if (fs.existsSync(bundledBinPath)) {
@@ -135,6 +142,23 @@ function initializeConfiguration() {
             outputChannel.appendLine(`❌ BSL Analyzer binaries not found in extension.`);
             outputChannel.appendLine(`💡 Please run 'npm run copy:binaries' to update extension binaries.`);
         }
+    }
+}
+
+async function autoDetectConfigurationIfNeeded() {
+    const configPath = BslAnalyzerConfig.configurationPath;
+    
+    if (!configPath) {
+        outputChannel.appendLine('📍 Configuration path not set, attempting auto-detection...');
+        const detectedPath = await autoDetectConfiguration(outputChannel);
+        
+        if (detectedPath) {
+            outputChannel.appendLine(`✅ Configuration auto-detected: ${detectedPath}`);
+            // Refresh providers to use new configuration
+            vscode.commands.executeCommand('bslAnalyzer.refreshTypeIndex');
+        }
+    } else {
+        outputChannel.appendLine(`📍 Using configured path: ${configPath}`);
     }
 }
 

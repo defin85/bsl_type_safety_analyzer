@@ -2,7 +2,7 @@
     "name": "bsl-type-safety-analyzer",
     "displayName": "BSL Analyzer",
     "description": "Advanced BSL (1C:Enterprise) static analyzer with type safety checking - Self-contained with bundled binaries",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "publisher": "bsl-analyzer-team",
     "icon": "images/bsl-analyzer-logo.png",
     "engines": {
@@ -142,6 +142,7 @@
                         "type": "string",
                         "default": "",
                         "description": "Путь к директории конфигурации 1С для построения индекса",
+                        "scope": "resource",
                         "order": 0
                     },
                     "bslAnalyzer.platformVersion": {

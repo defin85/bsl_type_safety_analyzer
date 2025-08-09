@@ -113,63 +113,40 @@ export async function addPlatformDocumentation(provider: BslPlatformDocsProvider
             try {
                 let currentStep = 1;
                 
-                // Обрабатываем shcntx архив (основные типы и методы)
-                if (shcntxPath) {
-                    updateIndexingProgress(currentStep++, 'Processing shcntx archive (types & methods)...', 25);
-                    progress.report({ increment: 25, message: 'Processing main types archive...' });
-                    
-                    const shcntxResult = await executeBslCommand('extract_platform_docs', [
-                        '--archive', shcntxPath,
-                        '--platform-version', version,
-                        '--force' // Всегда форсируем при ручном добавлении документации
-                    ]);
-                    
-                    // Ищем количество типов в выводе
-                    let shcntxTypes = 0;
-                    const shcntxTypesMatch = shcntxResult.match(/(\d+)\s+types/i) || shcntxResult.match(/(\d+)\s+entities/i);
-                    const shcntxSavedMatch = shcntxResult.match(/Saved\s+(\d+)\s+platform\s+types/i);
-                    
-                    if (shcntxSavedMatch && shcntxSavedMatch[1]) {
-                        shcntxTypes = parseInt(shcntxSavedMatch[1]);
-                    } else if (shcntxTypesMatch && shcntxTypesMatch[1]) {
-                        shcntxTypes = parseInt(shcntxTypesMatch[1]);
-                    }
-                    
-                    totalTypesCount += shcntxTypes;
-                    outputChannel.appendLine(`✅ shcntx processed: ${shcntxTypes} types`);
-                }
+                // extract_platform_docs автоматически находит второй архив в той же директории
+                // Поэтому достаточно вызвать один раз с любым из архивов
+                const primaryArchive = shcntxPath || shlangPath;
                 
-                // Обрабатываем shlang архив (примитивные типы)
-                if (shlangPath) {
-                    updateIndexingProgress(currentStep++, 'Processing shlang archive (primitive types)...', 50);
-                    progress.report({ increment: 25, message: 'Processing primitive types archive...' });
+                if (primaryArchive) {
+                    updateIndexingProgress(currentStep++, 'Processing platform documentation archives...', 25);
+                    progress.report({ increment: 25, message: 'Extracting platform types from archives...' });
                     
-                    const shlangResult = await executeBslCommand('extract_platform_docs', [
-                        '--archive', shlangPath,
+                    const extractResult = await executeBslCommand('extract_platform_docs', [
+                        '--archive', primaryArchive,
                         '--platform-version', version,
                         '--force' // Всегда форсируем при ручном добавлении документации
                     ]);
                     
                     // Ищем количество типов в выводе
-                    let shlangTypes = 0;
-                    const shlangTypesMatch = shlangResult.match(/(\d+)\s+types/i) || shlangResult.match(/(\d+)\s+entities/i);
-                    const shlangSavedMatch = shlangResult.match(/Saved\s+(\d+)\s+platform\s+types/i);
+                    // extract_platform_docs обрабатывает оба архива и выводит общее количество
+                    const typesMatch = extractResult.match(/(\d+)\s+types/i) || 
+                                      extractResult.match(/(\d+)\s+entities/i) ||
+                                      extractResult.match(/Objects\s+│\s+(\d+)/i);
+                    const savedMatch = extractResult.match(/Saved\s+(\d+)\s+platform\s+types/i);
                     
-                    if (shlangSavedMatch && shlangSavedMatch[1]) {
-                        shlangTypes = parseInt(shlangSavedMatch[1]);
-                    } else if (shlangTypesMatch && shlangTypesMatch[1]) {
-                        shlangTypes = parseInt(shlangTypesMatch[1]);
+                    if (savedMatch && savedMatch[1]) {
+                        totalTypesCount = parseInt(savedMatch[1]);
+                    } else if (typesMatch && typesMatch[1]) {
+                        totalTypesCount = parseInt(typesMatch[1]);
                     }
                     
-                    // Для shlang обычно возвращается общее количество после добавления
-                    if (shlangTypes > 0 && shlangTypes > totalTypesCount) {
-                        // Это общее количество, а не дополнительное
-                        totalTypesCount = shlangTypes;
-                    } else {
-                        totalTypesCount += shlangTypes;
+                    // Проверяем, были ли обработаны оба архива
+                    const hasAutoDetected = extractResult.includes('Auto-detected');
+                    if (hasAutoDetected) {
+                        outputChannel.appendLine(`✅ Both archives processed automatically`);
                     }
                     
-                    outputChannel.appendLine(`✅ shlang processed: total types now ${totalTypesCount}`);
+                    outputChannel.appendLine(`✅ Platform documentation extracted: ${totalTypesCount} types`);
                 }
                 
                 // Финализация
