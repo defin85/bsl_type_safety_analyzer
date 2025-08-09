@@ -22,6 +22,7 @@ let samples = parser.extract_sample_files(5)?;
 */
 
 use anyhow::{bail, Result};
+use tracing::{error, warn};
 use scraper::{ElementRef, Html, Selector};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -101,7 +102,7 @@ impl HbkArchiveParser {
                     Ok(true)
                 }
                 Err(_) => {
-                    eprintln!(
+                    error!(
                         "Ошибка: '{}' не является корректным ZIP-архивом",
                         self.hbk_file.display()
                     );
@@ -109,7 +110,7 @@ impl HbkArchiveParser {
                 }
             },
             Err(e) => {
-                eprintln!("Ошибка при открытии архива: {}", e);
+                error!("Ошибка при открытии архива: {}", e);
                 Ok(false)
             }
         }
@@ -157,7 +158,7 @@ impl HbkArchiveParser {
                         }
                     }
                     Err(e) => {
-                        eprintln!("Ошибка при извлечении файла {}: {}", filename, e);
+                        error!("Ошибка при извлечении файла {}: {}", filename, e);
                         None
                     }
                 }
@@ -352,11 +353,11 @@ impl HbkArchiveParser {
                         samples.push(parsed);
                     }
                     Err(e) => {
-                        eprintln!("Ошибка при обработке файла {}: {}", filename, e);
+                        error!("Ошибка при обработке файла {}: {}", filename, e);
                     }
                 },
                 None => {
-                    eprintln!("Не удалось извлечь содержимое файла: {}", filename);
+                    warn!("Не удалось извлечь содержимое файла: {}", filename);
                 }
             }
         }

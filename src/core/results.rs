@@ -217,7 +217,7 @@ impl std::fmt::Display for AnalysisResults {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parser::Position;
+    use crate::core::position::Position;
     use std::path::PathBuf;
 
     fn create_test_error() -> AnalysisError {

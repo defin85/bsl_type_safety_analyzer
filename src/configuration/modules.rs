@@ -1,5 +1,5 @@
 // BSL модули
-use crate::parser::lexer::read_bsl_file;
+use crate::core::read_bsl_file;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::path::Path;

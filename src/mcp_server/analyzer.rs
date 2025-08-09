@@ -51,12 +51,12 @@ impl BslTypeAnalyzer {
 
         // Пытаемся загрузить индекс если есть конфигурация
         if let Some(ref path) = _config_path {
-            eprintln!("Loading BSL index from: {:?}", path);
+            info!("Loading BSL index from: {:?}", path);
             analyzer
                 .load_index(path.to_str().unwrap_or_default())
                 .await?;
         } else {
-            eprintln!("No BSL_CONFIG_PATH set, index will be loaded on demand");
+            info!("No BSL_CONFIG_PATH set, index will be loaded on demand");
         }
 
         Ok(analyzer)

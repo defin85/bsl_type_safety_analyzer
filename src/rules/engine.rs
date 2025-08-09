@@ -363,7 +363,7 @@ impl std::fmt::Display for RulesSummary {
 mod tests {
     use super::*;
     use crate::core::errors::{AnalysisError, ErrorLevel};
-    use crate::parser::ast::Position;
+    use crate::core::position::Position;
     use std::path::PathBuf;
 
     fn create_test_error(code: &str, message: &str) -> AnalysisError {

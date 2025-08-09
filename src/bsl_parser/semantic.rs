@@ -2,11 +2,12 @@
 
 use crate::bsl_parser::{ast::*, diagnostics::*, keywords};
 use crate::core::errors::{AnalysisError, ErrorLevel};
-use crate::parser::ast::Position;
+use crate::core::position::Position;
 use crate::unified_index::UnifiedBslIndex;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use tracing::debug;
 
 /// Информация о переменной в области видимости
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -327,7 +328,7 @@ impl SemanticAnalyzer {
 
                         // Выводим тип из правой части присваивания
                         if let Some(inferred_type) = self.infer_expression_type(&assignment.value) {
-                            println!(
+                            debug!(
                                 "🔍 Вывод типа: {} = {} (тип: {})",
                                 name,
                                 match &assignment.value {
@@ -676,7 +677,7 @@ impl SemanticAnalyzer {
             let object_type = self.infer_expression_type(&method_call.object);
 
             // Отладочный вывод для понимания структуры вызова метода
-            println!(
+            debug!(
                 "🔍 DEBUG MethodCall: object={:?}, method={}, object_type={:?}",
                 method_call.object, method_call.method, object_type
             );
@@ -684,7 +685,7 @@ impl SemanticAnalyzer {
             // ОБХОДНОЙ ПУТЬ: Обрабатываем составные методы типа "Пользователи.СоздатьЭлемент"
             if method_call.method.contains('.') && object_type.is_some() {
                 let object_type_name = object_type.as_ref().unwrap();
-                println!(
+                debug!(
                     "🔧 WORKAROUND: Обрабатываем составной метод: {} для {}",
                     method_call.method, object_type_name
                 );
@@ -700,7 +701,7 @@ impl SemanticAnalyzer {
                     if let Some(manager_info) = self.parse_manager_type(object_type_name) {
                         // Формируем конкретный тип: manager_info.base_type заменяем на полное имя объекта
                         let concrete_type = format!("{}.{}", object_type_name, property_name);
-                        println!(
+                        debug!(
                             "🔧 ИСПРАВЛЕНО: Поиск конкретного объекта {}: {}",
                             manager_info.kind, concrete_type
                         );
@@ -708,7 +709,7 @@ impl SemanticAnalyzer {
                         // Проверяем существование конкретного объекта в конфигурации
                         if let Some(entity) = index.find_entity(&concrete_type) {
                             let all_methods = index.get_all_methods(&entity.qualified_name);
-                            println!(
+                            debug!(
                                 "🔍 DEBUG: Найден объект {}, методов: {}",
                                 concrete_type,
                                 all_methods.len()
@@ -721,13 +722,13 @@ impl SemanticAnalyzer {
                                 });
 
                             if method_found {
-                                println!(
+                                debug!(
                                     "✅ ИСПРАВЛЕНО: Метод {} найден в конкретном объекте {}",
                                     method_name, concrete_type
                                 );
                                 return Ok(()); // Метод найден - всё в порядке
                             } else {
-                                println!(
+                                debug!(
                                     "❌ ИСПРАВЛЕНО: Метод {} НЕ найден в конкретном объекте {}",
                                     method_name, concrete_type
                                 );
@@ -751,7 +752,7 @@ impl SemanticAnalyzer {
                                 return Ok(()); // Обработали ошибку
                             }
                         } else {
-                            println!(
+                            debug!(
                                 "❌ ИСПРАВЛЕНО: Конкретный объект {} не найден в конфигурации",
                                 concrete_type
                             );
@@ -774,14 +775,14 @@ impl SemanticAnalyzer {
             if let Some(type_name) = object_type {
                 // Ищем тип в индексе
                 if let Some(entity) = index.find_entity(&type_name) {
-                    println!(
+                    debug!(
                         "🔍 DEBUG найден entity: qualified_name='{}', display_name='{}'",
                         entity.qualified_name, entity.display_name
                     );
 
                     // Получаем все методы (включая унаследованные)
                     let all_methods = index.get_all_methods(&entity.qualified_name);
-                    println!(
+                    debug!(
                         "🔍 DEBUG методы для {}: {:?}",
                         entity.qualified_name,
                         all_methods.keys().collect::<Vec<_>>()
@@ -1037,18 +1038,18 @@ impl SemanticAnalyzer {
                 // ВАЖНО: Сначала проверяем глобальные алиасы, потом ключевые слова BSL
                 // Проверяем глобальные алиасы через UnifiedBslIndex
                 if let Some(index) = &self.index {
-                    println!("🔍 DEBUG Ищем identifier: {}", name);
+                    debug!("🔍 DEBUG Ищем identifier: {}", name);
                     if let Some(entity) = index.find_entity(name) {
-                        println!("🔍 DEBUG Identifier: {} -> {}", name, entity.qualified_name);
+                        debug!("🔍 DEBUG Identifier: {} -> {}", name, entity.qualified_name);
                         return Some(entity.qualified_name.clone());
                     } else {
-                        println!("🔍 DEBUG Identifier {} НЕ найден в индексе", name);
+                        debug!("🔍 DEBUG Identifier {} НЕ найден в индексе", name);
                     }
                 }
 
                 // Если переменная не найдена в алиасах, проверяем ключевые слова BSL
                 if keywords::is_bsl_reserved_word(name) {
-                    println!("🔍 DEBUG {} is BSL reserved word", name);
+                    debug!("🔍 DEBUG {} is BSL reserved word", name);
                     return Some(name.clone());
                 }
 
@@ -1056,7 +1057,7 @@ impl SemanticAnalyzer {
             }
             Expression::New(new_expr) => {
                 // Тип объекта создается из конструктора
-                println!("🔍 DEBUG New expression: {}", new_expr.type_name);
+                debug!("🔍 DEBUG New expression: {}", new_expr.type_name);
                 Some(new_expr.type_name.clone())
             }
             Expression::MethodCall(method_call) => {
@@ -1095,21 +1096,21 @@ impl SemanticAnalyzer {
             },
             Expression::PropertyAccess(prop_access) => {
                 // Обрабатываем составные выражения типа Справочники.Пользователи
-                println!(
+                debug!(
                     "🔍 DEBUG PropertyAccess: object={:?}, property={}",
                     prop_access.object, prop_access.property
                 );
 
                 if let Some(index) = &self.index {
                     if let Some(object_type) = self.infer_expression_type(&prop_access.object) {
-                        println!("🔍 DEBUG PropertyAccess object_type: {}", object_type);
+                        debug!("🔍 DEBUG PropertyAccess object_type: {}", object_type);
 
                         // Универсальная обработка менеджеров 1С
                         if let Some(manager_info) = self.parse_manager_type(&object_type) {
                             // Менеджер.Свойство -> БазовыйТип.Свойство
                             let target_type =
                                 format!("{}.{}", manager_info.base_type, prop_access.property);
-                            println!(
+                            debug!(
                                 "🔍 DEBUG PropertyAccess manager: {} -> {}",
                                 object_type, target_type
                             );

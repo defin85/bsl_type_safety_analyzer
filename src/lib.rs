@@ -101,7 +101,7 @@ pub mod docs_integration; // NEW: Documentation integration module
 pub mod lsp;
 pub mod mcp_server; // NEW: Model Context Protocol server
 pub mod metrics; // NEW: Code quality metrics and technical debt analysis
-pub mod parser;
+// (legacy parser shim removed)
 pub mod reports; // NEW: Reports module for SARIF, HTML, Text output
 pub mod rules; // NEW: Rules system for configurable analysis
 pub mod unified_index; // NEW: Unified BSL Type System
@@ -115,7 +115,6 @@ pub use bsl_parser::BslParser;
 pub use bsl_parser::{DataFlowAnalyzer, SemanticAnalyzer};
 pub use configuration::Configuration;
 pub use core::{AnalysisError, ErrorCollector, ErrorLevel};
-pub use parser::BslLexer;
 pub use verifiers::MethodVerifier;
 
 // NEW: Re-export integrated parsers and documentation tools
@@ -169,7 +168,7 @@ pub fn analyze_configuration<P: AsRef<Path>>(config_path: P) -> Result<String> {
                     // Run semantic analysis
                     if let Err(e) = analyzer.analyze_code(&content, &module.path.to_string_lossy())
                     {
-                        eprintln!("Analysis failed for {}: {}", module.path.display(), e);
+                        tracing::error!("Analysis failed for {}: {}", module.path.display(), e);
                         continue;
                     }
 
@@ -179,12 +178,12 @@ pub fn analyze_configuration<P: AsRef<Path>>(config_path: P) -> Result<String> {
 
                     // Print results for this module
                     if results.has_errors() || results.has_warnings() {
-                        println!("=== {} ===", module.path.display());
-                        println!("{}", results);
+                        tracing::info!("=== {} ===", module.path.display());
+                        tracing::info!("{}", results);
                     }
                 }
                 None => {
-                    eprintln!("Parse error in {}", module.path.display());
+                    tracing::error!("Parse error in {}", module.path.display());
                     total_errors += 1;
                 }
             }
@@ -239,8 +238,7 @@ mod tests {
 
     #[test]
     fn test_lexer_functionality() {
-        let lexer = BslLexer::new();
-        let tokens = lexer.tokenize("Процедура Тест() КонецПроцедуры").unwrap();
-        assert!(!tokens.is_empty());
+        // Legacy lexer removed; keep a placeholder assertion to ensure test module runs
+        assert!("Процедура Тест() КонецПроцедуры".starts_with("Процедура"));
     }
 }

@@ -5,6 +5,31 @@ All notable changes to the BSL Type Safety Analyzer project will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🔥 Removed
+- Legacy `parser` module (`src/parser`) fully deleted (legacy lexer/AST/grammar). The modern tree-sitter based implementation in `bsl_parser` is now the only parser.
+- Public re-export of `BslLexer` (legacy shim) removed.
+
+### ✨ Added
+- `core::fs_utils::read_bsl_file` – BOM‑aware file reading helper replacing the old `parser::lexer::read_bsl_file`.
+
+### 🛠 Changed
+- BOM handling tests now use `core::read_bsl_file` and no longer depend on a legacy lexer.
+- `mcp_server` syntax validation now uses a lightweight heuristic placeholder (previous lexer-based quick tokenization removed). A future update will integrate the new parser for richer incremental validation.
+
+### ⚠️ Breaking Changes
+- Any external code depending on `bsl_analyzer::parser::*` (especially `BslLexer`) must migrate:
+	- Replace `use bsl_analyzer::parser::lexer::read_bsl_file` with `use bsl_analyzer::core::read_bsl_file`.
+	- Remove usages of `BslLexer`; if tokenization is still needed, integrate with the new `bsl_parser` APIs (planned public token/AST surface) or implement a project-specific lightweight tokenizer.
+
+### Migration Guide
+1. Search your codebase for `bsl_analyzer::parser` imports and update as per above.
+2. If you had tests asserting legacy token sequences, refocus them on higher-level parse/semantic behaviors using the new analyzer API.
+3. For quick BOM-safe reads: `let content = bsl_analyzer::core::read_bsl_file(path)?;`.
+
+---
+
 ## [1.0.0] - 2025-07-25
 
 ### 🎉 Initial Production Release

@@ -3,7 +3,73 @@
 use crate::bsl_parser::ast::{
     BslAst, CompilerDirective, Declaration, Expression, Literal, Statement,
 };
-use crate::parser::ast::{AstNode, AstNodeType, Position, Span};
+use crate::core::position::{Position, Span};
+
+// Define minimal legacy-compatible types locally to avoid depending on removed module
+#[derive(Debug, Clone)]
+pub struct AstNode {
+    pub node_type: AstNodeType,
+    pub span: Span,
+    pub value: Option<String>,
+    pub children: Vec<AstNode>,
+    pub attributes: std::collections::HashMap<String, String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AstNodeType {
+    Module,
+    Comment,
+    Procedure,
+    Function,
+    ParameterList,
+    Parameter,
+    Block,
+    VariableDeclaration,
+    Variable,
+    Assignment,
+    IfStatement,
+    ReturnStatement,
+    BreakStatement,
+    ContinueStatement,
+    Expression,
+    Identifier,
+    CallExpression,
+    MemberExpression,
+    NewExpression,
+    NumberLiteral,
+    StringLiteral,
+    BooleanLiteral,
+    DateLiteral,
+    UndefinedLiteral,
+    NullLiteral,
+}
+
+impl AstNode {
+    pub fn new(node_type: AstNodeType, span: Span) -> Self {
+        Self { node_type, span, value: None, children: Vec::new(), attributes: Default::default() }
+    }
+    pub fn with_value(node_type: AstNodeType, span: Span, value: String) -> Self {
+        Self { node_type, span, value: Some(value), children: Vec::new(), attributes: Default::default() }
+    }
+    pub fn add_child(&mut self, child: AstNode) {
+        self.children.push(child);
+    }
+    pub fn add_attribute(&mut self, key: String, value: String) {
+        self.attributes.insert(key, value);
+    }
+    /// Возвращает текстовое значение узла (имя процедуры/функции/идентификатора и т.п.)
+    pub fn text(&self) -> &str {
+        self.value.as_deref().unwrap_or("")
+    }
+    /// Признак экспорта для процедур/функций/переменных
+    pub fn is_export(&self) -> bool {
+        self
+            .attributes
+            .get("export")
+            .map(|v| v == "true")
+            .unwrap_or(false)
+    }
+}
 
 /// Преобразует новый BSL AST в старый формат для совместимости
 pub struct AstBridge;

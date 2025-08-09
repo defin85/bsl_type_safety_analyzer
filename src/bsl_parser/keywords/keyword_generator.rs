@@ -11,6 +11,7 @@ use serde_json::Value;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use tracing::{info, warn};
 
 /// Автоматически сгенерированные ключевые слова BSL из базы платформы
 pub struct GeneratedBslKeywords {
@@ -59,8 +60,8 @@ impl GeneratedBslKeywords {
                 }
                 Err(e) => {
                     // Логируем ошибку, но продолжаем обработку
-                    eprintln!(
-                        "Warning: Failed to parse entity at line {}: {}",
+                    warn!(
+                        "Failed to parse entity at line {}: {}",
                         line_num + 1,
                         e
                     );
@@ -157,18 +158,18 @@ impl GeneratedBslKeywords {
                     .iter()
                     .any(|t| t.starts_with(required_type) && t.contains('('));
             if !found {
-                eprintln!(
-                    "Warning: Required type '{}' not found in platform cache",
+                warn!(
+                    "Required type '{}' not found in platform cache",
                     required_type
                 );
             }
         }
 
-        println!(
-            "Loaded {} builtin types, {} global functions, {} system objects",
-            self.builtin_types.len(),
-            self.global_functions.len(),
-            self.system_objects.len()
+        info!(
+            builtin_types = self.builtin_types.len(),
+            global_functions = self.global_functions.len(),
+            system_objects = self.system_objects.len(),
+            "Platform keywords loaded"
         );
 
         Ok(())
@@ -351,7 +352,7 @@ fn get_platform_cache_path(version: &str) -> Result<std::path::PathBuf> {
 pub static GENERATED_BSL_KEYWORDS: Lazy<GeneratedBslKeywords> = Lazy::new(|| {
     // Пытаемся загрузить из кеша, fallback на версию по умолчанию
     GeneratedBslKeywords::load_from_platform_cache("8.3.25").unwrap_or_else(|e| {
-        eprintln!(
+        warn!(
             "Warning: Failed to load platform keywords: {}. Using fallback.",
             e
         );
@@ -437,9 +438,9 @@ mod tests {
             assert!(keywords.is_builtin_type("Массив"));
 
             // Проверяем системные объекты
-            println!(
-                "Available system objects: {:?}",
-                keywords.system_objects.iter().take(10).collect::<Vec<_>>()
+            info!(
+                available_system_objects = ?keywords.system_objects.iter().take(10).collect::<Vec<_>>(),
+                "Available system objects"
             );
 
             // Ищем вариации "Метаданные"
@@ -449,7 +450,7 @@ mod tests {
                 .find(|&name| keywords.is_system_object(name));
 
             if let Some(found_name) = found_metadata {
-                println!("Found metadata as: {}", found_name);
+                info!("Found metadata as: {}", found_name);
             } else {
                 // Если не нашли точное совпадение, проверим похожие
                 let similar: Vec<&String> = keywords
@@ -459,15 +460,12 @@ mod tests {
                         name.to_lowercase().contains("мета") || name.to_lowercase().contains("meta")
                     })
                     .collect();
-                println!("Similar to metadata: {:?}", similar);
+                info!(similar = ?similar, "Similar to metadata");
 
                 // Для теста используем любой доступный системный объект
                 if !keywords.system_objects.is_empty() {
                     let first_obj = keywords.system_objects.iter().next().unwrap();
-                    println!(
-                        "Using first available system object for test: {}",
-                        first_obj
-                    );
+                    info!("Using first available system object for test: {}", first_obj);
                     assert!(keywords.is_system_object(first_obj));
                 }
             }
@@ -477,10 +475,10 @@ mod tests {
             // Проверяем глобальные функции
             assert!(keywords.is_global_function("Сообщить"));
 
-            println!(
-                "Platform cache test passed: {} types, {} functions loaded",
-                keywords.builtin_types.len(),
-                keywords.global_functions.len()
+            info!(
+                builtin_types = keywords.builtin_types.len(),
+                global_functions = keywords.global_functions.len(),
+                "Platform cache test passed"
             );
         }
     }

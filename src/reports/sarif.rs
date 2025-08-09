@@ -626,7 +626,7 @@ impl From<Severity> for SarifLevel {
 mod tests {
     use super::*;
     use crate::core::{AnalysisError, AnalysisResults};
-    use crate::parser::Position;
+    use crate::core::position::Position;
     use std::path::PathBuf;
 
     fn create_test_analysis_results() -> AnalysisResults {

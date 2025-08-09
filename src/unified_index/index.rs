@@ -4,6 +4,7 @@ use petgraph::visit::EdgeRef;
 use petgraph::Direction;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use tracing::{debug, info, warn};
 
 use super::entity::{
     BslApplicationMode, BslEntity, BslEntityId, BslEntityKind, BslEntityType, BslMethod,
@@ -339,16 +340,16 @@ impl UnifiedBslIndex {
             if let Some(target_id) = self.find_target_for_alias(target_type) {
                 self.global_aliases
                     .insert(alias.to_string(), target_id.clone());
-                println!("🔗 Создан глобальный алиас: {} → {}", alias, target_type);
+                debug!("🔗 Создан глобальный алиас: {} → {}", alias, target_type);
             } else {
-                println!(
+                warn!(
                     "⚠️ Целевой тип '{}' для алиаса '{}' не найден",
                     target_type, alias
                 );
             }
         }
 
-        println!(
+        info!(
             "✅ Инициализировано {} глобальных алиасов 1С",
             self.global_aliases.len()
         );
@@ -357,18 +358,18 @@ impl UnifiedBslIndex {
 
     /// Ищет целевой тип для алиаса с различными стратегиями поиска
     fn find_target_for_alias(&self, target_type: &str) -> Option<&BslEntityId> {
-        println!("🔍 Поиск target для алиаса: '{}'", target_type);
+    debug!("🔍 Поиск target для алиаса: '{}'", target_type);
 
         // 1. Точный поиск по qualified_name
         if let Some(id) = self.by_qualified_name.get(target_type) {
-            println!("✅ Найден по qualified_name: {}", target_type);
+            debug!("✅ Найден по qualified_name: {}", target_type);
             return Some(id);
         }
 
         // 2. Поиск по display_name
         if let Some(id) = self.by_name.get(target_type) {
             if let Some(entity) = self.entities.get(id) {
-                println!(
+                debug!(
                     "✅ Найден по display_name: {} -> {} ({:?})",
                     target_type, entity.qualified_name, entity.entity_kind
                 );
@@ -378,14 +379,14 @@ impl UnifiedBslIndex {
 
         // 3. Поиск по альтернативным именам
         if let Some(id) = self.alternative_names.get(target_type) {
-            println!("✅ Найден по альтернативным именам: {}", target_type);
+            debug!("✅ Найден по альтернативным именам: {}", target_type);
             return Some(id);
         }
 
         // 4. Гибкий поиск с частичным совпадением (для сложных имен) - только если точно не найдено
         for (qualified_name, id) in &self.by_qualified_name {
             if qualified_name.contains(target_type) {
-                println!(
+                debug!(
                     "✅ Найден по частичному совпадению: {} -> {}",
                     target_type, qualified_name
                 );
@@ -393,7 +394,7 @@ impl UnifiedBslIndex {
             }
         }
 
-        println!("❌ Тип '{}' не найден", target_type);
+    debug!("❌ Тип '{}' не найден", target_type);
         None
     }
 
@@ -875,7 +876,7 @@ impl UnifiedBslIndex {
                                 .interface
                                 .methods
                                 .insert(method_name.clone(), method.clone());
-                            println!("  ✅ Унаследован метод: {}", method_name);
+                            debug!("  ✅ Унаследован метод: {}", method_name);
                         }
                     }
 
@@ -886,7 +887,7 @@ impl UnifiedBslIndex {
                                 .interface
                                 .properties
                                 .insert(prop_name.clone(), prop.clone());
-                            println!("  ✅ Унаследовано свойство: {}", prop_name);
+                            debug!("  ✅ Унаследовано свойство: {}", prop_name);
                         }
                     }
 
@@ -908,11 +909,11 @@ impl UnifiedBslIndex {
                             && e.qualified_name == exact_template
                     }) {
                         tracing::debug!("    ✅ ТОЧНОЕ совпадение найдено!");
-                        println!(
+                        debug!(
                             "       qualified_name: '{}'",
                             catalog_manager.qualified_name
                         );
-                        println!("       методы: {}", catalog_manager.interface.methods.len());
+                        info!("       методы: {}", catalog_manager.interface.methods.len());
                     } else {
                         // Покажем все типы, которые начинаются с "СправочникМенеджер.<Имя справочника>"
                         let related: Vec<_> = self

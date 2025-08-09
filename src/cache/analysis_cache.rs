@@ -6,7 +6,13 @@
 */
 
 use crate::cache::{CacheKey, CacheManager, CacheType, CacheValue};
-use crate::parser::ast::AstNode;
+// Legacy AST node type (minimal) for cache compatibility
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AstNode {
+    pub node_type: String,
+    pub span_start: (u32, u32, u32),
+    pub span_end: (u32, u32, u32),
+}
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

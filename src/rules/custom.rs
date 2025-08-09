@@ -470,7 +470,7 @@ impl Default for CustomRulesManager {
 mod tests {
     use super::*;
     use crate::core::errors::ErrorLevel;
-    use crate::parser::ast::Position;
+    use crate::core::position::Position;
     use std::path::PathBuf;
     use tempfile::NamedTempFile;
 

@@ -5,7 +5,7 @@ Comprehensive error handling and reporting system.
 Ported from Python implementation with enhanced type safety.
 */
 
-use crate::parser::ast::Position;
+use crate::core::position::Position;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::PathBuf;
@@ -73,7 +73,7 @@ impl AnalysisError {
 
 impl fmt::Display for AnalysisError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[{}] {}: {}", self.level, self.position, self.message)?;
+    write!(f, "[{}] {}: {}", self.level, self.position, self.message)?;
 
         if let Some(code) = &self.error_code {
             write!(f, " ({})", code)?;

@@ -20,7 +20,7 @@ use crate::docs_integration::{bsl_syntax_extractor::BslSyntaxExtractor, hbk_pars
 let mut parser = HbkArchiveParser::new("1C_Help.hbk");
 parser.open_archive()?;
 let structure = parser.analyze_structure()?;
-println!("HTML files: {}", structure.html_files);
+tracing::info!("HTML files: {}", structure.html_files);
 
 // Извлекаем базу знаний BSL
 let mut extractor = BslSyntaxExtractor::new("1C_Help.hbk");

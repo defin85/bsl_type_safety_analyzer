@@ -2,7 +2,8 @@
 
 use super::{BslParser, DataFlowAnalyzer, Diagnostic, SemanticAnalysisConfig, SemanticAnalyzer};
 use crate::core::errors::{AnalysisError, ErrorCollector};
-use crate::parser::ast::AstNode;
+// Legacy AstNode no longer used; keep method signature for backward compatibility behind empty type.
+// Remove direct import of legacy AST.
 use crate::unified_index::UnifiedBslIndex;
 use anyhow::Result;
 
@@ -270,7 +271,7 @@ impl BslAnalyzer {
     }
 
     /// Выполняет анализ AST (для совместимости со старым API)
-    pub fn analyze(&mut self, _ast: &AstNode) -> Result<()> {
+    pub fn analyze(&mut self, _ast: &()) -> Result<()> {
         // TODO: конвертировать старый AST в новый формат
         // Пока что возвращаем Ok для совместимости
         Ok(())
@@ -321,7 +322,7 @@ impl BslAnalyzer {
 
     /// Преобразует диагностику в ошибку анализа
     fn add_diagnostic_as_error(&mut self, diagnostic: &Diagnostic) {
-        let position = crate::parser::ast::Position {
+    let position = crate::core::position::Position {
             line: diagnostic.location.line,
             column: diagnostic.location.column,
             offset: diagnostic.location.offset,

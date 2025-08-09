@@ -653,7 +653,7 @@ fn html_escape(text: &str) -> String {
 mod tests {
     use super::*;
     use crate::core::{AnalysisError, AnalysisResults};
-    use crate::parser::Position;
+    use crate::core::position::Position;
     use std::path::PathBuf;
 
     fn create_test_results() -> AnalysisResults {
