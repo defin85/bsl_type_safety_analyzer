@@ -73,7 +73,7 @@ pub struct ConfigurationXmlParser {
 ```rust
 pub struct PlatformDocsCache {
     pub fn get_or_create(&self, version: &str) -> Result<Vec<BslEntity>>;
-    // Кеш: ~/.bsl_analyzer/platform_cache/v8.3.25.jsonl
+    // Кеш: ~/.bsl_analyzer/platform_cache/8.3.25.jsonl
 }
 ```
 
@@ -96,7 +96,7 @@ pub struct UnifiedIndexBuilder {
 ~/.bsl_analyzer/
 ├── platform_cache/                          # Переиспользуется между проектами
 │   ├── v8.3.24.jsonl                       # 24,050 типов платформы
-│   ├── v8.3.25.jsonl                       
+│   ├── 8.3.25.jsonl                       
 │   └── v8.3.26.jsonl
 └── project_indices/                        # Кеши проектов
     └── ProjectName_<hash>/                 # Уникальное имя (хеш полного пути)

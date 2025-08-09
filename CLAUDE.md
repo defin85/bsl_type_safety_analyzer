@@ -96,7 +96,7 @@ npm run rebuild:extension    # Пересборка расширения
     <command>
       <description>Extract platform documentation (one-time per version)</description>
       <code>cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"</code>
-      <result>~/.bsl_analyzer/platform_cache/v8.3.25.jsonl</result>
+      <result>~/.bsl_analyzer/platform_cache/8.3.25.jsonl</result>
     </command>
   </command-group>
 
@@ -124,7 +124,7 @@ npm run rebuild:extension    # Пересборка расширения
     <example>
       <description>Извлечение платформенных типов (один раз для версии)</description>
       <code>cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"</code>
-      <result>~/.bsl_analyzer/platform_cache/v8.3.25.jsonl</result>
+      <result>~/.bsl_analyzer/platform_cache/8.3.25.jsonl</result>
     </example>
   </example-group>
 
@@ -360,11 +360,11 @@ npm run build:smart:release  # Release сборка с оптимизирова�
 ```
 ~/.bsl_analyzer/
 ├── platform_cache/           # Переиспользуется между проектами
-│   ├── v8.3.25.jsonl        # 24,050 типов платформы (~8.5MB)
-│   └── v8.3.26.jsonl
+│   ├── 8.3.25.jsonl        # 24,050 типов платформы (~8.5MB)
+│   └── 8.3.26.jsonl
 └── project_indices/          # Кеши проектов
     └── ProjectName_<hash>/   # Уникальное имя (хеш пути)
-        └── v8.3.25/         # Версия платформы
+        └── 8.3.25/         # Версия платформы
             ├── config_entities.jsonl  # ~5KB
             └── unified_index.json     # ~1KB
 ```
@@ -484,16 +484,16 @@ Grep(pattern="BegOfYear", file_path="Global context.html")
 ```
 ~/.bsl_analyzer/
 ├── platform_cache/                          # Переиспользуется между проектами
-│   ├── v8.3.24.jsonl                       # 24,050 типов платформы
-│   ├── v8.3.25.jsonl           
-│   └── v8.3.26.jsonl
+│   ├── 8.3.24.jsonl                       # 24,050 типов платформы
+│   ├── 8.3.25.jsonl           
+│   └── 8.3.26.jsonl
 └── project_indices/                        # Индексы проектов
     └── ProjectName_<hash>/                 # Уникальное имя (хеш полного пути)
-        ├── v8.3.25/                        # Версия платформы
+        ├── 8.3.25/                        # Версия платформы
         │   ├── config_entities.jsonl       # Объекты конфигурации (~5KB)
         │   ├── unified_index.json          # Только индексы конфигурации (~1KB)
         │   └── manifest.json               # Метаданные проекта
-        └── v8.3.26/                        # Другая версия платформы
+        └── 8.3.26/                        # Другая версия платформы
             └── ...
 ```
 

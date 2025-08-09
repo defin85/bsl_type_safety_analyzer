@@ -26,7 +26,7 @@ import {
     BslOverviewProvider,
     BslDiagnosticsProvider,
     BslPlatformDocsProvider,
-    BslTypeIndexProvider,
+    HierarchicalTypeIndexProvider,
     BslActionsWebviewProvider
 } from './providers';
 // Webview функции не используются напрямую в extension.ts
@@ -49,17 +49,20 @@ let statusBarItem: vscode.StatusBarItem;
 export async function activate(context: vscode.ExtensionContext) {
 
     try {
+        // Get the current version from package.json
+        const currentVersion = context.extension.packageJSON.version;
+
         // Context is passed directly to functions that need it
         
         // Initialize output channel
         outputChannel = vscode.window.createOutputChannel('BSL Analyzer');
         context.subscriptions.push(outputChannel);
         
-        outputChannel.appendLine('🚀 BSL Analyzer v1.9.0 activation started (with modular architecture)');
+        outputChannel.appendLine(`🚀 BSL Analyzer v${currentVersion} activation started (with modular architecture)`);
         outputChannel.appendLine(`Extension path: ${context.extensionPath}`);
         
         // Show immediate notification for debugging
-        vscode.window.showInformationMessage('BSL Analyzer v1.9.0 is activating...');
+        vscode.window.showInformationMessage(`BSL Analyzer v${currentVersion} is activating...`);
         outputChannel.show(); // Показываем Output канал для отладки
 
         // Create status bar item first
@@ -104,7 +107,7 @@ export async function activate(context: vscode.ExtensionContext) {
         // Show welcome message
         showWelcomeMessage();
         
-        outputChannel.appendLine('✅ BSL Analyzer v1.9.0 activated successfully with auto-indexing support');
+        outputChannel.appendLine(`✅ BSL Analyzer v${currentVersion} activated successfully with auto-indexing support`);
         
     } catch (error) {
         outputChannel?.appendLine(`❌ Activation failed: ${error}`);
@@ -254,15 +257,15 @@ function registerSidebarProviders(context: vscode.ExtensionContext) {
         context.subscriptions.push(diagnosticsTreeView);
         outputChannel.appendLine('✅ Diagnostics provider registered');
         
-        // Type Index provider
-        outputChannel.appendLine('📋 Creating Type Index provider...');
-        const typeIndexProvider = new BslTypeIndexProvider(outputChannel);
+        // Type Index provider - используем новый иерархический провайдер
+        outputChannel.appendLine('📋 Creating Hierarchical Type Index provider...');
+        const typeIndexProvider = new HierarchicalTypeIndexProvider(outputChannel);
         const typeIndexTreeView = vscode.window.createTreeView('bslAnalyzer.typeIndex', {
             treeDataProvider: typeIndexProvider,
             showCollapseAll: true
         });
         context.subscriptions.push(typeIndexTreeView);
-        outputChannel.appendLine('✅ Type Index provider registered');
+        outputChannel.appendLine('✅ Hierarchical Type Index provider registered');
 
         // Platform Documentation provider
         outputChannel.appendLine('📋 Creating Platform Documentation provider...');

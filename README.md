@@ -117,7 +117,7 @@ cargo run --bin extract_platform_docs -- --archive "path/to/archive.zip" --versi
 # Extract BSL documentation for your platform version
 cargo run --bin extract_platform_docs -- --archive "path/to/1c_v8.3.25.zip" --version "8.3.25"
 
-# This creates: ~/.bsl_analyzer/platform_cache/v8.3.25.jsonl
+# This creates: ~/.bsl_analyzer/platform_cache/8.3.25.jsonl
 # Reuse across all projects using the same platform version!
 ```
 
@@ -164,7 +164,7 @@ Tested on enterprise-scale 1C configurations:
 ~/.bsl_analyzer/
 ├── platform_cache/          # Shared across all projects
 │   ├── v8.3.24.jsonl       # 15MB per platform version
-│   └── v8.3.25.jsonl
+│   └── 8.3.25.jsonl
 └── project_indices/        # Per-project indices
     └── my_project/
         ├── config_entities.jsonl  # 80MB for 80K objects

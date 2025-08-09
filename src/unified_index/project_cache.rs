@@ -381,10 +381,10 @@ impl ProjectIndexCache {
     }
 
     pub fn get_project_versioned_dir(&self, project_name: &str, platform_version: &str) -> PathBuf {
-        // Structure: project_indices/ProjectName_hash/v8.3.25/
+        // Structure: project_indices/ProjectName_hash/8.3.25/
         self.cache_dir
             .join(project_name)
-            .join(format!("v{}", platform_version))
+            .join(platform_version)
     }
 }
 
