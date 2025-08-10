@@ -893,12 +893,17 @@ impl LanguageServer for BslLanguageServer {
                                 let _ = analyzer.analyze_text(&text, &cfg_clone);
                                 // Extract metrics (fallback 0 if not available).
                                 let (symbol_count, total_bytes) = analyzer.get_interner_metrics();
-                                // Basic code metrics approximations (lines, functions) placeholders until real implementation.
                                 let lines = text.lines().count();
                                 let complexity = 0; // TODO real complexity
-                                let functions = 0; // TODO count procedures/functions via AST when exposed
+                                // Routine & call stats via arena if доступно
+                                let (functions, call_total, call_methods, call_functions, avg_args, max_args) = if let Some(ast) = analyzer.last_built_arena() {
+                                    let routines = ast.count_routines();
+                                    let (total, method, func, args_sum, max_a) = ast.call_stats();
+                                    let avg = if total>0 { args_sum as f64 / total as f64 } else { 0.0 };
+                                    (routines, total, method, func, avg, max_a)
+                                } else { (0,0,0,0,0.0,0) };
                                 let (errors, warnings) = analyzer.get_errors_and_warnings();
-                                let score = 100i32.saturating_sub((errors.len()*5 + warnings.len()) as i32).max(0) as i32;
+                                let score = 100i32.saturating_sub((errors.len()*5 + warnings.len()) as i32).max(0);
                                 let value = serde_json::json!({
                                     "file": uri_str,
                                     "complexity": complexity,
@@ -909,6 +914,11 @@ impl LanguageServer for BslLanguageServer {
                                     "score": score,
                                     "internerSymbols": symbol_count,
                                     "internerBytes": total_bytes,
+                                    "callsTotal": call_total,
+                                    "callsMethod": call_methods,
+                                    "callsFunction": call_functions,
+                                    "callsAvgArgs": (avg_args * 100.0).round() / 100.0,
+                                    "callsMaxArgs": max_args,
                                 });
                                 return Ok(Some(value));
                             }

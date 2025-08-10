@@ -209,6 +209,9 @@ impl BslAnalyzer {
     /// Текущая конфигурация (для вспомогательных вызовов вне основного API)
     pub fn get_config(&self) -> &AnalysisConfig { &self.config }
 
+    /// Доступ к последнему построенному arena AST (для метрик / отладки)
+    pub fn last_built_arena(&self) -> Option<&crate::ast_core::BuiltAst> { self.last_built_arena.as_ref() }
+
     /// Метрики интернера (символы, байты). Возвращает (0,0) если недоступно.
     pub fn get_interner_metrics(&self) -> (usize, usize) {
         if let Some(built) = &self.last_built_arena {

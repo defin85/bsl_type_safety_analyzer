@@ -180,13 +180,12 @@ impl AstBuilder {
                 let mut c = node.first_child;
                 while let Some(cc) = c { child_ids.push(cc); c = self.arena.node(cc).next_sibling; }
                 let mut is_method = false;
-                let arg_start_index;
                 if child_ids.len() >= 2 {
                     let first_kind = self.arena.node(child_ids[0]).kind;
                     let second_kind = self.arena.node(child_ids[1]).kind;
                     if second_kind == AstKind::Identifier && first_kind != AstKind::Identifier { is_method = true; }
                 }
-                if is_method { arg_start_index = 2; } else { arg_start_index = 1; }
+                let arg_start_index = if is_method { 2 } else { 1 };
                 let arg_count = if child_ids.len() > arg_start_index { (child_ids.len() - arg_start_index) as u16 } else { 0 };
                 let data_idx = self.call_data.len();
                 self.call_data.push(CallData { arg_count, is_method });
@@ -259,6 +258,21 @@ impl BuiltAst {
     pub fn node_call_data(&self, id: NodeId) -> Option<CallData> {
         let node = self.arena.node(id);
         match node.payload { AstPayload::Call { data } => self.call_data.get(data as usize).copied(), _ => None }
+    }
+    /// Подсчитать количество узлов указанного вида.
+    pub fn count_kind(&self, kind: AstKind) -> usize {
+        preorder(&self.arena, self.root).filter(|nid| self.arena.node(*nid).kind == kind).count()
+    }
+    /// Подсчитать процедуры + функции.
+    pub fn count_routines(&self) -> usize { self.count_kind(AstKind::Procedure) + self.count_kind(AstKind::Function) }
+    /// Статистика вызовов: (total_calls, method_calls, function_calls, total_args, max_args)
+    pub fn call_stats(&self) -> (usize, usize, usize, usize, u16) {
+        let mut total=0; let mut method=0; let mut func=0; let mut args=0; let mut max_args=0u16;
+        for (i, cd) in self.call_data.iter().enumerate() { total+=1; if cd.is_method { method+=1; } else { func+=1; } args += cd.arg_count as usize; if cd.arg_count>max_args { max_args=cd.arg_count; }
+            // sanity: ensure some node references this call data (debug mode could assert)
+            let _ = i; // placeholder
+        }
+        (total, method, func, args, max_args)
     }
 }
 
