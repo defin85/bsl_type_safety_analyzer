@@ -11,6 +11,8 @@ pub struct ParseResult {
     pub ast: Option<BslAst>,
     pub diagnostics: Vec<Diagnostic>,
     pub arena: Option<BuiltAst>,
+    pub parse_time_ns: u128,
+    pub arena_time_ns: u128,
 }
 
 /// BSL Parser
@@ -30,11 +32,14 @@ impl BslParser {
     /// Парсит BSL код
     pub fn parse(&self, source: &str, file_path: &str) -> ParseResult {
         let mut diagnostics = Vec::new();
-
-        // Парсинг через tree-sitter
-    let ast = self.parse_with_tree_sitter(source, file_path, &mut diagnostics);
-    let arena = ast.as_ref().map(|a| ArenaConverter::build_module(&a.module));
-    ParseResult { ast, diagnostics, arena }
+        let t_parse_start = std::time::Instant::now();
+        // Парсинг через tree-sitter / заглушка
+        let ast = self.parse_with_tree_sitter(source, file_path, &mut diagnostics);
+        let parse_time_ns = t_parse_start.elapsed().as_nanos();
+        let t_arena_start = std::time::Instant::now();
+        let arena = ast.as_ref().map(|a| ArenaConverter::build_module(&a.module));
+        let arena_time_ns = t_arena_start.elapsed().as_nanos();
+        ParseResult { ast, diagnostics, arena, parse_time_ns, arena_time_ns }
     }
 
     /// Парсит код с использованием tree-sitter

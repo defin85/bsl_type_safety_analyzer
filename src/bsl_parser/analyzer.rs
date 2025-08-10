@@ -130,6 +130,9 @@ pub struct BslAnalyzer {
     config: AnalysisConfig,
     // Последний успешно построенный arena-AST (для метрик интернера и потенциально быстрых повторных запросов)
     last_built_arena: Option<crate::ast_core::BuiltAst>,
+    // Тайминги последнего запуска
+    last_parse_time_ns: Option<u128>,
+    last_arena_time_ns: Option<u128>,
 }
 
 impl BslAnalyzer {
@@ -143,6 +146,8 @@ impl BslAnalyzer {
             index: None,
             config: AnalysisConfig::default(),
             last_built_arena: None,
+            last_parse_time_ns: None,
+            last_arena_time_ns: None,
         })
     }
 
@@ -156,6 +161,8 @@ impl BslAnalyzer {
             index: None,
             config,
             last_built_arena: None,
+            last_parse_time_ns: None,
+            last_arena_time_ns: None,
         })
     }
 
@@ -174,6 +181,8 @@ impl BslAnalyzer {
             index: Some(index),
             config: AnalysisConfig::default(),
             last_built_arena: None,
+            last_parse_time_ns: None,
+            last_arena_time_ns: None,
         })
     }
 
@@ -192,6 +201,8 @@ impl BslAnalyzer {
             index: Some(index),
             config,
             last_built_arena: None,
+            last_parse_time_ns: None,
+            last_arena_time_ns: None,
         })
     }
 
@@ -258,6 +269,8 @@ impl BslAnalyzer {
 
         // 1. Парсинг (всегда выполняется)
     let mut parse_result = self.parser.parse(source, file_path);
+    self.last_parse_time_ns = Some(parse_result.parse_time_ns);
+    self.last_arena_time_ns = Some(parse_result.arena_time_ns);
     // Сохраняем последний arena AST для метрик (перемещаем out of parse_result)
     if let Some(built) = parse_result.arena.take() { self.last_built_arena = Some(built); }
     let _arena_ast = self.last_built_arena.as_ref(); // временно не используется (семантика на старом AST)
@@ -402,6 +415,9 @@ impl BslAnalyzer {
 
         self.error_collector.add_error(error);
     }
+
+    pub fn last_timing_parse_ns(&self) -> Option<u128> { self.last_parse_time_ns }
+    pub fn last_timing_arena_ns(&self) -> Option<u128> { self.last_arena_time_ns }
 }
 
 impl Default for BslAnalyzer {
