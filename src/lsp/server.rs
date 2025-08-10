@@ -904,6 +904,7 @@ impl LanguageServer for BslLanguageServer {
                                 } else { (0,0,0,0,0.0,0) };
                                 let (errors, warnings) = analyzer.get_errors_and_warnings();
                                 let score = 100i32.saturating_sub((errors.len()*5 + warnings.len()) as i32).max(0);
+                                let fingerprint = analyzer.get_root_fingerprint();
                                 let value = serde_json::json!({
                                     "file": uri_str,
                                     "complexity": complexity,
@@ -919,6 +920,7 @@ impl LanguageServer for BslLanguageServer {
                                     "callsFunction": call_functions,
                                     "callsAvgArgs": (avg_args * 100.0).round() / 100.0,
                                     "callsMaxArgs": max_args,
+                                    "fingerprint": fingerprint,
                                 });
                                 return Ok(Some(value));
                             }

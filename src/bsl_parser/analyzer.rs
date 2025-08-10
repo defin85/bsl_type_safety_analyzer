@@ -220,6 +220,11 @@ impl BslAnalyzer {
         (0, 0)
     }
 
+    /// Root fingerprint (0 если AST отсутствует)
+    pub fn get_root_fingerprint(&self) -> u64 {
+        self.last_built_arena.as_ref().map(|b| b.root_fingerprint()).unwrap_or(0)
+    }
+
     /// Выполняет анализ BSL файла с конфигурацией
     pub fn analyze_file(&mut self, path: &std::path::Path, config: &AnalysisConfig) -> Result<()> {
         let source = std::fs::read_to_string(path)?;

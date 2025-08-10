@@ -274,6 +274,36 @@ impl BuiltAst {
         }
         (total, method, func, args, max_args)
     }
+    /// Вычислить vector fingerprint'ов (post-order) для всех узлов. Fingerprint стабилен между запусками.
+    pub fn compute_fingerprints(&self) -> Vec<u64> {
+        let mut fp = vec![0u64; self.arena.len()];
+        fn fnv64(acc: u64, byte: u64) -> u64 { let mut h = acc; h ^= byte.wrapping_mul(0x100000001b3); h = h.wrapping_mul(0x100000001b3); h }
+        fn node_fp(ast: &BuiltAst, id: NodeId, out: &mut [u64]) -> u64 {
+            if out[id.0 as usize] != 0 { return out[id.0 as usize]; }
+            // children first (post-order)
+            let mut children_fps = Vec::new();
+            let mut cur = ast.arena.node(id).first_child;
+            while let Some(c) = cur { let cf = node_fp(ast, c, out); children_fps.push(cf); cur = ast.arena.node(c).next_sibling; }
+            let node = ast.arena.node(id);
+            let mut h: u64 = 0xcbf29ce484222325; // FNV offset
+            h = fnv64(h, node.kind as u64);
+            h = fnv64(h, node.span.start as u64);
+            h = fnv64(h, node.span.len as u64);
+            match node.payload {
+                AstPayload::Ident { sym } => { h = fnv64(h, 1); h = fnv64(h, sym.0 as u64); },
+                AstPayload::Literal { sym } => { h = fnv64(h, 2); h = fnv64(h, sym.0 as u64); },
+                AstPayload::Error { msg } => { h = fnv64(h, 3); h = fnv64(h, msg as u64); },
+                AstPayload::Call { data } => { if let Some(cd) = ast.call_data.get(data as usize) { h = fnv64(h, 4); h = fnv64(h, cd.arg_count as u64); h = fnv64(h, cd.is_method as u64); } },
+                AstPayload::None => { h = fnv64(h, 0); },
+            }
+            for cf in children_fps { h = fnv64(h, cf); }
+            out[id.0 as usize] = h; h
+        }
+        node_fp(self, self.root, &mut fp);
+        fp
+    }
+    /// Root fingerprint convenience.
+    pub fn root_fingerprint(&self) -> u64 { self.compute_fingerprints()[self.root.0 as usize] }
 }
 
 /// Утилита обхода (предварительный проход).
