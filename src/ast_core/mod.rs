@@ -388,6 +388,37 @@ impl BuiltAst {
         out.sort_by_key(|n| n.0);
         out
     }
+    /// Сформировать структурный diff по fingerprint'ам (прототип инкрементальности).
+    pub fn fingerprint_diff(&self, other: &BuiltAst) -> Option<FingerprintDiff> {
+        if self.arena.len() != other.arena.len() { return None; }
+        let mut changed = Vec::new();
+        let mut reused_nodes = 0usize;
+        let mut reused_subtrees = 0usize;
+        let parent_map = self.build_parent_map();
+        for i in 0..self.arena.len() {
+            let a = self.fingerprints[i];
+            let b = other.fingerprints[i];
+            if a == b { reused_nodes += 1; }
+        }
+        // reused_subtrees: узлы с совпадающим fingerprint и (root или родитель тоже совпал) учитываются только когда родитель отличается (или отсутствует), т.е. верхушки полностью совпавших поддеревьев.
+        for (i, parent_opt) in parent_map.iter().enumerate() {
+            if self.fingerprints[i] == other.fingerprints[i] {
+                if let Some(p) = parent_opt {
+                    if self.fingerprints[p.0 as usize] != other.fingerprints[p.0 as usize] { reused_subtrees += 1; }
+                } else { reused_subtrees += 1; }
+            } else { changed.push(NodeId(i as u32)); }
+        }
+        Some(FingerprintDiff { changed, reused_nodes, total_nodes: self.arena.len(), reused_subtrees })
+    }
+}
+
+/// Результат сравнения двух AST по fingerprint'ам (прототип для incremental rebuild).
+#[derive(Debug, Clone)]
+pub struct FingerprintDiff {
+    pub changed: Vec<NodeId>,
+    pub reused_nodes: usize,
+    pub reused_subtrees: usize,
+    pub total_nodes: usize,
 }
 
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).

@@ -36,3 +36,18 @@ fn fingerprint_diff_detects_identifier_change() {
     // Корень должен войти из-за каскада изменения вверх по дереву
     assert!(diff.contains(&a1.root()), "Root id should be in diff due to propagated fingerprint change");
 }
+
+#[test]
+fn fingerprint_structural_diff_proto() {
+    let a1 = build_simple_proc("Same");
+    let a2 = build_simple_proc("Same");
+    let diff = a1.fingerprint_diff(&a2).expect("sizes");
+    assert_eq!(diff.changed.len(), 0);
+    assert_eq!(diff.reused_nodes, diff.total_nodes);
+
+    let b1 = build_simple_proc("Alpha");
+    let b2 = build_simple_proc("Beta");
+    let diff2 = b1.fingerprint_diff(&b2).expect("sizes");
+    assert!(!diff2.changed.is_empty());
+    assert!(diff2.reused_nodes < diff2.total_nodes);
+}
