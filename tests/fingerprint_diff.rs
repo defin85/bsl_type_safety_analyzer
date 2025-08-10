@@ -51,3 +51,13 @@ fn fingerprint_structural_diff_proto() {
     assert!(!diff2.changed.is_empty());
     assert!(diff2.reused_nodes < diff2.total_nodes);
 }
+
+#[test]
+fn fingerprint_diff_stats_conversion() {
+    let a = build_simple_proc("Z");
+    let b = build_simple_proc("Z");
+    let diff = a.fingerprint_diff(&b).unwrap();
+    let stats = diff.to_stats();
+    assert_eq!(stats.changed_nodes, 0);
+    assert!(stats.reuse_ratio > 0.0);
+}

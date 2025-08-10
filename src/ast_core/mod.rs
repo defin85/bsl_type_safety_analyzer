@@ -421,6 +421,30 @@ pub struct FingerprintDiff {
     pub total_nodes: usize,
 }
 
+impl FingerprintDiff {
+    pub fn to_stats(&self) -> IncrementalStats {
+        let changed_nodes = self.changed.len();
+        let reuse_ratio = if self.total_nodes > 0 { self.reused_nodes as f64 / self.total_nodes as f64 } else { 0.0 };
+        IncrementalStats {
+            total_nodes: self.total_nodes,
+            changed_nodes,
+            reused_nodes: self.reused_nodes,
+            reused_subtrees: self.reused_subtrees,
+            reuse_ratio,
+        }
+    }
+}
+
+/// Сводные метрики инкрементального сравнения (без таймингов).
+#[derive(Debug, Clone, Copy, Default)]
+pub struct IncrementalStats {
+    pub total_nodes: usize,
+    pub changed_nodes: usize,
+    pub reused_nodes: usize,
+    pub reused_subtrees: usize,
+    pub reuse_ratio: f64,
+}
+
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
 fn compute_fingerprints_internal(ast: &BuiltAst) -> Vec<u64> {
     let mut fp = vec![0u64; ast.arena.len()];
