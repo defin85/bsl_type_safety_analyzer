@@ -103,21 +103,21 @@ fn convert_expression(b: &mut AstBuilder, expr: &Expression) {
             b.leaf_ident(ps(0, name.len() as u32), name.clone());
         }
         Expression::MethodCall(mc) => {
-            b.start_node(AstKind::Call, from_loc(mc.location.offset, mc.location.length));
+            b.start_call(from_loc(mc.location.offset, mc.location.length));
             // object
             convert_expression(b, &mc.object);
             // Эвристика: имя метода в конце диапазона
             let m_off = mc.location.offset + mc.location.length.saturating_sub(mc.method.len());
             b.leaf_ident(from_loc(m_off, mc.method.len()), mc.method.clone());
             for a in &mc.args { convert_expression(b, a); }
-            b.finish_node();
+            b.finish_call();
         }
         Expression::FunctionCall(fc) => {
-            b.start_node(AstKind::Call, from_loc(fc.location.offset, fc.location.length));
+            b.start_call(from_loc(fc.location.offset, fc.location.length));
             // Предполагаем что имя функции в начале
             b.leaf_ident(from_loc(fc.location.offset, fc.name.len()), fc.name.clone());
             for a in &fc.args { convert_expression(b, a); }
-            b.finish_node();
+            b.finish_call();
         }
         Expression::PropertyAccess(pa) => {
             b.start_node(AstKind::Member, from_loc(pa.location.offset, pa.location.length));

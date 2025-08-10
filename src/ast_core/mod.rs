@@ -45,6 +45,8 @@ pub enum AstPayload {
     Literal { sym: SymbolId },
     /// Ошибка хранит индекс сообщения в отдельной таблице (payload split step 1).
     Error { msg: u32 },
+    /// Вызов функции/метода: индекс структуры CallData.
+    Call { data: u32 },
 }
 
 /// Узел в аренe. Дети связаны через first_child / next_sibling (sibling chain).
@@ -90,10 +92,11 @@ pub struct AstBuilder {
     root: Option<NodeId>,
     interner: StringInterner,
     error_messages: Vec<String>,
+    call_data: Vec<CallData>,
 }
 
 impl AstBuilder {
-    pub fn new() -> Self { Self { arena: Arena::new(), stack: Vec::new(), root: None, interner: StringInterner::new(), error_messages: Vec::new() } }
+    pub fn new() -> Self { Self { arena: Arena::new(), stack: Vec::new(), root: None, interner: StringInterner::new(), error_messages: Vec::new(), call_data: Vec::new() } }
 
     pub fn start_node(&mut self, kind: AstKind, span: PackedSpan) {
         let id = self.arena.alloc(AstNode::new(kind, span, AstPayload::None));
@@ -163,6 +166,37 @@ impl AstBuilder {
         self.leaf(AstKind::Error, span, AstPayload::Error { msg: idx as u32 })
     }
 
+    /// Начать Call без немедленного вычисления arg_count.
+    pub fn start_call(&mut self, span: PackedSpan) {
+        self.start_node(AstKind::Call, span);
+    }
+    /// Завершить Call: вычислить аргументы и сохранить CallData.
+    pub fn finish_call(&mut self) {
+        if let Some(&id) = self.stack.last() { // текущий Call
+            let node = self.arena.node(id).clone();
+            if node.kind == AstKind::Call {
+                // children chain: determine method vs function call
+                let mut child_ids = Vec::new();
+                let mut c = node.first_child;
+                while let Some(cc) = c { child_ids.push(cc); c = self.arena.node(cc).next_sibling; }
+                let mut is_method = false;
+                let arg_start_index;
+                if child_ids.len() >= 2 {
+                    let first_kind = self.arena.node(child_ids[0]).kind;
+                    let second_kind = self.arena.node(child_ids[1]).kind;
+                    if second_kind == AstKind::Identifier && first_kind != AstKind::Identifier { is_method = true; }
+                }
+                if is_method { arg_start_index = 2; } else { arg_start_index = 1; }
+                let arg_count = if child_ids.len() > arg_start_index { (child_ids.len() - arg_start_index) as u16 } else { 0 };
+                let data_idx = self.call_data.len();
+                self.call_data.push(CallData { arg_count, is_method });
+                // обновляем payload
+                if let Some(nm) = self.arena.nodes.get_mut(id.0 as usize) { nm.payload = AstPayload::Call { data: data_idx as u32 }; }
+            }
+        }
+        self.finish_node();
+    }
+
     fn attach(&mut self, id: NodeId) {
         if let Some(&parent) = self.stack.last() {
             let parent_node = self.arena.node_mut(parent);
@@ -181,7 +215,7 @@ impl AstBuilder {
         }
     }
 
-    pub fn build(self) -> BuiltAst { BuiltAst { arena: self.arena, root: self.root.expect("AST has no root"), interner: self.interner, error_messages: self.error_messages } }
+    pub fn build(self) -> BuiltAst { BuiltAst { arena: self.arena, root: self.root.expect("AST has no root"), interner: self.interner, error_messages: self.error_messages, call_data: self.call_data } }
 }
 
 impl Default for AstBuilder {
@@ -194,7 +228,11 @@ pub struct BuiltAst {
     pub root: NodeId,
     pub interner: StringInterner,
     pub error_messages: Vec<String>,
+    pub call_data: Vec<CallData>,
 }
+
+#[derive(Debug, Clone, Copy)]
+pub struct CallData { pub arg_count: u16, pub is_method: bool }
 
 impl BuiltAst {
     pub fn root(&self) -> NodeId { self.root }
@@ -216,6 +254,11 @@ impl BuiltAst {
     pub fn node_error_message(&self, id: NodeId) -> Option<&str> {
         let node = self.arena.node(id);
         match node.payload { AstPayload::Error { msg } => self.error_messages.get(msg as usize).map(|s| s.as_str()), _ => None }
+    }
+    /// Получить данные Call (если имеются).
+    pub fn node_call_data(&self, id: NodeId) -> Option<CallData> {
+        let node = self.arena.node(id);
+        match node.payload { AstPayload::Call { data } => self.call_data.get(data as usize).copied(), _ => None }
     }
 }
 
