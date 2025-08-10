@@ -101,9 +101,18 @@ impl BslLanguageServer {
             }
         };
 
+        // Пытаемся найти архив документации платформы
+        let platform_docs_archive = self.find_platform_docs_archive(&workspace_path).await;
+        
         // Создаем builder с обработкой ошибок
         let mut builder = match UnifiedIndexBuilder::new() {
-            Ok(b) => b.with_application_mode(BslApplicationMode::ManagedApplication),
+            Ok(b) => {
+                let mut b = b.with_application_mode(BslApplicationMode::ManagedApplication);
+                if let Some(archive) = platform_docs_archive {
+                    b = b.with_platform_docs_archive(Some(archive));
+                }
+                b
+            },
             Err(e) => {
                 self.client
                     .log_message(
@@ -200,6 +209,45 @@ impl BslLanguageServer {
 
         Ok(workspace_path.to_path_buf())
     }
+    
+    /// Поиск архива документации платформы
+    async fn find_platform_docs_archive(&self, workspace_path: &std::path::Path) -> Option<std::path::PathBuf> {
+        // Стандартные места для поиска архива
+        let archive_candidates = [
+            workspace_path.join("examples").join("rebuilt.shcntx_ru.zip"),
+            workspace_path.join("examples").join("rebuilt.shlang_ru.zip"),
+            workspace_path.join("platform_docs").join("rebuilt.shcntx_ru.zip"),
+            workspace_path.join("platform_docs").join("rebuilt.shlang_ru.zip"),
+            // Проверяем в родительской директории расширения
+            workspace_path.parent()
+                .and_then(|p| Some(p.join("examples").join("rebuilt.shcntx_ru.zip")))
+                .unwrap_or_default(),
+            workspace_path.parent()
+                .and_then(|p| Some(p.join("examples").join("rebuilt.shlang_ru.zip")))
+                .unwrap_or_default(),
+        ];
+        
+        for candidate in &archive_candidates {
+            if candidate.exists() {
+                self.client
+                    .log_message(
+                        MessageType::INFO,
+                        format!("Found platform docs archive: {}", candidate.display()),
+                    )
+                    .await;
+                return Some(candidate.clone());
+            }
+        }
+        
+        self.client
+            .log_message(
+                MessageType::WARNING,
+                "Platform documentation archive not found. Some features will be limited.",
+            )
+            .await;
+        
+        None
+    }
 
 
     /// Enhanced completion с UnifiedBslIndex
@@ -259,46 +307,169 @@ impl BslLanguageServer {
 
     let index_guard = self.unified_index.read().await;
     if let Some(index) = &*index_guard {
-            // Автодополнение типов из UnifiedBslIndex
-            if line_prefix.ends_with('.')
-                || line_prefix.contains("Справочники.")
-                || line_prefix.contains("Документы.")
-            {
-                // Предлагаем объекты конфигурации
+            // Проверяем контекст для автодополнения
+            let is_after_dot = line_prefix.ends_with('.');
+            let is_type_context = line_prefix.contains("Новый ") || line_prefix.contains("New ") 
+                || line_prefix.contains("Тип(") || line_prefix.contains("Type(");
+            
+            // Автодополнение после точки - методы объекта
+            if is_after_dot {
+                // TODO: определить тип объекта перед точкой и предложить его методы
+                // Пока предлагаем объекты конфигурации как fallback
                 let entities = index.get_all_entities();
-                for entity in entities.iter().take(50) {
-                    // Ограничиваем количество для производительности
+                for entity in entities.iter().take(30) {
                     if format!("{:?}", entity.entity_type).contains("Configuration") {
                         let completion = CompletionItem {
                             label: entity.display_name.clone(),
                             kind: Some(CompletionItemKind::CLASS),
-                            detail: Some(format!("{:?}", entity.entity_type)),
-                            documentation: Some(Documentation::String(format!(
-                                "Объект конфигурации: {} ({:?})\n\nМетодов: {}, Свойств: {}",
-                                entity.display_name,
-                                entity.entity_type,
-                                entity.interface.methods.len(),
-                                entity.interface.properties.len()
-                            ))),
+                            detail: Some(format!("Конфигурация: {:?}", entity.entity_kind)),
+                            documentation: entity.documentation.as_ref().map(|d| Documentation::String(d.clone())),
                             insert_text: Some(entity.display_name.clone()),
                             ..Default::default()
                         };
                         completions.push(completion);
                     }
                 }
+            } else if !current_token.is_empty() {
+                // Автодополнение по текущему токену - платформенные типы и функции
+                let entities = index.get_all_entities();
+                let mut platform_completions = Vec::new();
+                let mut config_completions = Vec::new();
+                
+                for entity in entities {
+                    // Проверяем совпадение с токеном
+                    let entity_lower = entity.display_name.to_lowercase();
+                    let qualified_lower = entity.qualified_name.to_lowercase();
+                    
+                    // Особая обработка для Global объекта с глобальными функциями
+                    if entity.qualified_name == "Global" && !entity.interface.methods.is_empty() {
+                        // Добавляем каждую глобальную функцию как отдельный completion item
+                        for (method_name, method) in &entity.interface.methods {
+                            let method_lower = method_name.to_lowercase();
+                            if method_lower.starts_with(&token_lower) {
+                                let doc_text = method.documentation.as_ref()
+                                    .map(|d| d.clone())
+                                    .unwrap_or_else(|| format!("Глобальная функция {}", method_name));
+                                
+                                let completion = CompletionItem {
+                                    label: method_name.clone(),
+                                    kind: Some(CompletionItemKind::FUNCTION),
+                                    detail: method.return_type.as_ref()
+                                        .map(|t| format!("Функция → {}", t))
+                                        .or_else(|| Some("Глобальная функция".to_string())),
+                                    documentation: Some(Documentation::String(doc_text)),
+                                    insert_text: Some(format!("{}()", method_name)),
+                                    sort_text: Some(format!("0_{}", method_name)), // Глобальные функции выше
+                                    ..Default::default()
+                                };
+                                platform_completions.push(completion);
+                            }
+                        }
+                        continue; // Переходим к следующей сущности
+                    }
+                    
+                    // Обычные типы (не Global)
+                    if entity_lower.starts_with(&token_lower) || qualified_lower.starts_with(&token_lower) {
+                        let is_platform = format!("{:?}", entity.entity_type).contains("Platform");
+                        
+                        let kind = match entity.entity_kind {
+                            crate::unified_index::entity::BslEntityKind::Primitive => CompletionItemKind::KEYWORD,
+                            crate::unified_index::entity::BslEntityKind::Array 
+                            | crate::unified_index::entity::BslEntityKind::Structure 
+                            | crate::unified_index::entity::BslEntityKind::Map
+                            | crate::unified_index::entity::BslEntityKind::ValueTable
+                            | crate::unified_index::entity::BslEntityKind::ValueList
+                            | crate::unified_index::entity::BslEntityKind::ValueTree => CompletionItemKind::CLASS,
+                            crate::unified_index::entity::BslEntityKind::Catalog 
+                            | crate::unified_index::entity::BslEntityKind::Document 
+                            | crate::unified_index::entity::BslEntityKind::InformationRegister
+                            | crate::unified_index::entity::BslEntityKind::AccumulationRegister => CompletionItemKind::CLASS,
+                            crate::unified_index::entity::BslEntityKind::Enum => CompletionItemKind::ENUM,
+                            crate::unified_index::entity::BslEntityKind::Global => {
+                                // Глобальные функции обычно в Global объекте
+                                if entity.qualified_name == "Global" {
+                                    CompletionItemKind::MODULE
+                                } else {
+                                    CompletionItemKind::FUNCTION
+                                }
+                            },
+                            _ => CompletionItemKind::REFERENCE,
+                        };
+                        
+                        let detail = if is_platform {
+                            format!("Платформа: {:?}", entity.entity_kind)
+                        } else {
+                            format!("Конфигурация: {:?}", entity.entity_kind)
+                        };
+                        
+                        let mut doc_text = String::new();
+                        if let Some(doc) = &entity.documentation {
+                            doc_text.push_str(doc);
+                            doc_text.push_str("\n\n");
+                        }
+                        doc_text.push_str(&format!("Методов: {}, Свойств: {}",
+                            entity.interface.methods.len(),
+                            entity.interface.properties.len()
+                        ));
+                        
+                        let insert_text = if kind == CompletionItemKind::FUNCTION {
+                            // Для функций добавляем скобки
+                            format!("{}()", entity.display_name)
+                        } else if is_type_context && kind == CompletionItemKind::CLASS {
+                            // В контексте создания объекта
+                            format!("{}()", entity.display_name)
+                        } else {
+                            entity.display_name.clone()
+                        };
+                        
+                        let completion = CompletionItem {
+                            label: entity.display_name.clone(),
+                            kind: Some(kind),
+                            detail: Some(detail),
+                            documentation: Some(Documentation::String(doc_text)),
+                            insert_text: Some(insert_text),
+                            sort_text: Some(if is_platform { 
+                                format!("0_{}", entity.display_name) // Платформенные типы выше
+                            } else { 
+                                format!("1_{}", entity.display_name) 
+                            }),
+                            ..Default::default()
+                        };
+                        
+                        if is_platform {
+                            platform_completions.push(completion);
+                        } else {
+                            config_completions.push(completion);
+                        }
+                    }
+                }
+                
+                // Добавляем сначала платформенные, потом конфигурационные (лимит 100)
+                completions.extend(platform_completions.into_iter().take(50));
+                completions.extend(config_completions.into_iter().take(50));
             }
-
-            // Автодополнение глобальных функций (по текущему токену)
-            if let Some(global_entity) = index.find_entity("Global") {
-                for (method_name, method) in &global_entity.interface.methods {
-                    let m_lower = method_name.to_lowercase();
-                    if token_lower.is_empty() || m_lower.starts_with(&token_lower) {
+            
+            // Автодополнение глобальных функций (если токен пустой или не после точки)
+            if !is_after_dot && (current_token.is_empty() || token_lower.len() <= 2) {
+                // Предлагаем популярные глобальные функции
+                let popular_functions = [
+                    ("Сообщить", "Вывод сообщения"),
+                    ("СокрЛП", "Удаление пробелов"),
+                    ("СтрДлина", "Длина строки"),
+                    ("СтрНайти", "Поиск в строке"),
+                    ("Формат", "Форматирование значения"),
+                    ("Тип", "Получение типа"),
+                    ("ТипЗнч", "Тип значения"),
+                ];
+                
+                for (name, desc) in &popular_functions {
+                    if token_lower.is_empty() || name.to_lowercase().starts_with(&token_lower) {
                         completions.push(CompletionItem {
-                            label: method_name.clone(),
+                            label: name.to_string(),
                             kind: Some(CompletionItemKind::FUNCTION),
-                            detail: method.return_type.as_ref().map(|t| format!("-> {}", t)),
-                            documentation: method.documentation.as_ref().map(|d| Documentation::String(d.clone())),
-                            insert_text: Some(format!("{}()", method_name)),
+                            detail: Some(desc.to_string()),
+                            insert_text: Some(format!("{}()", name)),
+                            sort_text: Some(format!("00_{}", name)), // Популярные функции в самом верху
                             ..Default::default()
                         });
                     }

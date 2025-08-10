@@ -138,70 +138,117 @@ async function autoDetectConfigurationIfNeeded() {
 async function initializeIndexIfNeeded() {
     const autoIndexBuild = config_1.BslAnalyzerConfig.autoIndexBuild;
     const configPath = config_1.BslAnalyzerConfig.configurationPath;
-    if (!autoIndexBuild || !configPath) {
-        outputChannel.appendLine('ℹ️ Auto-index build is disabled or configuration path is not set');
+    if (!autoIndexBuild) {
+        outputChannel.appendLine('ℹ️ Auto-index build is disabled');
+        return;
+    }
+    if (!configPath) {
+        outputChannel.appendLine('⚠️ Configuration path not set - user must configure it');
+        (0, progress_1.updateStatusBar)('BSL Analyzer: No Config');
+        return;
+    }
+    // Check if we have valid UUID for this configuration
+    const projectId = extractUuidProjectId(configPath);
+    if (!projectId) {
+        outputChannel.appendLine('❌ Cannot find UUID in Configuration.xml - no fallback, index cannot be built');
+        (0, progress_1.updateStatusBar)('BSL Analyzer: Invalid Config');
         return;
     }
     // Check if index already exists in cache
     const platformVersion = config_1.BslAnalyzerConfig.platformVersion;
-    const projectId = extractUuidProjectId(configPath);
-    if (!projectId) {
-        outputChannel.appendLine('⚠️ Cannot auto-build index: UUID not found in Configuration.xml (no fallback).');
-        return;
-    }
     const indexCachePath = path.join(require('os').homedir(), '.bsl_analyzer', 'project_indices', projectId, platformVersion);
     if (fs.existsSync(path.join(indexCachePath, 'unified_index.json'))) {
-        outputChannel.appendLine('✅ BSL Index already exists in cache, skipping auto-build');
+        outputChannel.appendLine(`✅ Index found in cache: ${projectId}/${platformVersion}`);
         (0, progress_1.updateStatusBar)('BSL Analyzer: Index Ready');
         return;
     }
-    outputChannel.appendLine('🚀 Auto-building BSL index on extension activation...');
-    // Build index automatically
+    // Check if platform documentation is configured
+    const platformDocsArchive = (0, utils_1.getPlatformDocsArchive)();
+    if (!platformDocsArchive) {
+        outputChannel.appendLine('❌ Platform documentation not configured - cannot build full index');
+        outputChannel.appendLine('💡 User must specify platform documentation archive in settings');
+        (0, progress_1.updateStatusBar)('BSL Analyzer: No Platform Docs');
+        // Don't build index without platform docs - it would be incomplete
+        return;
+    }
+    outputChannel.appendLine('🚀 Building BSL index with user-configured settings...');
+    // Build index with user-provided configuration
     try {
         (0, progress_1.startIndexing)(4);
         await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: 'Auto-building BSL Index',
+            title: 'Building BSL Index',
             cancellable: false
         }, async (progress) => {
-            (0, progress_1.updateIndexingProgress)(1, 'Loading platform cache...', 10);
-            progress.report({ increment: 25, message: 'Loading platform cache...' });
+            (0, progress_1.updateIndexingProgress)(1, 'Loading platform documentation...', 10);
+            progress.report({ increment: 25, message: 'Loading platform documentation...' });
             (0, progress_1.updateIndexingProgress)(2, 'Parsing configuration...', 35);
             progress.report({ increment: 25, message: 'Parsing configuration...' });
             (0, progress_1.updateIndexingProgress)(3, 'Building unified index...', 70);
             progress.report({ increment: 35, message: 'Building unified index...' });
+            outputChannel.appendLine(`📁 Configuration: ${configPath}`);
+            outputChannel.appendLine(`📚 Platform docs: ${platformDocsArchive}`);
+            outputChannel.appendLine(`🔢 Platform version: ${platformVersion}`);
             const args = [
                 '--config', configPath,
-                '--platform-version', platformVersion
-            ]; // UUID-based projectId implied by Rust side
-            const platformDocsArchive = (0, utils_1.getPlatformDocsArchive)();
-            if (platformDocsArchive) {
-                args.push('--platform-docs-archive', platformDocsArchive);
-                outputChannel.appendLine(`📚 Using platform documentation: ${platformDocsArchive}`);
-            }
+                '--platform-version', platformVersion,
+                '--platform-docs-archive', platformDocsArchive
+            ];
             await (0, utils_1.executeBslCommand)('build_unified_index', args);
             (0, progress_1.updateIndexingProgress)(4, 'Finalizing index...', 90);
             progress.report({ increment: 15, message: 'Finalizing...' });
             (0, progress_1.finishIndexing)(true);
-            outputChannel.appendLine('✅ Auto-index build completed successfully');
+            outputChannel.appendLine('✅ Index build completed successfully');
+            (0, progress_1.updateStatusBar)('BSL Analyzer: Index Ready');
         });
     }
     catch (error) {
         (0, progress_1.finishIndexing)(false);
-        outputChannel.appendLine(`❌ Auto-index build failed: ${error}`);
+        outputChannel.appendLine(`❌ Index build failed: ${error}`);
+        (0, progress_1.updateStatusBar)('BSL Analyzer: Build Failed');
     }
 }
 function showWelcomeMessage() {
     const configPath = config_1.BslAnalyzerConfig.configurationPath;
-    if (!configPath) {
-        vscode.window.showInformationMessage('BSL Analyzer is ready! Configure your 1C configuration path in settings to enable full functionality.', 'Open Settings').then(selection => {
+    const platformDocs = config_1.BslAnalyzerConfig.platformDocsArchive;
+    if (!configPath && !platformDocs) {
+        vscode.window.showInformationMessage('BSL Analyzer: No configuration. Please configure 1C path and platform documentation.', 'Open Settings').then(selection => {
+            if (selection === 'Open Settings') {
+                vscode.commands.executeCommand('workbench.action.openSettings', 'bslAnalyzer');
+            }
+        });
+    }
+    else if (!configPath) {
+        vscode.window.showInformationMessage('BSL Analyzer: Please configure your 1C configuration path.', 'Open Settings').then(selection => {
             if (selection === 'Open Settings') {
                 vscode.commands.executeCommand('workbench.action.openSettings', 'bslAnalyzer.configurationPath');
             }
         });
     }
+    else if (!platformDocs) {
+        vscode.window.showInformationMessage('BSL Analyzer: Please configure platform documentation archive for full functionality.', 'Open Settings').then(selection => {
+            if (selection === 'Open Settings') {
+                vscode.commands.executeCommand('workbench.action.openSettings', 'bslAnalyzer.platformDocsArchive');
+            }
+        });
+    }
     else {
-        vscode.window.showInformationMessage('BSL Analyzer is ready! Use Ctrl+Shift+P and search for "BSL" to explore features.');
+        // Everything is configured
+        const homedir = require('os').homedir();
+        const platformVersion = config_1.BslAnalyzerConfig.platformVersion;
+        const projectId = extractUuidProjectId(configPath);
+        if (projectId) {
+            const indexPath = path.join(homedir, '.bsl_analyzer', 'project_indices', projectId, platformVersion, 'unified_index.json');
+            if (fs.existsSync(indexPath)) {
+                vscode.window.showInformationMessage('BSL Analyzer: Index loaded from cache. Ready to use!');
+            }
+            else {
+                vscode.window.showInformationMessage('BSL Analyzer: Configuration detected. Building index...');
+            }
+        }
+        else {
+            vscode.window.showWarningMessage('BSL Analyzer: Invalid configuration (no UUID). Please check your Configuration.xml');
+        }
     }
 }
 // UUID-based project identifier (must match Rust naming scheme; no fallback)

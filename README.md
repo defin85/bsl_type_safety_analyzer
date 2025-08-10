@@ -163,7 +163,7 @@ Tested on enterprise-scale 1C configurations:
 ```
 ~/.bsl_analyzer/
 ├── platform_cache/          # Shared across all projects
-│   ├── v8.3.24.jsonl       # 15MB per platform version
+│   ├── 8.3.24.jsonl       # 15MB per platform version
 │   └── 8.3.25.jsonl
 └── project_indices/        # Per-project indices
     └── my_project/

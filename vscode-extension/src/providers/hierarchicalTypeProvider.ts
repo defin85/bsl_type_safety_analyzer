@@ -378,8 +378,10 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
     private async getRootCategories(): Promise<HierarchicalTypeItem[]> {
         this.outputChannel?.appendLine(`HierarchicalTypeIndexProvider: Building categories, found ${this.typeCategories.size} categories`);
         const items: HierarchicalTypeItem[] = [];
+        const configPath = BslAnalyzerConfig.configurationPath;
+        const platformDocs = BslAnalyzerConfig.platformDocsArchive;
 
-        // Добавляем группы верхнего уровня
+        // Platform types group
         if (this.platformTypes.size > 0) {
             const platformGroup = new HierarchicalTypeItem(
                 `🏢 Платформа 1С (${this.platformTypes.size} типов)`,
@@ -388,8 +390,29 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
                 'platform-group'
             );
             items.push(platformGroup);
+        } else if (platformDocs) {
+            // Platform docs configured but no cache
+            const noPlatformItem = new HierarchicalTypeItem(
+                '⚠️ Кеш платформы не найден',
+                vscode.TreeItemCollapsibleState.None,
+                'no-platform',
+                'empty'
+            );
+            noPlatformItem.tooltip = 'Постройте индекс для создания кеша платформы';
+            items.push(noPlatformItem);
+        } else {
+            // No platform docs configured
+            const noPlatformDocsItem = new HierarchicalTypeItem(
+                '❌ Документация платформы не настроена',
+                vscode.TreeItemCollapsibleState.None,
+                'no-platform-docs',
+                'empty'
+            );
+            noPlatformDocsItem.tooltip = 'Укажите путь к архиву документации платформы в настройках';
+            items.push(noPlatformDocsItem);
         }
 
+        // Configuration types group
         if (this.configTypes.size > 0) {
             const configGroup = new HierarchicalTypeItem(
                 `🏗️ Конфигурация (${this.configTypes.size} типов)`,
@@ -398,6 +421,38 @@ export class HierarchicalTypeIndexProvider implements vscode.TreeDataProvider<Hi
                 'config-group'
             );
             items.push(configGroup);
+        } else if (configPath) {
+            // Config path set but no cache
+            const projectId = this.extractUuidProjectId(configPath);
+            if (!projectId) {
+                const invalidConfigItem = new HierarchicalTypeItem(
+                    '❌ Неверная конфигурация (нет UUID)',
+                    vscode.TreeItemCollapsibleState.None,
+                    'invalid-config',
+                    'empty'
+                );
+                invalidConfigItem.tooltip = 'Configuration.xml должен содержать валидный UUID';
+                items.push(invalidConfigItem);
+            } else {
+                const noConfigItem = new HierarchicalTypeItem(
+                    '⚠️ Кеш конфигурации не найден',
+                    vscode.TreeItemCollapsibleState.None,
+                    'no-config',
+                    'empty'
+                );
+                noConfigItem.tooltip = 'Постройте индекс для создания кеша конфигурации';
+                items.push(noConfigItem);
+            }
+        } else {
+            // No config path set
+            const noConfigPathItem = new HierarchicalTypeItem(
+                'ℹ️ Путь к конфигурации не указан',
+                vscode.TreeItemCollapsibleState.None,
+                'no-config-path',
+                'empty'
+            );
+            noConfigPathItem.tooltip = 'Укажите путь к конфигурации 1С в настройках';
+            items.push(noConfigPathItem);
         }
 
         return items;

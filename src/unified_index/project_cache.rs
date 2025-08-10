@@ -319,36 +319,43 @@ impl ProjectIndexCache {
     }
 
     pub fn generate_project_name(&self, config_path: &Path) -> String {
-        // Try to extract UUID from Configuration.xml for stable project ID
-        if let Ok(uuid) = self.extract_config_uuid(config_path) {
-            let project_name = config_path
-                .file_name()
-                .and_then(|n| n.to_str())
-                .unwrap_or("unknown");
-
-            // Format: projectname_uuid (e.g., "ConfTest_787997b1dd2a4b98a8ccc38eb2830949")
-            return format!("{}_{}", project_name, uuid.replace("-", ""));
+        match self.extract_config_uuid(config_path) {
+            Ok(uuid) => {
+                let project_name = config_path
+                    .file_name()
+                    .and_then(|n| n.to_str())
+                    .unwrap_or("unknown");
+                format!("{}_{}", project_name, uuid.replace('-', ""))
+            }
+            Err(e) => {
+                // Логируем предупреждение: это приведёт к расхождению с расширением (которое без fallback)
+                tracing::warn!(
+                    "Configuration UUID extraction failed ({}). Falling back to path hash (extension may not find this cache)",
+                    e
+                );
+                self.generate_project_name_fallback(config_path)
+            }
         }
-
-        // Fallback to path-based hash for non-1C configurations
-        self.generate_project_name_fallback(config_path)
     }
 
     fn extract_config_uuid(&self, config_path: &Path) -> Result<String> {
         let config_xml = config_path.join("Configuration.xml");
-        let content =
-            fs::read_to_string(&config_xml).context("Failed to read Configuration.xml")?;
+        let content = fs::read_to_string(&config_xml)
+            .with_context(|| format!("Failed to read {}", config_xml.display()))?;
 
-        // Extract UUID from <Configuration uuid="...">
-        if let Some(start) = content.find(r#"<Configuration uuid=""#) {
-            let start_pos = start + r#"<Configuration uuid=""#.len();
-            if let Some(end_pos) = content[start_pos..].find('"') {
-                let uuid = &content[start_pos..start_pos + end_pos];
-                return Ok(uuid.to_string());
+        // Используем regex чтобы UUID позиция в теге не имела значения (<Configuration ... uuid="...")
+        // Соответствует логике расширения (extension.ts / typeIndexProvider.ts)
+        let re = regex::Regex::new(r#"<Configuration[^>]*uuid=\"([^\"]+)\""#)
+            .expect("UUID regex must compile");
+        if let Some(captures) = re.captures(&content) {
+            if let Some(uuid_match) = captures.get(1) {
+                let raw = uuid_match.as_str().trim();
+                if !raw.is_empty() {
+                    return Ok(raw.to_string());
+                }
             }
         }
-
-        anyhow::bail!("UUID not found in Configuration.xml")
+        anyhow::bail!("UUID not found in Configuration.xml (regex scan)")
     }
 
     fn generate_project_name_fallback(&self, config_path: &Path) -> String {

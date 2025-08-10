@@ -160,7 +160,7 @@
                     },
                     "bslAnalyzer.autoIndexBuild": {
                         "type": "boolean",
-                        "default": false,
+                        "default": true,
                         "description": "Автоматически строить индекс при открытии BSL файлов",
                         "order": 3
                     }

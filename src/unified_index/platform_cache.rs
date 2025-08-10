@@ -133,24 +133,16 @@ impl PlatformDocsCache {
     }
 
     fn extract_from_hybrid_storage(&self, version: &str) -> Result<Vec<BslEntity>> {
-        // Создаем пустой вектор и добавляем примитивные типы
-        let mut entities = Vec::new();
-
-        // Добавляем примитивные типы BSL
-        self.add_primitive_types(&mut entities, version)?;
-
-        log::info!(
-            "Generated {} primitive platform types for version {}",
-            entities.len(),
+        // NO FALLBACK - если архив не найден, возвращаем ошибку
+        log::error!(
+            "Platform documentation archive not provided for version {}. User must specify archive path.",
             version
         );
-
-        // Сохраняем в кеш для будущего использования
-        if !entities.is_empty() {
-            self.save_to_cache(version, &entities)?;
-        }
-
-        Ok(entities)
+        
+        Err(anyhow::anyhow!(
+            "Platform documentation archive is required but not provided. \
+             Please specify path to rebuilt.shcntx_ru.zip or rebuilt.shlang_ru.zip archive."
+        ))
     }
 
     fn convert_method(&self, method_data: &serde_json::Value) -> Result<BslMethod> {

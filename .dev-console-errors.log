@@ -5,3 +5,4 @@
 {"timestamp":"2025-08-10T18:45:43.629Z","command":"git commit -m \"новый LSP\"","error":"Command failed: git commit -m \"новый LSP\""}
 {"timestamp":"2025-08-10T19:09:29.663Z","command":"npm run rebuild:extension","error":"Command failed: npm run rebuild:extension"}
 {"timestamp":"2025-08-10T19:19:03.402Z","command":"npm run copy:binaries:release","error":"Command failed: npm run copy:binaries:release"}
+{"timestamp":"2025-08-10T19:31:21.613Z","command":"npm run copy:binaries:release","error":"Command failed: npm run copy:binaries:release"}
