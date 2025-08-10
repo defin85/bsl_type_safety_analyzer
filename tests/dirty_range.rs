@@ -45,3 +45,13 @@ fn test_overlapping_range_selection() {
     let leaves = ast.overlapping_leaf_nodes(0,20);
     for nid in &leaves { let span = ast.arena().node(*nid).span; assert!(span.start < 21, "Leaf from wrong region"); }
 }
+
+#[test]
+fn test_dirty_rebuild_boundaries() {
+    let ast = sample_module();
+    // Изменение внутри второй процедуры (offset 25)
+    let boundaries = ast.dirty_rebuild_boundaries(25,25);
+    assert!(!boundaries.is_empty(), "Expect at least one boundary");
+    // Должна быть найдена именно вторая процедура, не модуль
+    assert!(boundaries.iter().any(|nid| ast.arena().node(*nid).kind == AstKind::Procedure), "Expected procedure boundary");
+}

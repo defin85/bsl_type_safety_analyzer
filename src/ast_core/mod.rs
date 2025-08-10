@@ -357,6 +357,37 @@ impl BuiltAst {
             true
         }).collect()
     }
+    /// Определить минимальные «границы» для частичной пересборки по dirty range.
+    /// Правила:
+    /// 1. Начинаем с deepest overlapping (leaf) узлов.
+    /// 2. Поднимаемся вверх до ближайшего узла вида Procedure | Function.
+    /// 3. Если ни один boundary-kind не найден (например изменение на уровне модульных деклараций), возвращаем Module root.
+    /// 4. Дедупликация.
+    pub fn dirty_rebuild_boundaries(&self, start: u32, end: u32) -> Vec<NodeId> {
+        use std::collections::HashSet;
+        let leaf_overlaps = self.overlapping_leaf_nodes(start, end);
+        if leaf_overlaps.is_empty() { return Vec::new(); }
+        let parent_map = self.build_parent_map();
+        let mut out: Vec<NodeId> = Vec::new();
+        let mut seen: HashSet<u32> = HashSet::new();
+        'each: for leaf in leaf_overlaps {
+            let mut cur = leaf;
+            loop {
+                let kind = self.arena.node(cur).kind;
+                if matches!(kind, AstKind::Procedure | AstKind::Function) {
+                    if seen.insert(cur.0) { out.push(cur); }
+                    continue 'each;
+                }
+                if let Some(p) = parent_map[cur.0 as usize] { cur = p; } else { break; }
+                if cur == self.root { break; }
+            }
+            // boundary не найден — модуль
+            if seen.insert(self.root.0) { out.push(self.root); }
+        }
+        // Детеминированный порядок
+        out.sort_by_key(|n| n.0);
+        out
+    }
 }
 
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
