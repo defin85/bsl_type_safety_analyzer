@@ -308,6 +308,55 @@ impl BuiltAst {
         }
         Some(changed)
     }
+    /// Построить parent map (однократно дёшево) для операций инкрементальности.
+    pub fn build_parent_map(&self) -> Vec<Option<NodeId>> {
+        let mut parents = vec![None; self.arena.len()];
+        for (nid, _) in self.arena.iter() {
+            let mut child = self.arena.node(nid).first_child;
+            while let Some(c) = child { parents[c.0 as usize] = Some(nid); child = self.arena.node(c).next_sibling; }
+        }
+        parents
+    }
+    /// Проверка пересечения span узла с диапазоном [start,end). Если end==start трактуется как вставка и попадает
+    /// в узел, если позиция лежит внутри или на конце узла.
+    fn span_overlaps(span: PackedSpan, start: u32, end: u32) -> bool {
+        if end == start { // insertion
+            start >= span.start && start <= span.end()
+        } else {
+            start < span.end() && end > span.start
+        }
+    }
+    /// Все узлы, span которых пересекается с диапазоном.
+    pub fn overlapping_nodes(&self, start: u32, end: u32) -> Vec<NodeId> {
+        let mut out = Vec::new();
+        for (nid, node) in self.arena.iter() { if Self::span_overlaps(node.span, start, end) { out.push(nid); } }
+        out
+    }
+    /// Overlapping root nodes: пересекающиеся узлы без пересекающегося предка (наиболее "верхние").
+    pub fn overlapping_root_nodes(&self, start: u32, end: u32) -> Vec<NodeId> {
+        let overlaps = self.overlapping_nodes(start, end);
+        if overlaps.is_empty() { return overlaps; }
+        let parent_map = self.build_parent_map();
+        overlaps.iter().copied().filter(|nid| {
+            let mut p = parent_map[nid.0 as usize];
+            while let Some(pp) = p { if overlaps.contains(&pp) { return false; } p = parent_map[pp.0 as usize]; }
+            true
+        }).collect()
+    }
+    /// Overlapping leaf nodes: пересекающиеся узлы без пересекающегося потомка (наиболее "глубокие").
+    pub fn overlapping_leaf_nodes(&self, start: u32, end: u32) -> Vec<NodeId> {
+        let overlaps = self.overlapping_nodes(start, end);
+        if overlaps.is_empty() { return overlaps; }
+        // Пометим пересекающиеся
+        let mut is_overlap = vec![false; self.arena.len()];
+        for nid in &overlaps { is_overlap[nid.0 as usize] = true; }
+        // Узел лист пересекающихся если ни один его ребёнок не в overlaps
+        overlaps.into_iter().filter(|nid| {
+            let mut child = self.arena.node(*nid).first_child;
+            while let Some(c) = child { if is_overlap[c.0 as usize] { return false; } child = self.arena.node(c).next_sibling; }
+            true
+        }).collect()
+    }
 }
 
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
