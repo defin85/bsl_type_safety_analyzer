@@ -214,7 +214,18 @@ impl AstBuilder {
         }
     }
 
-    pub fn build(self) -> BuiltAst { BuiltAst { arena: self.arena, root: self.root.expect("AST has no root"), interner: self.interner, error_messages: self.error_messages, call_data: self.call_data } }
+    pub fn build(self) -> BuiltAst {
+        let mut built = BuiltAst {
+            arena: self.arena,
+            root: self.root.expect("AST has no root"),
+            interner: self.interner,
+            error_messages: self.error_messages,
+            call_data: self.call_data,
+            fingerprints: Vec::new(),
+        };
+        built.recompute_fingerprints();
+        built
+    }
 }
 
 impl Default for AstBuilder {
@@ -228,6 +239,8 @@ pub struct BuiltAst {
     pub interner: StringInterner,
     pub error_messages: Vec<String>,
     pub call_data: Vec<CallData>,
+    /// Кэш fingerprint'ов для каждого узла (индекс = NodeId.0). Заполняется при build().
+    pub fingerprints: Vec<u64>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -239,6 +252,12 @@ impl BuiltAst {
     pub fn resolve_symbol(&self, sym: SymbolId) -> &str { self.interner.resolve(sym) }
     pub fn interner_symbol_count(&self) -> usize { self.interner.symbol_count() }
     pub fn interner_total_bytes(&self) -> usize { self.interner.bytes() }
+    /// Прямой доступ к кэшированным fingerprint'ам.
+    pub fn fingerprints(&self) -> &[u64] { &self.fingerprints }
+    /// Полное пересчитывание fingerprint'ов (использовать при отладке / после мутаций).
+    pub fn recompute_fingerprints(&mut self) {
+        self.fingerprints = compute_fingerprints_internal(self);
+    }
     /// Получить текст идентификатора по NodeId (если это Identifier/Param/Function/Procedure с payload Ident).
     pub fn node_ident_text(&self, id: NodeId) -> Option<&str> {
         let node = self.arena.node(id);
@@ -275,35 +294,49 @@ impl BuiltAst {
         (total, method, func, args, max_args)
     }
     /// Вычислить vector fingerprint'ов (post-order) для всех узлов. Fingerprint стабилен между запусками.
-    pub fn compute_fingerprints(&self) -> Vec<u64> {
-        let mut fp = vec![0u64; self.arena.len()];
-        fn fnv64(acc: u64, byte: u64) -> u64 { let mut h = acc; h ^= byte.wrapping_mul(0x100000001b3); h = h.wrapping_mul(0x100000001b3); h }
-        fn node_fp(ast: &BuiltAst, id: NodeId, out: &mut [u64]) -> u64 {
-            if out[id.0 as usize] != 0 { return out[id.0 as usize]; }
-            // children first (post-order)
-            let mut children_fps = Vec::new();
-            let mut cur = ast.arena.node(id).first_child;
-            while let Some(c) = cur { let cf = node_fp(ast, c, out); children_fps.push(cf); cur = ast.arena.node(c).next_sibling; }
-            let node = ast.arena.node(id);
-            let mut h: u64 = 0xcbf29ce484222325; // FNV offset
-            h = fnv64(h, node.kind as u64);
-            h = fnv64(h, node.span.start as u64);
-            h = fnv64(h, node.span.len as u64);
-            match node.payload {
-                AstPayload::Ident { sym } => { h = fnv64(h, 1); h = fnv64(h, sym.0 as u64); },
-                AstPayload::Literal { sym } => { h = fnv64(h, 2); h = fnv64(h, sym.0 as u64); },
-                AstPayload::Error { msg } => { h = fnv64(h, 3); h = fnv64(h, msg as u64); },
-                AstPayload::Call { data } => { if let Some(cd) = ast.call_data.get(data as usize) { h = fnv64(h, 4); h = fnv64(h, cd.arg_count as u64); h = fnv64(h, cd.is_method as u64); } },
-                AstPayload::None => { h = fnv64(h, 0); },
-            }
-            for cf in children_fps { h = fnv64(h, cf); }
-            out[id.0 as usize] = h; h
+    /// Совместимость со старым API: возвращает клон кэшированного списка.
+    pub fn compute_fingerprints(&self) -> Vec<u64> { self.fingerprints.clone() }
+    /// Root fingerprint convenience (берёт из кэша).
+    pub fn root_fingerprint(&self) -> u64 { self.fingerprints.get(self.root.0 as usize).copied().unwrap_or(0) }
+    /// Сравнить с другим AST и вернуть список узлов (NodeId) с отличающимися fingerprint'ами.
+    /// Возвращает None если размеры арен различаются (сравнение невалидно).
+    pub fn diff_changed_nodes(&self, other: &BuiltAst) -> Option<Vec<NodeId>> {
+        if self.arena.len() != other.arena.len() { return None; }
+        let mut changed = Vec::new();
+        for i in 0..self.arena.len() {
+            if self.fingerprints.get(i) != other.fingerprints.get(i) { changed.push(NodeId(i as u32)); }
         }
-        node_fp(self, self.root, &mut fp);
-        fp
+        Some(changed)
     }
-    /// Root fingerprint convenience.
-    pub fn root_fingerprint(&self) -> u64 { self.compute_fingerprints()[self.root.0 as usize] }
+}
+
+/// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
+fn compute_fingerprints_internal(ast: &BuiltAst) -> Vec<u64> {
+    let mut fp = vec![0u64; ast.arena.len()];
+    fn fnv64(acc: u64, byte: u64) -> u64 { let mut h = acc; h ^= byte.wrapping_mul(0x100000001b3); h = h.wrapping_mul(0x100000001b3); h }
+    fn node_fp(ast: &BuiltAst, id: NodeId, out: &mut [u64]) -> u64 {
+        if out[id.0 as usize] != 0 { return out[id.0 as usize]; }
+        // children first (post-order)
+        let mut children_fps = Vec::new();
+        let mut cur = ast.arena.node(id).first_child;
+        while let Some(c) = cur { let cf = node_fp(ast, c, out); children_fps.push(cf); cur = ast.arena.node(c).next_sibling; }
+        let node = ast.arena.node(id);
+        let mut h: u64 = 0xcbf29ce484222325; // FNV offset
+        h = fnv64(h, node.kind as u64);
+        h = fnv64(h, node.span.start as u64);
+        h = fnv64(h, node.span.len as u64);
+        match node.payload {
+            AstPayload::Ident { sym } => { h = fnv64(h, 1); h = fnv64(h, sym.0 as u64); },
+            AstPayload::Literal { sym } => { h = fnv64(h, 2); h = fnv64(h, sym.0 as u64); },
+            AstPayload::Error { msg } => { h = fnv64(h, 3); h = fnv64(h, msg as u64); },
+            AstPayload::Call { data } => { if let Some(cd) = ast.call_data.get(data as usize) { h = fnv64(h, 4); h = fnv64(h, cd.arg_count as u64); h = fnv64(h, cd.is_method as u64); } },
+            AstPayload::None => { h = fnv64(h, 0); },
+        }
+        for cf in children_fps { h = fnv64(h, cf); }
+        out[id.0 as usize] = h; h
+    }
+    if !ast.arena.is_empty() { node_fp(ast, ast.root, &mut fp); }
+    fp
 }
 
 /// Утилита обхода (предварительный проход).
