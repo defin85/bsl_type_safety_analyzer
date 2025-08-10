@@ -144,7 +144,12 @@ async function initializeIndexIfNeeded() {
     }
     // Check if index already exists in cache
     const platformVersion = config_1.BslAnalyzerConfig.platformVersion;
-    const indexCachePath = path.join(require('os').homedir(), '.bsl_analyzer', 'project_indices', `${path.basename(configPath)}_${require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8)}`, platformVersion);
+    const projectId = extractUuidProjectId(configPath);
+    if (!projectId) {
+        outputChannel.appendLine('⚠️ Cannot auto-build index: UUID not found in Configuration.xml (no fallback).');
+        return;
+    }
+    const indexCachePath = path.join(require('os').homedir(), '.bsl_analyzer', 'project_indices', projectId, platformVersion);
     if (fs.existsSync(path.join(indexCachePath, 'unified_index.json'))) {
         outputChannel.appendLine('✅ BSL Index already exists in cache, skipping auto-build');
         (0, progress_1.updateStatusBar)('BSL Analyzer: Index Ready');
@@ -168,7 +173,7 @@ async function initializeIndexIfNeeded() {
             const args = [
                 '--config', configPath,
                 '--platform-version', platformVersion
-            ];
+            ]; // UUID-based projectId implied by Rust side
             const platformDocsArchive = (0, utils_1.getPlatformDocsArchive)();
             if (platformDocsArchive) {
                 args.push('--platform-docs-archive', platformDocsArchive);
@@ -198,6 +203,24 @@ function showWelcomeMessage() {
     else {
         vscode.window.showInformationMessage('BSL Analyzer is ready! Use Ctrl+Shift+P and search for "BSL" to explore features.');
     }
+}
+// UUID-based project identifier (must match Rust naming scheme; no fallback)
+function extractUuidProjectId(configPath) {
+    try {
+        const cfgXml = path.join(configPath, 'Configuration.xml');
+        if (!fs.existsSync(cfgXml))
+            return null;
+        const content = fs.readFileSync(cfgXml, 'utf-8');
+        const m = content.match(/<Configuration[^>]*uuid="([^"]+)"/i);
+        if (m && m[1]) {
+            const uuid = m[1].replace(/-/g, '');
+            return `${path.basename(configPath)}_${uuid}`;
+        }
+    }
+    catch (e) {
+        outputChannel.appendLine(`Failed to extract UUID: ${e}`);
+    }
+    return null;
 }
 // Все функции организованы в модули:
 // - LSP клиент в модуле lsp/

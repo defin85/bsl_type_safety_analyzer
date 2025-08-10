@@ -13,13 +13,13 @@ function checkVersionSync() {
         // Читаем версии
         const cargoContent = fs.readFileSync('Cargo.toml', 'utf8');
         const cargoVersion = cargoContent.match(/version\s*=\s*"([^"]+)"/)?.[1];
-        
+
         const extensionPackage = JSON.parse(fs.readFileSync(path.join('vscode-extension', 'package.json'), 'utf8'));
         const extensionVersion = extensionPackage.version;
-        
+
         const rootPackage = JSON.parse(fs.readFileSync('package.json', 'utf8'));
         const rootVersion = rootPackage.version;
-        
+
         if (cargoVersion !== extensionVersion || extensionVersion !== rootVersion) {
             console.log('⚠️  Version mismatch detected:');
             console.log(`   Cargo.toml: ${cargoVersion}`);
@@ -37,7 +37,19 @@ function checkVersionSync() {
 
 checkVersionSync();
 
+// Определяем текущую версию из extension package
+let currentVersion = 'unknown';
+try {
+    const extPkg = JSON.parse(fs.readFileSync(path.join('vscode-extension', 'package.json'), 'utf8'));
+    currentVersion = extPkg.version;
+} catch (_) { }
+
 const steps = [
+    {
+        name: 'Building Rust (release)',
+        command: 'npm run build:rust:release',
+        icon: '🦀'
+    },
     {
         name: 'Copying essential binaries to extension',
         command: 'node scripts/copy-essential-binaries.js release',
@@ -65,18 +77,18 @@ let success = true;
 for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
     console.log(`\n${step.icon} [${i + 1}/${steps.length}] ${step.name}...`);
-    
+
     try {
         if (step.command === null) {
             // Special handling for file operations
             const glob = require('glob');
-            
+
             // Create dist directory
             const distDir = path.join('vscode-extension', 'dist');
             if (!fs.existsSync(distDir)) {
                 fs.mkdirSync(distDir, { recursive: true });
             }
-            
+
             // Move .vsix files to dist
             const vsixFiles = glob.sync('vscode-extension/bsl-type-safety-analyzer-*.vsix');
             for (const file of vsixFiles) {
@@ -85,22 +97,24 @@ for (let i = 0; i < steps.length; i++) {
                 fs.renameSync(file, newPath);
                 console.log(`   Moved ${filename} to dist/`);
             }
-            
-            // Clean old packages (keep only latest)
+
+            // Оставляем только самый новый .vsix (по времени изменения)
             const distFiles = glob.sync(path.join(distDir, 'bsl-type-safety-analyzer-*.vsix'));
-            const latestFile = path.join(distDir, 'bsl-type-safety-analyzer-1.6.0.vsix');
-            
-            for (const file of distFiles) {
-                if (file !== latestFile) {
-                    fs.unlinkSync(file);
-                    console.log(`   Removed old package: ${path.basename(file)}`);
+            if (distFiles.length > 1) {
+                const sorted = distFiles.map(f => ({ f, m: fs.statSync(f).mtimeMs }))
+                    .sort((a, b) => b.m - a.m);
+                const keep = sorted[0].f;
+                for (const entry of sorted.slice(1)) {
+                    fs.unlinkSync(entry.f);
+                    console.log(`   Removed old package: ${path.basename(entry.f)}`);
                 }
+                console.log(`   Keeping latest package: ${path.basename(keep)}`);
             }
         } else {
-            execSync(step.command, { 
-                stdio: 'inherit', 
+            execSync(step.command, {
+                stdio: 'inherit',
                 cwd: process.cwd(),
-                shell: true 
+                shell: true
             });
         }
         console.log(`✅ ${step.name} completed`);
@@ -115,21 +129,26 @@ if (success) {
     console.log('\n' + '='.repeat(50));
     console.log('🎉 SUCCESS: Extension rebuilt successfully!');
     console.log('='.repeat(50));
-    
-    // Check file size
+    const distDir = path.join('vscode-extension', 'dist');
     try {
-        const stats = fs.statSync('vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix');
-        const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(1);
-        console.log(`📊 Package size: ${fileSizeInMB} MB`);
-        console.log(`📁 Location: vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix`);
+        const vsixFiles = fs.readdirSync(distDir).filter(f => f.endsWith('.vsix'));
+        if (vsixFiles.length) {
+            const latest = vsixFiles.map(f => ({ f, m: fs.statSync(path.join(distDir, f)).mtimeMs }))
+                .sort((a, b) => b.m - a.m)[0].f;
+            const stats = fs.statSync(path.join(distDir, latest));
+            const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(1);
+            console.log(`📊 Package size: ${fileSizeInMB} MB`);
+            console.log(`📁 Location: ${path.join(distDir, latest)}`);
+            console.log('\n📋 To install:');
+            console.log('   1. Ctrl+Shift+P');
+            console.log('   2. Extensions: Install from VSIX');
+            console.log(`   3. Select: ${path.join(distDir, latest)}`);
+        } else {
+            console.log('⚠️ No VSIX found in dist directory');
+        }
     } catch (e) {
-        console.log('📊 Package created in vscode-extension/dist/');
+        console.log('📊 Package created (listing failed)');
     }
-    
-    console.log('\n📋 To install:');
-    console.log('   1. Press Ctrl+Shift+P in VS Code');
-    console.log('   2. Type: Extensions: Install from VSIX');
-    console.log('   3. Select: vscode-extension/dist/bsl-type-safety-analyzer-1.6.0.vsix');
 } else {
     console.log('\n' + '='.repeat(50));
     console.log('💥 FAILED: Extension rebuild failed');

@@ -10,7 +10,7 @@ import { BslAnalyzerConfig } from '../config/configHelper';
 export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<BslTypeItem | undefined | null | void> = new vscode.EventEmitter<BslTypeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<BslTypeItem | undefined | null | void> = this._onDidChangeTreeData.event;
-    
+
     private outputChannel: vscode.OutputChannel | undefined;
 
     constructor(outputChannel?: vscode.OutputChannel) {
@@ -35,37 +35,37 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
 
     private async getRootItems(): Promise<BslTypeItem[]> {
         const items: BslTypeItem[] = [];
-        
+
         // Получаем информацию о кешированном индексе
         const indexInfo = await this.getIndexInfo();
-        
+
         if (indexInfo) {
             items.push(
                 new BslTypeItem(
-                    `📚 Platform Types (${indexInfo.platformTypes})`, 
-                    vscode.TreeItemCollapsibleState.Collapsed, 
-                    'Platform Types', 
+                    `📚 Platform Types (${indexInfo.platformTypes})`,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    'Platform Types',
                     'platform'
                 ),
                 new BslTypeItem(
-                    `🗂️ Configuration Types (${indexInfo.configTypes})`, 
-                    vscode.TreeItemCollapsibleState.Collapsed, 
-                    'Configuration Types', 
+                    `🗂️ Configuration Types (${indexInfo.configTypes})`,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    'Configuration Types',
                     'configuration'
                 ),
                 new BslTypeItem(
-                    `🔧 Global Functions (${indexInfo.globalFunctions})`, 
-                    vscode.TreeItemCollapsibleState.Collapsed, 
-                    'Global Functions', 
+                    `🔧 Global Functions (${indexInfo.globalFunctions})`,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    'Global Functions',
                     'module'
                 )
             );
-            
+
             // Добавляем общую статистику как отдельный элемент с типом module (для совместимости)
             const statsItem = new BslTypeItem(
-                `📊 Total: ${indexInfo.totalTypes} types`, 
-                vscode.TreeItemCollapsibleState.None, 
-                'Statistics', 
+                `📊 Total: ${indexInfo.totalTypes} types`,
+                vscode.TreeItemCollapsibleState.None,
+                'Statistics',
                 'module',
                 'stats'
             );
@@ -74,19 +74,19 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
         } else {
             // Если индекс не найден
             const warningItem = new BslTypeItem(
-                '⚠️ Index not found', 
-                vscode.TreeItemCollapsibleState.None, 
-                'No index', 
+                '⚠️ Index not found',
+                vscode.TreeItemCollapsibleState.None,
+                'No index',
                 'module',
                 'warning'
             );
             warningItem.iconPath = new vscode.ThemeIcon('warning');
             items.push(warningItem);
-            
+
             const buildItem = new BslTypeItem(
-                '🔨 Build Index', 
-                vscode.TreeItemCollapsibleState.None, 
-                'Build', 
+                '🔨 Build Index',
+                vscode.TreeItemCollapsibleState.None,
+                'Build',
                 'module',
                 'build-action'
             );
@@ -98,29 +98,29 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
             };
             items.push(buildItem);
         }
-        
+
         return items;
     }
 
     private async getChildItems(element: BslTypeItem): Promise<BslTypeItem[]> {
         const items: BslTypeItem[] = [];
-        
+
         // Пока возвращаем примеры, но можно будет загрузить реальные типы из кеша
         switch (element.contextValue) {
             case 'platform':
                 // Читаем платформенные типы из кеша
                 const platformTypes = await this.getPlatformTypes();
-                return platformTypes.slice(0, 50).map(type => 
+                return platformTypes.slice(0, 50).map(type =>
                     new BslTypeItem(type.name, vscode.TreeItemCollapsibleState.None, type.name, 'platform', 'type')
                 );
-                
+
             case 'configuration':
                 // Читаем типы конфигурации из кеша проекта
                 const configTypes = await this.getConfigurationTypes();
-                return configTypes.slice(0, 50).map(type => 
+                return configTypes.slice(0, 50).map(type =>
                     new BslTypeItem(type.name, vscode.TreeItemCollapsibleState.None, type.name, 'configuration', type.kind)
                 );
-                
+
             case 'module':
                 // Глобальные функции
                 return [
@@ -130,7 +130,7 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
                     new BslTypeItem('СтрНайти', vscode.TreeItemCollapsibleState.None, 'СтрНайти', 'module', 'function'),
                     new BslTypeItem('Тип', vscode.TreeItemCollapsibleState.None, 'Тип', 'module', 'function')
                 ];
-                
+
             default:
                 return items;
         }
@@ -147,37 +147,40 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
             const homedir = require('os').homedir();
             const platformVersion = BslAnalyzerConfig.platformVersion;
             const platformCachePath = path.join(homedir, '.bsl_analyzer', 'platform_cache', `${platformVersion}.jsonl`);
-            
+
             let platformTypes = 0;
             if (fs.existsSync(platformCachePath)) {
                 const content = fs.readFileSync(platformCachePath, 'utf-8');
                 platformTypes = content.trim().split('\n').length;
             }
-            
+
             // Проверяем кеш проекта
             const configPath = BslAnalyzerConfig.configurationPath;
             let configTypes = 0;
-            
+
             if (configPath) {
-                const projectHash = require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8);
-                const projectCachePath = path.join(
-                    homedir, 
-                    '.bsl_analyzer', 
-                    'project_indices',
-                    `${path.basename(configPath)}_${projectHash}`,
-                    platformVersion,
-                    'config_entities.jsonl'
-                );
-                
-                if (fs.existsSync(projectCachePath)) {
-                    const content = fs.readFileSync(projectCachePath, 'utf-8');
-                    configTypes = content.trim().split('\n').filter(line => line).length;
+                const projectId = this.tryExtractProjectId(configPath);
+                if (projectId) {
+                    const projectCachePath = path.join(
+                        homedir,
+                        '.bsl_analyzer',
+                        'project_indices',
+                        projectId,
+                        platformVersion,
+                        'config_entities.jsonl'
+                    );
+                    if (fs.existsSync(projectCachePath)) {
+                        const content = fs.readFileSync(projectCachePath, 'utf-8');
+                        configTypes = content.trim().split('\n').filter(line => line).length;
+                    }
+                } else {
+                    this.outputChannel?.appendLine('UUID not found in Configuration.xml – configuration types cache path unresolved');
                 }
             }
-            
+
             // Глобальные функции (примерное количество)
             const globalFunctions = 150; // Примерно столько глобальных функций в 1С
-            
+
             return {
                 platformTypes,
                 configTypes,
@@ -190,28 +193,28 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
         }
     }
 
-    private async getPlatformTypes(): Promise<{name: string}[]> {
+    private async getPlatformTypes(): Promise<{ name: string }[]> {
         try {
             const homedir = require('os').homedir();
             const platformVersion = BslAnalyzerConfig.platformVersion;
             const platformCachePath = path.join(homedir, '.bsl_analyzer', 'platform_cache', `${platformVersion}.jsonl`);
-            
+
             if (fs.existsSync(platformCachePath)) {
                 const content = fs.readFileSync(platformCachePath, 'utf-8');
                 const lines = content.trim().split('\n');
-                const types: {name: string}[] = [];
-                
+                const types: { name: string }[] = [];
+
                 for (const line of lines) {
                     try {
                         const entity = JSON.parse(line);
                         if (entity.display_name || entity.qualified_name) {
-                            types.push({name: entity.display_name || entity.qualified_name});
+                            types.push({ name: entity.display_name || entity.qualified_name });
                         }
                     } catch (e) {
                         // Игнорируем ошибки парсинга
                     }
                 }
-                
+
                 return types;
             }
         } catch (error) {
@@ -220,28 +223,32 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
         return [];
     }
 
-    private async getConfigurationTypes(): Promise<{name: string; kind: string}[]> {
+    private async getConfigurationTypes(): Promise<{ name: string; kind: string }[]> {
         try {
             const configPath = BslAnalyzerConfig.configurationPath;
             if (!configPath) return [];
-            
+
             const homedir = require('os').homedir();
             const platformVersion = BslAnalyzerConfig.platformVersion;
-            const projectHash = require('crypto').createHash('md5').update(configPath).digest('hex').slice(0, 8);
+            const projectId = this.tryExtractProjectId(configPath);
+            if (!projectId) {
+                this.outputChannel?.appendLine('Cannot list configuration types: UUID missing');
+                return [];
+            }
             const projectCachePath = path.join(
-                homedir, 
-                '.bsl_analyzer', 
+                homedir,
+                '.bsl_analyzer',
                 'project_indices',
-                `${path.basename(configPath)}_${projectHash}`,
+                projectId,
                 platformVersion,
                 'config_entities.jsonl'
             );
-            
+
             if (fs.existsSync(projectCachePath)) {
                 const content = fs.readFileSync(projectCachePath, 'utf-8');
                 const lines = content.trim().split('\n');
-                const types: {name: string; kind: string}[] = [];
-                
+                const types: { name: string; kind: string }[] = [];
+
                 for (const line of lines) {
                     try {
                         const entity = JSON.parse(line);
@@ -255,12 +262,27 @@ export class BslTypeIndexProvider implements vscode.TreeDataProvider<BslTypeItem
                         // Игнорируем ошибки парсинга
                     }
                 }
-                
+
                 return types;
             }
         } catch (error) {
             this.outputChannel?.appendLine(`Error reading configuration types: ${error}`);
         }
         return [];
+    }
+    private tryExtractProjectId(configPath: string): string | null {
+        try {
+            const configXmlPath = path.join(configPath, 'Configuration.xml');
+            if (!fs.existsSync(configXmlPath)) return null;
+            const content = fs.readFileSync(configXmlPath, 'utf-8');
+            const m = content.match(/<Configuration[^>]*uuid="([^"]+)"/i);
+            if (m && m[1]) {
+                const uuid = m[1].replace(/-/g, '');
+                return `${path.basename(configPath)}_${uuid}`;
+            }
+        } catch (e) {
+            this.outputChannel?.appendLine(`Failed to extract UUID: ${e}`);
+        }
+        return null;
     }
 }

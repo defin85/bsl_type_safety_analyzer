@@ -77,8 +77,7 @@ impl BslLanguageServer {
         }
     }
 
-    /// Инициализация UnifiedBslIndex из workspace
-    #[allow(dead_code)]
+    /// Инициализация UnifiedBslIndex из workspace (вызывается при initialize)
     async fn initialize_unified_index(&self, workspace_uri: &Url) -> Result<()> {
         let workspace_path = workspace_uri
             .to_file_path()
@@ -209,7 +208,7 @@ impl BslLanguageServer {
         position: Position,
         text: &str,
     ) -> Result<Vec<CompletionItem>> {
-        let mut completions = Vec::new();
+    let mut completions = Vec::new();
 
         // Получаем контекст для анализа
         let lines: Vec<&str> = text.lines().collect();
@@ -258,8 +257,8 @@ impl BslLanguageServer {
         let current_token = extract_last_token(line_prefix);
         let token_lower = current_token.to_lowercase();
 
-        let index_guard = self.unified_index.read().await;
-        if let Some(index) = &*index_guard {
+    let index_guard = self.unified_index.read().await;
+    if let Some(index) = &*index_guard {
             // Автодополнение типов из UnifiedBslIndex
             if line_prefix.ends_with('.')
                 || line_prefix.contains("Справочники.")
@@ -848,11 +847,22 @@ impl BslLanguageServer {
 impl LanguageServer for BslLanguageServer {
     async fn initialize(&self, params: InitializeParams) -> tower_lsp::jsonrpc::Result<InitializeResult> {
         tracing::info!("Initializing Enhanced BSL Language Server v2.0");
+        // Пытаемся сразу загрузить индекс (берём первый workspace folder)
         if let Some(workspace_folders) = params.workspace_folders.as_ref() {
             if let Some(workspace) = workspace_folders.first() {
                 tracing::info!("Workspace detected: {}", workspace.uri);
+                // Попытка инициализации индекса; ошибки не фатальны
+                if let Err(e) = self.initialize_unified_index(&workspace.uri).await {
+                    tracing::warn!("Unified index init failed: {}", e);
+                    self.client.log_message(MessageType::WARNING, format!("Unified index init failed: {}", e)).await;
+                }
+            } else {
+                tracing::warn!("No workspace folders provided in initialize params");
             }
+        } else {
+            tracing::warn!("No workspace_folders in initialize params");
         }
+
         Ok(InitializeResult { capabilities: ServerCapabilities { text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)), completion_provider: Some(CompletionOptions { resolve_provider: Some(false), trigger_characters: Some(vec![".".into(), " ".into()]), ..Default::default() }), hover_provider: Some(HoverProviderCapability::Simple(true)), definition_provider: Some(OneOf::Left(true)), diagnostic_provider: Some(DiagnosticServerCapabilities::Options(DiagnosticOptions { identifier: Some("bsl-lsp".into()), inter_file_dependencies: true, workspace_diagnostics: false, ..Default::default() })), execute_command_provider: None, ..Default::default() }, server_info: Some(ServerInfo { name: "Enhanced BSL Language Server v2.0".into(), version: Some(env!("CARGO_PKG_VERSION").into()) }) })
     }
     async fn initialized(&self, _params: InitializedParams) { self.client.log_message(MessageType::INFO, "Enhanced BSL Language Server v2.0 ready").await; }

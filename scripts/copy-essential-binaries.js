@@ -22,17 +22,17 @@ const ESSENTIAL_BINARIES = [
     'bsl-analyzer.exe',           // Главный анализатор
     'lsp_server.exe',             // LSP сервер для интеграции с редактором
     'syntaxcheck.exe',            // Синтаксический анализатор
-    
+
     // Система типов
     'build_unified_index.exe',    // Построение индекса типов
     'query_type.exe',             // Поиск типов
     'check_type_compatibility.exe', // Проверка совместимости типов
-    
+
     // Работа с платформой и конфигурацией
     'extract_platform_docs.exe',  // Извлечение документации платформы
     'extract_hybrid_docs.exe',    // Извлечение гибридной документации
     'incremental_update.exe',     // Инкрементальные обновления
-    
+
     // MCP интеграция для LLM
     'bsl-mcp-server.exe'          // MCP сервер для интеграции с Claude/GPT
 ];
@@ -41,12 +41,11 @@ const ESSENTIAL_BINARIES = [
 const sourceDir = `target/${buildProfile}`;
 const targetDir = 'vscode-extension/bin';
 
-// Проверяем существование исходной директории
+// Проверяем существование исходной директории (без авто-сборок или fallback)
 if (!fs.existsSync(sourceDir)) {
     console.error(`❌ Директория сборки не найдена: ${sourceDir}`);
-    console.log('💡 Выполните сборку: npm run build:rust' + 
-                (buildProfile === 'release' ? ':release' : 
-                 buildProfile === 'dev-fast' ? '' : ':dev'));
+    console.log('💡 Сначала выполните сборку явно: npm run build:rust' +
+        (buildProfile === 'release' ? ':release' : buildProfile === 'dev-fast' ? '' : ':dev'));
     process.exit(1);
 }
 
@@ -61,7 +60,7 @@ console.log('🧹 Очистка старых бинарников...');
 try {
     const oldFiles = fs.readdirSync(targetDir)
         .filter(file => file.endsWith('.exe') || file.endsWith('.pdb'));
-    
+
     for (const file of oldFiles) {
         fs.unlinkSync(path.join(targetDir, file));
     }
@@ -78,14 +77,14 @@ let totalSize = 0;
 for (const binary of ESSENTIAL_BINARIES) {
     const sourcePath = path.join(sourceDir, binary);
     const targetPath = path.join(targetDir, binary);
-    
+
     if (fs.existsSync(sourcePath)) {
         try {
             fs.copyFileSync(sourcePath, targetPath);
             const stats = fs.statSync(sourcePath);
             const sizeMB = (stats.size / (1024 * 1024)).toFixed(1);
             totalSize += stats.size;
-            
+
             console.log(`   ✅ ${binary} (${sizeMB} MB)`);
             copiedCount++;
         } catch (error) {
@@ -118,7 +117,7 @@ This directory contains essential binaries for BSL Analyzer VSCode extension.
 
 Total size optimized from 155+ MB to ~${(totalSize / (1024 * 1024)).toFixed(1)} MB by excluding test and debug binaries.
 `;
-    
+
     fs.writeFileSync(readmePath, readmeContent);
     console.log('   📝 README.md создан');
 }
@@ -133,7 +132,7 @@ console.log(`📁 Расположение: ${targetDir}`);
 console.log('');
 
 // Проверяем критичные инструменты
-const criticalMissing = ESSENTIAL_BINARIES.filter(binary => 
+const criticalMissing = ESSENTIAL_BINARIES.filter(binary =>
     !fs.existsSync(path.join(targetDir, binary))
 );
 
