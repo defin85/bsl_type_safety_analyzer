@@ -43,9 +43,12 @@ METHODOLOGY.md
 PROJECT_STRUCTURE.md
 Cargo_new.toml
 
-# Obsolete Python directories
-analyzers/
-core/
+# Obsolete Python directories (anchor to repo root)
+/analyzers/
+/core/
+# Re-allow new Rust core sources under src/
+!src/core/
+!src/core/**
 
 # Node.js dependencies and automation
 node_modules/
