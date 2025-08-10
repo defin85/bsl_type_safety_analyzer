@@ -42,7 +42,6 @@ pub struct BslLanguageServer {
 }
 
 /// Информация об открытом документе
-#[derive(Debug, Clone)]
 struct DocumentInfo {
     #[allow(dead_code)]
     uri: Url,
@@ -50,6 +49,8 @@ struct DocumentInfo {
     text: String,
     /// Результаты последнего анализа
     diagnostics: Vec<Diagnostic>,
+    /// Персистентный анализатор для инкрементального пути
+    analyzer: BslAnalyzer,
 }
 
 impl BslLanguageServer {
@@ -201,170 +202,6 @@ impl BslLanguageServer {
         Ok(workspace_path.to_path_buf())
     }
 
-    /// Real-time диагностика BSL кода с UnifiedBslIndex
-    async fn analyze_document(&self, uri: &Url, text: &str) -> Result<Vec<Diagnostic>> {
-        let mut diagnostics = Vec::new();
-
-        // Получаем конфигурацию анализа
-        let config = self.analysis_config.read().await.clone();
-
-        // Проверяем что UnifiedBslIndex загружен
-        let index_guard = self.unified_index.read().await;
-
-        // Создаем анализатор с или без индекса
-        let mut analyzer = match &*index_guard {
-            Some(idx) => {
-                // С индексом для семантического анализа
-                match BslAnalyzer::with_index_and_config(idx.clone(), config.clone()) {
-                    Ok(a) => a,
-                    Err(e) => {
-                        let diagnostic = Diagnostic {
-                            range: Range {
-                                start: Position {
-                                    line: 0,
-                                    character: 0,
-                                },
-                                end: Position {
-                                    line: 0,
-                                    character: 0,
-                                },
-                            },
-                            severity: Some(DiagnosticSeverity::ERROR),
-                            code: Some(NumberOrString::String("BSL001".to_string())),
-                            code_description: None,
-                            source: Some("bsl-lsp".to_string()),
-                            message: format!("Failed to create analyzer: {}", e),
-                            related_information: None,
-                            tags: None,
-                            data: None,
-                        };
-                        diagnostics.push(diagnostic);
-                        return Ok(diagnostics);
-                    }
-                }
-            }
-            None => {
-                // Без индекса - только синтаксический анализ
-                match BslAnalyzer::with_config(AnalysisConfig::syntax_only()) {
-                    Ok(a) => a,
-                    Err(e) => {
-                        let diagnostic = Diagnostic {
-                            range: Range {
-                                start: Position {
-                                    line: 0,
-                                    character: 0,
-                                },
-                                end: Position {
-                                    line: 0,
-                                    character: 0,
-                                },
-                            },
-                            severity: Some(DiagnosticSeverity::ERROR),
-                            code: Some(NumberOrString::String("BSL001".to_string())),
-                            code_description: None,
-                            source: Some("bsl-lsp".to_string()),
-                            message: format!("Failed to create analyzer: {}", e),
-                            related_information: None,
-                            tags: None,
-                            data: None,
-                        };
-                        diagnostics.push(diagnostic);
-                        return Ok(diagnostics);
-                    }
-                }
-            }
-        };
-
-        // Выполняем анализ с конфигурацией
-        let file_name = uri.path().split('/').next_back().unwrap_or("unknown.bsl");
-
-        match analyzer.analyze_code(text, file_name) {
-            Ok(()) => {
-                let (errors, warnings) = analyzer.get_errors_and_warnings();
-
-                // Конвертируем ошибки в LSP диагностику
-                for error in errors {
-                    let diagnostic = Diagnostic {
-                        range: Range {
-                            start: Position {
-                                line: error.position.line.saturating_sub(1) as u32,
-                                character: error.position.column.saturating_sub(1) as u32,
-                            },
-                            end: Position {
-                                line: error.position.line.saturating_sub(1) as u32,
-                                character: (error.position.column + 20).saturating_sub(1) as u32,
-                            },
-                        },
-                        severity: Some(DiagnosticSeverity::ERROR),
-                        code: error
-                            .error_code
-                            .as_ref()
-                            .map(|c| NumberOrString::String(c.clone())),
-                        code_description: None,
-                        source: Some("bsl-analyzer".to_string()),
-                        message: error.message,
-                        related_information: None,
-                        tags: None,
-                        data: None,
-                    };
-                    diagnostics.push(diagnostic);
-                }
-
-                // Конвертируем предупреждения
-                for warning in warnings {
-                    let diagnostic = Diagnostic {
-                        range: Range {
-                            start: Position {
-                                line: warning.position.line.saturating_sub(1) as u32,
-                                character: warning.position.column.saturating_sub(1) as u32,
-                            },
-                            end: Position {
-                                line: warning.position.line.saturating_sub(1) as u32,
-                                character: (warning.position.column + 20).saturating_sub(1) as u32,
-                            },
-                        },
-                        severity: Some(DiagnosticSeverity::WARNING),
-                        code: warning
-                            .error_code
-                            .as_ref()
-                            .map(|c| NumberOrString::String(c.clone())),
-                        code_description: None,
-                        source: Some("bsl-analyzer".to_string()),
-                        message: warning.message,
-                        related_information: None,
-                        tags: None,
-                        data: None,
-                    };
-                    diagnostics.push(diagnostic);
-                }
-            }
-            Err(e) => {
-                let diagnostic = Diagnostic {
-                    range: Range {
-                        start: Position {
-                            line: 0,
-                            character: 0,
-                        },
-                        end: Position {
-                            line: 0,
-                            character: 0,
-                        },
-                    },
-                    severity: Some(DiagnosticSeverity::ERROR),
-                    code: Some(NumberOrString::String("BSL000".to_string())),
-                    code_description: None,
-                    source: Some("bsl-analyzer".to_string()),
-                    message: format!("Analysis error: {}", e),
-                    related_information: None,
-                    tags: None,
-                    data: None,
-                };
-                diagnostics.push(diagnostic);
-            }
-        }
-
-        Ok(diagnostics)
-    }
 
     /// Enhanced completion с UnifiedBslIndex
     async fn provide_enhanced_completion(
@@ -391,12 +228,35 @@ impl BslLanguageServer {
             utf16_pos += ch.len_utf16();
         }
         
-        // Безопасное получение префикса строки
-        let line_prefix = if byte_pos <= line.len() {
-            &line[..byte_pos]
-        } else {
-            line
-        };
+        // Безопасное получение префикса строки (всё до курсора)
+        let line_prefix = if byte_pos <= line.len() { &line[..byte_pos] } else { line };
+
+        // Выделяем последний «токен» (буквенно-цифровая / подчёркивание / кириллица последовательность)
+        fn extract_last_token(s: &str) -> &str {
+            let trimmed = s.trim_end();
+            // Отбрасываем завершающие пробелы вручную (без промежуточных аллокаций)
+            let mut end = trimmed.len();
+            while end > 0 {
+                if let Some(ch) = trimmed[..end].chars().next_back() {
+                    if ch.is_whitespace() {
+                        end -= ch.len_utf8();
+                        continue;
+                    }
+                }
+                break;
+            }
+            if end == 0 { return ""; }
+            // Идём назад посимвольно пока символ удовлетворяет условию токена
+            let mut start = end;
+            for (idx, ch) in trimmed[..end].char_indices().rev() {
+                let is_token_ch = ch.is_alphanumeric() || ch == '_' || ('\u{0400}'..='\u{04FF}').contains(&ch);
+                if !is_token_ch { break; }
+                start = idx;
+            }
+            &trimmed[start..end]
+        }
+        let current_token = extract_last_token(line_prefix);
+        let token_lower = current_token.to_lowercase();
 
         let index_guard = self.unified_index.read().await;
         if let Some(index) = &*index_guard {
@@ -429,26 +289,19 @@ impl BslLanguageServer {
                 }
             }
 
-            // Автодополнение глобальных функций
+            // Автодополнение глобальных функций (по текущему токену)
             if let Some(global_entity) = index.find_entity("Global") {
                 for (method_name, method) in &global_entity.interface.methods {
-                    if method_name
-                        .to_lowercase()
-                        .contains(&line_prefix.to_lowercase())
-                        || line_prefix.is_empty()
-                    {
-                        let completion = CompletionItem {
+                    let m_lower = method_name.to_lowercase();
+                    if token_lower.is_empty() || m_lower.starts_with(&token_lower) {
+                        completions.push(CompletionItem {
                             label: method_name.clone(),
                             kind: Some(CompletionItemKind::FUNCTION),
                             detail: method.return_type.as_ref().map(|t| format!("-> {}", t)),
-                            documentation: method
-                                .documentation
-                                .as_ref()
-                                .map(|d| Documentation::String(d.clone())),
+                            documentation: method.documentation.as_ref().map(|d| Documentation::String(d.clone())),
                             insert_text: Some(format!("{}()", method_name)),
                             ..Default::default()
-                        };
-                        completions.push(completion);
+                        });
                     }
                 }
             }
@@ -550,183 +403,91 @@ impl BslLanguageServer {
         ];
 
         for keyword in &bsl_keywords {
-            if keyword
-                .to_lowercase()
-                .starts_with(&line_prefix.to_lowercase())
-            {
-                let completion = CompletionItem {
+            if token_lower.is_empty() || keyword.to_lowercase().starts_with(&token_lower) {
+                completions.push(CompletionItem {
                     label: keyword.to_string(),
                     kind: Some(CompletionItemKind::KEYWORD),
                     detail: Some("BSL keyword".to_string()),
                     ..Default::default()
-                };
-                completions.push(completion);
+                });
             }
         }
 
         Ok(completions)
     }
 
-    /// Enhanced hover с информацией из UnifiedBslIndex
     async fn provide_enhanced_hover(&self, position: Position, text: &str) -> Option<Hover> {
         let lines: Vec<&str> = text.lines().collect();
         let line = lines.get(position.line as usize)?;
-
-        // Правильная конвертация позиции из UTF-16 code units в индекс символов
-        let utf16_pos = position.character as usize;
-        let mut char_index = 0;
-        let mut current_utf16_pos = 0;
-        
-        for ch in line.chars() {
-            if current_utf16_pos >= utf16_pos {
-                break;
-            }
-            current_utf16_pos += ch.len_utf16();
-            char_index += 1;
-        }
-        
-        // Извлекаем слово под курсором
+        // UTF-16 -> char index
+        let mut char_index = 0usize; let mut utf16 = 0usize;
+        for ch in line.chars() { if utf16 >= position.character as usize { break; } utf16 += ch.len_utf16(); char_index += 1; }
         let word = self.extract_word_at_position(line, char_index);
-
-        if word.is_empty() {
-            return None;
-        }
-
+        if word.is_empty() { return None; }
         let index_guard = self.unified_index.read().await;
         if let Some(index) = &*index_guard {
-            // Ищем тип в UnifiedBslIndex
             if let Some(entity) = index.find_entity(&word) {
-                let hover_content = format!(
-                    "**{}** ({:?})\n\n{:?}\n\n**Методов:** {}\n**Свойств:** {}",
-                    entity.display_name,
-                    entity.entity_type,
-                    entity.entity_kind,
-                    entity.interface.methods.len(),
-                    entity.interface.properties.len()
-                );
-
-                return Some(Hover {
-                    contents: HoverContents::Markup(MarkupContent {
-                        kind: MarkupKind::Markdown,
-                        value: hover_content,
-                    }),
-                    range: None,
-                });
-            }
-
-            // Ищем в методах глобального контекста
-            if let Some(global_entity) = index.find_entity("Global") {
-                if let Some(method) = global_entity.interface.methods.get(&word) {
-                    let hover_content = format!(
-                        "**{}** (функция)\n\n{}\n\n**Возвращает:** {}",
-                        word,
-                        method
-                            .documentation
-                            .as_deref()
-                            .unwrap_or("Глобальная функция 1С"),
-                        method.return_type.as_deref().unwrap_or("Произвольный")
-                    );
-
-                    return Some(Hover {
-                        contents: HoverContents::Markup(MarkupContent {
-                            kind: MarkupKind::Markdown,
-                            value: hover_content,
-                        }),
-                        range: None,
-                    });
-                }
+                return Some(Hover { contents: HoverContents::Markup(MarkupContent { kind: MarkupKind::Markdown, value: format!("**{}** ({:?})", entity.display_name, entity.entity_type) }), range: None });
             }
         }
-
         None
     }
 
-    /// Извлечение слова в позиции курсора
     fn extract_word_at_position(&self, line: &str, position: usize) -> String {
         let chars: Vec<char> = line.chars().collect();
-        if position >= chars.len() {
-            return String::new();
-        }
-
-        // Находим границы слова
-        let mut start = position;
-        let mut end = position;
-
-        // Идем назад до начала слова
-        while start > 0 && (chars[start - 1].is_alphanumeric() || chars[start - 1] == '_') {
-            start -= 1;
-        }
-
-        // Идем вперед до конца слова
-        while end < chars.len() && (chars[end].is_alphanumeric() || chars[end] == '_') {
-            end += 1;
-        }
-
+        if position >= chars.len() { return String::new(); }
+        let mut start = position; let mut end = position;
+        while start > 0 && (chars[start-1].is_alphanumeric() || chars[start-1] == '_') { start -= 1; }
+        while end < chars.len() && (chars[end].is_alphanumeric() || chars[end] == '_') { end += 1; }
         chars[start..end].iter().collect()
     }
-}
 
-#[tower_lsp::async_trait]
-impl LanguageServer for BslLanguageServer {
-    async fn initialize(
-        &self,
-        params: InitializeParams,
-    ) -> tower_lsp::jsonrpc::Result<InitializeResult> {
-        tracing::info!("Initializing Enhanced BSL Language Server v2.0");
-
-        // Отложенная инициализация UnifiedBslIndex - не блокируем запуск сервера
-        // Индекс будет инициализирован позже при необходимости
-        if let Some(workspace_folders) = params.workspace_folders {
-            if let Some(workspace) = workspace_folders.first() {
-                tracing::info!("Workspace detected: {}", workspace.uri);
-                // Не инициализируем индекс сразу - это может вызвать падение
-                // if let Err(e) = self.initialize_unified_index(&workspace.uri).await {
-                //     tracing::warn!("BSL index initialization skipped: {}", e);
-                // }
-            }
+    /// Enhanced hover с информацией из UnifiedBslIndex
+    async fn analyze_document(&self, uri: &Url, text: &str) -> Result<Vec<Diagnostic>> {
+        // Попытка инкрементального анализа если документ уже есть
+        let mut make_new = false;
+        {
+            let docs = self.documents.read().await;
+            if !docs.contains_key(uri) { make_new = true; }
         }
-
-        Ok(InitializeResult {
-            capabilities: ServerCapabilities {
-                text_document_sync: Some(TextDocumentSyncCapability::Kind(
-                    TextDocumentSyncKind::FULL,
-                )),
-                completion_provider: Some(CompletionOptions {
-                    resolve_provider: Some(false),
-                    trigger_characters: Some(vec![".".to_string(), " ".to_string()]),
-                    ..Default::default()
-                }),
-                hover_provider: Some(HoverProviderCapability::Simple(true)),
-                definition_provider: Some(OneOf::Left(true)),
-                diagnostic_provider: Some(DiagnosticServerCapabilities::Options(
-                    DiagnosticOptions {
-                        identifier: Some("bsl-lsp".to_string()),
-                        inter_file_dependencies: true,
-                        workspace_diagnostics: false,
-                        ..Default::default()
-                    },
-                )),
-                // Убираем регистрацию команд - LSP сервер будет работать через стандартные LSP методы
-                // execute_command_provider убираем совсем, чтобы не было конфликтов
-                execute_command_provider: None,
-                ..Default::default()
-            },
-            server_info: Some(ServerInfo {
-                name: "Enhanced BSL Language Server v2.0".to_string(),
-                version: Some(env!("CARGO_PKG_VERSION").to_string()),
-            }),
-        })
+        if make_new {
+            // Создаём новый анализатор
+            let config = self.analysis_config.read().await.clone();
+            let index_guard = self.unified_index.read().await;
+            let analyzer_res = match &*index_guard {
+                Some(idx) => BslAnalyzer::with_index_and_config(idx.clone(), config),
+                None => BslAnalyzer::with_config(AnalysisConfig::syntax_only()),
+            };
+            let mut analyzer = match analyzer_res { Ok(a) => a, Err(e) => {
+                return Ok(vec![Diagnostic { range: Range { start: Position { line:0, character:0 }, end: Position { line:0, character:0 } }, severity: Some(DiagnosticSeverity::ERROR), code: Some(NumberOrString::String("BSL001".into())), code_description: None, source: Some("bsl-lsp".into()), message: format!("Failed to create analyzer: {}", e), related_information: None, tags: None, data: None }]); } };
+            let file_name = uri.path().split('/').next_back().unwrap_or("unknown.bsl");
+            let _ = analyzer.analyze_code(text, file_name);
+            let (errors, warnings) = analyzer.get_errors_and_warnings();
+            let diagnostics = self.convert_errors_warnings(errors, warnings);
+            // Помещаем DocumentInfo
+            let doc = DocumentInfo { uri: uri.clone(), version: 0, text: text.to_string(), diagnostics: diagnostics.clone(), analyzer };
+            self.documents.write().await.insert(uri.clone(), doc);
+            return Ok(diagnostics);
+        }
+        // Инкрементальный путь
+        let mut diagnostics = Vec::new();
+        if let Some(doc) = self.documents.write().await.get_mut(uri) {
+            // analyze_incremental
+            let file_name = uri.path().split('/').next_back().unwrap_or("unknown.bsl");
+            let _ = doc.analyzer.analyze_incremental(text, file_name);
+            let (errors, warnings) = doc.analyzer.get_errors_and_warnings();
+            diagnostics = self.convert_errors_warnings(errors, warnings);
+            doc.text = text.to_string();
+            doc.diagnostics = diagnostics.clone();
+        }
+        Ok(diagnostics)
     }
 
-    async fn initialized(&self, _params: InitializedParams) {
-        tracing::info!("Enhanced BSL LSP Server v2.0 initialized successfully");
-
-        self.client
-            .log_message(
-                MessageType::INFO,
-                "Enhanced BSL Language Server v2.0 ready with UnifiedBslIndex",
-            )
-            .await;
+    fn convert_errors_warnings(&self, errors: Vec<crate::core::errors::AnalysisError>, warnings: Vec<crate::core::errors::AnalysisError>) -> Vec<Diagnostic> {
+        let mut diagnostics = Vec::new();
+        for error in errors { diagnostics.push(Diagnostic { range: Range { start: Position { line: error.position.line.saturating_sub(1) as u32, character: error.position.column.saturating_sub(1) as u32 }, end: Position { line: error.position.line.saturating_sub(1) as u32, character: (error.position.column + 20).saturating_sub(1) as u32 } }, severity: Some(DiagnosticSeverity::ERROR), code: error.error_code.as_ref().map(|c| NumberOrString::String(c.clone())), code_description: None, source: Some("bsl-analyzer".into()), message: error.message, related_information: None, tags: None, data: None }); }
+        for warning in warnings { diagnostics.push(Diagnostic { range: Range { start: Position { line: warning.position.line.saturating_sub(1) as u32, character: warning.position.column.saturating_sub(1) as u32 }, end: Position { line: warning.position.line.saturating_sub(1) as u32, character: (warning.position.column + 20).saturating_sub(1) as u32 } }, severity: Some(DiagnosticSeverity::WARNING), code: warning.error_code.as_ref().map(|c| NumberOrString::String(c.clone())), code_description: None, source: Some("bsl-analyzer".into()), message: warning.message, related_information: None, tags: None, data: None }); }
+        diagnostics
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
@@ -739,17 +500,10 @@ impl LanguageServer for BslLanguageServer {
         {
             Ok(diagnostics) => {
                 // Сохраняем состояние документа
-                let doc_info = DocumentInfo {
-                    uri: params.text_document.uri.clone(),
-                    version: params.text_document.version,
-                    text: params.text_document.text,
-                    diagnostics: diagnostics.clone(),
-                };
-
-                self.documents
-                    .write()
-                    .await
-                    .insert(params.text_document.uri.clone(), doc_info);
+                // Документ уже добавлен внутри analyze_document при первом открытии; здесь только обновим версию
+                if let Some(doc) = self.documents.write().await.get_mut(&params.text_document.uri) {
+                    doc.version = params.text_document.version;
+                }
 
                 // Отправляем диагностику клиенту
                 self.client
@@ -777,15 +531,9 @@ impl LanguageServer for BslLanguageServer {
             {
                 Ok(diagnostics) => {
                     // Обновляем состояние документа
-                    if let Some(doc_info) = self
-                        .documents
-                        .write()
-                        .await
-                        .get_mut(&params.text_document.uri)
-                    {
+                    if let Some(doc_info) = self.documents.write().await.get_mut(&params.text_document.uri) {
                         doc_info.version = params.text_document.version;
-                        doc_info.text = change.text.clone();
-                        doc_info.diagnostics = diagnostics.clone();
+                        // text/diagnostics уже обновлены в analyze_document
                     }
 
                     // Отправляем обновленную диагностику
@@ -819,6 +567,7 @@ impl LanguageServer for BslLanguageServer {
             .await;
     }
 
+    #[allow(dead_code)]
     async fn did_change_configuration(&self, _params: DidChangeConfigurationParams) {
         // Обрабатываем изменение конфигурации
         tracing::debug!("Configuration changed, handling update...");
@@ -856,12 +605,7 @@ impl LanguageServer for BslLanguageServer {
     async fn hover(&self, params: HoverParams) -> tower_lsp::jsonrpc::Result<Option<Hover>> {
         let uri = &params.text_document_position_params.text_document.uri;
         let position = params.text_document_position_params.position;
-
-        if let Some(doc_info) = self.documents.read().await.get(uri) {
-            Ok(self.provide_enhanced_hover(position, &doc_info.text).await)
-        } else {
-            Ok(None)
-        }
+        if let Some(doc_info) = self.documents.read().await.get(uri) { Ok(self.provide_enhanced_hover(position, &doc_info.text).await) } else { Ok(None) }
     }
 
     async fn execute_command(
@@ -928,6 +672,50 @@ impl LanguageServer for BslLanguageServer {
                     }
                 }
                 Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid getMetrics arguments"))
+            }
+            "bslAnalyzer.getIncrementalMetrics" => {
+                if let Some(uri_val) = params.arguments.first() {
+                    if let Ok(uri_str) = serde_json::from_value::<String>(uri_val.clone()) {
+                        if let Ok(uri) = Url::parse(&uri_str) {
+                            if let Some(doc) = self.documents.read().await.get(&uri) {
+                                if let Some(stats) = doc.analyzer.last_incremental_stats() {
+                                    let debug_enabled = std::env::var("BSL_ANALYZER_DEBUG_METRICS").ok().as_deref() == Some("1");
+                                    let mut core = serde_json::json!({
+                                        "totalNodes": stats.total_nodes,
+                                        "changedNodes": stats.changed_nodes,
+                                        "reusedNodes": stats.reused_nodes,
+                                        "reusedSubtrees": stats.reused_subtrees,
+                                        "reuseRatio": stats.reuse_ratio,
+                                        "parseNs": stats.parse_ns,
+                                        "arenaNs": stats.arena_ns,
+                                        "fingerprintNs": stats.fingerprint_ns,
+                                        "semanticNs": stats.semantic_ns,
+                                        "totalNs": stats.total_ns,
+                                        "plannedRoutines": stats.planned_routines,
+                                        "replacedRoutines": stats.replaced_routines,
+                                        "fallbackReason": stats.fallback_reason,
+                                        "initialTouched": stats.initial_touched,
+                                        "expandedTouched": stats.expanded_touched,
+                                    });
+                                    if debug_enabled {
+                                        if let Some(obj) = core.as_object_mut() {
+                                            obj.insert("innerReusedNodes".into(), serde_json::json!(stats.inner_reused_nodes));
+                                            obj.insert("innerReuseRatio".into(), serde_json::json!(stats.inner_reuse_ratio));
+                                            obj.insert("recomputedFingerprints".into(), serde_json::json!(stats.recomputed_fingerprints));
+                                            obj.insert("semanticProcessedRoutines".into(), serde_json::json!(stats.semantic_processed_routines));
+                                            obj.insert("semanticReusedRoutines".into(), serde_json::json!(stats.semantic_reused_routines));
+                                            obj.insert("semanticSelectiveRatio".into(), serde_json::json!(stats.semantic_selective_ratio));
+                                        }
+                                    }
+                                    return Ok(Some(core));
+                                } else {
+                                    return Ok(Some(serde_json::json!({"status":"no-stats"})));
+                                }
+                            }
+                        }
+                    }
+                }
+                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid getIncrementalMetrics arguments"))
             }
             "bslAnalyzer.lsp.analyzeFile" => {
                 if let Some(uri_value) = params.arguments.first() {
@@ -1049,10 +837,34 @@ impl LanguageServer for BslLanguageServer {
         }
     }
 
+    #[allow(dead_code)]
     async fn shutdown(&self) -> tower_lsp::jsonrpc::Result<()> {
         tracing::info!("Enhanced BSL LSP Server v2.0 shutting down");
         Ok(())
     }
+}
+
+#[tower_lsp::async_trait]
+impl LanguageServer for BslLanguageServer {
+    async fn initialize(&self, params: InitializeParams) -> tower_lsp::jsonrpc::Result<InitializeResult> {
+        tracing::info!("Initializing Enhanced BSL Language Server v2.0");
+        if let Some(workspace_folders) = params.workspace_folders.as_ref() {
+            if let Some(workspace) = workspace_folders.first() {
+                tracing::info!("Workspace detected: {}", workspace.uri);
+            }
+        }
+        Ok(InitializeResult { capabilities: ServerCapabilities { text_document_sync: Some(TextDocumentSyncCapability::Kind(TextDocumentSyncKind::FULL)), completion_provider: Some(CompletionOptions { resolve_provider: Some(false), trigger_characters: Some(vec![".".into(), " ".into()]), ..Default::default() }), hover_provider: Some(HoverProviderCapability::Simple(true)), definition_provider: Some(OneOf::Left(true)), diagnostic_provider: Some(DiagnosticServerCapabilities::Options(DiagnosticOptions { identifier: Some("bsl-lsp".into()), inter_file_dependencies: true, workspace_diagnostics: false, ..Default::default() })), execute_command_provider: None, ..Default::default() }, server_info: Some(ServerInfo { name: "Enhanced BSL Language Server v2.0".into(), version: Some(env!("CARGO_PKG_VERSION").into()) }) })
+    }
+    async fn initialized(&self, _params: InitializedParams) { self.client.log_message(MessageType::INFO, "Enhanced BSL Language Server v2.0 ready").await; }
+    #[allow(dead_code)]
+    async fn shutdown(&self) -> tower_lsp::jsonrpc::Result<()> { Ok(()) }
+    async fn did_open(&self, params: DidOpenTextDocumentParams) { BslLanguageServer::did_open(self, params).await }
+    async fn did_change(&self, params: DidChangeTextDocumentParams) { BslLanguageServer::did_change(self, params).await }
+    async fn did_close(&self, params: DidCloseTextDocumentParams) { BslLanguageServer::did_close(self, params).await }
+    async fn completion(&self, params: CompletionParams) -> tower_lsp::jsonrpc::Result<Option<CompletionResponse>> { BslLanguageServer::completion(self, params).await }
+    async fn hover(&self, params: HoverParams) -> tower_lsp::jsonrpc::Result<Option<Hover>> { BslLanguageServer::hover(self, params).await }
+    async fn execute_command(&self, params: ExecuteCommandParams) -> tower_lsp::jsonrpc::Result<Option<serde_json::Value>> { BslLanguageServer::execute_command(self, params).await }
+    async fn diagnostic(&self, params: DocumentDiagnosticParams) -> tower_lsp::jsonrpc::Result<DocumentDiagnosticReportResult> { BslLanguageServer::diagnostic(self, params).await }
 }
 
 impl BslLanguageServer {

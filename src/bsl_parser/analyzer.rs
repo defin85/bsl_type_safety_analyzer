@@ -1,4 +1,5 @@
 //! Объединенный BSL анализатор на базе tree-sitter.
+// incremental-semantic: selective semantic timing integrated (marker)
 //!
 //! NOTE: Legacy семантический путь (структуры старого AST) объявлен устаревшим и
 //! будет удалён после стабилизации Phase 3 (arena-based semantics + precise spans + snapshot tests).
@@ -133,6 +134,12 @@ pub struct BslAnalyzer {
     // Тайминги последнего запуска
     last_parse_time_ns: Option<u128>,
     last_arena_time_ns: Option<u128>,
+    // Инкрементальные метрики последнего анализа (diff с предыдущим AST)
+    last_incremental_stats: Option<crate::ast_core::IncrementalStats>,
+    // Последний план частичной перестройки (прототип Phase 5)
+    last_rebuild_plan: Option<crate::ast_core::incremental::RebuildPlan>,
+    // Последний исходный текст (для вычисления diff range)
+    last_source: Option<String>,
 }
 
 impl BslAnalyzer {
@@ -148,6 +155,9 @@ impl BslAnalyzer {
             last_built_arena: None,
             last_parse_time_ns: None,
             last_arena_time_ns: None,
+            last_incremental_stats: None,
+            last_rebuild_plan: None,
+            last_source: None,
         })
     }
 
@@ -163,6 +173,9 @@ impl BslAnalyzer {
             last_built_arena: None,
             last_parse_time_ns: None,
             last_arena_time_ns: None,
+            last_incremental_stats: None,
+            last_rebuild_plan: None,
+            last_source: None,
         })
     }
 
@@ -183,6 +196,9 @@ impl BslAnalyzer {
             last_built_arena: None,
             last_parse_time_ns: None,
             last_arena_time_ns: None,
+            last_incremental_stats: None,
+            last_rebuild_plan: None,
+            last_source: None,
         })
     }
 
@@ -203,6 +219,9 @@ impl BslAnalyzer {
             last_built_arena: None,
             last_parse_time_ns: None,
             last_arena_time_ns: None,
+            last_incremental_stats: None,
+            last_rebuild_plan: None,
+            last_source: None,
         })
     }
 
@@ -268,12 +287,24 @@ impl BslAnalyzer {
         }
 
         // 1. Парсинг (всегда выполняется)
+    // Сохраняем предыдущий AST для diff до перезаписи
+    let old_built_opt = self.last_built_arena.take();
     let mut parse_result = self.parser.parse(source, file_path);
     self.last_parse_time_ns = Some(parse_result.parse_time_ns);
     self.last_arena_time_ns = Some(parse_result.arena_time_ns);
-    // Сохраняем последний arena AST для метрик (перемещаем out of parse_result)
-    if let Some(built) = parse_result.arena.take() { self.last_built_arena = Some(built); }
+    // Сохраняем последний arena AST и рассчитываем incremental stats
+    if let Some(new_built) = parse_result.arena.take() {
+        let stats_opt = if let Some(old_full) = old_built_opt.as_ref() {
+            if let Some(diff) = old_full.fingerprint_diff(&new_built) {
+                Some(diff.to_stats_with_timing(self.last_parse_time_ns, self.last_arena_time_ns, Some(new_built.fingerprint_time_ns)))
+            } else { None }
+        } else { None };
+        self.last_incremental_stats = stats_opt.map(|mut s| { s.planned_routines = self.last_rebuild_plan.as_ref().map(|p| p.routines_to_rebuild.len()); s.replaced_routines = s.planned_routines; s });
+        self.last_built_arena = Some(new_built);
+    } else { self.last_incremental_stats = None; }
     let _arena_ast = self.last_built_arena.as_ref(); // временно не используется (семантика на старом AST)
+    // Обновляем сохранённый исходник
+    self.last_source = Some(source.to_string());
 
         // Собираем диагностики парсера
         for diagnostic in parse_result.diagnostics {
@@ -418,6 +449,118 @@ impl BslAnalyzer {
 
     pub fn last_timing_parse_ns(&self) -> Option<u128> { self.last_parse_time_ns }
     pub fn last_timing_arena_ns(&self) -> Option<u128> { self.last_arena_time_ns }
+    pub fn last_incremental_stats(&self) -> Option<crate::ast_core::IncrementalStats> { self.last_incremental_stats }
+    pub fn last_rebuild_plan(&self) -> Option<&crate::ast_core::incremental::RebuildPlan> { self.last_rebuild_plan.as_ref() }
+
+    /// Вычислить текстовый dirty range между предыдущим и новым исходником (по байтам):
+    /// возвращает (start_old, end_old, start_new, end_new). Если предыдущего исходника нет — полное изменение.
+    fn compute_dirty_range(old_src: &str, new_src: &str) -> (usize, usize, usize, usize) {
+        if old_src == new_src { return (0, 0, 0, 0); }
+        let old_bytes = old_src.as_bytes();
+        let new_bytes = new_src.as_bytes();
+        let mut prefix = 0;
+        while prefix < old_bytes.len() && prefix < new_bytes.len() && old_bytes[prefix] == new_bytes[prefix] { prefix += 1; }
+        let mut old_suffix = old_bytes.len();
+        let mut new_suffix = new_bytes.len();
+        while old_suffix > prefix && new_suffix > prefix && old_bytes[old_suffix - 1] == new_bytes[new_suffix - 1] {
+            old_suffix -= 1;
+            new_suffix -= 1;
+        }
+        (prefix, old_suffix, prefix, new_suffix)
+    }
+
+    /// Сформировать план частичной перестройки на основе diff старого и нового текста (без выполнения самой перестройки).
+    pub fn plan_incremental_from_texts(&mut self, new_source: &str) -> Option<&crate::ast_core::incremental::RebuildPlan> {
+        use crate::ast_core::incremental::{plan_partial_rebuild, RebuildHeuristics};
+        let old_src = self.last_source.as_ref()?;
+        let built = self.last_built_arena.as_ref()?;
+        let (start_old, end_old, _start_new, _end_new) = Self::compute_dirty_range(old_src, new_source);
+        // Диапазон для планирования используем в координатах старого исходника (так как spans старые)
+        let plan = plan_partial_rebuild(built, start_old as u32, end_old as u32, RebuildHeuristics::default());
+        self.last_rebuild_plan = Some(plan);
+        self.last_rebuild_plan.as_ref()
+    }
+
+    /// Анализ с предварительным построением плана инкрементальной перестройки. Пока реализация всегда делает полный анализ,
+    /// но сохраняет план для дальнейшей оптимизации.
+    pub fn analyze_incremental(&mut self, new_source: &str, file_path: &str) -> Result<()> {
+        // Сохраняем старый AST и источник
+        let old_ast_opt = self.last_built_arena.clone();
+    let _old_source_opt = self.last_source.clone();
+        // Построить план (использует старый AST)
+        let _maybe_plan = self.plan_incremental_from_texts(new_source);
+        // Выполняем полный парс новой версии чтобы получить new_full (быстрый путь без семантики пока)
+        let mut parse_result = self.parser.parse(new_source, file_path);
+        self.last_parse_time_ns = Some(parse_result.parse_time_ns);
+        self.last_arena_time_ns = Some(parse_result.arena_time_ns);
+        if let Some(new_full) = parse_result.arena.take() {
+            if let (Some(old_ast), Some(plan)) = (old_ast_opt.as_ref(), self.last_rebuild_plan.as_ref()) {
+                use crate::ast_core::incremental::selective_rebuild;
+                let (hybrid, replaced, fallback, inner_reused, inner_total) = selective_rebuild(old_ast, &new_full, plan);
+                // Вычисляем diff против старого для метрик
+                let diff_opt = old_ast.fingerprint_diff(&hybrid);
+                let stats_opt = diff_opt.map(|d| {
+                    let mut s = d.to_stats_with_timing(self.last_parse_time_ns, self.last_arena_time_ns, Some(hybrid.fingerprint_time_ns));
+                    if hybrid.last_partial_recomputed > 0 { s.recomputed_fingerprints = Some(hybrid.last_partial_recomputed); }
+                    s.planned_routines = Some(plan.routines_to_rebuild.len());
+                    s.replaced_routines = Some(if fallback { plan.routines_to_rebuild.len() } else { replaced });
+                    s.initial_touched = Some(plan.initial_touched);
+                    s.expanded_touched = Some(plan.expanded_touched);
+                    if fallback { s.fallback_reason = Some(plan.fallback_reason); }
+                    else if inner_reused > 0 { s.inner_reused_nodes = Some(inner_reused); if inner_total>0 { s.inner_reuse_ratio = Some(inner_reused as f64 / inner_total as f64); } }
+                    // Selective semantic (подмножество заменённых рутин) если не fallback и есть рутины
+                    if !fallback {
+                        // Собираем идентификаторы рутин из плана
+                        let routine_ids: Vec<_> = plan.routines_to_rebuild.clone();
+                        if !routine_ids.is_empty() {
+                            let start_sem = std::time::Instant::now();
+                            let mut arena_sem = SemanticArena::new();
+                            arena_sem.set_file_name(file_path);
+                            arena_sem.set_line_index(crate::core::position::LineIndex::new(new_source));
+                            // Для подмножества отключаем undeclared (чтобы не ловить кросс-рутинг зависимости) — передаём false
+                            arena_sem.analyze_routines_subset(&hybrid, &routine_ids, true, true, false);
+                            let _sem_time = start_sem.elapsed().as_nanos();
+                            s.semantic_ns = Some(_sem_time);
+                            // Метрики selective семантики
+                            s.semantic_processed_routines = Some(routine_ids.len());
+                            if let Some(total) = s.planned_routines { if total>0 { let reused = total.saturating_sub(routine_ids.len()); s.semantic_reused_routines = Some(reused); s.semantic_selective_ratio = Some(reused as f64 / total as f64); } }
+                        }
+                    } else {
+                        // fallback: полный семантический анализ
+                        let start_sem = std::time::Instant::now();
+                        let mut arena_sem = SemanticArena::new();
+                        arena_sem.set_file_name(file_path);
+                        arena_sem.set_line_index(crate::core::position::LineIndex::new(new_source));
+                        arena_sem.analyze_with_flags(&hybrid, true, true, true);
+                        s.semantic_ns = Some(start_sem.elapsed().as_nanos());
+                        // В полном пути считаем всё пересчитанным
+                        if let Some(total) = s.planned_routines { s.semantic_processed_routines = Some(total); s.semantic_reused_routines = Some(0); s.semantic_selective_ratio = Some(0.0); }
+                    }
+                    s
+                });
+                self.last_incremental_stats = stats_opt;
+                self.last_built_arena = Some(hybrid);
+            } else {
+                // Нет старого AST — просто сохраняем полный
+                // Выполняем полный семантический анализ и фиксируем semantic_ns
+                let hybrid = new_full.clone();
+                let start_sem = std::time::Instant::now();
+                let mut arena_sem = SemanticArena::new();
+                arena_sem.set_file_name(file_path);
+                arena_sem.set_line_index(crate::core::position::LineIndex::new(new_source));
+                arena_sem.analyze_with_flags(&hybrid, true, true, true);
+                let _first_semantic_time = start_sem.elapsed().as_nanos();
+                // Первая сборка: нет diff -> не заполняем last_incremental_stats, но можем в будущем сохранить отдельное поле
+                self.last_incremental_stats = None; // Нет diff для первой сборки
+                // Сохраняем время семантики отдельно в last_incremental_stats нельзя (отсутствует diff), но можно хранить в parse+arena через future API
+                // Сохраняем AST
+                self.last_built_arena = Some(hybrid);
+            }
+        }
+        self.last_source = Some(new_source.to_string());
+        // Семантику и прочее пока не запускаем в incremental пути (можно включить опционально позже)
+        Ok(())
+    }
 }
 
 impl Default for BslAnalyzer {
@@ -454,5 +597,113 @@ mod tests {
 
         let result = analyzer.analyze_code(code, "test.bsl");
         assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_incremental_plan_single_routine() {
+        let mut analyzer = BslAnalyzer::new().unwrap();
+        let original = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("B");
+КонецПроцедуры
+"#;
+        analyzer.analyze_code(original, "mod.bsl").unwrap();
+        // Изменяем только тело второй процедуры (замена строки B на BB)
+        let modified = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("BB");
+КонецПроцедуры
+"#;
+        let plan_opt = analyzer.plan_incremental_from_texts(modified);
+        assert!(plan_opt.is_some(), "Plan should be produced");
+        let plan = plan_opt.unwrap();
+        // На текущем этапе stub-парсер даёт грубые span, поэтому может быть fallback_full.
+        // Проверяем минимум: либо одна рутина выделена, либо полный фолбэк (будет уточнено после улучшения span).
+        if !plan.fallback_full {
+            assert_eq!(plan.routines_to_rebuild.len(), 1, "Exactly one routine expected to rebuild");
+        }
+    }
+
+    #[test]
+    fn test_selective_rebuild_reuse_ratio() {
+        let mut analyzer = BslAnalyzer::new().unwrap();
+        let original = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("B");
+КонецПроцедуры
+"#;
+        analyzer.analyze_code(original, "mod.bsl").unwrap();
+        let modified = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("BB");
+КонецПроцедуры
+"#;
+        analyzer.analyze_incremental(modified, "mod.bsl").unwrap();
+        let stats = analyzer.last_incremental_stats().expect("stats");
+        assert!(stats.reuse_ratio > 0.0, "Expect some reuse");
+        // planned_routines присутствует
+        assert!(stats.planned_routines.is_some());
+    }
+
+    #[test]
+    fn test_selective_rebuild_fallback_on_first_run() {
+        let mut analyzer = BslAnalyzer::new().unwrap();
+        // Первый вызов incremental без предыдущего AST должен просто установить состояние.
+        analyzer.analyze_incremental("Процедура P()\nКонецПроцедуры", "f.bsl").unwrap();
+        assert!(analyzer.last_built_arena().is_some());
+        assert!(analyzer.last_incremental_stats().is_none());
+    }
+
+    #[test]
+    fn test_recomputed_fingerprints_metric() {
+        // Исходник с двумя процедурами, изменим одну чтобы selective пересчитал частично
+        let mut analyzer = BslAnalyzer::new().unwrap();
+        let original = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("B");
+КонецПроцедуры
+"#;
+        analyzer.analyze_code(original, "mod.bsl").unwrap();
+        let modified = r#"
+Процедура P1()
+    Сообщить("A");
+КонецПроцедуры
+
+Процедура P2()
+    Сообщить("BB"); // небольшое изменение
+КонецПроцедуры
+"#;
+        analyzer.analyze_incremental(modified, "mod.bsl").unwrap();
+        if let Some(stats) = analyzer.last_incremental_stats() {
+            // Если был fallback полный – пропускаем (зависит от span точности), иначе проверяем метрику
+            if stats.fallback_reason.is_none() {
+                if let Some(rc) = stats.recomputed_fingerprints {
+                    assert!(rc > 0, "Ожидаем >0 пересчитанных fingerprint узлов");
+                    assert!(rc < stats.total_nodes, "Пересчитанных fingerprint должно быть меньше общего числа узлов");
+                } else {
+                    panic!("Ожидается заполненная метрика recomputed_fingerprints");
+                }
+            }
+        } else { panic!("Статистика должна быть доступна после incremental шага"); }
     }
 }

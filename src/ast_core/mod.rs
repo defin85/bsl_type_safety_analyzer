@@ -66,7 +66,7 @@ impl AstNode {
 }
 
 /// Агрегатор всех узлов.
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct Arena {
     nodes: Vec<AstNode>,
 }
@@ -222,12 +222,31 @@ impl AstBuilder {
             error_messages: self.error_messages,
             call_data: self.call_data,
             fingerprints: Vec::new(),
+            dirty_fp: Vec::new(),
+            fp_generation: 0,
             fingerprint_time_ns: 0,
+            last_partial_recomputed: 0,
         };
         let start = std::time::Instant::now();
         built.recompute_fingerprints();
         built.fingerprint_time_ns = start.elapsed().as_nanos();
         built
+    }
+
+    /// Построить AST без немедленного вычисления fingerprint'ов (для частичного восстановления).
+    pub fn build_without_fingerprints(self) -> BuiltAst {
+        BuiltAst {
+            arena: self.arena,
+            root: self.root.expect("AST has no root"),
+            interner: self.interner,
+            error_messages: self.error_messages,
+            call_data: self.call_data,
+            fingerprints: Vec::new(),
+            dirty_fp: Vec::new(),
+            fp_generation: 0,
+            fingerprint_time_ns: 0,
+            last_partial_recomputed: 0,
+        }
     }
 }
 
@@ -235,7 +254,7 @@ impl Default for AstBuilder {
     fn default() -> Self { Self::new() }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BuiltAst {
     pub arena: Arena,
     pub root: NodeId,
@@ -244,8 +263,14 @@ pub struct BuiltAst {
     pub call_data: Vec<CallData>,
     /// Кэш fingerprint'ов для каждого узла (индекс = NodeId.0). Заполняется при build().
     pub fingerprints: Vec<u64>,
+    /// Маркеры грязных fingerprint'ов (true = нужно пересчитать)
+    pub dirty_fp: Vec<bool>,
+    /// Поколение инкрементального пересчёта
+    pub fp_generation: u64,
     /// Время вычисления fingerprint'ов при build (наносекунды).
     pub fingerprint_time_ns: u128,
+    /// Сколько fingerprint узлов было пересчитано в последнем partial проходе
+    pub last_partial_recomputed: usize,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -262,6 +287,59 @@ impl BuiltAst {
     /// Полное пересчитывание fingerprint'ов (использовать при отладке / после мутаций).
     pub fn recompute_fingerprints(&mut self) {
         self.fingerprints = compute_fingerprints_internal(self);
+    self.dirty_fp = vec![false; self.fingerprints.len()];
+    }
+    /// Частичное восстановление fingerprint'ов: копированные поддеревья уже имеют fingerprint;
+    /// узлы с нулевым значением будут вычислены (пост-ордер), существующие значения не пересчитываются.
+    pub fn recompute_fingerprints_partial(&mut self) {
+        if self.fingerprints.is_empty() { self.fingerprints = vec![0; self.arena.len()]; }
+    if self.dirty_fp.len() != self.arena.len() { self.dirty_fp = vec![true; self.arena.len()]; }
+        let start = std::time::Instant::now();
+    let mut recomputed = 0usize;
+        if !self.arena.is_empty() {
+            // Собираем стек для итеративного пост-ордера
+            let root = self.root;
+            // Post-order двухстековый подход
+            let mut stack = vec![root];
+            let mut order: Vec<NodeId> = Vec::new();
+            while let Some(id) = stack.pop() {
+                order.push(id);
+                let mut c = self.arena.node(id).first_child;
+                while let Some(ch) = c { stack.push(ch); c = self.arena.node(ch).next_sibling; }
+            }
+            // Теперь вычисляем в обратном порядке (дети раньше родителей)
+            for id in order.into_iter().rev() {
+                if self.fingerprints[id.0 as usize] != 0 && !self.dirty_fp[id.0 as usize] { continue; }
+                // Вычислить fingerprint
+                let node = self.arena.node(id);
+                let mut h: u64 = 0xcbf29ce484222325;
+                fn fnv64(acc: u64, byte: u64) -> u64 { let mut h = acc; h ^= byte.wrapping_mul(0x100000001b3); h = h.wrapping_mul(0x100000001b3); h }
+                h = fnv64(h, node.kind as u64);
+                h = fnv64(h, node.span.start as u64);
+                h = fnv64(h, node.span.len as u64);
+                match node.payload {
+                    AstPayload::Ident { sym } => { h = fnv64(h, 1); h = fnv64(h, sym.0 as u64); },
+                    AstPayload::Literal { sym } => { h = fnv64(h, 2); h = fnv64(h, sym.0 as u64); },
+                    AstPayload::Error { msg } => { h = fnv64(h, 3); h = fnv64(h, msg as u64); },
+                    AstPayload::Call { data } => { if let Some(cd) = self.call_data.get(data as usize) { h = fnv64(h, 4); h = fnv64(h, cd.arg_count as u64); h = fnv64(h, cd.is_method as u64); } },
+                    AstPayload::None => { h = fnv64(h, 0); },
+                }
+                let mut c = node.first_child;
+                while let Some(ch) = c { let cf = self.fingerprints[ch.0 as usize]; h = fnv64(h, cf); c = self.arena.node(ch).next_sibling; }
+        self.fingerprints[id.0 as usize] = h;
+        self.dirty_fp[id.0 as usize] = false;
+        recomputed += 1;
+            }
+        }
+        self.fingerprint_time_ns = start.elapsed().as_nanos();
+    self.last_partial_recomputed = recomputed;
+    }
+    /// Пометить узел и предков грязными.
+    pub fn mark_dirty_upwards(&mut self, id: NodeId) {
+        if self.dirty_fp.len() != self.arena.len() { self.dirty_fp = vec![false; self.arena.len()]; }
+        let parents = self.build_parent_map();
+        let mut cur = Some(id);
+        while let Some(n) = cur { self.dirty_fp[n.0 as usize] = true; cur = parents[n.0 as usize]; }
     }
     /// Получить текст идентификатора по NodeId (если это Identifier/Param/Function/Procedure с payload Ident).
     pub fn node_ident_text(&self, id: NodeId) -> Option<&str> {
@@ -444,7 +522,19 @@ impl FingerprintDiff {
             parse_ns,
             arena_ns,
             fingerprint_ns,
+            semantic_ns: None,
             total_ns,
+            planned_routines: None,
+            replaced_routines: None,
+            fallback_reason: None,
+            initial_touched: None,
+            expanded_touched: None,
+            inner_reused_nodes: None,
+            inner_reuse_ratio: None,
+            recomputed_fingerprints: None,
+            semantic_processed_routines: None,
+            semantic_reused_routines: None,
+            semantic_selective_ratio: None,
         }
     }
 }
@@ -460,7 +550,31 @@ pub struct IncrementalStats {
     pub parse_ns: Option<u128>,
     pub arena_ns: Option<u128>,
     pub fingerprint_ns: Option<u128>,
+    /// Время семантического анализа (selective или полного) в наносекундах
+    pub semantic_ns: Option<u128>,
     pub total_ns: Option<u128>,
+    /// Плановое количество рутин к перестройке (если применялся RebuildPlan)
+    pub planned_routines: Option<usize>,
+    /// Фактически заменённые рутины (пока = planned_routines в прототипе)
+    pub replaced_routines: Option<usize>,
+    /// Причина fallback (module|heur_fraction|heur_absolute|exp_fraction|exp_absolute)
+    pub fallback_reason: Option<&'static str>,
+    /// Кол-во рутин затронутых до расширения зависимостями
+    pub initial_touched: Option<usize>,
+    /// Кол-во рутин после расширения зависимостей
+    pub expanded_touched: Option<usize>,
+    /// Дополнительно переиспользовано внутренних узлов внутри заменённых рутин (глубокое переиспользование)
+    pub inner_reused_nodes: Option<usize>,
+    /// Процент внутренних узлов заменённых рутин, переиспользованных после расширенного анализа
+    pub inner_reuse_ratio: Option<f64>,
+    /// Число пересчитанных fingerprint узлов в частичном цикле
+    pub recomputed_fingerprints: Option<usize>,
+    /// Сколько рутин было реально пересемантизировано (при selective)
+    pub semantic_processed_routines: Option<usize>,
+    /// Сколько рутин семантики удалось переиспользовать без пересчёта
+    pub semantic_reused_routines: Option<usize>,
+    /// Доля переиспользованных (reused/total)
+    pub semantic_selective_ratio: Option<f64>,
 }
 
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
@@ -576,6 +690,7 @@ pub fn walk<V: Visitor>(arena: &Arena, root: NodeId, visitor: &mut V) -> bool {
 }
 
 pub mod interner;
+pub mod incremental;
 
 #[cfg(test)]
 mod tests {

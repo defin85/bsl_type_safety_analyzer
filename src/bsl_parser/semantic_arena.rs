@@ -52,6 +52,34 @@ impl SemanticArena {
             if self.check_uninitialized && !vi.initialized && vi.used && !vi.is_param { self.diagnostics.push(uninitialized_var_diag(&vi.name, self.make_location(&ast.arena, vi.declared))); }
         }
     }
+    /// Выборочный анализ только указанных рутин (Procedure/Function). Используется для инкрементального пути.
+    /// Ограничения: глобальные (модульные) объявления вне выбранных рутин не сканируются, чтобы избежать ложных
+    /// срабатываний по неинициализированным переменным. Проверку необъявленных можно опционально отключить.
+    pub fn analyze_routines_subset(&mut self, ast: &BuiltAst, routines: &[NodeId], check_unused: bool, check_uninitialized: bool, check_undeclared: bool) {
+        self.diagnostics.clear();
+        self.vars.clear();
+        self.expr_types.clear();
+        self.check_unused = check_unused;
+        self.check_uninitialized = check_uninitialized;
+        self.check_undeclared = check_undeclared;
+        self.scopes.clear();
+        if self.method_catalog.is_empty() { self.bootstrap_catalogs(); }
+        self.interner = Some(ast.interner.clone());
+        // Глобальная область модуля (для будущих расширений с модульными переменными)
+        self.push_scope();
+        let mut v = Collector { sem: self };
+        for &rid in routines {
+            // Защита по виду узла
+            let kind = ast.arena.node(rid).kind;
+            if !matches!(kind, AstKind::Procedure | AstKind::Function) { continue; }
+            super::super::ast_core::walk(&ast.arena, rid, &mut v);
+        }
+        // Финализация диагностики переменных
+        for vi in self.vars.values() {
+            if self.check_unused && !vi.used { self.diagnostics.push(unused_var_diag(&vi.name, self.make_location(&ast.arena, vi.declared))); }
+            if self.check_uninitialized && !vi.initialized && vi.used && !vi.is_param { self.diagnostics.push(uninitialized_var_diag(&vi.name, self.make_location(&ast.arena, vi.declared))); }
+        }
+    }
     pub fn diagnostics(&self) -> &[Diagnostic] { &self.diagnostics }
     pub fn enable_method_resolution(&mut self) { self.check_methods = true; }
     pub fn set_file_name(&mut self, name: impl Into<String>) { self.file_name = name.into(); }

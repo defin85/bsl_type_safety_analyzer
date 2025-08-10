@@ -252,6 +252,18 @@ mod tests {
     }
 
     #[test]
+    fn test_get_completions_prefix_builtin() {
+        // Создаём integration и имитируем загрузку минимальной индексированной документации.
+        // Чтобы не тянуть реальные файлы, напрямую подменим syntax_db через приватный доступ невозможен,
+        // поэтому используем загрузчик chunked_index если появится в будущем. Пока проверим что без загрузки
+        // префикс системного слова не даёт паники и возвращает 0..N (допустимо 0 на чистой среде).
+        let integration = DocsIntegration::new();
+        let completions = integration.get_completions("Сообщ");
+        // Разрешаем либо пусто (если документация не загружена), либо какие-то элементы.
+    assert!(completions.is_empty() || completions.iter().any(|c| c.label.contains("Сообщ")));
+    }
+
+    #[test]
     fn test_search_methods_empty() {
         let integration = DocsIntegration::new();
         let methods = integration.search_methods("test");

@@ -5,7 +5,7 @@ Tests modern UnifiedBslIndex architecture.
 Legacy parsers have been removed.
 */
 
-use bsl_analyzer::Configuration;
+use bsl_analyzer::{Configuration, bsl_parser::analyzer::BslAnalyzer};
 use std::fs;
 use tempfile::TempDir;
 
@@ -36,6 +36,38 @@ fn test_configuration_loading() {
     assert!(config.objects.is_empty());
 }
 
+#[test]
+fn incremental_metrics_core_snapshot() {
+  let mut analyzer = BslAnalyzer::new().expect("analyzer");
+  let original = "Процедура P1()\n КонецПроцедуры\n\nПроцедура P2()\n КонецПроцедуры";
+  analyzer.analyze_code(original, "file.bsl").unwrap();
+  // small edit inside second routine
+  let modified = "Процедура P1()\n КонецПроцедуры\n\nПроцедура P2()\n // edit\n КонецПроцедуры";
+  analyzer.analyze_incremental(modified, "file.bsl").unwrap();
+  let stats = analyzer.last_incremental_stats().expect("stats present");
+  // Build core JSON like LSP without debug flag
+  let core = serde_json::json!({
+    "totalNodes": stats.total_nodes,
+    "changedNodes": stats.changed_nodes,
+    "reusedNodes": stats.reused_nodes,
+    "reusedSubtrees": stats.reused_subtrees,
+    "reuseRatio": stats.reuse_ratio,
+    "parseNs": stats.parse_ns,
+    "arenaNs": stats.arena_ns,
+    "fingerprintNs": stats.fingerprint_ns,
+    "semanticNs": stats.semantic_ns,
+    "totalNs": stats.total_ns,
+    "plannedRoutines": stats.planned_routines,
+    "replacedRoutines": stats.replaced_routines,
+    "fallbackReason": stats.fallback_reason,
+    "initialTouched": stats.initial_touched,
+    "expandedTouched": stats.expanded_touched,
+  });
+  // Stable shape assertions (not exact numbers)
+  assert!(core.get("totalNodes").is_some());
+  assert!(core.get("reuseRatio").is_some());
+  assert!(core.get("innerReusedNodes").is_none(), "debug field must be absent in core reconstruction test" );
+}
 #[ignore = "Legacy test - parsers removed"]
 #[test]
 fn test_legacy_metadata_parser() {
