@@ -2,3 +2,4 @@
 {"timestamp":"2025-08-06T21:56:49.382Z","command":"npm run dev","error":"Command failed: npm run dev"}
 {"timestamp":"2025-08-06T22:53:40.565Z","command":"npm run dev","error":"Command failed: npm run dev"}
 {"timestamp":"2025-08-09T20:05:31.160Z","command":"npm run dev","error":"Command failed: npm run dev"}
+{"timestamp":"2025-08-10T18:45:43.629Z","command":"git commit -m \"новый LSP\"","error":"Command failed: git commit -m \"новый LSP\""}
