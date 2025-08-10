@@ -1,0 +1,38 @@
+[
+  {
+    "severity": "error",
+    "location": {
+      "file": "duplicate_params.bsl",
+      "line": 0,
+      "column": 0,
+      "offset": 0,
+      "length": 3
+    },
+    "code": "BSL010",
+    "message": "Дублированное объявление: А",
+    "details": {
+      "found": null,
+      "expected": null,
+      "info": null,
+      "suggestion": null
+    }
+  },
+  {
+    "severity": "warning",
+    "location": {
+      "file": "duplicate_params.bsl",
+      "line": 0,
+      "column": 0,
+      "offset": 0,
+      "length": 2
+    },
+    "code": "BSL008",
+    "message": "Переменная не используется: А",
+    "details": {
+      "found": null,
+      "expected": null,
+      "info": null,
+      "suggestion": null
+    }
+  }
+]

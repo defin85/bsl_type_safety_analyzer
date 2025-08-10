@@ -377,7 +377,26 @@ impl BslLanguageServer {
         // Получаем контекст для анализа
         let lines: Vec<&str> = text.lines().collect();
         let line = lines.get(position.line as usize).unwrap_or(&"");
-        let line_prefix = &line[..position.character.min(line.len() as u32) as usize];
+        
+        // Правильная конвертация позиции из UTF-16 code units в байтовый индекс
+        let char_pos = position.character as usize;
+        let mut byte_pos = 0;
+        let mut utf16_pos = 0;
+        
+        for ch in line.chars() {
+            if utf16_pos >= char_pos {
+                break;
+            }
+            byte_pos += ch.len_utf8();
+            utf16_pos += ch.len_utf16();
+        }
+        
+        // Безопасное получение префикса строки
+        let line_prefix = if byte_pos <= line.len() {
+            &line[..byte_pos]
+        } else {
+            line
+        };
 
         let index_guard = self.unified_index.read().await;
         if let Some(index) = &*index_guard {
@@ -430,6 +449,71 @@ impl BslLanguageServer {
                             ..Default::default()
                         };
                         completions.push(completion);
+                    }
+                }
+            }
+
+            // Автодополнение платформенных типов (конструкторы)
+            // Извлекаем последнее слово из строки для фильтрации
+            let last_word = line_prefix
+                .split_whitespace()
+                .last()
+                .unwrap_or("")
+                .trim_start_matches('=')
+                .trim();
+            
+            if !last_word.is_empty() || line_prefix.ends_with(' ') || line_prefix.ends_with('=') {
+                let entities = index.get_all_entities();
+                for entity in entities.iter() {
+                    // Показываем только платформенные типы с конструкторами
+                    if format!("{:?}", entity.entity_type).contains("Platform") {
+                        // Проверяем, является ли это типом с конструктором
+                        let constructable_types = [
+                            "ТаблицаЗначений", "ValueTable",
+                            "Массив", "Array",
+                            "Структура", "Structure",
+                            "Соответствие", "Map",
+                            "СписокЗначений", "ValueList",
+                            "ДеревоЗначений", "ValueTree",
+                            "ТабличныйДокумент", "SpreadsheetDocument",
+                            "ХранилищеЗначения", "ValueStorage",
+                            "УникальныйИдентификатор", "UUID",
+                            "ЧтениеXML", "XMLReader",
+                            "ЗаписьXML", "XMLWriter",
+                            "ЧтениеJSON", "JSONReader",
+                            "ЗаписьJSON", "JSONWriter",
+                            "ЧтениеТекста", "TextReader",
+                            "ЗаписьТекста", "TextWriter",
+                            "ЧтениеДанных", "DataReader",
+                            "ЗаписьДанных", "DataWriter",
+                        ];
+                        
+                        let entity_name = &entity.display_name;
+                        let is_constructable = constructable_types.iter().any(|&ct| {
+                            entity_name.contains(ct)
+                        });
+                        
+                        if is_constructable {
+                            // Фильтруем по введенному префиксу
+                            if last_word.is_empty() 
+                                || entity_name.to_lowercase().starts_with(&last_word.to_lowercase()) {
+                                
+                                let completion = CompletionItem {
+                                    label: entity_name.clone(),
+                                    kind: Some(CompletionItemKind::CLASS),
+                                    detail: Some("Платформенный тип (конструктор)".to_string()),
+                                    documentation: entity.documentation.as_ref().map(|d| {
+                                        Documentation::String(format!(
+                                            "{}\n\nИспользование: Новый {}()",
+                                            d, entity_name
+                                        ))
+                                    }),
+                                    insert_text: Some(format!("Новый {}()", entity_name)),
+                                    ..Default::default()
+                                };
+                                completions.push(completion);
+                            }
+                        }
                     }
                 }
             }
@@ -488,9 +572,21 @@ impl BslLanguageServer {
         let lines: Vec<&str> = text.lines().collect();
         let line = lines.get(position.line as usize)?;
 
+        // Правильная конвертация позиции из UTF-16 code units в индекс символов
+        let utf16_pos = position.character as usize;
+        let mut char_index = 0;
+        let mut current_utf16_pos = 0;
+        
+        for ch in line.chars() {
+            if current_utf16_pos >= utf16_pos {
+                break;
+            }
+            current_utf16_pos += ch.len_utf16();
+            char_index += 1;
+        }
+        
         // Извлекаем слово под курсором
-        let char_pos = position.character as usize;
-        let word = self.extract_word_at_position(line, char_pos);
+        let word = self.extract_word_at_position(line, char_index);
 
         if word.is_empty() {
             return None;

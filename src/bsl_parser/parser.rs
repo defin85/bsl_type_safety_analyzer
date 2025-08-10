@@ -1,7 +1,8 @@
 //! BSL Parser на базе tree-sitter
 
 use super::tree_sitter_adapter::TreeSitterAdapter;
-use crate::bsl_parser::{ast::*, diagnostics::*, Location};
+use crate::bsl_parser::{ast::*, diagnostics::*, Location, ArenaConverter};
+use crate::ast_core::BuiltAst;
 use anyhow::Result;
 
 /// Результат парсинга
@@ -9,6 +10,7 @@ use anyhow::Result;
 pub struct ParseResult {
     pub ast: Option<BslAst>,
     pub diagnostics: Vec<Diagnostic>,
+    pub arena: Option<BuiltAst>,
 }
 
 /// BSL Parser
@@ -30,9 +32,9 @@ impl BslParser {
         let mut diagnostics = Vec::new();
 
         // Парсинг через tree-sitter
-        let ast = self.parse_with_tree_sitter(source, file_path, &mut diagnostics);
-
-        ParseResult { ast, diagnostics }
+    let ast = self.parse_with_tree_sitter(source, file_path, &mut diagnostics);
+    let arena = ast.as_ref().map(|a| ArenaConverter::build_module(&a.module));
+    ParseResult { ast, diagnostics, arena }
     }
 
     /// Парсит код с использованием tree-sitter

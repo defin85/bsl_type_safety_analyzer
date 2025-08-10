@@ -5,8 +5,10 @@
 //! информации о вызовах методов.
 
 pub mod analyzer;
-pub mod ast;
-pub mod ast_bridge;
+pub mod ast; // TODO: удалить после миграции semantic на Arena
+pub mod cst_to_arena; // временный конвертер BslAst -> Arena
+pub mod semantic_arena; // экспериментальная семантика поверх Arena
+pub mod simple_types; // простая система типов для arena семантики
 pub mod data_flow;
 pub mod diagnostics;
 pub mod keywords;
@@ -15,8 +17,8 @@ pub mod semantic;
 pub mod tree_sitter_adapter;
 
 pub use analyzer::{AnalysisConfig, AnalysisLevel, BslAnalyzer};
-pub use ast::{BslAst, FunctionCall, MethodCall, PropertyAccess};
-pub use ast_bridge::AstBridge;
+pub use ast::{BslAst, FunctionCall, MethodCall, PropertyAccess}; // временно
+pub use cst_to_arena::ArenaConverter;
 pub use data_flow::{DataFlowAnalyzer, VariableState};
 pub use diagnostics::{Diagnostic, DiagnosticSeverity, Location};
 pub use parser::{BslParser, ParseResult};

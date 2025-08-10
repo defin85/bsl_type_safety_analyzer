@@ -93,6 +93,7 @@ println!("{}", result);
 // pub mod analyzer; // Удален - заменен на bsl_parser
 pub mod bsl_parser; // NEW: Tree-sitter based BSL parser
 pub mod cache;
+pub mod ast_core; // experimental new AST core (not yet integrated)
 pub mod cli_common;
 pub mod configuration;
 pub mod core;

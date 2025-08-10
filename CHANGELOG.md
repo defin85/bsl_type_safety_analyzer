@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### 🔥 Removed
+### � Deprecated
+- Legacy semantic analyzer path (pre-arena) marked for removal in next minor release; migrate to arena-based `SemanticArena` API.
+
+### ✨ Added
+- Arena semantic: precise spans for New/Binary/Unary, operator token spans normalized.
+- Prototype expression type side-table (`expr_types`) enabling future incremental & interning phases.
+- Snapshot diagnostics harness and parity tests broadened (control-flow, duplicates).
+
+### 🛠 Changed
+- `SemanticArena` now primary; legacy semantic code frozen (no further feature backports).
+
+### 📦 Internal
+- Docs: Updated `AST_REDESIGN_SUMMARY.md` to reflect Phase 3 completion criteria and next steps for Phase 4 (interning & symbol table).
+
+### �🔥 Removed
 - Legacy `parser` module (`src/parser`) fully deleted (legacy lexer/AST/grammar). The modern tree-sitter based implementation in `bsl_parser` is now the only parser.
 - Public re-export of `BslLexer` (legacy shim) removed.
 

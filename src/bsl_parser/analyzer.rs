@@ -1,6 +1,13 @@
-//! Объединенный BSL анализатор на базе tree-sitter
+//! Объединенный BSL анализатор на базе tree-sitter.
+//!
+//! NOTE: Legacy семантический путь (структуры старого AST) объявлен устаревшим и
+//! будет удалён после стабилизации Phase 3 (arena-based semantics + precise spans + snapshot tests).
+//! Новый движок: `semantic_arena::SemanticArena` (NodeId/Arena). Все новые правила и улучшения
+//! должны добавляться только туда. В этом модуле сохранены только внешние интерфейсы
+//! для обратной совместимости API.
 
 use super::{BslParser, DataFlowAnalyzer, Diagnostic, SemanticAnalysisConfig, SemanticAnalyzer};
+use super::semantic_arena::SemanticArena; // new arena-based semantic (experimental)
 use crate::core::errors::{AnalysisError, ErrorCollector};
 // Legacy AstNode no longer used; keep method signature for backward compatibility behind empty type.
 // Remove direct import of legacy AST.
@@ -225,7 +232,8 @@ impl BslAnalyzer {
         }
 
         // 1. Парсинг (всегда выполняется)
-        let parse_result = self.parser.parse(source, file_path);
+    let parse_result = self.parser.parse(source, file_path);
+    let _arena_ast = parse_result.arena.as_ref(); // временно не используется (семантика на старом AST)
 
         // Собираем диагностики парсера
         for diagnostic in parse_result.diagnostics {
@@ -238,7 +246,7 @@ impl BslAnalyzer {
         }
 
         // 2. Семантический анализ (если включен)
-        if self.config.level.includes_semantic() {
+    if self.config.level.includes_semantic() {
             if let Some(ast) = parse_result.ast {
                 self.semantic_analyzer.analyze(&ast)?;
                 let diagnostics = self.semantic_analyzer.get_diagnostics().to_vec();
@@ -262,6 +270,26 @@ impl BslAnalyzer {
                         {
                             return Ok(());
                         }
+                    }
+                }
+            }
+            // Experimental arena-based semantic (currently only unused vars) when enabled
+            if let Some(built) = &parse_result.arena {
+                // Arena semantic supports: unused, uninitialized, undeclared
+                if self.config.check_unused_variables || self.config.check_uninitialized {
+                    let mut arena_sem = SemanticArena::new();
+                    // Передаем корректное имя файла и line index для точных позиций
+                    arena_sem.set_file_name(file_path);
+                    arena_sem.set_line_index(crate::core::position::LineIndex::new(source));
+                    arena_sem.analyze_with_flags(
+                        built,
+                        self.config.check_unused_variables,
+                        self.config.check_uninitialized,
+                        true, // всегда сообщаем об необъявленных пока
+                    );
+                    for d in arena_sem.diagnostics() {
+                        self.add_diagnostic_as_error(d);
+                        if self.config.max_errors > 0 && self.error_collector.get_errors().len() >= self.config.max_errors { return Ok(()); }
                     }
                 }
             }

@@ -127,6 +127,8 @@ pub mod codes {
     pub const UNINITIALIZED_VARIABLE: &str = "BSL009";
     /// Дублированный параметр
     pub const DUPLICATE_PARAMETER: &str = "BSL010";
+    /// Дублированная переменная
+    pub const DUPLICATE_VARIABLE: &str = "BSL011";
 }
 
 #[cfg(test)]

@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "warning",
+    "location": {
+      "file": "if_full_init.bsl",
+      "line": 0,
+      "column": 0,
+      "offset": 0,
+      "length": 4
+    },
+    "code": "BSL008",
+    "message": "Переменная не используется: ем",
+    "details": {
+      "found": null,
+      "expected": null,
+      "info": null,
+      "suggestion": null
+    }
+  }
+]
