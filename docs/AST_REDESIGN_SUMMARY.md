@@ -78,16 +78,18 @@
 
 ### Phase 4: Interning & Payload Split
 Статус:
-- String interner: ЗАВЕРШЕНО — `AstPayload::Ident` / `Literal` теперь содержат только `sym: SymbolId` (дублированный текст удалён). Хелперы `BuiltAst::node_ident_text` / `node_literal_text` предоставляют доступ к строкам через интернер.
-- Метрики интернера интегрированы end-to-end (`interner.symbol_count`, `interner.total_bytes`) и доступны через LSP команду `bslAnalyzer.getMetrics`.
+- String interner: ЗАВЕРШЕНО — `AstPayload::Ident` / `Literal` только `sym: SymbolId`; доступ к строкам через `BuiltAst` хелперы.
+- Метрики интернера (`interner.symbol_count`, `interner.total_bytes`) и расширенные call/routine метрики (`functions`, `callsTotal`, `callsMethod`, `callsFunction`, `callsAvgArgs`, `callsMaxArgs`) доступны через LSP `bslAnalyzer.getMetrics`.
 - Хранение последнего `BuiltAst` в `BslAnalyzer` для метрик реализовано.
+- Payload Split ШАГ 1: Error сообщения вынесены из `AstPayload` в отдельный вектор (`Error { msg: u32 }`).
+- Payload Split ШАГ 2: Добавлен `CallData { arg_count, is_method }` во внешний вектор; `AstPayload::Call { data: u32 }` содержит индекс, билдера расширен (`start_call/finish_call`).
 
 Осталось в Phase 4:
-1. Payload Split: вынести «тяжёлые» payload (Call аргументы, сложные литералы / структуры) в сегрегированные вектора (`CallData`, `LiteralData` и др.) и в `AstPayload` держать компактные индексы.
-2. Обновить билдера и обходы под split (временные accessor-методы).
-3. Дополнительные метрики экономии памяти: `ast.payload_bytes_saved`, `ast.call_data_count` (опционально).
-4. Snapshot/parity адаптация под новый формат после split.
-5. Документация публичного API для доступа к вынесенным структурам.
+1. (Опционально) Split для будущих «тяжёлых» структур (например, LiteralData для числовых/дата литералов с нормализованными значениями) — пока отложено до появления доп. данных.
+2. Добавить метрики памяти/экономии: `ast.call_data_count`, потенциально `ast.error_msg_count` и вычисление байтов экономии (baseline size vs split).
+3. Обновить Snapshot/parity если появятся новые опции отображения payload (пока формат диагностик не изменился — не требуется).
+4. Документация публичного API доступа к вынесенным таблицам (Error messages, CallData) — отдельный doc раздел.
+5. (После измерений) Решение о дальнейшей сегрегации (BinaryOpData, MemberData) при появлении дополнительных полей.
 
 ### Phase 5: Fingerprints & Incremental
 - Fingerprint pass (DFS) + корневой hash.
