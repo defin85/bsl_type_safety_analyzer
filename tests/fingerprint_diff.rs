@@ -67,3 +67,13 @@ fn fingerprint_time_recorded() {
     let a = build_simple_proc("T");
     assert!(a.fingerprint_time_ns > 0, "fingerprint_time_ns should be >0");
 }
+
+#[test]
+fn fingerprint_diff_stats_with_timing() {
+    let a = build_simple_proc("X");
+    let b = build_simple_proc("Y");
+    let diff = a.fingerprint_diff(&b).unwrap();
+    let stats = diff.to_stats_with_timing(Some(10), Some(20), Some(30));
+    assert_eq!(stats.total_ns, Some(60));
+    assert_eq!(stats.parse_ns, Some(10));
+}

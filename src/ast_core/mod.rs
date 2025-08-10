@@ -427,19 +427,24 @@ pub struct FingerprintDiff {
 }
 
 impl FingerprintDiff {
-    pub fn to_stats(&self) -> IncrementalStats {
+    pub fn to_stats(&self) -> IncrementalStats { self.to_stats_with_timing(None, None, None) }
+    pub fn to_stats_with_timing(&self, parse_ns: Option<u128>, arena_ns: Option<u128>, fingerprint_ns: Option<u128>) -> IncrementalStats {
         let changed_nodes = self.changed.len();
         let reuse_ratio = if self.total_nodes > 0 { self.reused_nodes as f64 / self.total_nodes as f64 } else { 0.0 };
+        let total_ns = match (parse_ns, arena_ns, fingerprint_ns) {
+            (Some(p), Some(a), Some(f)) => Some(p + a + f),
+            _ => None,
+        };
         IncrementalStats {
             total_nodes: self.total_nodes,
             changed_nodes,
             reused_nodes: self.reused_nodes,
             reused_subtrees: self.reused_subtrees,
             reuse_ratio,
-            parse_ns: None,
-            arena_ns: None,
-            fingerprint_ns: None,
-            total_ns: None,
+            parse_ns,
+            arena_ns,
+            fingerprint_ns,
+            total_ns,
         }
     }
 }
