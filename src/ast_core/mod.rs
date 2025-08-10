@@ -43,7 +43,8 @@ pub enum AstPayload {
     Ident { sym: SymbolId },
     /// Литерал (только интернированный символ).
     Literal { sym: SymbolId },
-    Error(String),
+    /// Ошибка хранит индекс сообщения в отдельной таблице (payload split step 1).
+    Error { msg: u32 },
 }
 
 /// Узел в аренe. Дети связаны через first_child / next_sibling (sibling chain).
@@ -88,10 +89,11 @@ pub struct AstBuilder {
     stack: Vec<NodeId>,
     root: Option<NodeId>,
     interner: StringInterner,
+    error_messages: Vec<String>,
 }
 
 impl AstBuilder {
-    pub fn new() -> Self { Self { arena: Arena::new(), stack: Vec::new(), root: None, interner: StringInterner::new() } }
+    pub fn new() -> Self { Self { arena: Arena::new(), stack: Vec::new(), root: None, interner: StringInterner::new(), error_messages: Vec::new() } }
 
     pub fn start_node(&mut self, kind: AstKind, span: PackedSpan) {
         let id = self.arena.alloc(AstNode::new(kind, span, AstPayload::None));
@@ -155,7 +157,10 @@ impl AstBuilder {
 
     /// Создать Error-узел (leaf) с сообщением.
     pub fn error(&mut self, span: PackedSpan, message: impl Into<String>) -> NodeId {
-        self.leaf(AstKind::Error, span, AstPayload::Error(message.into()))
+        let msg = message.into();
+        let idx = self.error_messages.len();
+        self.error_messages.push(msg);
+        self.leaf(AstKind::Error, span, AstPayload::Error { msg: idx as u32 })
     }
 
     fn attach(&mut self, id: NodeId) {
@@ -176,7 +181,7 @@ impl AstBuilder {
         }
     }
 
-    pub fn build(self) -> BuiltAst { BuiltAst { arena: self.arena, root: self.root.expect("AST has no root"), interner: self.interner } }
+    pub fn build(self) -> BuiltAst { BuiltAst { arena: self.arena, root: self.root.expect("AST has no root"), interner: self.interner, error_messages: self.error_messages } }
 }
 
 impl Default for AstBuilder {
@@ -188,6 +193,7 @@ pub struct BuiltAst {
     pub arena: Arena,
     pub root: NodeId,
     pub interner: StringInterner,
+    pub error_messages: Vec<String>,
 }
 
 impl BuiltAst {
@@ -205,6 +211,11 @@ impl BuiltAst {
     pub fn node_literal_text(&self, id: NodeId) -> Option<&str> {
         let node = self.arena.node(id);
         match node.payload { AstPayload::Literal { sym } => Some(self.resolve_symbol(sym)), _ => None }
+    }
+    /// Получить сообщение об ошибке для Error узла.
+    pub fn node_error_message(&self, id: NodeId) -> Option<&str> {
+        let node = self.arena.node(id);
+        match node.payload { AstPayload::Error { msg } => self.error_messages.get(msg as usize).map(|s| s.as_str()), _ => None }
     }
 }
 
@@ -257,7 +268,6 @@ impl AstNode {
     pub fn literal_text<'a>(&self, interner: &'a StringInterner) -> Option<&'a str> { match &self.payload { AstPayload::Literal { sym } => Some(interner.resolve(*sym)), _ => None } }
     pub fn ident_symbol(&self) -> Option<SymbolId> { match &self.payload { AstPayload::Ident { sym, .. } => Some(*sym), _ => None } }
     pub fn literal_symbol(&self) -> Option<SymbolId> { match &self.payload { AstPayload::Literal { sym, .. } => Some(*sym), _ => None } }
-    pub fn error_message(&self) -> Option<&str> { match &self.payload { AstPayload::Error(s) => Some(s.as_str()), _ => None } }
 }
 
 /// Контроль обхода.
@@ -338,7 +348,7 @@ mod tests {
         let ast = b.build();
         // Найти error узел
         let mut has_error = false;
-    for (id, node) in ast.arena.iter() { if matches!(node.payload, AstPayload::Error(_)) { has_error = true; assert_eq!(node.kind, AstKind::Error); assert_eq!(node.span.len, 0); assert!(matches!(ast.arena.node(id).payload, AstPayload::Error(_))); } }
+    for (id, node) in ast.arena.iter() { if matches!(node.payload, AstPayload::Error { .. }) { has_error = true; assert_eq!(node.kind, AstKind::Error); assert_eq!(node.span.len, 0); assert!(matches!(ast.arena.node(id).payload, AstPayload::Error { .. })); } }
         assert!(has_error, "Error node not found");
         let mut v = CountingVisitor { enter_seq: Vec::new(), leaves: 0, stop_after: 10 };
         let completed = walk(&ast.arena, ast.root, &mut v);
