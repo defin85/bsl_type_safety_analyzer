@@ -61,3 +61,9 @@ fn fingerprint_diff_stats_conversion() {
     assert_eq!(stats.changed_nodes, 0);
     assert!(stats.reuse_ratio > 0.0);
 }
+
+#[test]
+fn fingerprint_time_recorded() {
+    let a = build_simple_proc("T");
+    assert!(a.fingerprint_time_ns > 0, "fingerprint_time_ns should be >0");
+}

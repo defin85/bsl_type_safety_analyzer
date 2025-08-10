@@ -222,8 +222,11 @@ impl AstBuilder {
             error_messages: self.error_messages,
             call_data: self.call_data,
             fingerprints: Vec::new(),
+            fingerprint_time_ns: 0,
         };
+        let start = std::time::Instant::now();
         built.recompute_fingerprints();
+        built.fingerprint_time_ns = start.elapsed().as_nanos();
         built
     }
 }
@@ -241,6 +244,8 @@ pub struct BuiltAst {
     pub call_data: Vec<CallData>,
     /// Кэш fingerprint'ов для каждого узла (индекс = NodeId.0). Заполняется при build().
     pub fingerprints: Vec<u64>,
+    /// Время вычисления fingerprint'ов при build (наносекунды).
+    pub fingerprint_time_ns: u128,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -431,6 +436,10 @@ impl FingerprintDiff {
             reused_nodes: self.reused_nodes,
             reused_subtrees: self.reused_subtrees,
             reuse_ratio,
+            parse_ns: None,
+            arena_ns: None,
+            fingerprint_ns: None,
+            total_ns: None,
         }
     }
 }
@@ -443,6 +452,10 @@ pub struct IncrementalStats {
     pub reused_nodes: usize,
     pub reused_subtrees: usize,
     pub reuse_ratio: f64,
+    pub parse_ns: Option<u128>,
+    pub arena_ns: Option<u128>,
+    pub fingerprint_ns: Option<u128>,
+    pub total_ns: Option<u128>,
 }
 
 /// Внутренняя реализация вычисления fingerprint'ов (post-order, стабильный).
