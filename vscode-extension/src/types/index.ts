@@ -13,6 +13,8 @@ export interface CodeMetrics {
     errors: number;
     warnings: number;
     score: number;
+    internerSymbols?: number;
+    internerBytes?: number;
     details?: {
         cyclomaticComplexity?: number;
         cognitiveComplexity?: number;

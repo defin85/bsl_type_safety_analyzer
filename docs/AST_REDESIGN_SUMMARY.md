@@ -77,9 +77,17 @@
 3. Документировать процедуру полного удаления legacy (remove code + changelog заметка).
 
 ### Phase 4: Interning & Payload Split
-- String interner (идентификаторы, строковые литералы) — ЧАСТИЧНО: внедрён `SymbolId` в `AstPayload::Ident` / `Literal` с дублированным текстом для обратной совместимости. Следующий шаг: убрать поле `text` после обновления диагностики/паритета.
-- Вынести разные payload (LiteralData, CallData, etc.) в сегрегированные вектора (пока не начато).
-- Добавить метрики: `interner.symbol_count`, `interner.total_bytes`.
+Статус:
+- String interner: ЗАВЕРШЕНО — `AstPayload::Ident` / `Literal` теперь содержат только `sym: SymbolId` (дублированный текст удалён). Хелперы `BuiltAst::node_ident_text` / `node_literal_text` предоставляют доступ к строкам через интернер.
+- Метрики интернера интегрированы end-to-end (`interner.symbol_count`, `interner.total_bytes`) и доступны через LSP команду `bslAnalyzer.getMetrics`.
+- Хранение последнего `BuiltAst` в `BslAnalyzer` для метрик реализовано.
+
+Осталось в Phase 4:
+1. Payload Split: вынести «тяжёлые» payload (Call аргументы, сложные литералы / структуры) в сегрегированные вектора (`CallData`, `LiteralData` и др.) и в `AstPayload` держать компактные индексы.
+2. Обновить билдера и обходы под split (временные accessor-методы).
+3. Дополнительные метрики экономии памяти: `ast.payload_bytes_saved`, `ast.call_data_count` (опционально).
+4. Snapshot/parity адаптация под новый формат после split.
+5. Документация публичного API для доступа к вынесенным структурам.
 
 ### Phase 5: Fingerprints & Incremental
 - Fingerprint pass (DFS) + корневой hash.

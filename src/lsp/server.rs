@@ -871,6 +871,52 @@ impl LanguageServer for BslLanguageServer {
         tracing::info!("Executing command: {}", params.command);
 
         match params.command.as_str() {
+            "bslAnalyzer.getMetrics" => {
+                // Expect first argument: file URI string
+                if let Some(uri_val) = params.arguments.first() {
+                    if let Ok(uri_str) = serde_json::from_value::<String>(uri_val.clone()) {
+                        if let Ok(uri) = Url::parse(&uri_str) {
+                            // Retrieve document text (from cache or disk)
+                            let text_opt = if let Some(doc) = self.documents.read().await.get(&uri) { Some(doc.text.clone()) } else { match uri.to_file_path() { Ok(p) => std::fs::read_to_string(p).ok(), Err(_) => None } };
+                            if let Some(text) = text_opt {
+                                // Build a temporary analyzer to capture interner stats.
+                                // We reuse analysis_config for consistency.
+                                let config = self.analysis_config.read().await.clone();
+                                // Use index if available.
+                                let index_guard = self.unified_index.read().await;
+                                let mut analyzer = match &*index_guard {
+                                    Some(idx) => match BslAnalyzer::with_index_and_config(idx.clone(), config) { Ok(a)=>a, Err(_)=> return Err(tower_lsp::jsonrpc::Error::internal_error()) },
+                                    None => match BslAnalyzer::with_config(config) { Ok(a)=>a, Err(_)=> return Err(tower_lsp::jsonrpc::Error::internal_error()) },
+                                };
+                                // Perform analysis to build AST & interner.
+                                let cfg_clone = analyzer.get_config().clone();
+                                let _ = analyzer.analyze_text(&text, &cfg_clone);
+                                // Extract metrics (fallback 0 if not available).
+                                let (symbol_count, total_bytes) = analyzer.get_interner_metrics();
+                                // Basic code metrics approximations (lines, functions) placeholders until real implementation.
+                                let lines = text.lines().count();
+                                let complexity = 0; // TODO real complexity
+                                let functions = 0; // TODO count procedures/functions via AST when exposed
+                                let (errors, warnings) = analyzer.get_errors_and_warnings();
+                                let score = 100i32.saturating_sub((errors.len()*5 + warnings.len()) as i32).max(0) as i32;
+                                let value = serde_json::json!({
+                                    "file": uri_str,
+                                    "complexity": complexity,
+                                    "lines": lines,
+                                    "functions": functions,
+                                    "errors": errors.len(),
+                                    "warnings": warnings.len(),
+                                    "score": score,
+                                    "internerSymbols": symbol_count,
+                                    "internerBytes": total_bytes,
+                                });
+                                return Ok(Some(value));
+                            }
+                        }
+                    }
+                }
+                Err(tower_lsp::jsonrpc::Error::invalid_params("Invalid getMetrics arguments"))
+            }
             "bslAnalyzer.lsp.analyzeFile" => {
                 if let Some(uri_value) = params.arguments.first() {
                     if let Ok(uri_str) = serde_json::from_value::<String>(uri_value.clone()) {

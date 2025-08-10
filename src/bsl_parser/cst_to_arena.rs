@@ -31,7 +31,7 @@ fn convert_params(b: &mut AstBuilder, params: &[Parameter]) {
     // Используем реальный span параметра
     let span = from_loc(p.location.offset, p.location.length.max(p.name.len()));
     let sym = b.intern_symbol(&p.name);
-    b.leaf(AstKind::Param, span, AstPayload::Ident { sym, text: p.name.clone() });
+    b.leaf(AstKind::Param, span, AstPayload::Ident { sym });
     }
 }
 
@@ -267,7 +267,7 @@ mod tests {
         let built = ArenaConverter::build_module(&module);
         use crate::ast_core::{preorder, AstKind};
         let mut found_plus = false;
-    for id in preorder(&built.arena, built.root) { let n = built.arena.node(id); if n.kind==AstKind::Identifier { if let AstPayload::Ident { text: s, .. } = &n.payload { if s=="+" && n.span.start==20 { found_plus = true; } } } }
+    for id in preorder(&built.arena, built.root) { let n = built.arena.node(id); if n.kind==AstKind::Identifier { if let AstPayload::Ident { sym } = &n.payload { let s = built.interner.resolve(*sym); if s=="+" && n.span.start==20 { found_plus = true; } } } }
         assert!(found_plus, "'+' operator identifier not found at expected offset");
     }
 
@@ -280,7 +280,7 @@ mod tests {
         let built = ArenaConverter::build_module(&module);
         use crate::ast_core::{preorder, AstKind};
         let mut found_minus = false;
-    for id in preorder(&built.arena, built.root) { let n = built.arena.node(id); if n.kind==AstKind::Identifier { if let AstPayload::Ident { text: s, .. } = &n.payload { if s=="-" && n.span.start==30 { found_minus = true; } } } }
+    for id in preorder(&built.arena, built.root) { let n = built.arena.node(id); if n.kind==AstKind::Identifier { if let AstPayload::Ident { sym } = &n.payload { let s = built.interner.resolve(*sym); if s=="-" && n.span.start==30 { found_minus = true; } } } }
         assert!(found_minus, "'-' operator identifier not found at expected offset");
     }
 }

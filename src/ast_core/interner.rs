@@ -5,7 +5,7 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SymbolId(pub u32);
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct StringInterner {
     map: HashMap<String, SymbolId>,
     rev: Vec<String>,
@@ -27,6 +27,7 @@ impl StringInterner {
     pub fn len(&self) -> usize { self.rev.len() }
     pub fn is_empty(&self) -> bool { self.rev.is_empty() }
     pub fn bytes(&self) -> usize { self.bytes }
+    pub fn symbol_count(&self) -> usize { self.rev.len() }
 }
 
 #[cfg(test)]

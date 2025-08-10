@@ -2,7 +2,8 @@
 //! Phase 3: precise spans, parity tests, snapshot baselines, proto TypeTable.
 //! Legacy semantic analyzer path is DEPRECATED and scheduled for removal after one stable release.
 
-use crate::ast_core::{Arena, AstKind, AstNode, BuiltAst, NodeId, Visitor, VisitControl};
+use crate::ast_core::{Arena, AstKind, AstNode, BuiltAst, NodeId, Visitor, VisitControl, AstPayload};
+use crate::ast_core::interner::{SymbolId, StringInterner};
 use crate::bsl_parser::diagnostics::{Diagnostic, DiagnosticSeverity, Location, codes};
 use std::collections::{HashMap, HashSet};
 use crate::bsl_parser::simple_types::{SimpleType, binary_result, unary_result};
@@ -26,13 +27,14 @@ pub struct SemanticArena {
     property_catalog: HashMap<String, HashSet<String>>,
     file_name: String,
     line_index: Option<LineIndex>,
+    interner: Option<StringInterner>,
 }
 
 impl SemanticArena {
-    pub fn new() -> Self { Self { file_name: "<arena>".into(), line_index: None, ..Default::default() } }
+    pub fn new() -> Self { Self { file_name: "<arena>".into(), line_index: None, interner: None, ..Default::default() } }
     pub fn analyze(&mut self, ast: &BuiltAst) { self.analyze_with_flags(ast, true, true, true) }
     pub fn analyze_with_flags(&mut self, ast: &BuiltAst, check_unused: bool, check_uninitialized: bool, check_undeclared: bool) {
-        self.diagnostics.clear();
+    self.diagnostics.clear();
         self.vars.clear();
     self.expr_types.clear();
         self.check_unused = check_unused;
@@ -40,6 +42,8 @@ impl SemanticArena {
     self.check_undeclared = check_undeclared;
     self.scopes.clear();
     if self.method_catalog.is_empty() { self.bootstrap_catalogs(); }
+    // захватываем interner из AST
+    self.interner = Some(ast.interner.clone());
     let mut v = Collector { sem: self };
         super::super::ast_core::walk(&ast.arena, ast.root, &mut v); // reuse walk
         // finalize diagnostics
@@ -68,6 +72,7 @@ impl SemanticArena {
         self.expr_types[idx] = Some(ty);
     }
     fn get_expr_type(&self, id: NodeId) -> Option<&SimpleType> { self.expr_types.get(id.0 as usize).and_then(|o| o.as_ref()) }
+    pub fn resolve_symbol(&self, sym: SymbolId) -> &str { self.interner.as_ref().map(|i| i.resolve(sym)).unwrap_or("<sym>") }
 }
 
 fn unused_var_diag(name: &str, loc: Location) -> Diagnostic {
@@ -109,15 +114,15 @@ impl<'a> Visitor for Collector<'a> {
                 // Параметры
                 if let Some(first) = node.first_child { // params precede body in our converter
                     let mut cur = Some(first);
-                    while let Some(c) = cur { let n = arena.node(c); if n.kind == AstKind::Param { if let Some(t) = n.ident_text() { self.sem.declare_var(t, c, true, arena); } } cur = n.next_sibling; }
+                    while let Some(c) = cur { let n = arena.node(c); if n.kind == AstKind::Param { if let AstPayload::Ident { sym } = n.payload { let name_owned = self.sem.resolve_symbol(sym).to_string(); self.sem.declare_var(&name_owned, c, true, arena); } } cur = n.next_sibling; }
                 }
             }
             AstKind::VarDecl => {
-                for c in arena.children(id) { let n = arena.node(c); if n.kind == AstKind::Identifier { if let Some(t) = n.ident_text() { self.sem.declare_var(t, c, false, arena); } } }
+                for c in arena.children(id) { let n = arena.node(c); if n.kind == AstKind::Identifier { if let AstPayload::Ident { sym } = n.payload { let name_owned = self.sem.resolve_symbol(sym).to_string(); self.sem.declare_var(&name_owned, c, false, arena); } } }
             }
             AstKind::Assignment => {
                 // Первый ребенок — target
-                if let Some(target) = node.first_child { let tnode = arena.node(target); if tnode.kind == AstKind::Identifier { if let Some(name) = tnode.ident_text() {
+                if let Some(target) = node.first_child { let tnode = arena.node(target); if tnode.kind == AstKind::Identifier { if let AstPayload::Ident { sym } = tnode.payload { let name_owned = self.sem.resolve_symbol(sym).to_string(); let name = name_owned.as_str();
                         let value = tnode.next_sibling; // expression assigned
                         let value_ty = value.and_then(|vid| self.sem.infer_expr_type(vid, arena));
                         if self.sem.vars.contains_key(name) {
@@ -136,7 +141,7 @@ impl<'a> Visitor for Collector<'a> {
             AstKind::Call => {
                 if self.sem.check_methods {
                     // Simple method call: first child is object or function identifier
-                    if let Some(obj_id) = node.first_child { let obj_node = arena.node(obj_id); let method_ident = obj_node.next_sibling; if let Some(mid) = method_ident { let mnode = arena.node(mid); if mnode.kind==AstKind::Identifier { if let Some(method_name)=mnode.ident_text() {
+                    if let Some(obj_id) = node.first_child { let obj_node = arena.node(obj_id); let method_ident = obj_node.next_sibling; if let Some(mid) = method_ident { let mnode = arena.node(mid); if mnode.kind==AstKind::Identifier { if let AstPayload::Ident { sym } = mnode.payload { let method_name_owned = self.sem.resolve_symbol(sym).to_string(); let method_name = method_name_owned.as_str();
                                         // Infer object type
                                         let obj_ty = self.sem.infer_expr_type(obj_id, arena).unwrap_or(SimpleType::Unknown);
                                         match obj_ty {
@@ -164,7 +169,7 @@ impl<'a> Visitor for Collector<'a> {
             }
             AstKind::Member => {
                 if self.sem.check_methods {
-                    if let Some(obj_id) = node.first_child { let prop_ident = arena.node(obj_id).next_sibling; if let Some(pid)=prop_ident { let pnode = arena.node(pid); if pnode.kind==AstKind::Identifier { if let Some(prop)=pnode.ident_text() {
+                    if let Some(obj_id) = node.first_child { let prop_ident = arena.node(obj_id).next_sibling; if let Some(pid)=prop_ident { let pnode = arena.node(pid); if pnode.kind==AstKind::Identifier { if let AstPayload::Ident { sym } = pnode.payload { let prop_owned = self.sem.resolve_symbol(sym).to_string(); let prop = prop_owned.as_str();
                         let obj_ty = self.sem.infer_expr_type(obj_id, arena).unwrap_or(SimpleType::Unknown);
                         match obj_ty {
                             SimpleType::Object(ref tn) => {
@@ -217,7 +222,7 @@ impl<'a> Visitor for Collector<'a> {
             AstKind::While => {
                 // Fixed-point inside loop; propagate only if condition literally TRUE.
                 let condition = node.first_child; let body = condition.and_then(|c| arena.node(c).next_sibling);
-                let guaranteed = condition.and_then(|c| arena.node(c).literal_text()).map(|t| t.eq_ignore_ascii_case("true")).unwrap_or(false);
+                let guaranteed = condition.and_then(|c| { let n = arena.node(c); if let AstPayload::Literal { sym, .. } = n.payload { Some(self.sem.resolve_symbol(sym)) } else { None } }).map(|t| t.eq_ignore_ascii_case("true")).unwrap_or(false);
                 let pre: Vec<(String,bool)> = self.sem.vars.iter().map(|(k,v)|(k.clone(), v.initialized)).collect();
                 let mut loop_inited: Vec<String>=Vec::new();
                 const MAX_ITER: usize = 4; for _ in 0..MAX_ITER { if let Some(b)=body { let before = self.sem.snapshot_inits(); self.visit_block(b, arena); // compare
@@ -230,7 +235,7 @@ impl<'a> Visitor for Collector<'a> {
                 return VisitControl::SkipChildren;
             }
             AstKind::Identifier => {
-                if let Some(name) = node.ident_text() {
+                if let AstPayload::Ident { sym } = node.payload { let name_owned = self.sem.resolve_symbol(sym).to_string(); let name = name_owned.as_str();
                     if let Some(v) = self.sem.vars.get_mut(name) { if id != v.declared { v.used = true; } }
                     else if self.sem.check_undeclared { self.sem.diagnostics.push(undeclared_var_diag(name, self.sem.make_location(arena, id))); }
                 }
@@ -307,14 +312,14 @@ impl SemanticArena {
         let node = arena.node(id);
         let computed = match node.kind {
             AstKind::Literal => {
-                if let Some(text) = node.literal_text() { Some(SimpleType::literal(text)) } else { Some(SimpleType::Unknown) }
+                if let AstPayload::Literal { sym } = node.payload { Some(SimpleType::literal(self.resolve_symbol(sym))) } else { Some(SimpleType::Unknown) }
             }
             AstKind::Identifier => {
-                node.ident_text().and_then(|n| self.vars.get(n)).map(|v| v.ty.clone())
+                match node.payload { AstPayload::Ident { sym } => { let n = self.resolve_symbol(sym); self.vars.get(n).map(|v| v.ty.clone()) } _ => None }
             }
             AstKind::New => {
                 // Identifier child = type name
-                if let Some(type_ident) = node.first_child { if let Some(name) = arena.node(type_ident).ident_text() { Some(SimpleType::Object(name.to_string())) } else { Some(SimpleType::Unknown) } } else { Some(SimpleType::Unknown) }
+                if let Some(type_ident) = node.first_child { let tn = arena.node(type_ident); if let AstPayload::Ident { sym } = tn.payload { Some(SimpleType::Object(self.resolve_symbol(sym).to_string())) } else { Some(SimpleType::Unknown) } } else { Some(SimpleType::Unknown) }
             }
             AstKind::Call => {
                 // Simplified: assume call returns Unknown
@@ -324,13 +329,13 @@ impl SemanticArena {
                 let left = node.first_child; let op = left.and_then(|l| arena.node(l).next_sibling); let right = op.and_then(|o| arena.node(o).next_sibling);
                 let lt = left.and_then(|id| self.infer_expr_type(id, arena)).unwrap_or(SimpleType::Unknown);
                 let rt = right.and_then(|id| self.infer_expr_type(id, arena)).unwrap_or(SimpleType::Unknown);
-                let op_name = op.and_then(|o| arena.node(o).ident_text()).unwrap_or("");
+                let op_name = op.and_then(|o| { let n = arena.node(o); if let AstPayload::Ident { sym } = n.payload { Some(self.resolve_symbol(sym)) } else { None } }).unwrap_or("");
                 Some(binary_result(&lt, op_name, &rt))
             }
             AstKind::Unary => {
                 let op = node.first_child; let inner = op.and_then(|o| arena.node(o).next_sibling);
                 let inner_ty = inner.and_then(|id| self.infer_expr_type(id, arena)).unwrap_or(SimpleType::Unknown);
-                let op_name = op.and_then(|o| arena.node(o).ident_text()).unwrap_or("");
+                let op_name = op.and_then(|o| { let n = arena.node(o); if let AstPayload::Ident { sym } = n.payload { Some(self.resolve_symbol(sym)) } else { None } }).unwrap_or("");
                 Some(unary_result(op_name, &inner_ty))
             }
             _ => Some(SimpleType::Unknown)

@@ -128,6 +128,8 @@ pub struct BslAnalyzer {
     error_collector: ErrorCollector,
     index: Option<UnifiedBslIndex>,
     config: AnalysisConfig,
+    // Последний успешно построенный arena-AST (для метрик интернера и потенциально быстрых повторных запросов)
+    last_built_arena: Option<crate::ast_core::BuiltAst>,
 }
 
 impl BslAnalyzer {
@@ -140,6 +142,7 @@ impl BslAnalyzer {
             error_collector: ErrorCollector::new(),
             index: None,
             config: AnalysisConfig::default(),
+            last_built_arena: None,
         })
     }
 
@@ -152,6 +155,7 @@ impl BslAnalyzer {
             error_collector: ErrorCollector::new(),
             index: None,
             config,
+            last_built_arena: None,
         })
     }
 
@@ -169,6 +173,7 @@ impl BslAnalyzer {
             error_collector: ErrorCollector::new(),
             index: Some(index),
             config: AnalysisConfig::default(),
+            last_built_arena: None,
         })
     }
 
@@ -186,6 +191,7 @@ impl BslAnalyzer {
             error_collector: ErrorCollector::new(),
             index: Some(index),
             config,
+            last_built_arena: None,
         })
     }
 
@@ -198,6 +204,17 @@ impl BslAnalyzer {
 
         self.semantic_analyzer = SemanticAnalyzer::with_index(config, index.clone());
         self.index = Some(index);
+    }
+
+    /// Текущая конфигурация (для вспомогательных вызовов вне основного API)
+    pub fn get_config(&self) -> &AnalysisConfig { &self.config }
+
+    /// Метрики интернера (символы, байты). Возвращает (0,0) если недоступно.
+    pub fn get_interner_metrics(&self) -> (usize, usize) {
+        if let Some(built) = &self.last_built_arena {
+            return (built.interner_symbol_count(), built.interner_total_bytes());
+        }
+        (0, 0)
     }
 
     /// Выполняет анализ BSL файла с конфигурацией
@@ -232,8 +249,10 @@ impl BslAnalyzer {
         }
 
         // 1. Парсинг (всегда выполняется)
-    let parse_result = self.parser.parse(source, file_path);
-    let _arena_ast = parse_result.arena.as_ref(); // временно не используется (семантика на старом AST)
+    let mut parse_result = self.parser.parse(source, file_path);
+    // Сохраняем последний arena AST для метрик (перемещаем out of parse_result)
+    if let Some(built) = parse_result.arena.take() { self.last_built_arena = Some(built); }
+    let _arena_ast = self.last_built_arena.as_ref(); // временно не используется (семантика на старом AST)
 
         // Собираем диагностики парсера
         for diagnostic in parse_result.diagnostics {
@@ -274,7 +293,7 @@ impl BslAnalyzer {
                 }
             }
             // Experimental arena-based semantic (currently only unused vars) when enabled
-            if let Some(built) = &parse_result.arena {
+            if let Some(built) = &self.last_built_arena {
                 // Arena semantic supports: unused, uninitialized, undeclared
                 if self.config.check_unused_variables || self.config.check_uninitialized {
                     let mut arena_sem = SemanticArena::new();
@@ -379,7 +398,7 @@ impl BslAnalyzer {
 
 impl Default for BslAnalyzer {
     fn default() -> Self {
-        Self::new().expect("Failed to create BSL analyzer")
+    Self::new().expect("Failed to create BSL analyzer")
     }
 }
 

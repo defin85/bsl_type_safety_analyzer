@@ -39,10 +39,10 @@ pub enum AstKind {
 pub enum AstPayload {
     #[default]
     None,
-    /// Идентификатор с интернированным символом (пока дублируем строку до полного перехода).
-    Ident { sym: SymbolId, text: String },
-    /// Литерал с интернированным символом.
-    Literal { sym: SymbolId, text: String },
+    /// Идентификатор (только интернированный символ).
+    Ident { sym: SymbolId },
+    /// Литерал (только интернированный символ).
+    Literal { sym: SymbolId },
     Error(String),
 }
 
@@ -109,7 +109,7 @@ impl AstBuilder {
 
     pub fn start_node_with_ident(&mut self, kind: AstKind, span: PackedSpan, name: String) {
         let sym = self.interner.intern(&name);
-        self.start_node_with_payload(kind, span, AstPayload::Ident { sym, text: name });
+        self.start_node_with_payload(kind, span, AstPayload::Ident { sym });
     }
 
     pub fn finish_node(&mut self) {
@@ -143,12 +143,12 @@ impl AstBuilder {
 
     pub fn leaf_ident(&mut self, span: PackedSpan, name: String) -> NodeId {
         let sym = self.interner.intern(&name);
-        self.leaf(AstKind::Identifier, span, AstPayload::Ident { sym, text: name })
+        self.leaf(AstKind::Identifier, span, AstPayload::Ident { sym })
     }
 
     pub fn leaf_literal(&mut self, span: PackedSpan, text: String) -> NodeId {
         let sym = self.interner.intern(&text);
-        self.leaf(AstKind::Literal, span, AstPayload::Literal { sym, text })
+        self.leaf(AstKind::Literal, span, AstPayload::Literal { sym })
     }
 
     pub fn intern_symbol(&mut self, text: &str) -> SymbolId { self.interner.intern(text) }
@@ -194,6 +194,18 @@ impl BuiltAst {
     pub fn root(&self) -> NodeId { self.root }
     pub fn arena(&self) -> &Arena { &self.arena }
     pub fn resolve_symbol(&self, sym: SymbolId) -> &str { self.interner.resolve(sym) }
+    pub fn interner_symbol_count(&self) -> usize { self.interner.symbol_count() }
+    pub fn interner_total_bytes(&self) -> usize { self.interner.bytes() }
+    /// Получить текст идентификатора по NodeId (если это Identifier/Param/Function/Procedure с payload Ident).
+    pub fn node_ident_text(&self, id: NodeId) -> Option<&str> {
+        let node = self.arena.node(id);
+        match node.payload { AstPayload::Ident { sym } => Some(self.resolve_symbol(sym)), _ => None }
+    }
+    /// Получить текст литерала по NodeId (если узел Literal и имеет payload Literal).
+    pub fn node_literal_text(&self, id: NodeId) -> Option<&str> {
+        let node = self.arena.node(id);
+        match node.payload { AstPayload::Literal { sym } => Some(self.resolve_symbol(sym)), _ => None }
+    }
 }
 
 /// Утилита обхода (предварительный проход).
@@ -241,18 +253,11 @@ impl Arena {
 }
 
 impl AstNode {
-    /// Если узел содержит идентификатор.
-    pub fn ident_text(&self) -> Option<&str> {
-        match &self.payload { AstPayload::Ident { text, .. } => Some(text.as_str()), _ => None }
-    }
-    /// Если узел содержит литерал.
-    pub fn literal_text(&self) -> Option<&str> {
-        match &self.payload { AstPayload::Literal { text, .. } => Some(text.as_str()), _ => None }
-    }
-    /// Если узел ошибка.
-    pub fn error_message(&self) -> Option<&str> {
-        match &self.payload { AstPayload::Error(s) => Some(s.as_str()), _ => None }
-    }
+    pub fn ident_text<'a>(&self, interner: &'a StringInterner) -> Option<&'a str> { match &self.payload { AstPayload::Ident { sym } => Some(interner.resolve(*sym)), _ => None } }
+    pub fn literal_text<'a>(&self, interner: &'a StringInterner) -> Option<&'a str> { match &self.payload { AstPayload::Literal { sym } => Some(interner.resolve(*sym)), _ => None } }
+    pub fn ident_symbol(&self) -> Option<SymbolId> { match &self.payload { AstPayload::Ident { sym, .. } => Some(*sym), _ => None } }
+    pub fn literal_symbol(&self) -> Option<SymbolId> { match &self.payload { AstPayload::Literal { sym, .. } => Some(*sym), _ => None } }
+    pub fn error_message(&self) -> Option<&str> { match &self.payload { AstPayload::Error(s) => Some(s.as_str()), _ => None } }
 }
 
 /// Контроль обхода.
