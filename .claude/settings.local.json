@@ -268,7 +268,10 @@
       "Bash(./target/debug/syntaxcheck.exe test_analysis.bsl:*)",
       "Bash(./target/debug/bsl-analyzer-cli.exe:*)",
       "Bash(./target/debug/bsl-analyzer.exe --help)",
-      "Bash(npx vsce package:*)"
+      "Bash(npx vsce package:*)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"СправочникиМенеджер\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Справочники\" --config \"examples/ConfTest\" --platform-version \"8.3.25\" --show-all-methods)",
+      "Bash(RUST_LOG=info cargo run --bin query_type -- --name \"Global\" --config \"examples/ConfTest\" --platform-version \"8.3.25\")"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

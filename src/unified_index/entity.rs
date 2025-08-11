@@ -111,6 +111,8 @@ pub enum BslEntityKind {
     // Системные
     System,
     Global,
+    GlobalFunction,
+    GlobalProperty,
 
     // Другие
     Other(String),
@@ -286,6 +288,12 @@ pub struct BslEntity {
     pub availability: Vec<BslContext>,
     pub lifecycle: BslLifecycle,
 
+    // Флаги доступности (для правильной работы автодополнения)
+    pub can_create_with_new: bool,
+    pub is_global_property: bool,
+    pub is_global_function: bool,
+    pub parent_manager: Option<String>,
+
     // Расширенные данные для специфичной информации
     pub extended_data: serde_json::Map<String, serde_json::Value>,
 }
@@ -322,6 +330,10 @@ impl BslEntity {
                 removed_version: None,
                 replacement: None,
             },
+            can_create_with_new: false,
+            is_global_property: false,
+            is_global_function: false,
+            parent_manager: None,
             extended_data: serde_json::Map::new(),
         }
     }

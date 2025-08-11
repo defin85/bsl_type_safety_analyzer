@@ -15,7 +15,7 @@ use crate::bsl_parser::{AnalysisConfig, BslAnalyzer};
 use crate::lsp::diagnostics::{convert_analysis_results, create_analysis_error_diagnostic};
 use crate::unified_index::{BslApplicationMode, UnifiedBslIndex, UnifiedIndexBuilder};
 use anyhow::Result;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -335,6 +335,7 @@ impl BslLanguageServer {
                 let entities = index.get_all_entities();
                 let mut platform_completions = Vec::new();
                 let mut config_completions = Vec::new();
+                let mut added_labels = std::collections::HashSet::new(); // Для дедупликации
                 
                 for entity in entities {
                     // Проверяем совпадение с токеном
@@ -351,25 +352,30 @@ impl BslLanguageServer {
                                     .map(|d| d.clone())
                                     .unwrap_or_else(|| format!("Глобальная функция {}", method_name));
                                 
-                                let completion = CompletionItem {
-                                    label: method_name.clone(),
-                                    kind: Some(CompletionItemKind::FUNCTION),
-                                    detail: method.return_type.as_ref()
-                                        .map(|t| format!("Функция → {}", t))
-                                        .or_else(|| Some("Глобальная функция".to_string())),
-                                    documentation: Some(Documentation::String(doc_text)),
-                                    insert_text: Some(format!("{}()", method_name)),
-                                    sort_text: Some(format!("0_{}", method_name)), // Глобальные функции выше
-                                    ..Default::default()
-                                };
-                                platform_completions.push(completion);
+                                // Проверяем, не добавляли ли уже этот элемент
+                                if added_labels.insert(method_name.clone()) {
+                                    let completion = CompletionItem {
+                                        label: method_name.clone(),
+                                        kind: Some(CompletionItemKind::FUNCTION),
+                                        detail: method.return_type.as_ref()
+                                            .map(|t| format!("Функция → {}", t))
+                                            .or_else(|| Some("Глобальная функция".to_string())),
+                                        documentation: Some(Documentation::String(doc_text)),
+                                        insert_text: Some(format!("{}()", method_name)),
+                                        sort_text: Some(format!("0_{}", method_name)), // Глобальные функции выше
+                                        ..Default::default()
+                                    };
+                                    platform_completions.push(completion);
+                                }
                             }
                         }
                         continue; // Переходим к следующей сущности
                     }
                     
                     // Обычные типы (не Global)
-                    if entity_lower.starts_with(&token_lower) || qualified_lower.starts_with(&token_lower) {
+                    // Пропускаем, если уже добавлено
+                    if !added_labels.contains(&entity.display_name) && 
+                       (entity_lower.starts_with(&token_lower) || qualified_lower.starts_with(&token_lower)) {
                         let is_platform = format!("{:?}", entity.entity_type).contains("Platform");
                         
                         let kind = match entity.entity_kind {
@@ -422,24 +428,27 @@ impl BslLanguageServer {
                             entity.display_name.clone()
                         };
                         
-                        let completion = CompletionItem {
-                            label: entity.display_name.clone(),
-                            kind: Some(kind),
-                            detail: Some(detail),
-                            documentation: Some(Documentation::String(doc_text)),
-                            insert_text: Some(insert_text),
-                            sort_text: Some(if is_platform { 
-                                format!("0_{}", entity.display_name) // Платформенные типы выше
-                            } else { 
-                                format!("1_{}", entity.display_name) 
-                            }),
-                            ..Default::default()
-                        };
-                        
-                        if is_platform {
-                            platform_completions.push(completion);
-                        } else {
-                            config_completions.push(completion);
+                        // Добавляем в список и отмечаем как добавленный
+                        if added_labels.insert(entity.display_name.clone()) {
+                            let completion = CompletionItem {
+                                label: entity.display_name.clone(),
+                                kind: Some(kind),
+                                detail: Some(detail),
+                                documentation: Some(Documentation::String(doc_text)),
+                                insert_text: Some(insert_text),
+                                sort_text: Some(if is_platform { 
+                                    format!("0_{}", entity.display_name) // Платформенные типы выше
+                                } else { 
+                                    format!("1_{}", entity.display_name) 
+                                }),
+                                ..Default::default()
+                            };
+                            
+                            if is_platform {
+                                platform_completions.push(completion);
+                            } else {
+                                config_completions.push(completion);
+                            }
                         }
                     }
                 }
